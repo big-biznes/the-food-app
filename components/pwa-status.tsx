@@ -44,7 +44,6 @@ export function PWAStatus() {
   if (isInstalled && isStandalone) {
     return (
       <div>
-        <div></div>
       </div>
     );
   }
@@ -62,7 +61,6 @@ export function PWAStatus() {
       </p>
       <div className="text-xs text-blue-600 dark:text-blue-400">
         <p>• Look for the install banner below</p>
-        <p>• Or use your browser's menu to add to home screen</p>
       </div>
     </div>
   );
