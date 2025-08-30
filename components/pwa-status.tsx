@@ -43,7 +43,9 @@ export function PWAStatus() {
 
   if (isInstalled && isStandalone) {
     return (
-      <div></div>
+      <div>
+        <div></div>
+      </div>
     );
   }
 
