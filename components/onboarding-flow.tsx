@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { NumberPicker } from "@/components/ui/number-picker"
 import {
   ArrowLeft,
   User,
@@ -36,9 +37,68 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     age: "",
     height: "",
     weight: "",
+    heightMetric: "metric", // "metric" for cm, "imperial" for inches
+    weightMetric: "metric", // "metric" for kg, "imperial" for lb
     hasDietaryRestrictions: "",
     dietaryRestrictions: [] as string[],
   })
+
+  // Helper function to convert between metric and imperial
+  const convertHeight = (value: number, fromMetric: string, toMetric: string) => {
+    if (fromMetric === toMetric) return value
+    if (fromMetric === "metric" && toMetric === "imperial") {
+      return Math.round(value / 2.54) // cm to inches
+    } else {
+      return Math.round(value * 2.54) // inches to cm
+    }
+  }
+
+  const convertWeight = (value: number, fromMetric: string, toMetric: string) => {
+    if (fromMetric === toMetric) return value
+    if (fromMetric === "metric" && toMetric === "imperial") {
+      return Math.round(value * 2.20462) // kg to lb
+    } else {
+      return Math.round(value / 2.20462) // lb to kg
+    }
+  }
+
+  const handleHeightMetricChange = (metric: string) => {
+    const currentHeight = Number.parseInt(formData.height || "170")
+    const convertedHeight = convertHeight(currentHeight, formData.heightMetric, metric)
+    
+    // Ensure the converted value is within the new metric's range
+    let finalHeight = convertedHeight
+    if (metric === "imperial") {
+      finalHeight = Math.max(55, Math.min(87, convertedHeight))
+    } else {
+      finalHeight = Math.max(140, Math.min(220, convertedHeight))
+    }
+    
+    setFormData({ 
+      ...formData, 
+      heightMetric: metric,
+      height: finalHeight.toString()
+    })
+  }
+
+  const handleWeightMetricChange = (metric: string) => {
+    const currentWeight = Number.parseInt(formData.weight || "70")
+    const convertedWeight = convertWeight(currentWeight, formData.weightMetric, metric)
+    
+    // Ensure the converted value is within the new metric's range
+    let finalWeight = convertedWeight
+    if (metric === "imperial") {
+      finalWeight = Math.max(88, Math.min(330, convertedWeight))
+    } else {
+      finalWeight = Math.max(40, Math.min(150, convertedWeight))
+    }
+    
+    setFormData({ 
+      ...formData, 
+      weightMetric: metric,
+      weight: finalWeight.toString()
+    })
+  }
 
   const [showCravingsPage, setShowCravingsPage] = useState(false)
   const [showMealPlanCreation, setShowMealPlanCreation] = useState(false)
@@ -126,25 +186,17 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       subtitle: "This helps us calculate your nutritional needs",
       content: (
         <div className="w-full">
-          <div className="relative h-64 flex items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-bold text-emerald-600 mb-4">{formData.age || "25"}</div>
               <div className="text-gray-500 text-lg mb-8">years old</div>
-              <input
-                type="range"
-                min="16"
-                max="80"
-                value={formData.age || "25"}
-                onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #10b981 0%, #10b981 ${((Number.parseInt(formData.age || "25") - 16) / (80 - 16)) * 100}%, #e5e7eb ${((Number.parseInt(formData.age || "25") - 16) / (80 - 16)) * 100}%, #e5e7eb 100%)`,
-                }}
+              <NumberPicker
+                value={Number.parseInt(formData.age || "25")}
+                onChange={(value) => setFormData({ ...formData, age: value.toString() })}
+                min={16}
+                max={80}
+                step={1}
+                className="mx-auto"
               />
-              <div className="flex justify-between text-sm text-gray-400 mt-2">
-                <span>16</span>
-                <span>80</span>
-              </div>
             </div>
           </div>
         </div>
@@ -155,25 +207,21 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       subtitle: "We'll use this to calculate your BMR",
       content: (
         <div className="w-full">
-          <div className="relative h-64 flex items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-bold text-emerald-600 mb-4">{formData.height || "170"}</div>
-              <div className="text-gray-500 text-lg mb-8">cm</div>
-              <input
-                type="range"
-                min="140"
-                max="220"
-                value={formData.height || "170"}
-                onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #10b981 0%, #10b981 ${((Number.parseInt(formData.height || "170") - 140) / (220 - 140)) * 100}%, #e5e7eb ${((Number.parseInt(formData.height || "170") - 140) / (220 - 140)) * 100}%, #e5e7eb 100%)`,
-                }}
+              <div className="text-gray-500 text-lg mb-8">Height</div>
+              <NumberPicker
+                value={Number.parseInt(formData.height || "170")}
+                onChange={(value) => setFormData({ ...formData, height: value.toString() })}
+                min={formData.heightMetric === "metric" ? 140 : 55}
+                max={formData.heightMetric === "metric" ? 220 : 87}
+                step={1}
+                unit="cm"
+                showMetricSelector={true}
+                onMetricChange={handleHeightMetricChange}
+                currentMetric={formData.heightMetric}
+                className="mx-auto"
               />
-              <div className="flex justify-between text-sm text-gray-400 mt-2">
-                <span>140cm</span>
-                <span>220cm</span>
-              </div>
             </div>
           </div>
         </div>
@@ -184,25 +232,21 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       subtitle: "This helps us determine your caloric needs",
       content: (
         <div className="w-full">
-          <div className="relative h-64 flex items-center justify-center">
+          <div className="relative flex items-center justify-center">
             <div className="text-center">
-              <div className="text-6xl font-bold text-emerald-600 mb-4">{formData.weight || "70"}</div>
-              <div className="text-gray-500 text-lg mb-8">kg</div>
-              <input
-                type="range"
-                min="40"
-                max="150"
-                value={formData.weight || "70"}
-                onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #10b981 0%, #10b981 ${((Number.parseInt(formData.weight || "70") - 40) / (150 - 40)) * 100}%, #e5e7eb ${((Number.parseInt(formData.weight || "70") - 40) / (150 - 40)) * 100}%, #e5e7eb 100%)`,
-                }}
+              <div className="text-gray-500 text-lg mb-8">Weight</div>
+              <NumberPicker
+                value={Number.parseInt(formData.weight || "70")}
+                onChange={(value) => setFormData({ ...formData, weight: value.toString() })}
+                min={formData.weightMetric === "metric" ? 40 : 88}
+                max={formData.weightMetric === "metric" ? 150 : 330}
+                step={1}
+                unit="kg"
+                showMetricSelector={true}
+                onMetricChange={handleWeightMetricChange}
+                currentMetric={formData.weightMetric}
+                className="mx-auto"
               />
-              <div className="flex justify-between text-sm text-gray-400 mt-2">
-                <span>40kg</span>
-                <span>150kg</span>
-              </div>
             </div>
           </div>
         </div>
