@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Modal,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -77,9 +79,38 @@ export default function HomeScreen() {
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
   const [cravingText, setCravingText] = useState('');
   const [showSheet, setShowSheet] = useState(false);
+  const backdropAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(Dimensions.get('screen').height)).current;
 
   const insets = useSafeAreaInsets();
   const firstName = user?.name?.split(' ')[0] || 'there';
+
+  function openSheet() {
+    slideAnim.setValue(Dimensions.get('screen').height);
+    backdropAnim.setValue(0);
+    setShowSheet(true);
+    Animated.parallel([
+      Animated.timing(backdropAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        damping: 22,
+        mass: 1,
+        stiffness: 220,
+      }),
+    ]).start();
+  }
+
+  function closeSheet() {
+    Animated.parallel([
+      Animated.timing(backdropAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
+      Animated.timing(slideAnim, {
+        toValue: Dimensions.get('screen').height,
+        duration: 280,
+        useNativeDriver: true,
+      }),
+    ]).start(() => setShowSheet(false));
+  }
 
   function toggleCraving(chip: string) {
     setSelectedCravings(prev =>
@@ -110,7 +141,7 @@ export default function HomeScreen() {
 
   function handleGenerateFromSheet() {
     applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords()));
-    setShowSheet(false);
+    closeSheet();
   }
 
   function handlePartChange(part: WeekPart) {
@@ -328,7 +359,7 @@ export default function HomeScreen() {
       {/* FAB */}
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => setShowSheet(true)}
+        onPress={openSheet}
         activeOpacity={0.85}
       >
         <Text style={styles.fabText}>New Plan</Text>
@@ -337,24 +368,35 @@ export default function HomeScreen() {
       {/* Craving sheet modal */}
       <Modal
         visible={showSheet}
-        animationType="slide"
+        animationType="none"
         transparent
         presentationStyle="overFullScreen"
         statusBarTranslucent
-        onRequestClose={() => setShowSheet(false)}
+        onRequestClose={closeSheet}
       >
-        <View style={sheet.overlay}>
+        {/* Backdrop — fades in independently */}
+        <Animated.View
+          style={[sheet.backdrop, { opacity: backdropAnim }]}
+          pointerEvents="box-none"
+        >
           <TouchableOpacity
-            style={sheet.backdrop}
+            style={StyleSheet.absoluteFillObject}
             activeOpacity={1}
-            onPress={() => setShowSheet(false)}
+            onPress={closeSheet}
           />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={sheet.avoidingView}
+        </Animated.View>
+
+        {/* Card — slides up independently */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={sheet.sheetContainer}
+          pointerEvents="box-none"
+        >
+          <Animated.View
+            style={{ transform: [{ translateY: slideAnim }] }}
+            pointerEvents="auto"
           >
             <View style={sheet.card}>
-              {/* Handle */}
               <View style={sheet.handle} />
 
               <ScrollView
@@ -400,11 +442,11 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </ScrollView>
 
-              {/* Fills the home-indicator / bottom-nav zone */}
-              <View style={{ height: insets.bottom || 34 }} />
+              {/* Extends card into the home-indicator zone */}
+              <View style={{ height: Math.max(insets.bottom, 34) }} />
             </View>
-          </KeyboardAvoidingView>
-        </View>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
@@ -534,16 +576,15 @@ const styles = StyleSheet.create({
 });
 
 const sheet = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.35)',
-  },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
-  avoidingView: {
-    width: '100%',
+  sheetContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   card: {
     backgroundColor: '#FFFFFF',
