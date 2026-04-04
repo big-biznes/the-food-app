@@ -10,12 +10,18 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 import {
-  DAYS,
-  generateMealPlan,
+  PART_DAYS,
+  PART_SHOPPING_DAY,
+  WeekPart,
+  Day,
+  DayPlan,
+  generateStructuredMealPlan,
   getAlternateMeal,
-  WeekPlan,
+  extractUsedIds,
+  StructuredWeekPlan,
   MealType,
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
@@ -32,6 +38,13 @@ function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
 }
 
+function getTodayPart(): WeekPart {
+  const today = getTodayKey();
+  if (['Mon', 'Tue', 'Wed'].includes(today)) return 'A';
+  if (['Thu', 'Fri', 'Sat'].includes(today)) return 'B';
+  return 'C';
+}
+
 function getGreeting(): string {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
@@ -39,11 +52,23 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
+const PART_LABEL: Record<WeekPart, string> = {
+  A: 'Mon – Wed',
+  B: 'Thu – Sat',
+  C: 'Sunday',
+};
+
+const SHOPPING_BANNER: Partial<Record<string, string>> = {
+  Sun: 'Shop today — Part A starts tomorrow',
+  Wed: 'Shop today — Part B starts tomorrow',
+};
+
 export default function HomeScreen() {
   const { user } = useAuth();
 
-  const [plan, setPlan] = useState<WeekPlan | null>(null);
-  const [selectedDay, setSelectedDay] = useState(getTodayKey);
+  const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
+  const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
+  const [selectedDay, setSelectedDay] = useState<string>(getTodayKey);
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
   const [cravingText, setCravingText] = useState('');
 
@@ -63,28 +88,60 @@ export default function HomeScreen() {
   }
 
   function handleGenerate() {
-    const newPlan = generateMealPlan(user?.restrictions ?? [], buildKeywords());
+    const newPlan = generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords());
     setPlan(newPlan);
-    setSelectedDay(getTodayKey());
+    const todayPart = getTodayPart();
+    setSelectedPart(todayPart);
+    const today = getTodayKey();
+    const days = PART_DAYS[todayPart];
+    setSelectedDay(days.includes(today as Day) ? today : days[0]);
   }
 
-  function handleRefreshMeal(day: string, mealType: MealType) {
+  function handlePartChange(part: WeekPart) {
+    setSelectedPart(part);
+    const today = getTodayKey();
+    const days = PART_DAYS[part];
+    setSelectedDay(days.includes(today as Day) ? today : days[0]);
+  }
+
+  function handleRefreshMeal(part: WeekPart, day: string, mealType: MealType) {
     if (!plan) return;
-    const current = plan[day][mealType];
-    const alternate = getAlternateMeal(current, plan, user?.restrictions ?? []);
+    const usedIds = extractUsedIds(plan);
+
+    if (part === 'C') {
+      if (mealType !== 'lunch') return;
+      const current = plan.C[day].lunch;
+      const alternate = getAlternateMeal(current, usedIds, user?.restrictions ?? []);
+      setPlan(prev =>
+        prev
+          ? { ...prev, C: { ...prev.C, [day]: { ...prev.C[day], lunch: alternate } } }
+          : prev,
+      );
+      return;
+    }
+
+    const partPlan = plan[part] as Record<string, DayPlan>;
+    const current = partPlan[day][mealType];
+    const alternate = getAlternateMeal(current, usedIds, user?.restrictions ?? []);
     setPlan(prev =>
       prev
-        ? { ...prev, [day]: { ...prev[day], [mealType]: alternate } }
+        ? {
+            ...prev,
+            [part]: {
+              ...prev[part],
+              [day]: { ...(prev[part] as Record<string, DayPlan>)[day], [mealType]: alternate },
+            },
+          }
         : prev,
     );
   }
 
   function handleRegenerate() {
-    const newPlan = generateMealPlan(user?.restrictions ?? [], buildKeywords());
+    const newPlan = generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords());
     setPlan(newPlan);
   }
 
-  // ── Setup phase ──────────────────────────────────────────────────────────
+  // ── Setup phase ──────────────────────────────────────────────────────────────
   if (!plan) {
     return (
       <SafeAreaView style={styles.safe}>
@@ -151,9 +208,11 @@ export default function HomeScreen() {
     );
   }
 
-  // ── Plan phase ───────────────────────────────────────────────────────────
+  // ── Plan phase ───────────────────────────────────────────────────────────────
   const today = getTodayKey();
-  const dayMeals = plan[selectedDay];
+  const partDays = PART_DAYS[selectedPart];
+  const validDay = partDays.includes(selectedDay as Day) ? selectedDay : partDays[0];
+  const shoppingBanner = SHOPPING_BANNER[today] ?? null;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -170,15 +229,42 @@ export default function HomeScreen() {
           <Text style={styles.subText}>Here's your week</Text>
         </View>
 
-        {/* Day selector */}
+        {/* Part selector */}
+        <View style={styles.partRow}>
+          {(['A', 'B', 'C'] as WeekPart[]).map(part => {
+            const isSelected = selectedPart === part;
+            return (
+              <TouchableOpacity
+                key={part}
+                style={[styles.partChip, isSelected && styles.partChipOn]}
+                onPress={() => handlePartChange(part)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.partChipText, isSelected && styles.partChipTextOn]}>
+                  {PART_LABEL[part]}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {/* Shopping banner */}
+        {shoppingBanner && (
+          <View style={styles.shopBanner}>
+            <Ionicons name="bag-outline" size={13} color="#111111" />
+            <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
+          </View>
+        )}
+
+        {/* Day selector — only days in current part */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.dayRow}
           style={styles.dayScroll}
         >
-          {DAYS.map(day => {
-            const isSelected = selectedDay === day;
+          {partDays.map(day => {
+            const isSelected = validDay === day;
             const isToday = day === today;
             return (
               <TouchableOpacity
@@ -200,18 +286,30 @@ export default function HomeScreen() {
 
         {/* Meal cards */}
         <View style={styles.mealList}>
-          <MealCard
-            meal={dayMeals.breakfast}
-            onRefresh={() => handleRefreshMeal(selectedDay, 'breakfast')}
-          />
-          <MealCard
-            meal={dayMeals.lunch}
-            onRefresh={() => handleRefreshMeal(selectedDay, 'lunch')}
-          />
-          <MealCard
-            meal={dayMeals.dinner}
-            onRefresh={() => handleRefreshMeal(selectedDay, 'dinner')}
-          />
+          {selectedPart === 'C' ? (
+            <>
+              <MealCard
+                meal={plan.C[validDay].lunch}
+                onRefresh={() => handleRefreshMeal('C', validDay, 'lunch')}
+              />
+              <MealCard meal={plan.C[validDay].dinner} />
+            </>
+          ) : (
+            <>
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
+                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'breakfast')}
+              />
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
+                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'lunch')}
+              />
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
+                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'dinner')}
+              />
+            </>
+          )}
         </View>
 
         {/* Regenerate */}
@@ -231,23 +329,19 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFFFFF' },
   flex: { flex: 1 },
 
-  // ── Setup ──
   setupScroll: {
     flexGrow: 1,
     paddingHorizontal: 24,
     paddingBottom: 40,
   },
-
-  // ── Plan ──
   planScroll: {
     paddingHorizontal: 24,
     paddingBottom: 40,
   },
 
-  // ── Shared ──
   header: {
     paddingTop: 20,
-    marginBottom: 32,
+    marginBottom: 24,
   },
   greeting: {
     fontSize: 26,
@@ -261,7 +355,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // ── Setup sections ──
+  // ── Setup ──
   section: {
     marginBottom: 28,
   },
@@ -318,6 +412,49 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+  },
+
+  // ── Part selector ──
+  partRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  partChip: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 100,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+  },
+  partChipOn: {
+    backgroundColor: '#111111',
+  },
+  partChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#AAAAAA',
+  },
+  partChipTextOn: {
+    color: '#FFFFFF',
+  },
+
+  // ── Shopping banner ──
+  shopBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 100,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    alignSelf: 'flex-start',
+    marginBottom: 16,
+  },
+  shopBannerText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#111111',
   },
 
   // ── Day selector ──

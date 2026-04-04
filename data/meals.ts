@@ -2,6 +2,13 @@ import { DietaryRestriction } from '@/contexts/AuthContext';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner';
 
+export type MealComponents = {
+  protein: string;
+  carb: string;
+  sauce: string;
+  vegetable: string;
+};
+
 export type Meal = {
   id: string;
   name: string;
@@ -12,10 +19,63 @@ export type Meal = {
   dietaryTags: DietaryRestriction[];
   keywords: string[];
   emoji: string;
+  components: MealComponents;
 };
 
+export type WeekPart = 'A' | 'B' | 'C';
+
+export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+export type Day = typeof DAYS[number];
+
+export const PART_DAYS: Record<WeekPart, Day[]> = {
+  A: ['Mon', 'Tue', 'Wed'],
+  B: ['Thu', 'Fri', 'Sat'],
+  C: ['Sun'],
+};
+
+export const PART_SHOPPING_DAY: Record<'A' | 'B', Day> = {
+  A: 'Sun',
+  B: 'Wed',
+};
+
+export type EatingOutEntry = {
+  isEatingOut: true;
+  mealType: 'dinner';
+  emoji: string;
+  name: string;
+  description: string;
+};
+
+export const EATING_OUT: EatingOutEntry = {
+  isEatingOut: true,
+  mealType: 'dinner',
+  emoji: '🍽️',
+  name: 'Eating out',
+  description: 'Enjoy a meal at your favourite restaurant',
+};
+
+export type DayPlan = {
+  breakfast: Meal;
+  lunch: Meal;
+  dinner: Meal;
+};
+
+export type PartCDayPlan = {
+  lunch: Meal;
+  dinner: EatingOutEntry;
+};
+
+export type StructuredWeekPlan = {
+  A: Record<string, DayPlan>;
+  B: Record<string, DayPlan>;
+  C: Record<string, PartCDayPlan>;
+};
+
+// ── Legacy alias (kept so nothing else breaks) ────────────────────────────────
+export type WeekPlan = Record<string, DayPlan>;
+
 export const MEALS: Meal[] = [
-  // ── BREAKFAST ────────────────────────────────────────────────────────────
+  // ── BREAKFAST ────────────────────────────────────────────────────────────────
   {
     id: 'b1',
     name: 'Avocado Toast',
@@ -24,6 +84,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free'],
     keywords: ['light', 'fresh', 'quick', 'toast', 'trendy'],
     emoji: '🥑',
+    components: { protein: 'avocado', carb: 'sourdough', sauce: 'lemon & chili', vegetable: 'tomato' },
   },
   {
     id: 'b2',
@@ -33,6 +94,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian'],
     keywords: ['light', 'fresh', 'quick', 'sweet', 'fruity'],
     emoji: '🫙',
+    components: { protein: 'greek yogurt', carb: 'granola', sauce: 'honey', vegetable: 'mixed berries' },
   },
   {
     id: 'b3',
@@ -42,6 +104,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian'],
     keywords: ['hearty', 'quick', 'classic', 'comfort', 'protein'],
     emoji: '🍳',
+    components: { protein: 'eggs', carb: 'sourdough', sauce: 'butter', vegetable: 'tomato' },
   },
   {
     id: 'b4',
@@ -51,6 +114,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['light', 'warm', 'sweet', 'healthy', 'fruity'],
     emoji: '🫐',
+    components: { protein: 'almond milk', carb: 'oats', sauce: 'honey', vegetable: 'mixed berries' },
   },
   {
     id: 'b5',
@@ -60,6 +124,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['light', 'fresh', 'sweet', 'tropical', 'fruity'],
     emoji: '🍌',
+    components: { protein: 'banana', carb: 'granola', sauce: 'honey', vegetable: 'mixed berries' },
   },
   {
     id: 'b6',
@@ -69,6 +134,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'gluten-free', 'dairy-free'],
     keywords: ['hearty', 'savory', 'fresh', 'protein', 'veggie'],
     emoji: '🥚',
+    components: { protein: 'eggs', carb: 'whole wheat toast', sauce: 'olive oil', vegetable: 'peppers & mushrooms' },
   },
   {
     id: 'b7',
@@ -78,6 +144,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free'],
     keywords: ['quick', 'light', 'prep-ahead', 'sweet', 'easy'],
     emoji: '🥣',
+    components: { protein: 'chia seeds', carb: 'oats', sauce: 'almond milk', vegetable: 'banana' },
   },
   {
     id: 'b8',
@@ -87,6 +154,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['light', 'sweet', 'tropical', 'prep-ahead', 'fruity'],
     emoji: '🥥',
+    components: { protein: 'chia seeds', carb: 'coconut milk', sauce: 'honey', vegetable: 'mango' },
   },
   {
     id: 'b9',
@@ -96,6 +164,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['hearty', 'savory', 'veggie', 'spicy', 'protein'],
     emoji: '🧀',
+    components: { protein: 'tofu', carb: 'toast', sauce: 'turmeric sauce', vegetable: 'kale & tomatoes' },
   },
   {
     id: 'b10',
@@ -105,9 +174,10 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free'],
     keywords: ['hearty', 'sweet', 'quick', 'comfort', 'filling'],
     emoji: '🥜',
+    components: { protein: 'peanut butter', carb: 'bread', sauce: 'honey', vegetable: 'banana' },
   },
 
-  // ── LUNCH ─────────────────────────────────────────────────────────────────
+  // ── LUNCH ─────────────────────────────────────────────────────────────────────
   {
     id: 'l1',
     name: 'Caesar Salad',
@@ -116,6 +186,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian'],
     keywords: ['light', 'fresh', 'classic', 'salad'],
     emoji: '🥗',
+    components: { protein: 'parmesan', carb: 'croutons', sauce: 'caesar dressing', vegetable: 'romaine lettuce' },
   },
   {
     id: 'l2',
@@ -125,6 +196,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['dairy-free'],
     keywords: ['hearty', 'quick', 'fresh', 'protein', 'filling'],
     emoji: '🌯',
+    components: { protein: 'chicken', carb: 'tortilla', sauce: 'lime sauce', vegetable: 'avocado & lettuce' },
   },
   {
     id: 'l3',
@@ -134,6 +206,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['hearty', 'warm', 'comfort', 'filling', 'cozy'],
     emoji: '🍲',
+    components: { protein: 'red lentils', carb: 'bread', sauce: 'cumin & coriander', vegetable: 'spinach' },
   },
   {
     id: 'l4',
@@ -143,6 +216,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['healthy', 'fresh', 'filling', 'hearty', 'veggie'],
     emoji: '🥙',
+    components: { protein: 'chickpeas', carb: 'quinoa', sauce: 'tahini', vegetable: 'roasted vegetables' },
   },
   {
     id: 'l5',
@@ -152,6 +226,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['dairy-free'],
     keywords: ['quick', 'classic', 'hearty', 'protein', 'easy'],
     emoji: '🥪',
+    components: { protein: 'tuna', carb: 'whole grain bread', sauce: 'mayo', vegetable: 'lettuce & tomato' },
   },
   {
     id: 'l6',
@@ -161,6 +236,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian'],
     keywords: ['italian', 'comfort', 'cheesy', 'classic', 'indulgent'],
     emoji: '🍕',
+    components: { protein: 'mozzarella', carb: 'pizza dough', sauce: 'tomato sauce', vegetable: 'fresh basil' },
   },
   {
     id: 'l7',
@@ -170,6 +246,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['asian', 'fresh', 'light', 'noodles', 'cold'],
     emoji: '🍜',
+    components: { protein: 'tofu', carb: 'rice noodles', sauce: 'sesame dressing', vegetable: 'cucumber & mint' },
   },
   {
     id: 'l8',
@@ -179,6 +256,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'gluten-free'],
     keywords: ['mediterranean', 'light', 'fresh', 'greek', 'salad'],
     emoji: '🫒',
+    components: { protein: 'feta', carb: 'pita bread', sauce: 'olive oil & oregano', vegetable: 'tomatoes & cucumber' },
   },
   {
     id: 'l9',
@@ -188,6 +266,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['mexican', 'spicy', 'hearty', 'filling', 'bold'],
     emoji: '🌮',
+    components: { protein: 'black beans', carb: 'corn tortillas', sauce: 'salsa', vegetable: 'avocado' },
   },
   {
     id: 'l10',
@@ -197,9 +276,10 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'gluten-free'],
     keywords: ['light', 'warm', 'comfort', 'italian', 'cozy'],
     emoji: '🍅',
+    components: { protein: 'parmesan', carb: 'croutons', sauce: 'basil cream', vegetable: 'roasted tomatoes' },
   },
 
-  // ── DINNER ────────────────────────────────────────────────────────────────
+  // ── DINNER ────────────────────────────────────────────────────────────────────
   {
     id: 'd1',
     name: 'Spaghetti Bolognese',
@@ -208,6 +288,7 @@ export const MEALS: Meal[] = [
     dietaryTags: [],
     keywords: ['italian', 'comfort', 'hearty', 'classic', 'pasta', 'indulgent'],
     emoji: '🍝',
+    components: { protein: 'ground beef', carb: 'spaghetti', sauce: 'tomato ragù', vegetable: 'carrot & celery' },
   },
   {
     id: 'd2',
@@ -217,6 +298,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['gluten-free', 'dairy-free'],
     keywords: ['light', 'healthy', 'fresh', 'protein', 'fish', 'mediterranean'],
     emoji: '🐟',
+    components: { protein: 'salmon', carb: 'potatoes', sauce: 'lemon herb', vegetable: 'asparagus' },
   },
   {
     id: 'd3',
@@ -226,6 +308,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['gluten-free', 'dairy-free'],
     keywords: ['asian', 'quick', 'spicy', 'hearty', 'bold'],
     emoji: '🥢',
+    components: { protein: 'chicken', carb: 'rice', sauce: 'soy ginger', vegetable: 'broccoli & peppers' },
   },
   {
     id: 'd4',
@@ -235,6 +318,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['spicy', 'hearty', 'warm', 'indian', 'comfort', 'bold'],
     emoji: '🍛',
+    components: { protein: 'chickpeas', carb: 'rice', sauce: 'coconut curry', vegetable: 'sweet potato' },
   },
   {
     id: 'd5',
@@ -244,6 +328,7 @@ export const MEALS: Meal[] = [
     dietaryTags: [],
     keywords: ['mexican', 'spicy', 'hearty', 'comfort', 'bold', 'indulgent'],
     emoji: '🌮',
+    components: { protein: 'ground beef', carb: 'taco shells', sauce: 'salsa', vegetable: 'lettuce & tomato' },
   },
   {
     id: 'd6',
@@ -253,6 +338,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free'],
     keywords: ['italian', 'light', 'fresh', 'pasta', 'veggie'],
     emoji: '🍝',
+    components: { protein: 'parmesan', carb: 'penne', sauce: 'garlic olive oil', vegetable: 'seasonal veggies' },
   },
   {
     id: 'd7',
@@ -262,6 +348,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['gluten-free', 'dairy-free'],
     keywords: ['light', 'classic', 'hearty', 'protein', 'mediterranean'],
     emoji: '🍗',
+    components: { protein: 'chicken', carb: 'potatoes', sauce: 'lemon & rosemary', vegetable: 'green beans' },
   },
   {
     id: 'd8',
@@ -271,6 +358,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['spicy', 'hearty', 'mexican', 'comfort', 'filling', 'bold'],
     emoji: '🫘',
+    components: { protein: 'black beans', carb: 'rice', sauce: 'chipotle', vegetable: 'peppers & onion' },
   },
   {
     id: 'd9',
@@ -280,6 +368,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'gluten-free'],
     keywords: ['italian', 'comfort', 'hearty', 'creamy', 'indulgent'],
     emoji: '🍄',
+    components: { protein: 'parmesan', carb: 'arborio rice', sauce: 'white wine', vegetable: 'wild mushrooms' },
   },
   {
     id: 'd10',
@@ -289,6 +378,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'vegan', 'dairy-free', 'gluten-free'],
     keywords: ['asian', 'spicy', 'thai', 'aromatic', 'bold'],
     emoji: '🥬',
+    components: { protein: 'tofu', carb: 'rice', sauce: 'green curry paste', vegetable: 'zucchini' },
   },
   {
     id: 'd11',
@@ -298,6 +388,7 @@ export const MEALS: Meal[] = [
     dietaryTags: ['gluten-free', 'dairy-free'],
     keywords: ['light', 'healthy', 'fresh', 'fish', 'mediterranean'],
     emoji: '🐠',
+    components: { protein: 'cod', carb: 'potatoes', sauce: 'herb crust', vegetable: 'cherry tomatoes' },
   },
   {
     id: 'd12',
@@ -307,23 +398,11 @@ export const MEALS: Meal[] = [
     dietaryTags: ['vegetarian', 'gluten-free'],
     keywords: ['mediterranean', 'spicy', 'hearty', 'warm', 'bold'],
     emoji: '🍳',
+    components: { protein: 'eggs & chickpeas', carb: 'pita bread', sauce: 'spiced tomato', vegetable: 'feta & peppers' },
   },
 ];
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-export type DayPlan = {
-  breakfast: Meal;
-  lunch: Meal;
-  dinner: Meal;
-};
-
-export type WeekPlan = Record<string, DayPlan>;
-
-export const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
-export type Day = typeof DAYS[number];
-
-// ── Generation ────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function scoredPool(
   meals: Meal[],
@@ -357,6 +436,8 @@ function pickMeal(
   return pick;
 }
 
+// ── Legacy plan generation (kept for getAlternateMeal compatibility) ──────────
+
 export function generateMealPlan(
   restrictions: DietaryRestriction[],
   cravingKeywords: string[],
@@ -364,13 +445,10 @@ export function generateMealPlan(
   const compatible = MEALS.filter(m =>
     restrictions.every(r => m.dietaryTags.includes(r)),
   );
-  // Fall back to full list if restrictions leave too few options
   const pool = compatible.length >= 15 ? compatible : MEALS;
-
   const scored = scoredPool(pool, cravingKeywords);
   const usedIds = new Set<string>();
   const plan: WeekPlan = {};
-
   for (const day of DAYS) {
     plan[day] = {
       breakfast: pickMeal(scored, 'breakfast', usedIds),
@@ -378,20 +456,93 @@ export function generateMealPlan(
       dinner: pickMeal(scored, 'dinner', usedIds),
     };
   }
-
   return plan;
+}
+
+// ── Structured part generation ────────────────────────────────────────────────
+
+function pickDominantProtein(pool: Meal[]): string | null {
+  const freq = new Map<string, number>();
+  for (const m of pool) {
+    const p = m.components.protein;
+    freq.set(p, (freq.get(p) ?? 0) + 1);
+  }
+  const candidates = [...freq.entries()]
+    .filter(([, count]) => count >= 2)
+    .map(([protein]) => protein);
+  return candidates.length > 0
+    ? candidates[Math.floor(Math.random() * candidates.length)]
+    : null;
+}
+
+function generatePartPlan(
+  days: Day[],
+  pool: Meal[],
+  keywords: string[],
+  usedIds: Set<string>,
+): Record<string, DayPlan> {
+  const dominant = pickDominantProtein(pool);
+  const scored = scoredPool(pool, keywords).map(m => ({
+    ...m,
+    score: dominant && m.components.protein === dominant ? m.score + 4 : m.score,
+  }));
+
+  const plan: Record<string, DayPlan> = {};
+  for (const day of days) {
+    plan[day] = {
+      breakfast: pickMeal(scored, 'breakfast', usedIds),
+      lunch: pickMeal(scored, 'lunch', usedIds),
+      dinner: pickMeal(scored, 'dinner', usedIds),
+    };
+  }
+  return plan;
+}
+
+export function generateStructuredMealPlan(
+  restrictions: DietaryRestriction[],
+  keywords: string[],
+): StructuredWeekPlan {
+  const compatible = MEALS.filter(m =>
+    restrictions.every(r => m.dietaryTags.includes(r)),
+  );
+  const pool = compatible.length >= 15 ? compatible : MEALS;
+  const usedIds = new Set<string>();
+
+  const partA = generatePartPlan(PART_DAYS.A, pool, keywords, usedIds);
+  const partB = generatePartPlan(PART_DAYS.B, pool, keywords, usedIds);
+
+  // Part C: one cooked lunch + eating-out dinner
+  const cScored = scoredPool(pool, keywords);
+  const cLunch = pickMeal(cScored, 'lunch', usedIds);
+  const partC: Record<string, PartCDayPlan> = {
+    Sun: { lunch: cLunch, dinner: EATING_OUT },
+  };
+
+  return { A: partA, B: partB, C: partC };
+}
+
+// ── Alternate meal (refresh) ──────────────────────────────────────────────────
+
+export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
+  const ids = new Set<string>();
+  for (const part of ['A', 'B'] as const) {
+    for (const dayPlan of Object.values(plan[part])) {
+      ids.add(dayPlan.breakfast.id);
+      ids.add(dayPlan.lunch.id);
+      ids.add(dayPlan.dinner.id);
+    }
+  }
+  for (const dayPlan of Object.values(plan.C)) {
+    ids.add(dayPlan.lunch.id);
+  }
+  return ids;
 }
 
 export function getAlternateMeal(
   current: Meal,
-  plan: WeekPlan,
+  usedIds: Set<string>,
   restrictions: DietaryRestriction[],
 ): Meal {
-  const usedIds = new Set(
-    Object.values(plan).flatMap(d => [d.breakfast.id, d.lunch.id, d.dinner.id]),
-  );
-
-  // Prefer: compatible + not already in plan
   const fresh = MEALS.filter(
     m =>
       m.mealType === current.mealType &&
@@ -401,7 +552,6 @@ export function getAlternateMeal(
   );
   if (fresh.length > 0) return fresh[Math.floor(Math.random() * fresh.length)];
 
-  // Then: compatible (may repeat another slot)
   const compatible = MEALS.filter(
     m =>
       m.mealType === current.mealType &&
@@ -411,7 +561,6 @@ export function getAlternateMeal(
   if (compatible.length > 0)
     return compatible[Math.floor(Math.random() * compatible.length)];
 
-  // Last resort: any other meal of same type
   const any = MEALS.filter(m => m.mealType === current.mealType && m.id !== current.id);
   return any.length > 0 ? any[Math.floor(Math.random() * any.length)] : current;
 }

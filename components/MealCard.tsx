@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Meal, MealType } from '@/data/meals';
+import { Meal, EatingOutEntry, MealType } from '@/data/meals';
 
 const TYPE_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -17,10 +17,9 @@ const TYPE_ICON: Record<MealType, IoniconName> = {
   dinner: 'moon-outline',
 };
 
-type Props = {
-  meal: Meal;
-  onRefresh: () => void;
-};
+type Props =
+  | { meal: Meal; onRefresh: () => void }
+  | { meal: EatingOutEntry; onRefresh?: never };
 
 export default function MealCard({ meal, onRefresh }: Props) {
   const spinAnim = useRef(new Animated.Value(0)).current;
@@ -32,7 +31,7 @@ export default function MealCard({ meal, onRefresh }: Props) {
       useNativeDriver: true,
     }).start(() => {
       spinAnim.setValue(0);
-      onRefresh();
+      onRefresh?.();
     });
   }
 
@@ -41,9 +40,33 @@ export default function MealCard({ meal, onRefresh }: Props) {
     outputRange: ['0deg', '360deg'],
   });
 
+  if ('isEatingOut' in meal) {
+    return (
+      <View style={[styles.card, styles.cardEatingOut]}>
+        <View style={styles.topRow}>
+          <View style={styles.typeRow}>
+            <Ionicons name="moon-outline" size={13} color="#888888" />
+            <Text style={[styles.typeLabel, styles.typeLabelLight]}>Dinner</Text>
+          </View>
+          <View style={styles.eatingOutBadge}>
+            <Text style={styles.eatingOutBadgeText}>Eating out</Text>
+          </View>
+        </View>
+        <View style={styles.body}>
+          <Text style={styles.emoji}>{meal.emoji}</Text>
+          <View style={styles.textBlock}>
+            <Text style={[styles.name, styles.nameLight]}>{meal.name}</Text>
+            <Text style={[styles.description, styles.descriptionLight]}>
+              {meal.description}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.card}>
-      {/* Top row: meal type label + refresh button */}
       <View style={styles.topRow}>
         <View style={styles.typeRow}>
           <Ionicons name={TYPE_ICON[meal.mealType]} size={13} color="#BBBBBB" />
@@ -61,7 +84,6 @@ export default function MealCard({ meal, onRefresh }: Props) {
         </TouchableOpacity>
       </View>
 
-      {/* Body: emoji + name + description */}
       <View style={styles.body}>
         <Text style={styles.emoji}>{meal.emoji}</Text>
         <View style={styles.textBlock}>
@@ -74,7 +96,6 @@ export default function MealCard({ meal, onRefresh }: Props) {
         </View>
       </View>
 
-      {/* Footer badges */}
       <View style={styles.badgeRow}>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{meal.prepTime} min</Text>
@@ -94,6 +115,9 @@ const styles = StyleSheet.create({
     padding: 18,
     gap: 14,
   },
+  cardEatingOut: {
+    backgroundColor: '#111111',
+  },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -111,6 +135,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
+  typeLabelLight: {
+    color: '#666666',
+  },
   refreshBtn: {
     width: 32,
     height: 32,
@@ -118,6 +145,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#EBEBEB',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  eatingOutBadge: {
+    backgroundColor: '#2A2A2A',
+    borderRadius: 100,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  eatingOutBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#888888',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
   body: {
     flexDirection: 'row',
@@ -138,10 +178,16 @@ const styles = StyleSheet.create({
     color: '#111111',
     letterSpacing: -0.2,
   },
+  nameLight: {
+    color: '#FFFFFF',
+  },
   description: {
     fontSize: 13,
     color: '#AAAAAA',
     lineHeight: 19,
+  },
+  descriptionLight: {
+    color: '#666666',
   },
   badgeRow: {
     flexDirection: 'row',
