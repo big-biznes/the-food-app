@@ -538,6 +538,41 @@ export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
   return ids;
 }
 
+export function extractPlanIngredients(plan: StructuredWeekPlan): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  function push(raw: string) {
+    for (const part of raw.split(/\s*&\s*/).map(s => s.trim())) {
+      const key = part.toLowerCase();
+      if (part && !seen.has(key)) {
+        seen.add(key);
+        result.push(part);
+      }
+    }
+  }
+
+  for (const partKey of ['A', 'B'] as const) {
+    for (const dayPlan of Object.values(plan[partKey])) {
+      for (const meal of [dayPlan.breakfast, dayPlan.lunch, dayPlan.dinner]) {
+        push(meal.components.protein);
+        push(meal.components.carb);
+        push(meal.components.sauce);
+        push(meal.components.vegetable);
+      }
+    }
+  }
+  for (const dayPlan of Object.values(plan.C)) {
+    const { lunch } = dayPlan;
+    push(lunch.components.protein);
+    push(lunch.components.carb);
+    push(lunch.components.sauce);
+    push(lunch.components.vegetable);
+  }
+
+  return result;
+}
+
 export function getAlternateMeal(
   current: Meal,
   usedIds: Set<string>,

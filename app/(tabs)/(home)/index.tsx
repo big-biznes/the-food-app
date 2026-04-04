@@ -8,10 +8,13 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
+import { useShoppingContext } from '@/contexts/ShoppingContext';
 import {
   PART_DAYS,
   PART_SHOPPING_DAY,
@@ -21,6 +24,7 @@ import {
   generateStructuredMealPlan,
   getAlternateMeal,
   extractUsedIds,
+  extractPlanIngredients,
   StructuredWeekPlan,
   MealType,
 } from '@/data/meals';
@@ -65,13 +69,16 @@ const SHOPPING_BANNER: Partial<Record<string, string>> = {
 
 export default function HomeScreen() {
   const { user } = useAuth();
+  const { addShoppingItems } = useShoppingContext();
 
   const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
   const [selectedDay, setSelectedDay] = useState<string>(getTodayKey);
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
   const [cravingText, setCravingText] = useState('');
+  const [showSheet, setShowSheet] = useState(false);
 
+  const insets = useSafeAreaInsets();
   const firstName = user?.name?.split(' ')[0] || 'there';
 
   function toggleCraving(chip: string) {
@@ -87,14 +94,23 @@ export default function HomeScreen() {
     ];
   }
 
-  function handleGenerate() {
-    const newPlan = generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords());
+  function applyNewPlan(newPlan: StructuredWeekPlan) {
+    addShoppingItems(extractPlanIngredients(newPlan));
     setPlan(newPlan);
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);
     const today = getTodayKey();
     const days = PART_DAYS[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
+  }
+
+  function handleGenerate() {
+    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords()));
+  }
+
+  function handleGenerateFromSheet() {
+    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords()));
+    setShowSheet(false);
   }
 
   function handlePartChange(part: WeekPart) {
@@ -129,16 +145,14 @@ export default function HomeScreen() {
             ...prev,
             [part]: {
               ...prev[part],
-              [day]: { ...(prev[part] as Record<string, DayPlan>)[day], [mealType]: alternate },
+              [day]: {
+                ...(prev[part] as Record<string, DayPlan>)[day],
+                [mealType]: alternate,
+              },
             },
           }
         : prev,
     );
-  }
-
-  function handleRegenerate() {
-    const newPlan = generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords());
-    setPlan(newPlan);
   }
 
   // ── Setup phase ──────────────────────────────────────────────────────────────
@@ -172,9 +186,7 @@ export default function HomeScreen() {
                       onPress={() => toggleCraving(chip)}
                       activeOpacity={0.7}
                     >
-                      <Text style={[styles.chipText, on && styles.chipTextOn]}>
-                        {chip}
-                      </Text>
+                      <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
                     </TouchableOpacity>
                   );
                 })}
@@ -256,7 +268,7 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {/* Day selector — only days in current part */}
+        {/* Day selector */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -311,16 +323,89 @@ export default function HomeScreen() {
             </>
           )}
         </View>
-
-        {/* Regenerate */}
-        <TouchableOpacity
-          style={styles.regenBtn}
-          onPress={handleRegenerate}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.regenBtnText}>Regenerate full plan</Text>
-        </TouchableOpacity>
       </ScrollView>
+
+      {/* FAB */}
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setShowSheet(true)}
+        activeOpacity={0.85}
+      >
+        <Text style={styles.fabText}>New Plan</Text>
+      </TouchableOpacity>
+
+      {/* Craving sheet modal */}
+      <Modal
+        visible={showSheet}
+        animationType="slide"
+        transparent
+        presentationStyle="overFullScreen"
+        statusBarTranslucent
+        onRequestClose={() => setShowSheet(false)}
+      >
+        <View style={sheet.overlay}>
+          <TouchableOpacity
+            style={sheet.backdrop}
+            activeOpacity={1}
+            onPress={() => setShowSheet(false)}
+          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={sheet.avoidingView}
+          >
+            <View style={sheet.card}>
+              {/* Handle */}
+              <View style={sheet.handle} />
+
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+              >
+                <Text style={sheet.title}>New plan</Text>
+                <Text style={sheet.hint}>What are you craving this week?</Text>
+
+                <View style={sheet.chipGrid}>
+                  {CRAVING_CHIPS.map(chip => {
+                    const on = selectedCravings.includes(chip);
+                    return (
+                      <TouchableOpacity
+                        key={chip}
+                        style={[styles.chip, on && styles.chipOn]}
+                        onPress={() => toggleCraving(chip)}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+
+                <TextInput
+                  style={sheet.input}
+                  placeholder="e.g. something with pasta, no mushrooms…"
+                  placeholderTextColor="#C5C5C5"
+                  value={cravingText}
+                  onChangeText={setCravingText}
+                  multiline
+                  numberOfLines={3}
+                  textAlignVertical="top"
+                />
+
+                <TouchableOpacity
+                  style={styles.primaryBtn}
+                  onPress={handleGenerateFromSheet}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.primaryBtnText}>Generate</Text>
+                </TouchableOpacity>
+              </ScrollView>
+
+              {/* Fills the home-indicator / bottom-nav zone */}
+              <View style={{ height: insets.bottom || 34 }} />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -336,62 +421,27 @@ const styles = StyleSheet.create({
   },
   planScroll: {
     paddingHorizontal: 24,
-    paddingBottom: 40,
+    paddingBottom: 120, // space for FAB
   },
 
-  header: {
-    paddingTop: 20,
-    marginBottom: 24,
-  },
+  header: { paddingTop: 20, marginBottom: 24 },
   greeting: {
     fontSize: 26,
     fontWeight: '700',
     color: '#111111',
     letterSpacing: -0.3,
   },
-  subText: {
-    fontSize: 15,
-    color: '#AAAAAA',
-    marginTop: 4,
-  },
+  subText: { fontSize: 15, color: '#AAAAAA', marginTop: 4 },
 
-  // ── Setup ──
-  section: {
-    marginBottom: 28,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#111111',
-    marginBottom: 4,
-  },
-  sectionHint: {
-    fontSize: 14,
-    color: '#AAAAAA',
-    marginBottom: 16,
-  },
-  chipGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  chip: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-  },
-  chipOn: {
-    backgroundColor: '#111111',
-  },
-  chipText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#111111',
-  },
-  chipTextOn: {
-    color: '#FFFFFF',
-  },
+  // Setup
+  section: { marginBottom: 28 },
+  sectionTitle: { fontSize: 18, fontWeight: '700', color: '#111111', marginBottom: 4 },
+  sectionHint: { fontSize: 14, color: '#AAAAAA', marginBottom: 16 },
+  chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  chip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 100, backgroundColor: '#F5F5F5' },
+  chipOn: { backgroundColor: '#111111' },
+  chipText: { fontSize: 14, fontWeight: '500', color: '#111111' },
+  chipTextOn: { color: '#FFFFFF' },
   cravingInput: {
     backgroundColor: '#F5F5F5',
     borderRadius: 16,
@@ -408,18 +458,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 4,
   },
-  primaryBtnText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  primaryBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 
-  // ── Part selector ──
-  partRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
-  },
+  // Part selector
+  partRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
   partChip: {
     flex: 1,
     paddingVertical: 10,
@@ -427,19 +469,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     alignItems: 'center',
   },
-  partChipOn: {
-    backgroundColor: '#111111',
-  },
-  partChipText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#AAAAAA',
-  },
-  partChipTextOn: {
-    color: '#FFFFFF',
-  },
+  partChipOn: { backgroundColor: '#111111' },
+  partChipText: { fontSize: 12, fontWeight: '600', color: '#AAAAAA' },
+  partChipTextOn: { color: '#FFFFFF' },
 
-  // ── Shopping banner ──
+  // Shopping banner
   shopBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -451,19 +485,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: 16,
   },
-  shopBannerText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#111111',
-  },
+  shopBannerText: { fontSize: 13, fontWeight: '500', color: '#111111' },
 
-  // ── Day selector ──
-  dayScroll: {
-    marginBottom: 24,
-  },
-  dayRow: {
-    gap: 8,
-  },
+  // Day selector
+  dayScroll: { marginBottom: 24 },
+  dayRow: { gap: 8 },
   dayChip: {
     paddingHorizontal: 16,
     paddingVertical: 10,
@@ -472,45 +498,95 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 52,
   },
-  dayChipOn: {
-    backgroundColor: '#111111',
-  },
-  dayChipText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#AAAAAA',
-  },
-  dayChipTextOn: {
-    color: '#FFFFFF',
-  },
+  dayChipOn: { backgroundColor: '#111111' },
+  dayChipText: { fontSize: 13, fontWeight: '600', color: '#AAAAAA' },
+  dayChipTextOn: { color: '#FFFFFF' },
   todayDot: {
-    width: 4,
+    width: 4, height: 4, borderRadius: 2,
+    backgroundColor: '#111111', marginTop: 3,
+  },
+  todayDotOn: { backgroundColor: '#FFFFFF' },
+
+  // Meal list
+  mealList: { gap: 16, marginBottom: 32 },
+
+  // FAB
+  fab: {
+    position: 'absolute',
+    bottom: 28,
+    alignSelf: 'center',
+    backgroundColor: '#111111',
+    borderRadius: 100,
+    paddingHorizontal: 36,
+    paddingVertical: 17,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  fabText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: -0.2,
+  },
+});
+
+const sheet = StyleSheet.create({
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  avoidingView: {
+    width: '100%',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: 24,
+    paddingTop: 12,
+    maxHeight: '85%',
+  },
+  handle: {
+    width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#111111',
-    marginTop: 3,
+    backgroundColor: '#E0E0E0',
+    alignSelf: 'center',
+    marginBottom: 24,
   },
-  todayDotOn: {
-    backgroundColor: '#FFFFFF',
-  },
-
-  // ── Meal list ──
-  mealList: {
-    gap: 16,
-    marginBottom: 32,
-  },
-
-  // ── Regenerate ──
-  regenBtn: {
-    borderWidth: 1.5,
-    borderColor: '#E5E5E5',
-    borderRadius: 100,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  regenBtnText: {
-    fontSize: 15,
-    fontWeight: '600',
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
     color: '#111111',
+    letterSpacing: -0.3,
+    marginBottom: 4,
+  },
+  hint: {
+    fontSize: 14,
+    color: '#AAAAAA',
+    marginBottom: 20,
+  },
+  chipGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 20,
+  },
+  input: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 16,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    fontSize: 15,
+    color: '#111111',
+    minHeight: 80,
+    marginBottom: 20,
   },
 });

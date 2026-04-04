@@ -11,87 +11,41 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-
-type ShoppingItem = {
-  id: string;
-  name: string;
-  checked: boolean;
-};
-
-type PantryItem = {
-  id: string;
-  name: string;
-};
-
-let nextId = 1;
-function uid() { return String(nextId++); }
+import {
+  useShoppingContext,
+  ShoppingItem,
+  PantryItem,
+} from '@/contexts/ShoppingContext';
 
 export default function ShoppingScreen() {
+  const {
+    shoppingItems,
+    pantryItems,
+    addShoppingItem,
+    toggleShoppingItem,
+    deleteShoppingItem,
+    clearChecked,
+    finishShopping,
+    addPantryItem,
+    deletePantryItem,
+  } = useShoppingContext();
+
   const [activeTab, setActiveTab] = useState<'list' | 'pantry'>('list');
-
-  // Shopping list
-  const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([]);
   const [shoppingInput, setShoppingInput] = useState('');
-
-  // Pantry / inventory
-  const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
   const [pantryInput, setPantryInput] = useState('');
 
-  // ── Shopping list actions ────────────────────────────────────────────────
-
-  function addShoppingItem() {
-    const name = shoppingInput.trim();
-    if (!name) return;
-    setShoppingItems(prev => [{ id: uid(), name, checked: false }, ...prev]);
+  function handleAddShoppingItem() {
+    addShoppingItem(shoppingInput);
     setShoppingInput('');
   }
 
-  function toggleShoppingItem(id: string) {
-    setShoppingItems(prev =>
-      prev.map(item => item.id === id ? { ...item, checked: !item.checked } : item),
-    );
-  }
-
-  function deleteShoppingItem(id: string) {
-    setShoppingItems(prev => prev.filter(item => item.id !== id));
-  }
-
-  function clearChecked() {
-    setShoppingItems(prev => prev.filter(item => !item.checked));
-  }
-
-  function finishShopping() {
-    const bought = shoppingItems.filter(i => i.checked);
-    if (bought.length === 0) return;
-    setPantryItems(prev => {
-      const existingNames = new Set(prev.map(p => p.name.toLowerCase()));
-      const newItems = bought
-        .filter(i => !existingNames.has(i.name.toLowerCase()))
-        .map(i => ({ id: uid(), name: i.name }));
-      return [...newItems, ...prev];
-    });
-    setShoppingItems(prev => prev.filter(i => !i.checked));
-  }
-
-  // ── Pantry actions ───────────────────────────────────────────────────────
-
-  function addPantryItem() {
-    const name = pantryInput.trim();
-    if (!name) return;
-    setPantryItems(prev => [{ id: uid(), name }, ...prev]);
+  function handleAddPantryItem() {
+    addPantryItem(pantryInput);
     setPantryInput('');
   }
 
-  function deletePantryItem(id: string) {
-    setPantryItems(prev => prev.filter(item => item.id !== id));
-  }
-
-  // ── Derived ──────────────────────────────────────────────────────────────
-
   const unchecked = shoppingItems.filter(i => !i.checked);
   const checked = shoppingItems.filter(i => i.checked);
-
-  // ── Render ───────────────────────────────────────────────────────────────
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -128,7 +82,6 @@ export default function ShoppingScreen() {
 
         {activeTab === 'list' ? (
           <>
-            {/* Add item row */}
             <View style={styles.addRow}>
               <TextInput
                 style={styles.addInput}
@@ -136,63 +89,75 @@ export default function ShoppingScreen() {
                 placeholderTextColor="#C5C5C5"
                 value={shoppingInput}
                 onChangeText={setShoppingInput}
-                onSubmitEditing={addShoppingItem}
+                onSubmitEditing={handleAddShoppingItem}
                 returnKeyType="done"
               />
-              <TouchableOpacity style={styles.addBtn} onPress={addShoppingItem} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.addBtn} onPress={handleAddShoppingItem} activeOpacity={0.8}>
                 <Ionicons name="add" size={22} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
 
-            <ScrollView
-              style={styles.flex}
-              contentContainerStyle={[styles.listContent, checked.length > 0 && styles.listContentWithFab]}
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled"
-            >
-              {shoppingItems.length === 0 && (
-                <View style={styles.emptyState}>
-                  <Text style={styles.emptyIcon}>🛒</Text>
-                  <Text style={styles.emptyText}>Your list is empty</Text>
-                  <Text style={styles.emptyHint}>Add items above to get started</Text>
-                </View>
-              )}
-
-              {/* Unchecked items */}
-              {unchecked.map(item => (
-                <ShoppingRow
-                  key={item.id}
-                  item={item}
-                  onToggle={() => toggleShoppingItem(item.id)}
-                  onDelete={() => deleteShoppingItem(item.id)}
-                />
-              ))}
-
-              {/* Checked items section */}
-              {checked.length > 0 && (
-                <>
-                  <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionLabel}>In cart ({checked.length})</Text>
-                    <TouchableOpacity onPress={clearChecked} activeOpacity={0.7}>
-                      <Text style={styles.clearText}>Clear</Text>
-                    </TouchableOpacity>
+            <View style={styles.flex}>
+              <ScrollView
+                style={styles.flex}
+                contentContainerStyle={[
+                  styles.listContent,
+                  checked.length > 0 && styles.listContentWithFab,
+                ]}
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+              >
+                {shoppingItems.length === 0 && (
+                  <View style={styles.emptyState}>
+                    <Text style={styles.emptyIcon}>🛒</Text>
+                    <Text style={styles.emptyText}>Your list is empty</Text>
+                    <Text style={styles.emptyHint}>Add items above to get started</Text>
                   </View>
-                  {checked.map(item => (
-                    <ShoppingRow
-                      key={item.id}
-                      item={item}
-                      onToggle={() => toggleShoppingItem(item.id)}
-                      onDelete={() => deleteShoppingItem(item.id)}
-                    />
-                  ))}
-                </>
-              )}
-            </ScrollView>
+                )}
 
+                {unchecked.map(item => (
+                  <ShoppingRow
+                    key={item.id}
+                    item={item}
+                    onToggle={() => toggleShoppingItem(item.id)}
+                    onDelete={() => deleteShoppingItem(item.id)}
+                  />
+                ))}
+
+                {checked.length > 0 && (
+                  <>
+                    <View style={styles.sectionHeader}>
+                      <Text style={styles.sectionLabel}>In cart ({checked.length})</Text>
+                      <TouchableOpacity onPress={clearChecked} activeOpacity={0.7}>
+                        <Text style={styles.clearText}>Clear</Text>
+                      </TouchableOpacity>
+                    </View>
+                    {checked.map(item => (
+                      <ShoppingRow
+                        key={item.id}
+                        item={item}
+                        onToggle={() => toggleShoppingItem(item.id)}
+                        onDelete={() => deleteShoppingItem(item.id)}
+                      />
+                    ))}
+                  </>
+                )}
+              </ScrollView>
+
+              {checked.length > 0 && (
+                <TouchableOpacity
+                  style={styles.fab}
+                  onPress={finishShopping}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.fabText}>Finish shopping</Text>
+                  <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              )}
+            </View>
           </>
         ) : (
           <>
-            {/* Add pantry item row */}
             <View style={styles.addRow}>
               <TextInput
                 style={styles.addInput}
@@ -200,10 +165,10 @@ export default function ShoppingScreen() {
                 placeholderTextColor="#C5C5C5"
                 value={pantryInput}
                 onChangeText={setPantryInput}
-                onSubmitEditing={addPantryItem}
+                onSubmitEditing={handleAddPantryItem}
                 returnKeyType="done"
               />
-              <TouchableOpacity style={styles.addBtn} onPress={addPantryItem} activeOpacity={0.8}>
+              <TouchableOpacity style={styles.addBtn} onPress={handleAddPantryItem} activeOpacity={0.8}>
                 <Ionicons name="add" size={22} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
@@ -233,22 +198,9 @@ export default function ShoppingScreen() {
           </>
         )}
       </KeyboardAvoidingView>
-
-      {activeTab === 'list' && checked.length > 0 && (
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={finishShopping}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.fabText}>Finish shopping</Text>
-          <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
-      )}
     </SafeAreaView>
   );
 }
-
-// ── Sub-components ────────────────────────────────────────────────────────────
 
 function ShoppingRow({
   item,
@@ -310,8 +262,6 @@ function PantryRow({
   );
 }
 
-// ── Styles ────────────────────────────────────────────────────────────────────
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFFFFF' },
   flex: { flex: 1 },
@@ -342,17 +292,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 100,
   },
-  segmentBtnOn: {
-    backgroundColor: '#111111',
-  },
-  segmentText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#AAAAAA',
-  },
-  segmentTextOn: {
-    color: '#FFFFFF',
-  },
+  segmentBtnOn: { backgroundColor: '#111111' },
+  segmentText: { fontSize: 14, fontWeight: '600', color: '#AAAAAA' },
+  segmentTextOn: { color: '#FFFFFF' },
 
   addRow: {
     flexDirection: 'row',
@@ -378,32 +320,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  listContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 40,
-  },
-  listContentWithFab: {
-    paddingBottom: 100,
-  },
-
-  fab: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-    backgroundColor: '#111111',
-    borderRadius: 100,
-    paddingVertical: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  listContent: { paddingHorizontal: 24, paddingBottom: 40 },
+  listContentWithFab: { paddingBottom: 100 },
 
   sectionHeader: {
     flexDirection: 'row',
@@ -419,30 +337,27 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
-  clearText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#111111',
-  },
+  clearText: { fontSize: 13, fontWeight: '600', color: '#111111' },
 
-  emptyState: {
+  emptyState: { alignItems: 'center', marginTop: 64 },
+  emptyIcon: { fontSize: 48, marginBottom: 16 },
+  emptyText: { fontSize: 17, fontWeight: '600', color: '#111111', marginBottom: 6 },
+  emptyHint: { fontSize: 14, color: '#AAAAAA' },
+
+  fab: {
+    position: 'absolute',
+    bottom: 20,
+    left: 24,
+    right: 24,
+    backgroundColor: '#111111',
+    borderRadius: 100,
+    paddingVertical: 18,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 64,
+    justifyContent: 'center',
+    gap: 10,
   },
-  emptyIcon: {
-    fontSize: 48,
-    marginBottom: 16,
-  },
-  emptyText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#111111',
-    marginBottom: 6,
-  },
-  emptyHint: {
-    fontSize: 14,
-    color: '#AAAAAA',
-  },
+  fabText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });
 
 const rowStyles = StyleSheet.create({
@@ -463,10 +378,7 @@ const rowStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkboxChecked: {
-    backgroundColor: '#111111',
-    borderColor: '#111111',
-  },
+  checkboxChecked: { backgroundColor: '#111111', borderColor: '#111111' },
   pantryDot: {
     width: 8,
     height: 8,
@@ -474,14 +386,6 @@ const rowStyles = StyleSheet.create({
     backgroundColor: '#111111',
     marginHorizontal: 7,
   },
-  itemName: {
-    flex: 1,
-    fontSize: 15,
-    color: '#111111',
-    fontWeight: '500',
-  },
-  itemNameChecked: {
-    color: '#AAAAAA',
-    textDecorationLine: 'line-through',
-  },
+  itemName: { flex: 1, fontSize: 15, color: '#111111', fontWeight: '500' },
+  itemNameChecked: { color: '#AAAAAA', textDecorationLine: 'line-through' },
 });

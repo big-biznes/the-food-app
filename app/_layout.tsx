@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ShoppingProvider } from '@/contexts/ShoppingContext';
 
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <ShoppingProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </ShoppingProvider>
     </AuthProvider>
   );
 }
