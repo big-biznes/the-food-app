@@ -442,8 +442,7 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </ScrollView>
 
-              {/* Extends card into the home-indicator zone */}
-              <View style={{ height: Math.max(insets.bottom, 34) }} />
+              <View style={{ height: insets.bottom + 8 }} />
             </View>
           </Animated.View>
         </KeyboardAvoidingView>
@@ -592,7 +591,6 @@ const sheet = StyleSheet.create({
     borderTopRightRadius: 28,
     paddingHorizontal: 24,
     paddingTop: 12,
-    maxHeight: '85%',
   },
   handle: {
     width: 40,
