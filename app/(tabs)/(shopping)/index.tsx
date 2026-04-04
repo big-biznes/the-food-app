@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, memo, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import {
   useShoppingContext,
@@ -30,25 +32,58 @@ export default function ShoppingScreen() {
     deletePantryItem,
   } = useShoppingContext();
 
+  const insets = useSafeAreaInsets();
+  const toastAnim = useRef(new Animated.Value(-80)).current;
+  const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showToast = useCallback(() => {
+    if (toastTimeout.current) clearTimeout(toastTimeout.current);
+    Animated.spring(toastAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      damping: 18,
+      stiffness: 200,
+    }).start();
+    toastTimeout.current = setTimeout(() => {
+      Animated.timing(toastAnim, {
+        toValue: -80,
+        duration: 260,
+        useNativeDriver: true,
+      }).start();
+    }, 2800);
+  }, [toastAnim]);
+
+  const handleFinishShopping = useCallback(() => {
+    finishShopping();
+    showToast();
+  }, [finishShopping, showToast]);
+
   const [activeTab, setActiveTab] = useState<'list' | 'pantry'>('list');
   const [shoppingInput, setShoppingInput] = useState('');
   const [pantryInput, setPantryInput] = useState('');
 
-  function handleAddShoppingItem() {
+  const handleAddShoppingItem = useCallback(() => {
     addShoppingItem(shoppingInput);
     setShoppingInput('');
-  }
+  }, [addShoppingItem, shoppingInput]);
 
-  function handleAddPantryItem() {
+  const handleAddPantryItem = useCallback(() => {
     addPantryItem(pantryInput);
     setPantryInput('');
-  }
+  }, [addPantryItem, pantryInput]);
 
-  const unchecked = shoppingItems.filter(i => !i.checked);
-  const checked = shoppingItems.filter(i => i.checked);
+  const checked = useMemo(() => shoppingItems.filter(i => i.checked), [shoppingItems]);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      <Animated.View
+        style={[styles.toast, { top: insets.top + 12, transform: [{ translateY: toastAnim }] }]}
+        pointerEvents="none"
+      >
+        <Ionicons name="checkmark-circle" size={18} color="#FFFFFF" />
+        <Text style={styles.toastText}>Ingredients added to pantry</Text>
+      </Animated.View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -98,6 +133,15 @@ export default function ShoppingScreen() {
             </View>
 
             <View style={styles.flex}>
+              {checked.length > 0 && (
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionLabel}>{checked.length} checked</Text>
+                  <TouchableOpacity onPress={clearChecked} activeOpacity={0.7}>
+                    <Text style={styles.clearText}>Clear</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+
               <ScrollView
                 style={styles.flex}
                 contentContainerStyle={[
@@ -115,39 +159,20 @@ export default function ShoppingScreen() {
                   </View>
                 )}
 
-                {unchecked.map(item => (
+                {shoppingItems.map(item => (
                   <ShoppingRow
                     key={item.id}
                     item={item}
-                    onToggle={() => toggleShoppingItem(item.id)}
-                    onDelete={() => deleteShoppingItem(item.id)}
+                    onToggle={toggleShoppingItem}
+                    onDelete={deleteShoppingItem}
                   />
                 ))}
-
-                {checked.length > 0 && (
-                  <>
-                    <View style={styles.sectionHeader}>
-                      <Text style={styles.sectionLabel}>In cart ({checked.length})</Text>
-                      <TouchableOpacity onPress={clearChecked} activeOpacity={0.7}>
-                        <Text style={styles.clearText}>Clear</Text>
-                      </TouchableOpacity>
-                    </View>
-                    {checked.map(item => (
-                      <ShoppingRow
-                        key={item.id}
-                        item={item}
-                        onToggle={() => toggleShoppingItem(item.id)}
-                        onDelete={() => deleteShoppingItem(item.id)}
-                      />
-                    ))}
-                  </>
-                )}
               </ScrollView>
 
               {checked.length > 0 && (
                 <TouchableOpacity
                   style={styles.fab}
-                  onPress={finishShopping}
+                  onPress={handleFinishShopping}
                   activeOpacity={0.85}
                 >
                   <Text style={styles.fabText}>Finish shopping</Text>
@@ -191,7 +216,7 @@ export default function ShoppingScreen() {
                 <PantryRow
                   key={item.id}
                   item={item}
-                  onDelete={() => deletePantryItem(item.id)}
+                  onDelete={deletePantryItem}
                 />
               ))}
             </ScrollView>
@@ -202,20 +227,20 @@ export default function ShoppingScreen() {
   );
 }
 
-function ShoppingRow({
+const ShoppingRow = memo(function ShoppingRow({
   item,
   onToggle,
   onDelete,
 }: {
   item: ShoppingItem;
-  onToggle: () => void;
-  onDelete: () => void;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <View style={rowStyles.row}>
       <TouchableOpacity
         style={[rowStyles.checkbox, item.checked && rowStyles.checkboxChecked]}
-        onPress={onToggle}
+        onPress={() => onToggle(item.id)}
         activeOpacity={0.7}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
@@ -228,7 +253,7 @@ function ShoppingRow({
         {item.name}
       </Text>
       <TouchableOpacity
-        onPress={onDelete}
+        onPress={() => onDelete(item.id)}
         activeOpacity={0.7}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
@@ -236,14 +261,14 @@ function ShoppingRow({
       </TouchableOpacity>
     </View>
   );
-}
+});
 
-function PantryRow({
+const PantryRow = memo(function PantryRow({
   item,
   onDelete,
 }: {
   item: PantryItem;
-  onDelete: () => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <View style={rowStyles.row}>
@@ -252,7 +277,7 @@ function PantryRow({
         {item.name}
       </Text>
       <TouchableOpacity
-        onPress={onDelete}
+        onPress={() => onDelete(item.id)}
         activeOpacity={0.7}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
@@ -260,7 +285,7 @@ function PantryRow({
       </TouchableOpacity>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFFFFF' },
@@ -327,8 +352,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 8,
+    paddingHorizontal: 24,
+    paddingBottom: 8,
   },
   sectionLabel: {
     fontSize: 13,
@@ -343,6 +368,29 @@ const styles = StyleSheet.create({
   emptyIcon: { fontSize: 48, marginBottom: 16 },
   emptyText: { fontSize: 17, fontWeight: '600', color: '#111111', marginBottom: 6 },
   emptyHint: { fontSize: 14, color: '#AAAAAA' },
+
+  toast: {
+    position: 'absolute',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#111111',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 100,
+    zIndex: 100,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  toastText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
 
   fab: {
     position: 'absolute',
