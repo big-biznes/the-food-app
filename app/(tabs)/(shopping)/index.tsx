@@ -48,7 +48,7 @@ export default function ShoppingScreen() {
   const checked = shoppingItems.filter(i => i.checked);
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}

@@ -17,8 +17,12 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
-          borderTopColor: '#F0F0F0',
           borderTopWidth: 1,
+          borderTopColor: '#F0F0F0',
+          elevation: 0,
+          shadowOpacity: 0,
+          shadowColor: 'transparent',
+          height: 72,
         },
         tabBarActiveTintColor: '#111111',
         tabBarInactiveTintColor: '#CCCCCC',

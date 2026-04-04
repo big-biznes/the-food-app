@@ -213,7 +213,7 @@ export default function HomeScreen() {
   // ── Setup phase ──────────────────────────────────────────────────────────────
   if (!plan) {
     return (
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top']}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.flex}
@@ -282,7 +282,7 @@ export default function HomeScreen() {
   const shoppingBanner = SHOPPING_BANNER[today] ?? null;
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView
         style={styles.flex}
         contentContainerStyle={styles.planScroll}
