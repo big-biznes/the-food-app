@@ -12,6 +12,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, DietaryRestriction, Goal } from '@/contexts/AuthContext';
 
+const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 type MacroBalance = 'balanced' | 'low-carb' | 'high-protein' | 'custom';
 type MeasurementSystem = 'metric' | 'imperial';
 type AppTheme = 'light' | 'dark' | 'system';
@@ -46,11 +48,13 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
 ];
 
 export default function SettingsScreen() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
 
   // Plan settings
   const [goal, setGoal] = useState<Goal>(user?.goal ?? 'maintain');
   const [macroBalance, setMacroBalance] = useState<MacroBalance>('balanced');
+
+  const [eatingOutDay, setEatingOutDay] = useState<string>(user?.eatingOutDay ?? 'Fri');
 
   // Account settings
   const [restrictions, setRestrictions] = useState<DietaryRestriction[]>(
@@ -137,6 +141,23 @@ export default function SettingsScreen() {
                 label={opt.label}
                 selected={goal === opt.value}
                 onPress={() => setGoal(opt.value)}
+              />
+            ))}
+          </View>
+
+          <Divider />
+
+          <RowLabel label="Eating out day" hint="We'll skip meal planning for this day" />
+          <View style={styles.chipRow}>
+            {DAYS_OF_WEEK.map(d => (
+              <Chip
+                key={d}
+                label={d}
+                selected={eatingOutDay === d}
+                onPress={() => {
+                  setEatingOutDay(d);
+                  updateProfile({ eatingOutDay: d });
+                }}
               />
             ))}
           </View>

@@ -11,9 +11,12 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth, Goal, Gender, DietaryRestriction } from '@/contexts/AuthContext';
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8;
+
+const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const GOALS: { value: Goal; label: string; desc: string }[] = [
   { value: 'lose', label: 'Lose weight', desc: 'Reduce body fat' },
@@ -49,6 +52,7 @@ export default function QuizScreen() {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [restrictions, setRestrictions] = useState<DietaryRestriction[]>([]);
+  const [eatingOutDay, setEatingOutDay] = useState<string | null>(null);
 
   function canContinue() {
     const n = (v: string) => parseInt(v, 10);
@@ -60,6 +64,7 @@ export default function QuizScreen() {
       case 5: return !isNaN(n(height)) && n(height) >= 50 && n(height) <= 300;
       case 6: return !isNaN(n(weight)) && n(weight) >= 20 && n(weight) <= 500;
       case 7: return true;
+      case 8: return eatingOutDay !== null;
       default: return false;
     }
   }
@@ -84,6 +89,7 @@ export default function QuizScreen() {
       heightCm: parseInt(height, 10),
       weightKg: parseInt(weight, 10),
       restrictions,
+      eatingOutDay: eatingOutDay!,
     });
     router.replace('/(tabs)/(home)');
   }
@@ -106,13 +112,6 @@ export default function QuizScreen() {
       >
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={handleBack}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.backArrow}>←</Text>
-            </TouchableOpacity>
             <Text style={styles.stepLabel}>{step} / {TOTAL_STEPS}</Text>
           </View>
 
@@ -162,19 +161,31 @@ export default function QuizScreen() {
             {step === 7 && (
               <StepRestrictions restrictions={restrictions} toggle={toggleRestriction} />
             )}
+            {step === 8 && (
+              <StepEatingOutDay day={eatingOutDay} setDay={setEatingOutDay} />
+            )}
           </ScrollView>
 
           <View style={styles.footer}>
-            <TouchableOpacity
-              style={[styles.nextButton, !canContinue() && styles.nextButtonDisabled]}
-              onPress={handleNext}
-              activeOpacity={0.8}
-              disabled={!canContinue()}
-            >
-              <Text style={styles.nextButtonText}>
-                {step === TOTAL_STEPS ? "Let's go" : 'Continue'}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.footerRow}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={handleBack}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-back" size={22} color="#111111" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.nextButton, !canContinue() && styles.nextButtonDisabled]}
+                onPress={handleNext}
+                activeOpacity={0.8}
+                disabled={!canContinue()}
+              >
+                <Text style={styles.nextButtonText}>
+                  {step === TOTAL_STEPS ? "Let's go" : 'Continue'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -342,6 +353,36 @@ function StepRestrictions({
   );
 }
 
+function StepEatingOutDay({
+  day,
+  setDay,
+}: {
+  day: string | null;
+  setDay: (v: string) => void;
+}) {
+  return (
+    <View style={step.wrap}>
+      <Text style={step.question}>Which day do you eat out?</Text>
+      <Text style={step.hint}>We'll skip meal planning for that day</Text>
+      <View style={step.chipRow}>
+        {DAYS_OF_WEEK.map(d => {
+          const selected = day === d;
+          return (
+            <TouchableOpacity
+              key={d}
+              style={[step.chip, selected && step.chipSelected]}
+              onPress={() => setDay(d)}
+              activeOpacity={0.7}
+            >
+              <Text style={[step.chipText, selected && step.chipTextSelected]}>{d}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
@@ -353,23 +394,9 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     paddingTop: 8,
     marginBottom: 16,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backArrow: {
-    fontSize: 20,
-    color: '#111111',
   },
   stepLabel: {
     fontSize: 14,
@@ -394,7 +421,23 @@ const styles = StyleSheet.create({
   footer: {
     paddingTop: 16,
   },
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  backButton: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#111111',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   nextButton: {
+    flex: 1,
     backgroundColor: '#111111',
     borderRadius: 100,
     paddingVertical: 18,

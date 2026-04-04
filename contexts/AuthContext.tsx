@@ -21,6 +21,7 @@ export type UserProfile = {
   heightCm: number;
   weightKg: number;
   restrictions: DietaryRestriction[];
+  eatingOutDay: string;
 };
 
 type AuthContextType = {
@@ -30,6 +31,7 @@ type AuthContextType = {
   register: (email: string, password: string) => void;
   login: (email: string, password: string) => void;
   completeProfile: (profile: Omit<UserProfile, 'email'>) => void;
+  updateProfile: (updates: Partial<Omit<UserProfile, 'email'>>) => void;
   devLogin: (profile: UserProfile) => void;
   logout: () => void;
 };
@@ -55,6 +57,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoggedIn(true);
   }
 
+  function updateProfile(updates: Partial<Omit<UserProfile, 'email'>>) {
+    setUser(prev => prev ? { ...prev, ...updates } : prev);
+  }
+
   function devLogin(profile: UserProfile) {
     setUser(profile);
     setIsLoggedIn(true);
@@ -67,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, pendingEmail, register, login, completeProfile, devLogin, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, pendingEmail, register, login, completeProfile, updateProfile, devLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );

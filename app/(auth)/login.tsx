@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginScreen() {
@@ -37,16 +38,6 @@ export default function LoginScreen() {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.back()}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.backArrow}>←</Text>
-            </TouchableOpacity>
-          </View>
-
           <Text style={styles.title}>Welcome back</Text>
           <Text style={styles.subtitle}>Sign in to your account</Text>
 
@@ -79,14 +70,23 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.footer}>
-            <TouchableOpacity
-              style={[styles.primaryButton, !canSubmit && styles.primaryButtonDisabled]}
-              onPress={handleLogin}
-              activeOpacity={0.8}
-              disabled={!canSubmit}
-            >
-              <Text style={styles.primaryButtonText}>Sign in</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => router.back()}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-back" size={22} color="#111111" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.primaryButton, !canSubmit && styles.primaryButtonDisabled]}
+                onPress={handleLogin}
+                activeOpacity={0.8}
+                disabled={!canSubmit}
+              >
+                <Text style={styles.primaryButtonText}>Sign in</Text>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity
               onPress={() => router.replace('/(auth)/register')}
               activeOpacity={0.7}
@@ -111,23 +111,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 32,
   },
-  header: {
-    paddingTop: 8,
-    marginBottom: 40,
-  },
-  backButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backArrow: {
-    fontSize: 20,
-    color: '#111111',
-  },
   title: {
+    paddingTop: 8,
     fontSize: 30,
     fontWeight: '700',
     color: '#111111',
@@ -163,12 +148,28 @@ const styles = StyleSheet.create({
     gap: 20,
     alignItems: 'center',
   },
+  buttonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    width: '100%',
+  },
+  backButton: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#111111',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   primaryButton: {
+    flex: 1,
     backgroundColor: '#111111',
     borderRadius: 100,
     paddingVertical: 18,
     alignItems: 'center',
-    width: '100%',
   },
   primaryButtonDisabled: {
     backgroundColor: '#D0D0D0',

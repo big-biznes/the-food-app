@@ -459,6 +459,38 @@ export function generateMealPlan(
   return plan;
 }
 
+// ── Week structure (dynamic based on eating-out day) ─────────────────────────
+
+export type WeekStructure = {
+  partDays: Record<WeekPart, Day[]>;
+  partShoppingDay: Record<'A' | 'B', Day>;
+  partLabel: Record<WeekPart, string>;
+};
+
+export function getWeekStructure(eatingOutDay: string): WeekStructure {
+  const idx = DAYS.indexOf(eatingOutDay as Day);
+  const safeIdx = idx === -1 ? 6 : idx; // default to Sunday
+
+  const wrap = (n: number) => DAYS[n % 7];
+  const a1 = wrap(safeIdx + 1);
+  const a2 = wrap(safeIdx + 2);
+  const a3 = wrap(safeIdx + 3);
+  const b1 = wrap(safeIdx + 4);
+  const b2 = wrap(safeIdx + 5);
+  const b3 = wrap(safeIdx + 6);
+  const c  = DAYS[safeIdx];
+
+  return {
+    partDays: { A: [a1, a2, a3], B: [b1, b2, b3], C: [c] },
+    partShoppingDay: { A: c, B: a3 },
+    partLabel: {
+      A: `${a1} – ${a3}`,
+      B: `${b1} – ${b3}`,
+      C: c,
+    },
+  };
+}
+
 // ── Structured part generation ────────────────────────────────────────────────
 
 function pickDominantProtein(pool: Meal[]): string | null {
@@ -501,21 +533,24 @@ function generatePartPlan(
 export function generateStructuredMealPlan(
   restrictions: DietaryRestriction[],
   keywords: string[],
+  eatingOutDay: string = 'Sun',
 ): StructuredWeekPlan {
+  const { partDays } = getWeekStructure(eatingOutDay);
+
   const compatible = MEALS.filter(m =>
     restrictions.every(r => m.dietaryTags.includes(r)),
   );
   const pool = compatible.length >= 15 ? compatible : MEALS;
   const usedIds = new Set<string>();
 
-  const partA = generatePartPlan(PART_DAYS.A, pool, keywords, usedIds);
-  const partB = generatePartPlan(PART_DAYS.B, pool, keywords, usedIds);
+  const partA = generatePartPlan(partDays.A, pool, keywords, usedIds);
+  const partB = generatePartPlan(partDays.B, pool, keywords, usedIds);
 
-  // Part C: one cooked lunch + eating-out dinner
+  // Part C: eating-out day — one cooked lunch + eating-out dinner
   const cScored = scoredPool(pool, keywords);
   const cLunch = pickMeal(cScored, 'lunch', usedIds);
   const partC: Record<string, PartCDayPlan> = {
-    Sun: { lunch: cLunch, dinner: EATING_OUT },
+    [partDays.C[0]]: { lunch: cLunch, dinner: EATING_OUT },
   };
 
   return { A: partA, B: partB, C: partC };

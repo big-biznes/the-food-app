@@ -12,6 +12,7 @@ const DEV_PROFILE = {
   heightCm: 175,
   weightKg: 70,
   restrictions: [] as [],
+  eatingOutDay: 'Fri',
 };
 
 export default function WelcomeScreen() {

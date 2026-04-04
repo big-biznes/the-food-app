@@ -19,12 +19,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
 import {
-  PART_DAYS,
-  PART_SHOPPING_DAY,
   WeekPart,
   Day,
   DayPlan,
   generateStructuredMealPlan,
+  getWeekStructure,
   getAlternateMeal,
   extractUsedIds,
   extractPlanIngredients,
@@ -45,13 +44,6 @@ function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
 }
 
-function getTodayPart(): WeekPart {
-  const today = getTodayKey();
-  if (['Mon', 'Tue', 'Wed'].includes(today)) return 'A';
-  if (['Thu', 'Fri', 'Sat'].includes(today)) return 'B';
-  return 'C';
-}
-
 function getGreeting(): string {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
@@ -59,20 +51,23 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
-const PART_LABEL: Record<WeekPart, string> = {
-  A: 'Mon – Wed',
-  B: 'Thu – Sat',
-  C: 'Sunday',
-};
-
-const SHOPPING_BANNER: Partial<Record<string, string>> = {
-  Sun: 'Shop today — Part A starts tomorrow',
-  Wed: 'Shop today — Part B starts tomorrow',
-};
-
 export default function HomeScreen() {
   const { user } = useAuth();
   const { addShoppingItems } = useShoppingContext();
+
+  const { partDays, partShoppingDay, partLabel } = getWeekStructure(user?.eatingOutDay ?? 'Sun');
+
+  function getTodayPart(): WeekPart {
+    const today = getTodayKey();
+    if (partDays.A.includes(today as Day)) return 'A';
+    if (partDays.B.includes(today as Day)) return 'B';
+    return 'C';
+  }
+
+  const shoppingBannerMap: Partial<Record<string, string>> = {
+    [partShoppingDay.A]: `Shop today — ${partLabel.A} starts tomorrow`,
+    [partShoppingDay.B]: `Shop today — ${partLabel.B} starts tomorrow`,
+  };
 
   const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
@@ -155,23 +150,23 @@ export default function HomeScreen() {
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);
     const today = getTodayKey();
-    const days = PART_DAYS[todayPart];
+    const days = partDays[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
   }
 
   function handleGenerate() {
-    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords()));
+    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun'));
   }
 
   function handleGenerateFromSheet() {
-    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords()));
+    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun'));
     closeSheet();
   }
 
   function handlePartChange(part: WeekPart) {
     setSelectedPart(part);
     const today = getTodayKey();
-    const days = PART_DAYS[part];
+    const days = partDays[part];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
   }
 
@@ -277,9 +272,9 @@ export default function HomeScreen() {
 
   // ── Plan phase ───────────────────────────────────────────────────────────────
   const today = getTodayKey();
-  const partDays = PART_DAYS[selectedPart];
-  const validDay = partDays.includes(selectedDay as Day) ? selectedDay : partDays[0];
-  const shoppingBanner = SHOPPING_BANNER[today] ?? null;
+  const selectedPartDays = partDays[selectedPart];
+  const validDay = selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0];
+  const shoppingBanner = shoppingBannerMap[today] ?? null;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -308,7 +303,7 @@ export default function HomeScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.partChipText, isSelected && styles.partChipTextOn]}>
-                  {PART_LABEL[part]}
+                  {partLabel[part]}
                 </Text>
               </TouchableOpacity>
             );
@@ -330,7 +325,7 @@ export default function HomeScreen() {
           contentContainerStyle={styles.dayRow}
           style={styles.dayScroll}
         >
-          {partDays.map(day => {
+          {selectedPartDays.map(day => {
             const isSelected = validDay === day;
             const isToday = day === today;
             return (
