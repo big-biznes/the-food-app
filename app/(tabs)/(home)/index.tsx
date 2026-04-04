@@ -11,6 +11,7 @@ import {
   Modal,
   Animated,
   Dimensions,
+  PanResponder,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -83,6 +84,29 @@ export default function HomeScreen() {
   const slideAnim = useRef(new Animated.Value(Dimensions.get('screen').height)).current;
 
   const insets = useSafeAreaInsets();
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, g) => {
+        if (g.dy > 0) slideAnim.setValue(g.dy);
+      },
+      onPanResponderRelease: (_, g) => {
+        if (g.dy > 80 || g.vy > 0.5) {
+          closeSheet();
+        } else {
+          Animated.spring(slideAnim, {
+            toValue: 0,
+            useNativeDriver: true,
+            damping: 22,
+            mass: 1,
+            stiffness: 220,
+          }).start();
+        }
+      },
+    }),
+  ).current;
   const firstName = user?.name?.split(' ')[0] || 'there';
 
   function openSheet() {
@@ -397,7 +421,9 @@ export default function HomeScreen() {
             pointerEvents="auto"
           >
             <View style={sheet.card}>
-              <View style={sheet.handle} />
+              <View style={sheet.dragZone} {...panResponder.panHandlers} hitSlop={{ top: 24 }}>
+                <View style={sheet.handle} />
+              </View>
 
               <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -590,15 +616,17 @@ const sheet = StyleSheet.create({
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 24,
+  },
+  dragZone: {
     paddingTop: 12,
+    paddingBottom: 16,
+    alignItems: 'center',
   },
   handle: {
     width: 40,
     height: 4,
     borderRadius: 2,
     backgroundColor: '#E0E0E0',
-    alignSelf: 'center',
-    marginBottom: 24,
   },
   title: {
     fontSize: 22,
