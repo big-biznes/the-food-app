@@ -1,4 +1,4 @@
-import { useState, useMemo, memo, useCallback, useRef } from 'react';
+import { useState, useMemo, memo, useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,13 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import {
   useShoppingContext,
   ShoppingItem,
   PantryItem,
 } from '@/contexts/ShoppingContext';
+import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 
 export default function ShoppingScreen() {
   const {
@@ -32,31 +32,12 @@ export default function ShoppingScreen() {
     deletePantryItem,
   } = useShoppingContext();
 
-  const insets = useSafeAreaInsets();
-  const toastAnim = useRef(new Animated.Value(-80)).current;
-  const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const showToast = useCallback(() => {
-    if (toastTimeout.current) clearTimeout(toastTimeout.current);
-    Animated.spring(toastAnim, {
-      toValue: 0,
-      useNativeDriver: true,
-      damping: 18,
-      stiffness: 200,
-    }).start();
-    toastTimeout.current = setTimeout(() => {
-      Animated.timing(toastAnim, {
-        toValue: -80,
-        duration: 260,
-        useNativeDriver: true,
-      }).start();
-    }, 2800);
-  }, [toastAnim]);
+  const pantryToastRef = useRef<ConfirmToastHandle>(null);
 
   const handleFinishShopping = useCallback(() => {
     finishShopping();
-    showToast();
-  }, [finishShopping, showToast]);
+    pantryToastRef.current?.show();
+  }, [finishShopping]);
 
   const [activeTab, setActiveTab] = useState<'list' | 'pantry'>('list');
   const [shoppingInput, setShoppingInput] = useState('');
@@ -74,15 +55,20 @@ export default function ShoppingScreen() {
 
   const checked = useMemo(() => shoppingItems.filter(i => i.checked), [shoppingItems]);
 
+  const fabAnim = useRef(new Animated.Value(80)).current;
+  useEffect(() => {
+    Animated.spring(fabAnim, {
+      toValue: checked.length > 0 ? 0 : 80,
+      useNativeDriver: true,
+      damping: 20,
+      stiffness: 220,
+      mass: 1,
+    }).start();
+  }, [checked.length > 0]);
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <Animated.View
-        style={[styles.toast, { top: insets.top + 12, transform: [{ translateY: toastAnim }] }]}
-        pointerEvents="none"
-      >
-        <Ionicons name="checkmark-circle" size={18} color="#FFFFFF" />
-        <Text style={styles.toastText}>Ingredients added to pantry</Text>
-      </Animated.View>
+      <ConfirmToast ref={pantryToastRef} message="Ingredients added to pantry" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -133,21 +119,22 @@ export default function ShoppingScreen() {
             </View>
 
             <View style={styles.flex}>
-              {checked.length > 0 && (
-                <View style={styles.sectionHeader}>
-                  <Text style={styles.sectionLabel}>{checked.length} checked</Text>
-                  <TouchableOpacity onPress={clearChecked} activeOpacity={0.7}>
-                    <Text style={styles.clearText}>Clear</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionLabel}>{checked.length} checked</Text>
+                <TouchableOpacity
+                  onPress={clearChecked}
+                  activeOpacity={checked.length > 0 ? 0.7 : 1}
+                  disabled={checked.length === 0}
+                >
+                  <Text style={[styles.clearText, checked.length === 0 && styles.clearTextDim]}>
+                    Clear
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
               <ScrollView
                 style={styles.flex}
-                contentContainerStyle={[
-                  styles.listContent,
-                  checked.length > 0 && styles.listContentWithFab,
-                ]}
+                contentContainerStyle={styles.listContentWithFab}
                 showsVerticalScrollIndicator={false}
                 keyboardShouldPersistTaps="handled"
               >
@@ -169,7 +156,10 @@ export default function ShoppingScreen() {
                 ))}
               </ScrollView>
 
-              {checked.length > 0 && (
+              <Animated.View
+                style={[styles.fabWrap, { transform: [{ translateY: fabAnim }] }]}
+                pointerEvents={checked.length > 0 ? 'auto' : 'none'}
+              >
                 <TouchableOpacity
                   style={styles.fab}
                   onPress={handleFinishShopping}
@@ -178,7 +168,7 @@ export default function ShoppingScreen() {
                   <Text style={styles.fabText}>Finish shopping</Text>
                   <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
                 </TouchableOpacity>
-              )}
+              </Animated.View>
             </View>
           </>
         ) : (
@@ -252,6 +242,11 @@ const ShoppingRow = memo(function ShoppingRow({
       >
         {item.name}
       </Text>
+      {item.lowStock && !item.checked && (
+        <View style={rowStyles.lowStockBadge}>
+          <Ionicons name="home-outline" size={12} color="#E07B00" />
+        </View>
+      )}
       <TouchableOpacity
         onPress={() => onDelete(item.id)}
         activeOpacity={0.7}
@@ -346,7 +341,7 @@ const styles = StyleSheet.create({
   },
 
   listContent: { paddingHorizontal: 24, paddingBottom: 40 },
-  listContentWithFab: { paddingBottom: 100 },
+  listContentWithFab: { paddingHorizontal: 24, paddingBottom: 100 },
 
   sectionHeader: {
     flexDirection: 'row',
@@ -363,40 +358,20 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   clearText: { fontSize: 13, fontWeight: '600', color: '#111111' },
+  clearTextDim: { color: '#DDDDDD' },
 
   emptyState: { alignItems: 'center', marginTop: 64 },
   emptyIcon: { fontSize: 48, marginBottom: 16 },
   emptyText: { fontSize: 17, fontWeight: '600', color: '#111111', marginBottom: 6 },
   emptyHint: { fontSize: 14, color: '#AAAAAA' },
 
-  toast: {
-    position: 'absolute',
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: '#111111',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 100,
-    zIndex: 100,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  toastText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-
-  fab: {
+  fabWrap: {
     position: 'absolute',
     bottom: 20,
     left: 24,
     right: 24,
+  },
+  fab: {
     backgroundColor: '#111111',
     borderRadius: 100,
     paddingVertical: 18,
@@ -436,4 +411,12 @@ const rowStyles = StyleSheet.create({
   },
   itemName: { flex: 1, fontSize: 15, color: '#111111', fontWeight: '500' },
   itemNameChecked: { color: '#AAAAAA', textDecorationLine: 'line-through' },
+  lowStockBadge: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FFF3E0',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -32,6 +31,8 @@ import {
   MealType,
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
+import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
+import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
 
 const CRAVING_CHIPS = [
   'Spicy', 'Light', 'Hearty', 'Fresh',
@@ -54,8 +55,7 @@ function getGreeting(): string {
 
 export default function HomeScreen() {
   const { user } = useAuth();
-  const { replaceShoppingItems } = useShoppingContext();
-  const router = useRouter();
+  const { replacePlanIngredients } = useShoppingContext();
 
   // Snapshot the eating-out day used when the plan was generated.
   // Changing it in settings only takes effect when a new plan is generated.
@@ -86,64 +86,17 @@ export default function HomeScreen() {
   const backdropAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(Dimensions.get('screen').height)).current;
 
-  // Toast state
-  const [toastVisible, setToastVisible] = useState(false);
-  const toastSlide = useRef(new Animated.Value(100)).current;
-  const toastTextWidth = useRef(new Animated.Value(160)).current;
-  const toastTextOpacity = useRef(new Animated.Value(1)).current;
-  const toastTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const planToastRef = useRef<PlanToastHandle>(null);
+  const confirmToastRef = useRef<ConfirmToastHandle>(null);
 
-  useEffect(() => {
-    return () => { toastTimers.current.forEach(clearTimeout); };
-  }, []);
-
-  function clearToastTimers() {
-    toastTimers.current.forEach(clearTimeout);
-    toastTimers.current = [];
-  }
-
-  function dismissToast() {
-    clearToastTimers();
-    Animated.timing(toastSlide, { toValue: 100, duration: 260, useNativeDriver: true }).start(
-      () => setToastVisible(false),
-    );
-  }
-
-  function handleGoShopping() {
-    if (plan) {
-      replaceShoppingItems(extractPartIngredients(plan, selectedPart));
-    }
-    dismissToast();
-    router.navigate('/(shopping)' as never);
-  }
-
-  function triggerPlanToast() {
-    clearToastTimers();
-    toastSlide.setValue(100);
-    toastTextWidth.setValue(160);
-    toastTextOpacity.setValue(1);
-    setToastVisible(true);
-
-    Animated.spring(toastSlide, {
-      toValue: 0,
-      useNativeDriver: true,
-      damping: 22,
-      stiffness: 220,
-      mass: 1,
-    }).start();
-
-    // Collapse button text to icon-only after 3.5s
-    const t1 = setTimeout(() => {
-      Animated.parallel([
-        Animated.timing(toastTextOpacity, { toValue: 0, duration: 280, useNativeDriver: true }),
-        Animated.timing(toastTextWidth, { toValue: 0, duration: 300, useNativeDriver: false }),
-      ]).start();
-    }, 3500);
-    toastTimers.current.push(t1);
-
-    // Auto-dismiss after 7s
-    const t2 = setTimeout(dismissToast, 7000);
-    toastTimers.current.push(t2);
+  function handleAddToShoppingList() {
+    planToastRef.current?.dismiss();
+    confirmToastRef.current?.show();
+    requestAnimationFrame(() => {
+      if (plan) {
+        replacePlanIngredients(extractPartIngredients(plan, selectedPart));
+      }
+    });
   }
 
   const insets = useSafeAreaInsets();
@@ -161,7 +114,7 @@ export default function HomeScreen() {
         } else {
           Animated.spring(slideAnim, {
             toValue: 0,
-            useNativeDriver: true,
+            useNativeDriver: false,
             damping: 22,
             mass: 1,
             stiffness: 220,
@@ -180,7 +133,7 @@ export default function HomeScreen() {
       Animated.timing(backdropAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
       Animated.spring(slideAnim, {
         toValue: 0,
-        useNativeDriver: true,
+        useNativeDriver: false,
         damping: 22,
         mass: 1,
         stiffness: 220,
@@ -194,7 +147,7 @@ export default function HomeScreen() {
       Animated.timing(slideAnim, {
         toValue: Dimensions.get('screen').height,
         duration: 280,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(() => setShowSheet(false));
   }
@@ -222,7 +175,7 @@ export default function HomeScreen() {
     const today = getTodayKey();
     const days = partDays[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
-    triggerPlanToast();
+    planToastRef.current?.show();
   }
 
   function handleGenerate() {
@@ -417,7 +370,7 @@ export default function HomeScreen() {
               );
             })}
           </ScrollView>
-          <TouchableOpacity style={styles.shopIconBtn} onPress={handleGoShopping} activeOpacity={0.7}>
+          <TouchableOpacity style={styles.shopIconBtn} onPress={handleAddToShoppingList} activeOpacity={0.7}>
             <Ionicons name="cart-outline" size={19} color="#111111" />
           </TouchableOpacity>
         </View>
@@ -460,34 +413,14 @@ export default function HomeScreen() {
         <Text style={styles.fabText}>New Plan</Text>
       </TouchableOpacity>
 
-      {/* Plan-ready toast */}
-      {toastVisible && (
-        <Animated.View
-          style={[styles.toast, { transform: [{ translateY: toastSlide }] }]}
-          pointerEvents="box-none"
-        >
-          <View style={styles.toastLeft}>
-            <Ionicons name="checkmark-circle-outline" size={17} color="#FFFFFF" />
-            <Text style={styles.toastMsg}>Meal plan ready!</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.toastBtn}
-            onPress={handleGoShopping}
-            activeOpacity={0.75}
-            pointerEvents="auto"
-          >
-            <Ionicons name="cart-outline" size={15} color="#111111" />
-            <Animated.View style={{ width: toastTextWidth, overflow: 'hidden' }}>
-              <Animated.Text
-                style={[styles.toastBtnText, { opacity: toastTextOpacity }]}
-                numberOfLines={1}
-              >
-                {' '}Prepare shopping list?
-              </Animated.Text>
-            </Animated.View>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+      <PlanToast
+        ref={planToastRef}
+        message="Meal plan ready!"
+        actionLabel="Prepare shopping list?"
+        actionIcon="cart-outline"
+        onAction={handleAddToShoppingList}
+      />
+      <ConfirmToast ref={confirmToastRef} message="Added to shopping list" />
 
       {/* Craving sheet modal */}
       <Modal
@@ -498,10 +431,9 @@ export default function HomeScreen() {
         statusBarTranslucent
         onRequestClose={closeSheet}
       >
-        {/* Backdrop — fades in independently */}
+        {/* Backdrop */}
         <Animated.View
           style={[sheet.backdrop, { opacity: backdropAnim }]}
-          pointerEvents="box-none"
         >
           <TouchableOpacity
             style={StyleSheet.absoluteFillObject}
@@ -510,15 +442,13 @@ export default function HomeScreen() {
           />
         </Animated.View>
 
-        {/* Card — slides up independently */}
+        {/* Card — slides up, renders after backdrop so it's always on top */}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={sheet.sheetContainer}
-          pointerEvents="box-none"
         >
           <Animated.View
             style={{ transform: [{ translateY: slideAnim }] }}
-            pointerEvents="auto"
           >
             <View style={sheet.card}>
               <View style={sheet.dragZone} {...panResponder.panHandlers} hitSlop={{ top: 24 }}>
@@ -690,50 +620,6 @@ const styles = StyleSheet.create({
 
   // Meal list
   mealList: { gap: 16, marginBottom: 32 },
-
-  // Toast
-  toast: {
-    position: 'absolute',
-    bottom: 96,
-    left: 16,
-    right: 16,
-    backgroundColor: '#111111',
-    borderRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    gap: 10,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 12,
-    elevation: 10,
-  },
-  toastLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-  },
-  toastMsg: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  toastBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 100,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  toastBtnText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#111111',
-  },
 
   // FAB
   fab: {
