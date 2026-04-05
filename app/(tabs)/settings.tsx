@@ -147,7 +147,7 @@ export default function SettingsScreen() {
 
           <Divider />
 
-          <RowLabel label="Eating out day" hint="We'll skip meal planning for this day" />
+          <RowLabel label="Eating out day" hint="Takes effect when your next plan is generated" />
           <View style={styles.chipRow}>
             {DAYS_OF_WEEK.map(d => (
               <Chip

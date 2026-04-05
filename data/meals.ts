@@ -9,6 +9,12 @@ export type MealComponents = {
   vegetable: string;
 };
 
+export type Ingredient = {
+  name: string;
+  amount: number;
+  unit: string; // 'g' | 'ml' | 'can' | 'tbsp' | 'tsp' | 'clove' | 'slice' | '' (piece/countable)
+};
+
 export type Meal = {
   id: string;
   name: string;
@@ -20,7 +26,20 @@ export type Meal = {
   keywords: string[];
   emoji: string;
   components: MealComponents;
+  ingredients: Ingredient[];
 };
+
+/** Format a single ingredient for display on the meal card */
+export function formatIngredient(ing: Ingredient): string {
+  if (!ing.unit) {
+    return ing.amount > 1 ? `${ing.amount} ${ing.name}` : ing.name;
+  }
+  if (ing.unit === 'g' || ing.unit === 'ml' || ing.unit === 'kg' || ing.unit === 'l') {
+    return `${ing.amount}${ing.unit} ${ing.name}`;
+  }
+  // can, tbsp, tsp, clove, slice, etc.
+  return `${ing.amount} ${ing.unit} ${ing.name}`;
+}
 
 export type WeekPart = 'A' | 'B' | 'C';
 
@@ -85,6 +104,14 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'fresh', 'quick', 'toast', 'trendy'],
     emoji: '🥑',
     components: { protein: 'avocado', carb: 'sourdough', sauce: 'lemon & chili', vegetable: 'tomato' },
+    ingredients: [
+      { name: 'sourdough bread', amount: 2, unit: 'slice' },
+      { name: 'avocado', amount: 1, unit: '' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'chili flakes', amount: 1, unit: 'tsp' },
+      { name: 'olive oil', amount: 1, unit: 'tbsp' },
+      { name: 'tomato', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'b2',
@@ -95,6 +122,12 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'fresh', 'quick', 'sweet', 'fruity'],
     emoji: '🫙',
     components: { protein: 'greek yogurt', carb: 'granola', sauce: 'honey', vegetable: 'mixed berries' },
+    ingredients: [
+      { name: 'greek yogurt', amount: 200, unit: 'g' },
+      { name: 'granola', amount: 60, unit: 'g' },
+      { name: 'mixed berries', amount: 100, unit: 'g' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+    ],
   },
   {
     id: 'b3',
@@ -105,6 +138,12 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'quick', 'classic', 'comfort', 'protein'],
     emoji: '🍳',
     components: { protein: 'eggs', carb: 'sourdough', sauce: 'butter', vegetable: 'tomato' },
+    ingredients: [
+      { name: 'eggs', amount: 3, unit: '' },
+      { name: 'sourdough bread', amount: 2, unit: 'slice' },
+      { name: 'butter', amount: 20, unit: 'g' },
+      { name: 'tomato', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'b4',
@@ -115,6 +154,13 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'warm', 'sweet', 'healthy', 'fruity'],
     emoji: '🫐',
     components: { protein: 'almond milk', carb: 'oats', sauce: 'honey', vegetable: 'mixed berries' },
+    ingredients: [
+      { name: 'oats', amount: 80, unit: 'g' },
+      { name: 'almond milk', amount: 200, unit: 'ml' },
+      { name: 'mixed berries', amount: 100, unit: 'g' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+      { name: 'cinnamon', amount: 1, unit: 'tsp' },
+    ],
   },
   {
     id: 'b5',
@@ -125,6 +171,14 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'fresh', 'sweet', 'tropical', 'fruity'],
     emoji: '🍌',
     components: { protein: 'banana', carb: 'granola', sauce: 'honey', vegetable: 'mixed berries' },
+    ingredients: [
+      { name: 'banana', amount: 2, unit: '' },
+      { name: 'almond milk', amount: 150, unit: 'ml' },
+      { name: 'granola', amount: 50, unit: 'g' },
+      { name: 'mixed berries', amount: 80, unit: 'g' },
+      { name: 'chia seeds', amount: 1, unit: 'tbsp' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+    ],
   },
   {
     id: 'b6',
@@ -135,6 +189,14 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'savory', 'fresh', 'protein', 'veggie'],
     emoji: '🥚',
     components: { protein: 'eggs', carb: 'whole wheat toast', sauce: 'olive oil', vegetable: 'peppers & mushrooms' },
+    ingredients: [
+      { name: 'eggs', amount: 3, unit: '' },
+      { name: 'bell peppers', amount: 100, unit: 'g' },
+      { name: 'mushrooms', amount: 100, unit: 'g' },
+      { name: 'spinach', amount: 60, unit: 'g' },
+      { name: 'olive oil', amount: 1, unit: 'tbsp' },
+      { name: 'whole wheat bread', amount: 2, unit: 'slice' },
+    ],
   },
   {
     id: 'b7',
@@ -145,6 +207,14 @@ export const MEALS: Meal[] = [
     keywords: ['quick', 'light', 'prep-ahead', 'sweet', 'easy'],
     emoji: '🥣',
     components: { protein: 'chia seeds', carb: 'oats', sauce: 'almond milk', vegetable: 'banana' },
+    ingredients: [
+      { name: 'oats', amount: 80, unit: 'g' },
+      { name: 'chia seeds', amount: 1, unit: 'tbsp' },
+      { name: 'almond milk', amount: 200, unit: 'ml' },
+      { name: 'banana', amount: 1, unit: '' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+      { name: 'vanilla extract', amount: 1, unit: 'tsp' },
+    ],
   },
   {
     id: 'b8',
@@ -155,6 +225,13 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'sweet', 'tropical', 'prep-ahead', 'fruity'],
     emoji: '🥥',
     components: { protein: 'chia seeds', carb: 'coconut milk', sauce: 'honey', vegetable: 'mango' },
+    ingredients: [
+      { name: 'chia seeds', amount: 3, unit: 'tbsp' },
+      { name: 'coconut milk', amount: 250, unit: 'ml' },
+      { name: 'mango', amount: 1, unit: '' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+      { name: 'vanilla extract', amount: 1, unit: 'tsp' },
+    ],
   },
   {
     id: 'b9',
@@ -165,6 +242,15 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'savory', 'veggie', 'spicy', 'protein'],
     emoji: '🧀',
     components: { protein: 'tofu', carb: 'toast', sauce: 'turmeric sauce', vegetable: 'kale & tomatoes' },
+    ingredients: [
+      { name: 'firm tofu', amount: 300, unit: 'g' },
+      { name: 'kale', amount: 80, unit: 'g' },
+      { name: 'tomato', amount: 1, unit: '' },
+      { name: 'turmeric', amount: 1, unit: 'tsp' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+      { name: 'olive oil', amount: 1, unit: 'tbsp' },
+      { name: 'bread', amount: 2, unit: 'slice' },
+    ],
   },
   {
     id: 'b10',
@@ -175,6 +261,12 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'sweet', 'quick', 'comfort', 'filling'],
     emoji: '🥜',
     components: { protein: 'peanut butter', carb: 'bread', sauce: 'honey', vegetable: 'banana' },
+    ingredients: [
+      { name: 'bread', amount: 2, unit: 'slice' },
+      { name: 'peanut butter', amount: 40, unit: 'g' },
+      { name: 'banana', amount: 1, unit: '' },
+      { name: 'honey', amount: 1, unit: 'tbsp' },
+    ],
   },
 
   // ── LUNCH ─────────────────────────────────────────────────────────────────────
@@ -187,6 +279,14 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'fresh', 'classic', 'salad'],
     emoji: '🥗',
     components: { protein: 'parmesan', carb: 'croutons', sauce: 'caesar dressing', vegetable: 'romaine lettuce' },
+    ingredients: [
+      { name: 'romaine lettuce', amount: 200, unit: 'g' },
+      { name: 'parmesan', amount: 40, unit: 'g' },
+      { name: 'croutons', amount: 60, unit: 'g' },
+      { name: 'caesar dressing', amount: 3, unit: 'tbsp' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+      { name: 'lemon', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'l2',
@@ -197,6 +297,14 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'quick', 'fresh', 'protein', 'filling'],
     emoji: '🌯',
     components: { protein: 'chicken', carb: 'tortilla', sauce: 'lime sauce', vegetable: 'avocado & lettuce' },
+    ingredients: [
+      { name: 'chicken breast', amount: 300, unit: 'g' },
+      { name: 'flour tortilla', amount: 2, unit: '' },
+      { name: 'avocado', amount: 1, unit: '' },
+      { name: 'romaine lettuce', amount: 80, unit: 'g' },
+      { name: 'lime', amount: 1, unit: '' },
+      { name: 'olive oil', amount: 1, unit: 'tbsp' },
+    ],
   },
   {
     id: 'l3',
@@ -207,6 +315,17 @@ export const MEALS: Meal[] = [
     keywords: ['hearty', 'warm', 'comfort', 'filling', 'cozy'],
     emoji: '🍲',
     components: { protein: 'red lentils', carb: 'bread', sauce: 'cumin & coriander', vegetable: 'spinach' },
+    ingredients: [
+      { name: 'red lentils', amount: 200, unit: 'g' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'cumin', amount: 2, unit: 'tsp' },
+      { name: 'coriander', amount: 1, unit: 'tsp' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'spinach', amount: 100, unit: 'g' },
+      { name: 'vegetable stock', amount: 500, unit: 'ml' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+    ],
   },
   {
     id: 'l4',
@@ -217,6 +336,16 @@ export const MEALS: Meal[] = [
     keywords: ['healthy', 'fresh', 'filling', 'hearty', 'veggie'],
     emoji: '🥙',
     components: { protein: 'chickpeas', carb: 'quinoa', sauce: 'tahini', vegetable: 'roasted vegetables' },
+    ingredients: [
+      { name: 'quinoa', amount: 180, unit: 'g' },
+      { name: 'chickpeas', amount: 1, unit: 'can' },
+      { name: 'zucchini', amount: 150, unit: 'g' },
+      { name: 'bell peppers', amount: 150, unit: 'g' },
+      { name: 'tahini', amount: 3, unit: 'tbsp' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+    ],
   },
   {
     id: 'l5',
@@ -227,6 +356,15 @@ export const MEALS: Meal[] = [
     keywords: ['quick', 'classic', 'hearty', 'protein', 'easy'],
     emoji: '🥪',
     components: { protein: 'tuna', carb: 'whole grain bread', sauce: 'mayo', vegetable: 'lettuce & tomato' },
+    ingredients: [
+      { name: 'canned tuna', amount: 1, unit: 'can' },
+      { name: 'whole grain bread', amount: 2, unit: 'slice' },
+      { name: 'mayonnaise', amount: 2, unit: 'tbsp' },
+      { name: 'romaine lettuce', amount: 80, unit: 'g' },
+      { name: 'tomato', amount: 1, unit: '' },
+      { name: 'celery', amount: 80, unit: 'g' },
+      { name: 'lemon', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'l6',
@@ -237,6 +375,14 @@ export const MEALS: Meal[] = [
     keywords: ['italian', 'comfort', 'cheesy', 'classic', 'indulgent'],
     emoji: '🍕',
     components: { protein: 'mozzarella', carb: 'pizza dough', sauce: 'tomato sauce', vegetable: 'fresh basil' },
+    ingredients: [
+      { name: 'pizza dough', amount: 300, unit: 'g' },
+      { name: 'mozzarella', amount: 150, unit: 'g' },
+      { name: 'tomato sauce', amount: 1, unit: 'can' },
+      { name: 'fresh basil', amount: 20, unit: 'g' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+    ],
   },
   {
     id: 'l7',
@@ -247,6 +393,16 @@ export const MEALS: Meal[] = [
     keywords: ['asian', 'fresh', 'light', 'noodles', 'cold'],
     emoji: '🍜',
     components: { protein: 'tofu', carb: 'rice noodles', sauce: 'sesame dressing', vegetable: 'cucumber & mint' },
+    ingredients: [
+      { name: 'rice noodles', amount: 150, unit: 'g' },
+      { name: 'firm tofu', amount: 200, unit: 'g' },
+      { name: 'cucumber', amount: 1, unit: '' },
+      { name: 'fresh mint', amount: 20, unit: 'g' },
+      { name: 'sesame oil', amount: 2, unit: 'tbsp' },
+      { name: 'soy sauce', amount: 3, unit: 'tbsp' },
+      { name: 'lime', amount: 1, unit: '' },
+      { name: 'sesame seeds', amount: 1, unit: 'tbsp' },
+    ],
   },
   {
     id: 'l8',
@@ -257,6 +413,16 @@ export const MEALS: Meal[] = [
     keywords: ['mediterranean', 'light', 'fresh', 'greek', 'salad'],
     emoji: '🫒',
     components: { protein: 'feta', carb: 'pita bread', sauce: 'olive oil & oregano', vegetable: 'tomatoes & cucumber' },
+    ingredients: [
+      { name: 'tomato', amount: 300, unit: 'g' },
+      { name: 'cucumber', amount: 1, unit: '' },
+      { name: 'feta cheese', amount: 100, unit: 'g' },
+      { name: 'kalamata olives', amount: 60, unit: 'g' },
+      { name: 'red onion', amount: 1, unit: '' },
+      { name: 'olive oil', amount: 3, unit: 'tbsp' },
+      { name: 'dried oregano', amount: 1, unit: 'tsp' },
+      { name: 'pita bread', amount: 2, unit: '' },
+    ],
   },
   {
     id: 'l9',
@@ -267,6 +433,16 @@ export const MEALS: Meal[] = [
     keywords: ['mexican', 'spicy', 'hearty', 'filling', 'bold'],
     emoji: '🌮',
     components: { protein: 'black beans', carb: 'corn tortillas', sauce: 'salsa', vegetable: 'avocado' },
+    ingredients: [
+      { name: 'black beans', amount: 1, unit: 'can' },
+      { name: 'corn tortillas', amount: 6, unit: '' },
+      { name: 'avocado', amount: 1, unit: '' },
+      { name: 'salsa', amount: 4, unit: 'tbsp' },
+      { name: 'lime', amount: 1, unit: '' },
+      { name: 'cumin', amount: 1, unit: 'tsp' },
+      { name: 'cilantro', amount: 20, unit: 'g' },
+      { name: 'red onion', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'l10',
@@ -277,6 +453,17 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'warm', 'comfort', 'italian', 'cozy'],
     emoji: '🍅',
     components: { protein: 'parmesan', carb: 'croutons', sauce: 'basil cream', vegetable: 'roasted tomatoes' },
+    ingredients: [
+      { name: 'tomato', amount: 500, unit: 'g' },
+      { name: 'fresh basil', amount: 30, unit: 'g' },
+      { name: 'cream', amount: 100, unit: 'ml' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'vegetable stock', amount: 400, unit: 'ml' },
+      { name: 'croutons', amount: 60, unit: 'g' },
+      { name: 'parmesan', amount: 40, unit: 'g' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+    ],
   },
 
   // ── DINNER ────────────────────────────────────────────────────────────────────
@@ -289,6 +476,18 @@ export const MEALS: Meal[] = [
     keywords: ['italian', 'comfort', 'hearty', 'classic', 'pasta', 'indulgent'],
     emoji: '🍝',
     components: { protein: 'ground beef', carb: 'spaghetti', sauce: 'tomato ragù', vegetable: 'carrot & celery' },
+    ingredients: [
+      { name: 'spaghetti', amount: 200, unit: 'g' },
+      { name: 'ground beef', amount: 400, unit: 'g' },
+      { name: 'canned tomatoes', amount: 1, unit: 'can' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'carrot', amount: 1, unit: '' },
+      { name: 'celery', amount: 80, unit: 'g' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+      { name: 'parmesan', amount: 50, unit: 'g' },
+      { name: 'red wine', amount: 100, unit: 'ml' },
+    ],
   },
   {
     id: 'd2',
@@ -299,6 +498,15 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'healthy', 'fresh', 'protein', 'fish', 'mediterranean'],
     emoji: '🐟',
     components: { protein: 'salmon', carb: 'potatoes', sauce: 'lemon herb', vegetable: 'asparagus' },
+    ingredients: [
+      { name: 'salmon fillet', amount: 400, unit: 'g' },
+      { name: 'asparagus', amount: 200, unit: 'g' },
+      { name: 'potatoes', amount: 300, unit: 'g' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'fresh dill', amount: 15, unit: 'g' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+    ],
   },
   {
     id: 'd3',
@@ -309,6 +517,16 @@ export const MEALS: Meal[] = [
     keywords: ['asian', 'quick', 'spicy', 'hearty', 'bold'],
     emoji: '🥢',
     components: { protein: 'chicken', carb: 'rice', sauce: 'soy ginger', vegetable: 'broccoli & peppers' },
+    ingredients: [
+      { name: 'chicken breast', amount: 400, unit: 'g' },
+      { name: 'broccoli', amount: 200, unit: 'g' },
+      { name: 'bell peppers', amount: 150, unit: 'g' },
+      { name: 'jasmine rice', amount: 200, unit: 'g' },
+      { name: 'soy sauce', amount: 3, unit: 'tbsp' },
+      { name: 'fresh ginger', amount: 20, unit: 'g' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'sesame oil', amount: 1, unit: 'tbsp' },
+    ],
   },
   {
     id: 'd4',
@@ -319,6 +537,17 @@ export const MEALS: Meal[] = [
     keywords: ['spicy', 'hearty', 'warm', 'indian', 'comfort', 'bold'],
     emoji: '🍛',
     components: { protein: 'chickpeas', carb: 'rice', sauce: 'coconut curry', vegetable: 'sweet potato' },
+    ingredients: [
+      { name: 'chickpeas', amount: 1, unit: 'can' },
+      { name: 'sweet potato', amount: 400, unit: 'g' },
+      { name: 'coconut milk', amount: 1, unit: 'can' },
+      { name: 'curry paste', amount: 3, unit: 'tbsp' },
+      { name: 'basmati rice', amount: 200, unit: 'g' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'fresh ginger', amount: 20, unit: 'g' },
+      { name: 'fresh coriander', amount: 20, unit: 'g' },
+    ],
   },
   {
     id: 'd5',
@@ -329,6 +558,17 @@ export const MEALS: Meal[] = [
     keywords: ['mexican', 'spicy', 'hearty', 'comfort', 'bold', 'indulgent'],
     emoji: '🌮',
     components: { protein: 'ground beef', carb: 'taco shells', sauce: 'salsa', vegetable: 'lettuce & tomato' },
+    ingredients: [
+      { name: 'ground beef', amount: 400, unit: 'g' },
+      { name: 'taco shells', amount: 8, unit: '' },
+      { name: 'salsa', amount: 4, unit: 'tbsp' },
+      { name: 'cheddar cheese', amount: 100, unit: 'g' },
+      { name: 'romaine lettuce', amount: 100, unit: 'g' },
+      { name: 'tomato', amount: 1, unit: '' },
+      { name: 'cumin', amount: 2, unit: 'tsp' },
+      { name: 'chili powder', amount: 1, unit: 'tsp' },
+      { name: 'sour cream', amount: 60, unit: 'g' },
+    ],
   },
   {
     id: 'd6',
@@ -339,6 +579,17 @@ export const MEALS: Meal[] = [
     keywords: ['italian', 'light', 'fresh', 'pasta', 'veggie'],
     emoji: '🍝',
     components: { protein: 'parmesan', carb: 'penne', sauce: 'garlic olive oil', vegetable: 'seasonal veggies' },
+    ingredients: [
+      { name: 'penne pasta', amount: 200, unit: 'g' },
+      { name: 'zucchini', amount: 150, unit: 'g' },
+      { name: 'cherry tomatoes', amount: 200, unit: 'g' },
+      { name: 'bell peppers', amount: 150, unit: 'g' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'olive oil', amount: 3, unit: 'tbsp' },
+      { name: 'parmesan', amount: 50, unit: 'g' },
+      { name: 'fresh basil', amount: 20, unit: 'g' },
+      { name: 'lemon', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'd7',
@@ -349,6 +600,15 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'classic', 'hearty', 'protein', 'mediterranean'],
     emoji: '🍗',
     components: { protein: 'chicken', carb: 'potatoes', sauce: 'lemon & rosemary', vegetable: 'green beans' },
+    ingredients: [
+      { name: 'chicken thighs', amount: 500, unit: 'g' },
+      { name: 'potatoes', amount: 400, unit: 'g' },
+      { name: 'green beans', amount: 200, unit: 'g' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'fresh rosemary', amount: 15, unit: 'g' },
+      { name: 'garlic', amount: 4, unit: 'clove' },
+      { name: 'olive oil', amount: 3, unit: 'tbsp' },
+    ],
   },
   {
     id: 'd8',
@@ -359,6 +619,17 @@ export const MEALS: Meal[] = [
     keywords: ['spicy', 'hearty', 'mexican', 'comfort', 'filling', 'bold'],
     emoji: '🫘',
     components: { protein: 'black beans', carb: 'rice', sauce: 'chipotle', vegetable: 'peppers & onion' },
+    ingredients: [
+      { name: 'black beans', amount: 1, unit: 'can' },
+      { name: 'canned tomatoes', amount: 1, unit: 'can' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'bell peppers', amount: 200, unit: 'g' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'cumin', amount: 2, unit: 'tsp' },
+      { name: 'chipotle paste', amount: 1, unit: 'tbsp' },
+      { name: 'basmati rice', amount: 200, unit: 'g' },
+      { name: 'lime', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'd9',
@@ -369,6 +640,17 @@ export const MEALS: Meal[] = [
     keywords: ['italian', 'comfort', 'hearty', 'creamy', 'indulgent'],
     emoji: '🍄',
     components: { protein: 'parmesan', carb: 'arborio rice', sauce: 'white wine', vegetable: 'wild mushrooms' },
+    ingredients: [
+      { name: 'arborio rice', amount: 250, unit: 'g' },
+      { name: 'wild mushrooms', amount: 300, unit: 'g' },
+      { name: 'parmesan', amount: 80, unit: 'g' },
+      { name: 'white wine', amount: 150, unit: 'ml' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'garlic', amount: 2, unit: 'clove' },
+      { name: 'butter', amount: 40, unit: 'g' },
+      { name: 'vegetable stock', amount: 800, unit: 'ml' },
+      { name: 'fresh thyme', amount: 10, unit: 'g' },
+    ],
   },
   {
     id: 'd10',
@@ -379,6 +661,16 @@ export const MEALS: Meal[] = [
     keywords: ['asian', 'spicy', 'thai', 'aromatic', 'bold'],
     emoji: '🥬',
     components: { protein: 'tofu', carb: 'rice', sauce: 'green curry paste', vegetable: 'zucchini' },
+    ingredients: [
+      { name: 'firm tofu', amount: 300, unit: 'g' },
+      { name: 'green curry paste', amount: 3, unit: 'tbsp' },
+      { name: 'coconut milk', amount: 1, unit: 'can' },
+      { name: 'zucchini', amount: 200, unit: 'g' },
+      { name: 'jasmine rice', amount: 200, unit: 'g' },
+      { name: 'fresh basil', amount: 20, unit: 'g' },
+      { name: 'fish sauce', amount: 1, unit: 'tbsp' },
+      { name: 'lime', amount: 1, unit: '' },
+    ],
   },
   {
     id: 'd11',
@@ -389,6 +681,16 @@ export const MEALS: Meal[] = [
     keywords: ['light', 'healthy', 'fresh', 'fish', 'mediterranean'],
     emoji: '🐠',
     components: { protein: 'cod', carb: 'potatoes', sauce: 'herb crust', vegetable: 'cherry tomatoes' },
+    ingredients: [
+      { name: 'cod fillet', amount: 400, unit: 'g' },
+      { name: 'cherry tomatoes', amount: 200, unit: 'g' },
+      { name: 'potatoes', amount: 300, unit: 'g' },
+      { name: 'fresh parsley', amount: 20, unit: 'g' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'olive oil', amount: 2, unit: 'tbsp' },
+      { name: 'lemon', amount: 1, unit: '' },
+      { name: 'breadcrumbs', amount: 40, unit: 'g' },
+    ],
   },
   {
     id: 'd12',
@@ -399,6 +701,18 @@ export const MEALS: Meal[] = [
     keywords: ['mediterranean', 'spicy', 'hearty', 'warm', 'bold'],
     emoji: '🍳',
     components: { protein: 'eggs & chickpeas', carb: 'pita bread', sauce: 'spiced tomato', vegetable: 'feta & peppers' },
+    ingredients: [
+      { name: 'eggs', amount: 4, unit: '' },
+      { name: 'chickpeas', amount: 1, unit: 'can' },
+      { name: 'canned tomatoes', amount: 1, unit: 'can' },
+      { name: 'feta cheese', amount: 80, unit: 'g' },
+      { name: 'bell peppers', amount: 200, unit: 'g' },
+      { name: 'onion', amount: 1, unit: '' },
+      { name: 'garlic', amount: 3, unit: 'clove' },
+      { name: 'cumin', amount: 2, unit: 'tsp' },
+      { name: 'paprika', amount: 1, unit: 'tsp' },
+      { name: 'pita bread', amount: 2, unit: '' },
+    ],
   },
 ];
 
@@ -571,6 +885,63 @@ export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
     ids.add(dayPlan.lunch.id);
   }
   return ids;
+}
+
+export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart): string[] {
+  // Collect every Ingredient instance across all meals in this part
+  const groups = new Map<string, Ingredient[]>();
+
+  function collect(ing: Ingredient) {
+    const key = ing.name.toLowerCase().trim();
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(ing);
+  }
+
+  if (part === 'C') {
+    for (const dayPlan of Object.values(plan.C)) {
+      for (const ing of dayPlan.lunch.ingredients) collect(ing);
+    }
+  } else {
+    for (const dayPlan of Object.values(plan[part])) {
+      for (const meal of [dayPlan.breakfast, dayPlan.lunch, dayPlan.dinner]) {
+        for (const ing of meal.ingredients) collect(ing);
+      }
+    }
+  }
+
+  const result: string[] = [];
+
+  for (const [, instances] of groups) {
+    const { name, unit } = instances[0];
+
+    if (unit === 'can') {
+      // Whole cans — show x{N} prefix when more than one
+      const count = instances.length;
+      result.push(count > 1 ? `x${count} ${name}` : name);
+
+    } else if (!unit) {
+      // Countable pieces (egg, banana, lemon, avocado…) — sum amounts
+      const total = instances.reduce((s, i) => s + i.amount, 0);
+      result.push(total > 1 ? `x${total} ${name}` : name);
+
+    } else if (unit === 'g' || unit === 'ml' || unit === 'kg' || unit === 'l') {
+      // Weight / volume — x{N} when all portions are equal, otherwise sum
+      const allSame = instances.every(i => i.amount === instances[0].amount);
+      if (instances.length > 1 && allSame) {
+        result.push(`x${instances.length} ${instances[0].amount}${unit} ${name}`);
+      } else {
+        const total = instances.reduce((s, i) => s + i.amount, 0);
+        result.push(`${total}${unit} ${name}`);
+      }
+
+    } else {
+      // tbsp, tsp, clove, slice — always sum
+      const total = instances.reduce((s, i) => s + i.amount, 0);
+      result.push(`${total} ${unit} ${name}`);
+    }
+  }
+
+  return result;
 }
 
 export function extractPlanIngredients(plan: StructuredWeekPlan): string[] {

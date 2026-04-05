@@ -36,22 +36,15 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
   const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
 
   const addShoppingItems = useCallback((names: string[]) => {
-    setShoppingItems(prevShopping => {
-      const existingNames = new Set(prevShopping.map(i => i.name.toLowerCase()));
-      setPantryItems(prevPantry => {
-        const pantryNames = new Set(prevPantry.map(i => i.name.toLowerCase()));
-        const toAdd = names
-          .filter(n => {
-            const key = n.toLowerCase().trim();
-            return key && !existingNames.has(key) && !pantryNames.has(key);
-          })
-          .map(name => ({ id: uid(), name: name.trim(), checked: false }));
-        if (toAdd.length > 0) {
-          setShoppingItems(prev => [...toAdd, ...prev]);
-        }
-        return prevPantry;
-      });
-      return prevShopping;
+    setShoppingItems(prev => {
+      const existingNames = new Set(prev.map(i => i.name.toLowerCase()));
+      const toAdd = names
+        .filter(n => {
+          const key = n.toLowerCase().trim();
+          return key && !existingNames.has(key);
+        })
+        .map(name => ({ id: uid(), name: name.trim(), checked: false }));
+      return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
     });
   }, []);
 

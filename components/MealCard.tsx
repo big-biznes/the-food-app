@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Meal, EatingOutEntry, MealType } from '@/data/meals';
+import { Meal, EatingOutEntry, MealType, formatIngredient } from '@/data/meals';
 
 const TYPE_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -104,6 +104,14 @@ export default function MealCard({ meal, onRefresh }: Props) {
           <Text style={styles.badgeText}>{meal.calories} kcal</Text>
         </View>
       </View>
+
+      <View style={styles.ingredientRow}>
+        {meal.ingredients.map(ing => (
+          <View key={ing.name} style={styles.ingredientChip}>
+            <Text style={styles.ingredientText}>{formatIngredient(ing)}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }
@@ -203,5 +211,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: '#666666',
+  },
+  ingredientRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  ingredientChip: {
+    backgroundColor: '#EBEBEB',
+    borderRadius: 100,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  ingredientText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#888888',
   },
 });
