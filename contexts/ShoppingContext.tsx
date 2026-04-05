@@ -15,6 +15,7 @@ type ShoppingContextType = {
   shoppingItems: ShoppingItem[];
   pantryItems: PantryItem[];
   addShoppingItems: (names: string[]) => void;
+  replaceShoppingItems: (names: string[]) => void;
   addShoppingItem: (name: string) => void;
   toggleShoppingItem: (id: string) => void;
   deleteShoppingItem: (id: string) => void;
@@ -46,6 +47,14 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         .map(name => ({ id: uid(), name: name.trim(), checked: false }));
       return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
     });
+  }, []);
+
+  const replaceShoppingItems = useCallback((names: string[]) => {
+    setShoppingItems(
+      names
+        .filter(n => n.trim())
+        .map(name => ({ id: uid(), name: name.trim(), checked: false })),
+    );
   }, []);
 
   const addShoppingItem = useCallback((name: string) => {
@@ -99,6 +108,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         shoppingItems,
         pantryItems,
         addShoppingItems,
+        replaceShoppingItems,
         addShoppingItem,
         toggleShoppingItem,
         deleteShoppingItem,

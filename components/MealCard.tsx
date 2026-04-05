@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Meal, EatingOutEntry, MealType, formatIngredient } from '@/data/meals';
+import { useRouter } from 'expo-router';
+import { Meal, EatingOutEntry, MealType } from '@/data/meals';
 
 const TYPE_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfast',
@@ -23,6 +24,7 @@ type Props =
 
 export default function MealCard({ meal, onRefresh }: Props) {
   const spinAnim = useRef(new Animated.Value(0)).current;
+  const router = useRouter();
 
   function handleRefresh() {
     Animated.timing(spinAnim, {
@@ -66,7 +68,11 @@ export default function MealCard({ meal, onRefresh }: Props) {
   }
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.75}
+      onPress={() => router.push({ pathname: '/details', params: { id: meal.id } })}
+    >
       <View style={styles.topRow}>
         <View style={styles.typeRow}>
           <Ionicons name={TYPE_ICON[meal.mealType]} size={13} color="#BBBBBB" />
@@ -104,15 +110,7 @@ export default function MealCard({ meal, onRefresh }: Props) {
           <Text style={styles.badgeText}>{meal.calories} kcal</Text>
         </View>
       </View>
-
-      <View style={styles.ingredientRow}>
-        {meal.ingredients.map(ing => (
-          <View key={ing.name} style={styles.ingredientChip}>
-            <Text style={styles.ingredientText}>{formatIngredient(ing)}</Text>
-          </View>
-        ))}
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -211,21 +209,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: '#666666',
-  },
-  ingredientRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  ingredientChip: {
-    backgroundColor: '#EBEBEB',
-    borderRadius: 100,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  ingredientText: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#888888',
   },
 });

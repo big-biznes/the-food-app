@@ -40,7 +40,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="(shopping)"
-        options={{ tabBarIcon: tabIcon('bag-outline') }}
+        options={{ tabBarIcon: tabIcon('cart-outline') }}
       />
       <Tabs.Screen
         name="settings"

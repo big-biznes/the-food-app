@@ -54,7 +54,7 @@ function getGreeting(): string {
 
 export default function HomeScreen() {
   const { user } = useAuth();
-  const { addShoppingItems } = useShoppingContext();
+  const { replaceShoppingItems } = useShoppingContext();
   const router = useRouter();
 
   // Snapshot the eating-out day used when the plan was generated.
@@ -111,7 +111,7 @@ export default function HomeScreen() {
 
   function handleGoShopping() {
     if (plan) {
-      addShoppingItems(extractPartIngredients(plan, selectedPart));
+      replaceShoppingItems(extractPartIngredients(plan, selectedPart));
     }
     dismissToast();
     router.navigate('/(shopping)' as never);
@@ -384,7 +384,7 @@ export default function HomeScreen() {
         {/* Shopping banner */}
         {shoppingBanner && (
           <View style={styles.shopBanner}>
-            <Ionicons name="bag-outline" size={13} color="#111111" />
+            <Ionicons name="cart-outline" size={13} color="#111111" />
             <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
           </View>
         )}
@@ -418,7 +418,7 @@ export default function HomeScreen() {
             })}
           </ScrollView>
           <TouchableOpacity style={styles.shopIconBtn} onPress={handleGoShopping} activeOpacity={0.7}>
-            <Ionicons name="bag-outline" size={19} color="#111111" />
+            <Ionicons name="cart-outline" size={19} color="#111111" />
           </TouchableOpacity>
         </View>
 
@@ -476,7 +476,7 @@ export default function HomeScreen() {
             activeOpacity={0.75}
             pointerEvents="auto"
           >
-            <Ionicons name="bag-outline" size={15} color="#111111" />
+            <Ionicons name="cart-outline" size={15} color="#111111" />
             <Animated.View style={{ width: toastTextWidth, overflow: 'hidden' }}>
               <Animated.Text
                 style={[styles.toastBtnText, { opacity: toastTextOpacity }]}

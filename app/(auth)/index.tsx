@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/contexts/AuthContext';
 
 const DEV_PROFILE = {
@@ -26,12 +27,17 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <StatusBar style="light" />
       <View style={styles.container}>
         <View style={styles.hero}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoChar}>f</Text>
+          <View style={styles.logoWrapper}>
+            <Image
+              source={require('@/assets/images/foodapp-logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </View>
-          <Text style={styles.title}>foodapp</Text>
+          <Text style={styles.title}>fudapp</Text>
           <Text style={styles.tagline}>Smart meals.{'\n'}Zero stress.</Text>
         </View>
 
@@ -72,7 +78,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#161516',
   },
   container: {
     flex: 1,
@@ -86,29 +92,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#111111',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
+  logoWrapper: {
+    backgroundColor: 'transparent',
+    borderRadius: 32,
+    marginBottom: 4,
+    overflow: 'hidden',
   },
-  logoChar: {
-    color: '#FFFFFF',
-    fontSize: 36,
-    fontWeight: '700',
+  logo: {
+    width: 180,
+    height: 180,
   },
   title: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#111111',
+    color: '#FFFFFF',
     letterSpacing: -0.5,
   },
   tagline: {
     fontSize: 18,
-    color: '#AAAAAA',
+    color: '#888888',
     textAlign: 'center',
     lineHeight: 27,
   },
@@ -116,42 +118,44 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   primaryButton: {
-    backgroundColor: '#111111',
+    backgroundColor: '#FFFFFF',
     borderRadius: 100,
     paddingVertical: 18,
     alignItems: 'center',
   },
   primaryButtonText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 16,
     fontWeight: '600',
   },
   secondaryButton: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
     borderRadius: 100,
     paddingVertical: 18,
     alignItems: 'center',
   },
   secondaryButtonText: {
-    color: '#111111',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
   },
   devDivider: {
     height: 1,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#2A2A2A',
     marginVertical: 4,
   },
   devButton: {
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: '#3A3A3A',
     borderStyle: 'dashed',
     borderRadius: 100,
     paddingVertical: 14,
     alignItems: 'center',
   },
   devButtonText: {
-    color: '#BBBBBB',
+    color: '#555555',
     fontSize: 13,
     fontWeight: '500',
     letterSpacing: 0.3,
