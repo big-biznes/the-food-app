@@ -10,6 +10,7 @@ import {
   Platform,
   Modal,
   Animated,
+  Easing,
   Dimensions,
   PanResponder,
 } from 'react-native';
@@ -78,6 +79,28 @@ export default function HomeScreen() {
   };
 
   const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
+  const [loading, setLoading] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const spinAnim = useRef(new Animated.Value(0)).current;
+  const spinLoopRef = useRef<Animated.CompositeAnimation | null>(null);
+
+  function runWithLoading(action: () => void) {
+    fadeAnim.setValue(0);
+    spinAnim.setValue(0);
+    setLoading(true);
+    Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+    spinLoopRef.current = Animated.loop(
+      Animated.timing(spinAnim, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true }),
+    );
+    spinLoopRef.current.start();
+    setTimeout(() => {
+      spinLoopRef.current?.stop();
+      Animated.timing(fadeAnim, { toValue: 0, duration: 300, useNativeDriver: true }).start(() => {
+        setLoading(false);
+        action();
+      });
+    }, 1400);
+  }
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
   const [selectedDay, setSelectedDay] = useState<string>(getTodayKey);
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
@@ -179,12 +202,16 @@ export default function HomeScreen() {
   }
 
   function handleGenerate() {
-    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun'));
+    runWithLoading(() =>
+      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun')),
+    );
   }
 
   function handleGenerateFromSheet() {
-    applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun'));
     closeSheet();
+    runWithLoading(() =>
+      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun')),
+    );
   }
 
   function handlePartChange(part: WeekPart) {
@@ -229,10 +256,27 @@ export default function HomeScreen() {
     );
   }
 
-  // ── Setup phase ──────────────────────────────────────────────────────────────
-  if (!plan) {
-    return (
-      <SafeAreaView style={styles.safe} edges={['top']}>
+  // ── Derived plan-phase values (safe to compute even when plan is null) ────────
+  const today = getTodayKey();
+  const selectedPartDays = partDays[selectedPart];
+  const validDay = selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0];
+  const shoppingBanner = shoppingBannerMap[today] ?? null;
+  const spin = spinAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+
+  return (
+    <SafeAreaView style={styles.safe} edges={['top']}>
+
+      {/* ── Loading screen ─────────────────────────────────────────────────── */}
+      {loading && (
+        <Animated.View style={[styles.loadingContainer, { opacity: fadeAnim }]}>
+          <Animated.View style={[styles.spinner, { transform: [{ rotate: spin }] }]} />
+          <Text style={styles.loadingTitle}>Building your plan</Text>
+          <Text style={styles.loadingSubText}>Picking meals just for you…</Text>
+        </Animated.View>
+      )}
+
+      {/* ── Setup phase ────────────────────────────────────────────────────── */}
+      {!loading && !plan && (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.flex}
@@ -290,129 +334,125 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
-      </SafeAreaView>
-    );
-  }
+      )}
 
-  // ── Plan phase ───────────────────────────────────────────────────────────────
-  const today = getTodayKey();
-  const selectedPartDays = partDays[selectedPart];
-  const validDay = selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0];
-  const shoppingBanner = shoppingBannerMap[today] ?? null;
-
-  return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView
-        style={styles.flex}
-        contentContainerStyle={styles.planScroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.greeting}>
-            {getGreeting()}, {firstName} 👋
-          </Text>
-          <Text style={styles.subText}>Here's your week</Text>
-        </View>
-
-        {/* Part selector */}
-        <View style={styles.partRow}>
-          {(['A', 'B', 'C'] as WeekPart[]).map(part => {
-            const isSelected = selectedPart === part;
-            return (
-              <TouchableOpacity
-                key={part}
-                style={[styles.partChip, isSelected && styles.partChipOn]}
-                onPress={() => handlePartChange(part)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.partChipText, isSelected && styles.partChipTextOn]}>
-                  {partLabel[part]}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        {/* Shopping banner */}
-        {shoppingBanner && (
-          <View style={styles.shopBanner}>
-            <Ionicons name="cart-outline" size={13} color="#111111" />
-            <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
+      {/* ── Plan phase ─────────────────────────────────────────────────────── */}
+      {!loading && plan && (
+        <ScrollView
+          style={styles.flex}
+          contentContainerStyle={styles.planScroll}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.greeting}>
+              {getGreeting()}, {firstName} 👋
+            </Text>
+            <Text style={styles.subText}>Here's your week</Text>
           </View>
-        )}
 
-        {/* Day selector */}
-        <View style={styles.dayRowWrapper}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.dayRow}
-            style={styles.dayScrollInner}
-          >
-            {selectedPartDays.map(day => {
-              const isSelected = validDay === day;
-              const isToday = day === today;
+          {/* Part selector */}
+          <View style={styles.partRow}>
+            {(['A', 'B', 'C'] as WeekPart[]).map(part => {
+              const isSelected = selectedPart === part;
               return (
                 <TouchableOpacity
-                  key={day}
-                  style={[styles.dayChip, isSelected && styles.dayChipOn]}
-                  onPress={() => setSelectedDay(day)}
+                  key={part}
+                  style={[styles.partChip, isSelected && styles.partChipOn]}
+                  onPress={() => handlePartChange(part)}
                   activeOpacity={0.7}
                 >
-                  <Text style={[styles.dayChipText, isSelected && styles.dayChipTextOn]}>
-                    {day}
+                  <Text style={[styles.partChipText, isSelected && styles.partChipTextOn]}>
+                    {partLabel[part]}
                   </Text>
-                  {isToday && (
-                    <View style={[styles.todayDot, isSelected && styles.todayDotOn]} />
-                  )}
                 </TouchableOpacity>
               );
             })}
-          </ScrollView>
-          <TouchableOpacity style={styles.shopIconBtn} onPress={handleAddToShoppingList} activeOpacity={0.7}>
-            <Ionicons name="cart-outline" size={19} color="#111111" />
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        {/* Meal cards */}
-        <View style={styles.mealList}>
-          {selectedPart === 'C' ? (
-            <>
-              <MealCard
-                meal={plan.C[validDay].lunch}
-                onRefresh={() => handleRefreshMeal('C', validDay, 'lunch')}
-              />
-              <MealCard meal={plan.C[validDay].dinner} />
-            </>
-          ) : (
-            <>
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
-                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'breakfast')}
-              />
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
-                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'lunch')}
-              />
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
-                onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'dinner')}
-              />
-            </>
+          {/* Shopping banner */}
+          {shoppingBanner && (
+            <View style={styles.shopBanner}>
+              <Ionicons name="cart-outline" size={13} color="#111111" />
+              <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
+            </View>
           )}
-        </View>
-      </ScrollView>
 
-      {/* FAB */}
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={openSheet}
-        activeOpacity={0.85}
-      >
-        <Text style={styles.fabText}>New Plan</Text>
-      </TouchableOpacity>
+          {/* Day selector */}
+          <View style={styles.dayRowWrapper}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.dayRow}
+              style={styles.dayScrollInner}
+            >
+              {selectedPartDays.map(day => {
+                const isSelected = validDay === day;
+                const isToday = day === today;
+                return (
+                  <TouchableOpacity
+                    key={day}
+                    style={[styles.dayChip, isSelected && styles.dayChipOn]}
+                    onPress={() => setSelectedDay(day)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.dayChipText, isSelected && styles.dayChipTextOn]}>
+                      {day}
+                    </Text>
+                    {isToday && (
+                      <View style={[styles.todayDot, isSelected && styles.todayDotOn]} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+            <TouchableOpacity style={styles.shopIconBtn} onPress={handleAddToShoppingList} activeOpacity={0.7}>
+              <Ionicons name="cart-outline" size={19} color="#111111" />
+            </TouchableOpacity>
+          </View>
 
+          {/* Meal cards */}
+          <View style={styles.mealList}>
+            {selectedPart === 'C' ? (
+              <>
+                <MealCard
+                  meal={plan.C[validDay].lunch}
+                  onRefresh={() => handleRefreshMeal('C', validDay, 'lunch')}
+                />
+                <MealCard meal={plan.C[validDay].dinner} />
+              </>
+            ) : (
+              <>
+                <MealCard
+                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
+                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'breakfast')}
+                />
+                <MealCard
+                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
+                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'lunch')}
+                />
+                <MealCard
+                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
+                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'dinner')}
+                />
+              </>
+            )}
+          </View>
+        </ScrollView>
+      )}
+
+      {/* FAB — only in plan phase */}
+      {!loading && plan && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={openSheet}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.fabText}>New Plan</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Toasts — always mounted so refs are valid when show() is called */}
       <PlanToast
         ref={planToastRef}
         message="Meal plan ready!"
@@ -431,7 +471,6 @@ export default function HomeScreen() {
         statusBarTranslucent
         onRequestClose={closeSheet}
       >
-        {/* Backdrop */}
         <Animated.View
           style={[sheet.backdrop, { opacity: backdropAnim }]}
         >
@@ -442,7 +481,6 @@ export default function HomeScreen() {
           />
         </Animated.View>
 
-        {/* Card — slides up, renders after backdrop so it's always on top */}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={sheet.sheetContainer}
@@ -617,6 +655,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111', marginTop: 3,
   },
   todayDotOn: { backgroundColor: '#FFFFFF' },
+
+  // Loading
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    paddingBottom: 40,
+  },
+  spinner: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 3,
+    borderColor: '#F5F5F5',
+    borderTopColor: '#111111',
+  },
+  loadingTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111111',
+    letterSpacing: -0.3,
+  },
+  loadingSubText: {
+    fontSize: 15,
+    color: '#AAAAAA',
+    marginTop: -8,
+  },
 
   // Meal list
   mealList: { gap: 16, marginBottom: 32 },
