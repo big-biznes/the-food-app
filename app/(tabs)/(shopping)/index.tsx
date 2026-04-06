@@ -109,11 +109,11 @@ export default function ShoppingScreen() {
       onPanResponderRelease: (_, g) => {
         const base = activeTabRef.current === 'list' ? 0 : 1;
         const progress = Math.max(0, Math.min(1, base - g.dx / SCREEN_WIDTH));
-        const fastLeft = g.vx < -0.3;
-        const fastRight = g.vx > 0.3;
-        if ((fastLeft || progress > 0.5) && activeTabRef.current === 'list') {
+        const fastLeft = g.vx < -0.15;
+        const fastRight = g.vx > 0.15;
+        if ((fastLeft || progress > 0.3) && activeTabRef.current === 'list') {
           switchTab('pantry');
-        } else if ((fastRight || progress < 0.5) && activeTabRef.current === 'pantry') {
+        } else if ((fastRight || progress < 0.7) && activeTabRef.current === 'pantry') {
           switchTab('list');
         } else {
           switchTab(activeTabRef.current);

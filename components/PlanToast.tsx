@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { Animated, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Animated, Easing, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export type PlanToastHandle = {
@@ -55,8 +55,8 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
       // Collapse button text to icon-only after 3.5s
       const t1 = setTimeout(() => {
         Animated.parallel([
-          Animated.timing(textOpacity, { toValue: 0, duration: 280, useNativeDriver: true }),
-          Animated.timing(textWidth, { toValue: 0, duration: 300, useNativeDriver: false }),
+          Animated.timing(textOpacity, { toValue: 0, duration: 280, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+          Animated.timing(textWidth, { toValue: 0, duration: 300, easing: Easing.inOut(Easing.ease), useNativeDriver: false }),
         ]).start();
       }, 3500);
       timers.current.push(t1);

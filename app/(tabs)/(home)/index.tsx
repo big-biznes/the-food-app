@@ -114,7 +114,7 @@ export default function HomeScreen() {
 
   function handleAddToShoppingList() {
     planToastRef.current?.dismiss();
-    confirmToastRef.current?.show();
+    setTimeout(() => confirmToastRef.current?.show(), 50);
     requestAnimationFrame(() => {
       if (plan) {
         replacePlanIngredients(extractPartIngredients(plan, selectedPart));
@@ -198,7 +198,7 @@ export default function HomeScreen() {
     const today = getTodayKey();
     const days = partDays[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
-    planToastRef.current?.show();
+    setTimeout(() => planToastRef.current?.show(), 500);
   }
 
   function handleGenerate() {
