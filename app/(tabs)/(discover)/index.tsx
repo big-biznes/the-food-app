@@ -153,6 +153,24 @@ function ReactionsSheet({ visible, onClose }: ReactionsSheetProps) {
   const slideAnim = useRef(new Animated.Value(SCREEN_H)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
 
+  // Keep the Modal mounted while the close animation is still running.
+  const [modalVisible, setModalVisible] = useState(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  function animateOut() {
+    Animated.parallel([
+      Animated.timing(backdropAnim, { toValue: 0, duration: 260, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: SCREEN_H, duration: 300, useNativeDriver: false }),
+    ]).start(() => {
+      setModalVisible(false);
+      onCloseRef.current();
+    });
+  }
+
+  const animateOutRef = useRef(animateOut);
+  animateOutRef.current = animateOut;
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -162,7 +180,7 @@ function ReactionsSheet({ visible, onClose }: ReactionsSheetProps) {
       },
       onPanResponderRelease: (_, g) => {
         if (g.dy > 80 || g.vy > 0.5) {
-          onClose();
+          animateOutRef.current();
         } else {
           Animated.spring(slideAnim, {
             toValue: 0,
@@ -180,6 +198,7 @@ function ReactionsSheet({ visible, onClose }: ReactionsSheetProps) {
     if (visible) {
       slideAnim.setValue(SCREEN_H);
       backdropAnim.setValue(0);
+      setModalVisible(true);
       Animated.parallel([
         Animated.timing(backdropAnim, { toValue: 1, duration: 280, useNativeDriver: true }),
         Animated.spring(slideAnim, {
@@ -191,14 +210,7 @@ function ReactionsSheet({ visible, onClose }: ReactionsSheetProps) {
         }),
       ]).start();
     } else {
-      Animated.parallel([
-        Animated.timing(backdropAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
-        Animated.timing(slideAnim, {
-          toValue: SCREEN_H,
-          duration: 260,
-          useNativeDriver: false,
-        }),
-      ]).start();
+      animateOut();
     }
   }, [visible]);
 
@@ -215,15 +227,15 @@ function ReactionsSheet({ visible, onClose }: ReactionsSheetProps) {
 
   return (
     <Modal
-      visible={visible}
+      visible={modalVisible}
       animationType="none"
       transparent
       presentationStyle="overFullScreen"
       statusBarTranslucent
-      onRequestClose={onClose}
+      onRequestClose={animateOut}
     >
       <Animated.View style={[sheet.backdrop, { opacity: backdropAnim }]}>
-        <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={onClose} />
+        <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={animateOut} />
       </Animated.View>
 
       <Animated.View style={[sheet.container, { transform: [{ translateY: slideAnim }] }]}>
