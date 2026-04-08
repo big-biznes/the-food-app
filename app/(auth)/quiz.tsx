@@ -90,6 +90,7 @@ export default function QuizScreen() {
       weightKg: parseInt(weight, 10),
       restrictions,
       eatingOutDay: eatingOutDay!,
+      discoverExpertMode: false,
     });
     router.replace('/(tabs)/(home)');
   }

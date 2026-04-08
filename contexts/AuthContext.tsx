@@ -22,6 +22,7 @@ export type UserProfile = {
   weightKg: number;
   restrictions: DietaryRestriction[];
   eatingOutDay: string;
+  discoverExpertMode: boolean;
 };
 
 type AuthContextType = {

@@ -39,6 +39,10 @@ export default function TabLayout() {
         options={{ tabBarIcon: tabIcon('home-outline') }}
       />
       <Tabs.Screen
+        name="(discover)"
+        options={{ tabBarIcon: tabIcon('sparkles-outline') }}
+      />
+      <Tabs.Screen
         name="(shopping)"
         options={{ tabBarIcon: tabIcon('cart-outline') }}
       />

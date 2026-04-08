@@ -848,6 +848,7 @@ export function generateStructuredMealPlan(
   restrictions: DietaryRestriction[],
   keywords: string[],
   eatingOutDay: string = 'Sun',
+  likedIds: string[] = [],
 ): StructuredWeekPlan {
   const { partDays } = getWeekStructure(eatingOutDay);
 
@@ -867,7 +868,33 @@ export function generateStructuredMealPlan(
     [partDays.C[0]]: { lunch: cLunch, dinner: EATING_OUT },
   };
 
-  return { A: partA, B: partB, C: partC };
+  const plan: StructuredWeekPlan = { A: partA, B: partB, C: partC };
+
+  // ── Liked-meal injection ────────────────────────────────────────────────────
+  // Guarantee at least one liked meal appears in the plan if any liked meals
+  // are compatible with the user's dietary restrictions.
+  if (likedIds.length > 0) {
+    const planIds = extractUsedIds(plan);
+    const alreadyHasLiked = likedIds.some(id => planIds.has(id));
+    if (!alreadyHasLiked) {
+      const candidates = MEALS.filter(
+        m =>
+          likedIds.includes(m.id) &&
+          restrictions.every(r => m.dietaryTags.includes(r)),
+      );
+      if (candidates.length > 0) {
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        // Replace the slot in part A on the first day matching this meal type.
+        const targetDay = partDays.A[0];
+        const dayPlan = partA[targetDay];
+        if (dayPlan) {
+          dayPlan[chosen.mealType] = chosen;
+        }
+      }
+    }
+  }
+
+  return plan;
 }
 
 // ── Alternate meal (refresh) ──────────────────────────────────────────────────

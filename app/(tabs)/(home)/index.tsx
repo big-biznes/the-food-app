@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
+import { useLikes } from '@/contexts/LikesContext';
 import {
   WeekPart,
   Day,
@@ -57,6 +58,7 @@ function getGreeting(): string {
 export default function HomeScreen() {
   const { user } = useAuth();
   const { replacePlanIngredients } = useShoppingContext();
+  const { likedIds } = useLikes();
 
   // Snapshot the eating-out day used when the plan was generated.
   // Changing it in settings only takes effect when a new plan is generated.
@@ -203,14 +205,14 @@ export default function HomeScreen() {
 
   function handleGenerate() {
     runWithLoading(() =>
-      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun')),
+      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun', likedIds)),
     );
   }
 
   function handleGenerateFromSheet() {
     closeSheet();
     runWithLoading(() =>
-      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun')),
+      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun', likedIds)),
     );
   }
 

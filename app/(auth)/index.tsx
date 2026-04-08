@@ -14,6 +14,7 @@ const DEV_PROFILE = {
   weightKg: 70,
   restrictions: [] as [],
   eatingOutDay: 'Fri',
+  discoverExpertMode: false,
 };
 
 export default function WelcomeScreen() {
