@@ -28,10 +28,11 @@ type SwipeCardProps = {
   meal: Meal;
   nextMeal: Meal | undefined;
   expertMode: boolean;
+  onSwipeCommit: (direction: 'left' | 'right') => void;
   onSwipe: (direction: 'left' | 'right') => void;
 };
 
-function SwipeCard({ meal, nextMeal, expertMode, onSwipe }: SwipeCardProps) {
+function SwipeCard({ meal, nextMeal, expertMode, onSwipeCommit, onSwipe }: SwipeCardProps) {
   const position = useRef(new Animated.ValueXY()).current;
 
   function swipeOff(direction: 'left' | 'right') {
@@ -45,6 +46,8 @@ function SwipeCard({ meal, nextMeal, expertMode, onSwipe }: SwipeCardProps) {
 
   const swipeOffRef = useRef(swipeOff);
   swipeOffRef.current = swipeOff;
+  const onSwipeCommitRef = useRef(onSwipeCommit);
+  onSwipeCommitRef.current = onSwipeCommit;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -55,8 +58,10 @@ function SwipeCard({ meal, nextMeal, expertMode, onSwipe }: SwipeCardProps) {
       },
       onPanResponderRelease: (_, g) => {
         if (g.dx > SWIPE_THRESHOLD) {
+          onSwipeCommitRef.current('right');
           swipeOffRef.current('right');
         } else if (g.dx < -SWIPE_THRESHOLD) {
+          onSwipeCommitRef.current('left');
           swipeOffRef.current('left');
         } else {
           Animated.spring(position, {
@@ -281,6 +286,19 @@ type ReactionRowProps = {
 };
 
 function ReactionRow({ meal, liked, onToggle }: ReactionRowProps) {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const likedRef = useRef(liked);
+
+  function handleToggle() {
+    Animated.sequence([
+      Animated.timing(fadeAnim, { toValue: 0, duration: 120, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 120, useNativeDriver: true }),
+    ]).start();
+    onToggle();
+  }
+
+  likedRef.current = liked;
+
   return (
     <View style={sheet.row}>
       <Text style={sheet.rowEmoji}>{meal.emoji}</Text>
@@ -290,18 +308,20 @@ function ReactionRow({ meal, liked, onToggle }: ReactionRowProps) {
           {meal.mealType[0].toUpperCase() + meal.mealType.slice(1)} · {meal.prepTime} min
         </Text>
       </View>
-      <TouchableOpacity
-        style={[sheet.toggleBtn, liked && sheet.toggleBtnActive]}
-        onPress={onToggle}
-        activeOpacity={0.75}
-        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-      >
-        <Ionicons
-          name={liked ? 'heart' : 'heart-outline'}
-          size={18}
-          color={liked ? '#FFFFFF' : '#AAAAAA'}
-        />
-      </TouchableOpacity>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <TouchableOpacity
+          style={[sheet.toggleBtn, liked && sheet.toggleBtnActive]}
+          onPress={handleToggle}
+          activeOpacity={0.75}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Ionicons
+            name={liked ? 'heart' : 'heart-outline'}
+            size={18}
+            color={liked ? '#FFFFFF' : '#AAAAAA'}
+          />
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }
@@ -343,10 +363,10 @@ export default function DiscoverScreen() {
   const next = initialDeck[index + 1];
   const totalSeen = likedIds.length + dislikedIds.length;
 
-  function handleGestureSwipe(direction: 'left' | 'right', meal: Meal) {
+  // Fires immediately when swipe threshold is crossed — updates like/dislike count right away.
+  function handleGestureCommit(direction: 'left' | 'right', meal: Meal) {
     if (direction === 'right') like(meal.id);
     else dislike(meal.id);
-    setIndex(i => i + 1);
 
     if (!expertMode) {
       swipeOnlyStreak.current += 1;
@@ -359,6 +379,11 @@ export default function DiscoverScreen() {
         }).start();
       }
     }
+  }
+
+  // Fires after card fly-off animation completes — advances the deck.
+  function handleGestureSwipe() {
+    setIndex(i => i + 1);
   }
 
   function handleButtonSwipe(direction: 'left' | 'right', meal: Meal) {
@@ -417,7 +442,8 @@ export default function DiscoverScreen() {
             meal={current}
             nextMeal={next}
             expertMode={expertMode}
-            onSwipe={(dir) => handleGestureSwipe(dir, current)}
+            onSwipeCommit={(dir) => handleGestureCommit(dir, current)}
+            onSwipe={handleGestureSwipe}
           />
         )}
       </View>
