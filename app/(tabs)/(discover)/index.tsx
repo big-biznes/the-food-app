@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { MEALS, Meal } from '@/data/meals';
+import { ALL_MEALS, Meal } from '@/data/meals';
 import { useLikes } from '@/contexts/LikesContext';
 import { useAuth } from '@/contexts/AuthContext';
 import SwipeCard from '@/components/discover/SwipeCard';
@@ -32,7 +32,7 @@ export default function DiscoverScreen() {
 
   const initialDeck = useMemo<Meal[]>(() => {
     const restrictions = user?.restrictions ?? [];
-    const compatible = MEALS.filter(m =>
+    const compatible = ALL_MEALS.filter(m =>
       restrictions.every(r => m.dietaryTags.includes(r)),
     );
     return [...compatible].sort(() => Math.random() - 0.5);

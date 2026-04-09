@@ -2,7 +2,7 @@ import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { MEALS, MealType, Ingredient, formatIngredient } from '@/data/meals';
+import { ALL_MEALS, MealType, Ingredient, formatIngredient } from '@/data/meals';
 import { DietaryRestriction } from '@/contexts/AuthContext';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -42,7 +42,7 @@ function formatAmount(ing: Ingredient): string {
 export default function DetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const meal = MEALS.find(m => m.id === id);
+  const meal = ALL_MEALS.find(m => m.id === id);
 
   if (!meal) {
     return (
@@ -124,6 +124,18 @@ export default function DetailsScreen() {
           </View>
         </View>
       </ScrollView>
+
+      {/* Floating cook button */}
+      {meal.instructions.length > 0 && (
+        <TouchableOpacity
+          style={styles.fab}
+          activeOpacity={0.85}
+          onPress={() => router.push({ pathname: '/cook', params: { id: meal.id } })}
+        >
+          <Ionicons name="restaurant-outline" size={18} color="#FFFFFF" />
+          <Text style={styles.fabText}>Cook</Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }
@@ -145,7 +157,7 @@ const styles = StyleSheet.create({
 
   scroll: {
     paddingHorizontal: 24,
-    paddingBottom: 48,
+    paddingBottom: 100,
   },
 
   // Hero
@@ -275,5 +287,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#AAAAAA',
     marginLeft: 12,
+  },
+
+  // Floating cook button
+  fab: {
+    position: 'absolute',
+    bottom: 28,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#111111',
+    borderRadius: 100,
+    paddingHorizontal: 32,
+    paddingVertical: 17,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  fabText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: -0.2,
   },
 });

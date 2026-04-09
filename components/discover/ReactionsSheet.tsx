@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { MEALS } from '@/data/meals';
+import { ALL_MEALS } from '@/data/meals';
 import { useLikes } from '@/contexts/LikesContext';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import ReactionRow from './ReactionRow';
@@ -47,11 +47,11 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
   }, [visible]);
 
   const likedMeals = useMemo(
-    () => MEALS.filter(m => likedIds.includes(m.id)),
+    () => ALL_MEALS.filter(m => likedIds.includes(m.id)),
     [likedIds],
   );
   const dislikedMeals = useMemo(
-    () => MEALS.filter(m => dislikedIds.includes(m.id)),
+    () => ALL_MEALS.filter(m => dislikedIds.includes(m.id)),
     [dislikedIds],
   );
 

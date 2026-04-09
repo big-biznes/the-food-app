@@ -6,6 +6,7 @@ export default function HomeLayout() {
     <Stack>
       <Stack.Screen name="index"  options={{headerShown: false}} />
       <Stack.Screen name="details"  options={{headerShown: false, animation: "fade"}} />
+      <Stack.Screen name="cook"  options={{headerShown: false, animation: "slide_from_bottom"}} />
     </Stack>
   );
 }
