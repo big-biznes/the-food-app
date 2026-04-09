@@ -217,18 +217,66 @@ export function getWeekStructure(eatingOutDay: string): WeekStructure {
 
 // ── Structured part generation ────────────────────────────────────────────────
 
-/** Count how many component fields a meal shares with already-picked meals. */
-function sharedIngredientScore(meal: Meal, picked: Meal[]): number {
+/**
+ * Pick 2 target proteins for a part, biased by the scored pool.
+ * Sums per-protein scores from the already-scored meals (which factor in
+ * keywords + liked preferences), then picks the top 2 with some randomness.
+ * `excludeProteins` ensures Part B doesn't repeat Part A's proteins.
+ */
+function pickTargetProteins(
+  pool: (Meal & { score: number })[],
+  excludeProteins: Set<string>,
+): [string, string] {
+  const proteinScore = new Map<string, number>();
+  for (const m of pool) {
+    const p = m.components.protein;
+    if (excludeProteins.has(p)) continue;
+    proteinScore.set(p, (proteinScore.get(p) ?? 0) + m.score);
+  }
+  // Sort by aggregate score descending, pick from the top candidates
+  const ranked = [...proteinScore.entries()].sort((a, b) => b[1] - a[1]);
+  if (ranked.length === 0) {
+    // Fallback: ignore exclusions
+    const all = new Map<string, number>();
+    for (const m of pool) {
+      const p = m.components.protein;
+      all.set(p, (all.get(p) ?? 0) + m.score);
+    }
+    const fallback = [...all.entries()].sort((a, b) => b[1] - a[1]);
+    const a = fallback[0]?.[0] ?? 'chicken';
+    const b = fallback[1]?.[0] ?? fallback[0]?.[0] ?? 'beef';
+    return [a, b];
+  }
+  // Pick from top 4 candidates with a weighted random for variety
+  const candidates = ranked.slice(0, Math.min(4, ranked.length));
+  const totalWeight = candidates.reduce((s, [, w]) => s + w + 1, 0); // +1 so zero-score proteins still have a chance
+  function weightedPick(exclude?: string): string {
+    const filtered = exclude
+      ? candidates.filter(([p]) => p !== exclude)
+      : candidates;
+    const tw = filtered.reduce((s, [, w]) => s + w + 1, 0);
+    let r = Math.random() * tw;
+    for (const [p, w] of filtered) {
+      r -= w + 1;
+      if (r <= 0) return p;
+    }
+    return filtered[filtered.length - 1][0];
+  }
+  const first = weightedPick();
+  const second = weightedPick(first);
+  return [first, second];
+}
+
+/** Bonus for non-protein ingredient overlap with already-picked meals in this part. */
+function nonProteinSharingScore(meal: Meal, picked: Meal[]): number {
   if (picked.length === 0) return 0;
   const seen = new Set<string>();
   for (const m of picked) {
-    seen.add(m.components.protein);
     seen.add(m.components.carb);
     seen.add(m.components.vegetable);
     seen.add(m.components.sauce);
   }
   let score = 0;
-  if (seen.has(meal.components.protein)) score += 3; // protein overlap is most valuable for shopping
   if (seen.has(meal.components.carb)) score += 2;
   if (seen.has(meal.components.vegetable)) score += 2;
   if (seen.has(meal.components.sauce)) score += 1;
@@ -240,16 +288,20 @@ function pickMealWithSharing(
   mealType: MealType,
   usedIds: Set<string>,
   pickedInPart: Meal[],
+  targetProteins: Set<string>,
 ): Meal {
   const typePool = pool.filter(m => m.mealType === mealType);
   const unused = typePool.filter(m => !usedIds.has(m.id));
   const source = unused.length > 0 ? unused : typePool;
 
-  // Add ingredient-sharing bonus to the keyword score
-  const boosted = source.map(m => ({
-    ...m,
-    score: m.score + sharedIngredientScore(m, pickedInPart),
-  }));
+  const boosted = source.map(m => {
+    let bonus = nonProteinSharingScore(m, pickedInPart);
+    // Strong boost for matching one of the 2 target proteins
+    if (targetProteins.has(m.components.protein)) bonus += 4;
+    // Penalise proteins outside the target pair
+    else bonus -= 3;
+    return { ...m, score: m.score + bonus };
+  });
 
   const sorted = [...boosted].sort((a, b) => b.score - a.score);
   const topN = sorted.slice(0, Math.min(5, sorted.length));
@@ -265,21 +317,24 @@ function generatePartPlan(
   keywords: string[],
   usedIds: Set<string>,
   likedIds: string[] = [],
-): Record<string, DayPlan> {
+  excludeProteins: Set<string> = new Set(),
+): { plan: Record<string, DayPlan>; proteins: Set<string> } {
   const scored = scoredPool(pool, keywords, likedIds);
+  const [prot1, prot2] = pickTargetProteins(scored, excludeProteins);
+  const targetProteins = new Set([prot1, prot2]);
   const pickedInPart: Meal[] = [];
 
   const plan: Record<string, DayPlan> = {};
   for (const day of days) {
-    const breakfast = pickMealWithSharing(scored, 'breakfast', usedIds, pickedInPart);
+    const breakfast = pickMealWithSharing(scored, 'breakfast', usedIds, pickedInPart, targetProteins);
     pickedInPart.push(breakfast);
-    const lunch = pickMealWithSharing(scored, 'lunch', usedIds, pickedInPart);
+    const lunch = pickMealWithSharing(scored, 'lunch', usedIds, pickedInPart, targetProteins);
     pickedInPart.push(lunch);
-    const dinner = pickMealWithSharing(scored, 'dinner', usedIds, pickedInPart);
+    const dinner = pickMealWithSharing(scored, 'dinner', usedIds, pickedInPart, targetProteins);
     pickedInPart.push(dinner);
     plan[day] = { breakfast, lunch, dinner };
   }
-  return plan;
+  return { plan, proteins: targetProteins };
 }
 
 export function generateStructuredMealPlan(
@@ -296,8 +351,9 @@ export function generateStructuredMealPlan(
   const pool = compatible.length >= 15 ? compatible : ALL_MEALS;
   const usedIds = new Set<string>();
 
-  const partA = generatePartPlan(partDays.A, pool, keywords, usedIds, likedIds);
-  const partB = generatePartPlan(partDays.B, pool, keywords, usedIds, likedIds);
+  // Part A picks 2 proteins; Part B excludes those so the week has 4 distinct proteins
+  const resultA = generatePartPlan(partDays.A, pool, keywords, usedIds, likedIds);
+  const resultB = generatePartPlan(partDays.B, pool, keywords, usedIds, likedIds, resultA.proteins);
 
   // Part C: eating-out day — one cooked lunch + eating-out dinner
   const cScored = scoredPool(pool, keywords, likedIds);
@@ -306,6 +362,8 @@ export function generateStructuredMealPlan(
     [partDays.C[0]]: { lunch: cLunch, dinner: EATING_OUT },
   };
 
+  const partA = resultA.plan;
+  const partB = resultB.plan;
   const plan: StructuredWeekPlan = { A: partA, B: partB, C: partC };
 
   // ── Liked-meal injection ────────────────────────────────────────────────────
