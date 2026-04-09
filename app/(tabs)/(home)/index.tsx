@@ -1,22 +1,6 @@
 import { useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  Modal,
-  Animated,
-  Easing,
-  Dimensions,
-  PanResponder,
-} from 'react-native';
+import { TouchableOpacity, Text, Animated, Easing, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
 import { useLikes } from '@/contexts/LikesContext';
@@ -24,35 +8,25 @@ import {
   WeekPart,
   Day,
   DayPlan,
+  MealType,
+  StructuredWeekPlan,
   generateStructuredMealPlan,
   getWeekStructure,
   getAlternateMeal,
   extractUsedIds,
   extractPartIngredients,
-  StructuredWeekPlan,
-  MealType,
 } from '@/data/meals';
-import MealCard from '@/components/MealCard';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
-
-const CRAVING_CHIPS = [
-  'Spicy', 'Light', 'Hearty', 'Fresh',
-  'Asian', 'Italian', 'Mediterranean', 'Mexican',
-  'Comfort', 'Quick',
-];
+import LoadingScreen from '@/components/home/LoadingScreen';
+import SetupPhase from '@/components/home/SetupPhase';
+import PlanPhase from '@/components/home/PlanPhase';
+import CravingSheet from '@/components/home/CravingSheet';
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
-}
-
-function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
 }
 
 export default function HomeScreen() {
@@ -103,78 +77,26 @@ export default function HomeScreen() {
       });
     }, 1400);
   }
+
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
   const [selectedDay, setSelectedDay] = useState<string>(getTodayKey);
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
   const [cravingText, setCravingText] = useState('');
   const [showSheet, setShowSheet] = useState(false);
-  const backdropAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(Dimensions.get('screen').height)).current;
 
   const planToastRef = useRef<PlanToastHandle>(null);
   const confirmToastRef = useRef<ConfirmToastHandle>(null);
+
+  const today = getTodayKey();
+  const shoppingBanner = shoppingBannerMap[today] ?? null;
+  const firstName = user?.name?.split(' ')[0] || 'there';
 
   function handleAddToShoppingList() {
     planToastRef.current?.dismiss();
     setTimeout(() => confirmToastRef.current?.show(), 50);
     requestAnimationFrame(() => {
-      if (plan) {
-        replacePlanIngredients(extractPartIngredients(plan, selectedPart));
-      }
+      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart));
     });
-  }
-
-  const insets = useSafeAreaInsets();
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (_, g) => {
-        if (g.dy > 0) slideAnim.setValue(g.dy);
-      },
-      onPanResponderRelease: (_, g) => {
-        if (g.dy > 80 || g.vy > 0.5) {
-          closeSheet();
-        } else {
-          Animated.spring(slideAnim, {
-            toValue: 0,
-            useNativeDriver: false,
-            damping: 22,
-            mass: 1,
-            stiffness: 220,
-          }).start();
-        }
-      },
-    }),
-  ).current;
-  const firstName = user?.name?.split(' ')[0] || 'there';
-
-  function openSheet() {
-    slideAnim.setValue(Dimensions.get('screen').height);
-    backdropAnim.setValue(0);
-    setShowSheet(true);
-    Animated.parallel([
-      Animated.timing(backdropAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        useNativeDriver: false,
-        damping: 22,
-        mass: 1,
-        stiffness: 220,
-      }),
-    ]).start();
-  }
-
-  function closeSheet() {
-    Animated.parallel([
-      Animated.timing(backdropAnim, { toValue: 0, duration: 220, useNativeDriver: true }),
-      Animated.timing(slideAnim, {
-        toValue: Dimensions.get('screen').height,
-        duration: 280,
-        useNativeDriver: false,
-      }),
-    ]).start(() => setShowSheet(false));
   }
 
   function toggleCraving(chip: string) {
@@ -191,34 +113,35 @@ export default function HomeScreen() {
   }
 
   function applyNewPlan(newPlan: StructuredWeekPlan) {
-    // Lock in the eating-out day for this plan so changing the setting
-    // mid-plan doesn't shift which days belong to which part.
     setPlanEatingOutDay(user?.eatingOutDay ?? 'Sun');
     setPlan(newPlan);
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);
-    const today = getTodayKey();
     const days = partDays[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
     setTimeout(() => planToastRef.current?.show(), 500);
   }
 
-  function handleGenerate() {
-    runWithLoading(() =>
-      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun', likedIds)),
+  function generatePlan() {
+    return generateStructuredMealPlan(
+      user?.restrictions ?? [],
+      buildKeywords(),
+      user?.eatingOutDay ?? 'Sun',
+      likedIds,
     );
   }
 
+  function handleGenerate() {
+    runWithLoading(() => applyNewPlan(generatePlan()));
+  }
+
   function handleGenerateFromSheet() {
-    closeSheet();
-    runWithLoading(() =>
-      applyNewPlan(generateStructuredMealPlan(user?.restrictions ?? [], buildKeywords(), user?.eatingOutDay ?? 'Sun', likedIds)),
-    );
+    setShowSheet(false);
+    runWithLoading(() => applyNewPlan(generatePlan()));
   }
 
   function handlePartChange(part: WeekPart) {
     setSelectedPart(part);
-    const today = getTodayKey();
     const days = partDays[part];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
   }
@@ -229,227 +152,63 @@ export default function HomeScreen() {
 
     if (part === 'C') {
       if (mealType !== 'lunch') return;
-      const current = plan.C[day].lunch;
-      const alternate = getAlternateMeal(current, usedIds, user?.restrictions ?? []);
+      const alternate = getAlternateMeal(plan.C[day].lunch, usedIds, user?.restrictions ?? []);
       setPlan(prev =>
-        prev
-          ? { ...prev, C: { ...prev.C, [day]: { ...prev.C[day], lunch: alternate } } }
-          : prev,
+        prev ? { ...prev, C: { ...prev.C, [day]: { ...prev.C[day], lunch: alternate } } } : prev,
       );
       return;
     }
 
     const partPlan = plan[part] as Record<string, DayPlan>;
-    const current = partPlan[day][mealType];
-    const alternate = getAlternateMeal(current, usedIds, user?.restrictions ?? []);
+    const alternate = getAlternateMeal(partPlan[day][mealType], usedIds, user?.restrictions ?? []);
     setPlan(prev =>
       prev
         ? {
             ...prev,
             [part]: {
               ...prev[part],
-              [day]: {
-                ...(prev[part] as Record<string, DayPlan>)[day],
-                [mealType]: alternate,
-              },
+              [day]: { ...(prev[part] as Record<string, DayPlan>)[day], [mealType]: alternate },
             },
           }
         : prev,
     );
   }
 
-  // ── Derived plan-phase values (safe to compute even when plan is null) ────────
-  const today = getTodayKey();
-  const selectedPartDays = partDays[selectedPart];
-  const validDay = selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0];
-  const shoppingBanner = shoppingBannerMap[today] ?? null;
-  const spin = spinAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      {loading && <LoadingScreen fadeAnim={fadeAnim} spinAnim={spinAnim} />}
 
-      {/* ── Loading screen ─────────────────────────────────────────────────── */}
-      {loading && (
-        <Animated.View style={[styles.loadingContainer, { opacity: fadeAnim }]}>
-          <Animated.View style={[styles.spinner, { transform: [{ rotate: spin }] }]} />
-          <Text style={styles.loadingTitle}>Building your plan</Text>
-          <Text style={styles.loadingSubText}>Picking meals just for you…</Text>
-        </Animated.View>
-      )}
-
-      {/* ── Setup phase ────────────────────────────────────────────────────── */}
       {!loading && !plan && (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.flex}
-        >
-          <ScrollView
-            contentContainerStyle={styles.setupScroll}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.header}>
-              <Text style={styles.greeting}>Hey {firstName} 👋</Text>
-              <Text style={styles.subText}>Let's build your meal plan</Text>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>What are you craving?</Text>
-              <Text style={styles.sectionHint}>Pick everything that sounds good</Text>
-              <View style={styles.chipGrid}>
-                {CRAVING_CHIPS.map(chip => {
-                  const on = selectedCravings.includes(chip);
-                  return (
-                    <TouchableOpacity
-                      key={chip}
-                      style={[styles.chip, on && styles.chipOn]}
-                      onPress={() => toggleCraving(chip)}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Anything specific?</Text>
-              <TextInput
-                style={styles.cravingInput}
-                placeholder="e.g. something with pasta, no mushrooms…"
-                placeholderTextColor="#C5C5C5"
-                value={cravingText}
-                onChangeText={setCravingText}
-                multiline
-                numberOfLines={3}
-                textAlignVertical="top"
-              />
-            </View>
-
-            <TouchableOpacity
-              style={styles.primaryBtn}
-              onPress={handleGenerate}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.primaryBtnText}>Generate my meal plan</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </KeyboardAvoidingView>
+        <SetupPhase
+          firstName={firstName}
+          selectedCravings={selectedCravings}
+          cravingText={cravingText}
+          onToggleCraving={toggleCraving}
+          onCravingTextChange={setCravingText}
+          onGenerate={handleGenerate}
+        />
       )}
 
-      {/* ── Plan phase ─────────────────────────────────────────────────────── */}
       {!loading && plan && (
-        <ScrollView
-          style={styles.flex}
-          contentContainerStyle={styles.planScroll}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.greeting}>
-              {getGreeting()}, {firstName} 👋
-            </Text>
-            <Text style={styles.subText}>Here's your week</Text>
-          </View>
-
-          {/* Part selector */}
-          <View style={styles.partRow}>
-            {(['A', 'B', 'C'] as WeekPart[]).map(part => {
-              const isSelected = selectedPart === part;
-              return (
-                <TouchableOpacity
-                  key={part}
-                  style={[styles.partChip, isSelected && styles.partChipOn]}
-                  onPress={() => handlePartChange(part)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.partChipText, isSelected && styles.partChipTextOn]}>
-                    {partLabel[part]}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          {/* Shopping banner */}
-          {shoppingBanner && (
-            <View style={styles.shopBanner}>
-              <Ionicons name="cart-outline" size={13} color="#111111" />
-              <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
-            </View>
-          )}
-
-          {/* Day selector */}
-          <View style={styles.dayRowWrapper}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.dayRow}
-              style={styles.dayScrollInner}
-            >
-              {selectedPartDays.map(day => {
-                const isSelected = validDay === day;
-                const isToday = day === today;
-                return (
-                  <TouchableOpacity
-                    key={day}
-                    style={[styles.dayChip, isSelected && styles.dayChipOn]}
-                    onPress={() => setSelectedDay(day)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={[styles.dayChipText, isSelected && styles.dayChipTextOn]}>
-                      {day}
-                    </Text>
-                    {isToday && (
-                      <View style={[styles.todayDot, isSelected && styles.todayDotOn]} />
-                    )}
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-            <TouchableOpacity style={styles.shopIconBtn} onPress={handleAddToShoppingList} activeOpacity={0.7}>
-              <Ionicons name="cart-outline" size={19} color="#111111" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Meal cards */}
-          <View style={styles.mealList}>
-            {selectedPart === 'C' ? (
-              <>
-                <MealCard
-                  meal={plan.C[validDay].lunch}
-                  onRefresh={() => handleRefreshMeal('C', validDay, 'lunch')}
-                />
-                <MealCard meal={plan.C[validDay].dinner} />
-              </>
-            ) : (
-              <>
-                <MealCard
-                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
-                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'breakfast')}
-                />
-                <MealCard
-                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
-                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'lunch')}
-                />
-                <MealCard
-                  meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
-                  onRefresh={() => handleRefreshMeal(selectedPart, validDay, 'dinner')}
-                />
-              </>
-            )}
-          </View>
-        </ScrollView>
+        <PlanPhase
+          firstName={firstName}
+          plan={plan}
+          selectedPart={selectedPart}
+          selectedDay={selectedDay}
+          today={today}
+          partLabel={partLabel}
+          partDays={partDays}
+          shoppingBanner={shoppingBanner}
+          onPartChange={handlePartChange}
+          onDayChange={setSelectedDay}
+          onAddToShoppingList={handleAddToShoppingList}
+          onRefreshMeal={handleRefreshMeal}
+        />
       )}
 
       {/* FAB — only in plan phase */}
       {!loading && plan && (
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={openSheet}
-          activeOpacity={0.85}
-        >
+        <TouchableOpacity style={styles.fab} onPress={() => setShowSheet(true)} activeOpacity={0.85}>
           <Text style={styles.fabText}>New Plan</Text>
         </TouchableOpacity>
       )}
@@ -464,232 +223,21 @@ export default function HomeScreen() {
       />
       <ConfirmToast ref={confirmToastRef} message="Added to shopping list" />
 
-      {/* Craving sheet modal */}
-      <Modal
+      <CravingSheet
         visible={showSheet}
-        animationType="none"
-        transparent
-        presentationStyle="overFullScreen"
-        statusBarTranslucent
-        onRequestClose={closeSheet}
-      >
-        <Animated.View
-          style={[sheet.backdrop, { opacity: backdropAnim }]}
-        >
-          <TouchableOpacity
-            style={StyleSheet.absoluteFillObject}
-            activeOpacity={1}
-            onPress={closeSheet}
-          />
-        </Animated.View>
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={sheet.sheetContainer}
-        >
-          <Animated.View
-            style={{ transform: [{ translateY: slideAnim }] }}
-          >
-            <View style={sheet.card}>
-              <View style={sheet.dragZone} {...panResponder.panHandlers} hitSlop={{ top: 24 }}>
-                <View style={sheet.handle} />
-              </View>
-
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-              >
-                <Text style={sheet.title}>New plan</Text>
-                <Text style={sheet.hint}>What are you craving this week?</Text>
-
-                <View style={sheet.chipGrid}>
-                  {CRAVING_CHIPS.map(chip => {
-                    const on = selectedCravings.includes(chip);
-                    return (
-                      <TouchableOpacity
-                        key={chip}
-                        style={[styles.chip, on && styles.chipOn]}
-                        onPress={() => toggleCraving(chip)}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-
-                <TextInput
-                  style={sheet.input}
-                  placeholder="e.g. something with pasta, no mushrooms…"
-                  placeholderTextColor="#C5C5C5"
-                  value={cravingText}
-                  onChangeText={setCravingText}
-                  multiline
-                  numberOfLines={3}
-                  textAlignVertical="top"
-                />
-
-                <TouchableOpacity
-                  style={styles.primaryBtn}
-                  onPress={handleGenerateFromSheet}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.primaryBtnText}>Generate</Text>
-                </TouchableOpacity>
-              </ScrollView>
-
-              <View style={{ height: insets.bottom + 8 }} />
-            </View>
-          </Animated.View>
-        </KeyboardAvoidingView>
-      </Modal>
+        onClose={() => setShowSheet(false)}
+        selectedCravings={selectedCravings}
+        cravingText={cravingText}
+        onToggleCraving={toggleCraving}
+        onCravingTextChange={setCravingText}
+        onGenerate={handleGenerateFromSheet}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#FFFFFF' },
-  flex: { flex: 1 },
-
-  setupScroll: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingBottom: 40,
-  },
-  planScroll: {
-    paddingHorizontal: 24,
-    paddingBottom: 120, // space for FAB
-  },
-
-  header: { paddingTop: 20, marginBottom: 24 },
-  greeting: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-  },
-  subText: { fontSize: 15, color: '#AAAAAA', marginTop: 4 },
-
-  // Setup
-  section: { marginBottom: 28 },
-  sectionTitle: { fontSize: 18, fontWeight: '700', color: '#111111', marginBottom: 4 },
-  sectionHint: { fontSize: 14, color: '#AAAAAA', marginBottom: 16 },
-  chipGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  chip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 100, backgroundColor: '#F5F5F5' },
-  chipOn: { backgroundColor: '#111111' },
-  chipText: { fontSize: 14, fontWeight: '500', color: '#111111' },
-  chipTextOn: { color: '#FFFFFF' },
-  cravingInput: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 16,
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    fontSize: 15,
-    color: '#111111',
-    minHeight: 90,
-  },
-  primaryBtn: {
-    backgroundColor: '#111111',
-    borderRadius: 100,
-    paddingVertical: 18,
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  primaryBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
-
-  // Part selector
-  partRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
-  partChip: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-  },
-  partChipOn: { backgroundColor: '#111111' },
-  partChipText: { fontSize: 12, fontWeight: '600', color: '#AAAAAA' },
-  partChipTextOn: { color: '#FFFFFF' },
-
-  // Shopping banner
-  shopBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 100,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  shopBannerText: { fontSize: 13, fontWeight: '500', color: '#111111' },
-
-  // Day selector
-  dayRowWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-    gap: 8,
-  },
-  dayScrollInner: { flex: 1 },
-  dayRow: { gap: 8 },
-  shopIconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    minWidth: 52,
-  },
-  dayChipOn: { backgroundColor: '#111111' },
-  dayChipText: { fontSize: 13, fontWeight: '600', color: '#AAAAAA' },
-  dayChipTextOn: { color: '#FFFFFF' },
-  todayDot: {
-    width: 4, height: 4, borderRadius: 2,
-    backgroundColor: '#111111', marginTop: 3,
-  },
-  todayDotOn: { backgroundColor: '#FFFFFF' },
-
-  // Loading
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
-    paddingBottom: 40,
-  },
-  spinner: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 3,
-    borderColor: '#F5F5F5',
-    borderTopColor: '#111111',
-  },
-  loadingTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-  },
-  loadingSubText: {
-    fontSize: 15,
-    color: '#AAAAAA',
-    marginTop: -8,
-  },
-
-  // Meal list
-  mealList: { gap: 16, marginBottom: 32 },
-
-  // FAB
   fab: {
     position: 'absolute',
     bottom: 28,
@@ -709,63 +257,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: -0.2,
-  },
-});
-
-const sheet = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-  },
-  sheetContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 24,
-  },
-  dragZone: {
-    paddingTop: 12,
-    paddingBottom: 16,
-    alignItems: 'center',
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#E0E0E0',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-    marginBottom: 4,
-  },
-  hint: {
-    fontSize: 14,
-    color: '#AAAAAA',
-    marginBottom: 20,
-  },
-  chipGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 20,
-  },
-  input: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 16,
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    fontSize: 15,
-    color: '#111111',
-    minHeight: 80,
-    marginBottom: 20,
   },
 });
