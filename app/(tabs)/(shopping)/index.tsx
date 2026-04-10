@@ -117,6 +117,9 @@ export default function ShoppingScreen() {
           switchTab(activeTabRef.current);
         }
       },
+      onPanResponderTerminate: () => {
+        switchTab(activeTabRef.current);
+      },
     }),
   ).current;
 
@@ -209,9 +212,9 @@ const styles = StyleSheet.create({
   },
   segmentPill: {
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
+    top: 4,
+    bottom: 4,
+    left: 4,
     backgroundColor: '#111111',
     borderRadius: 100,
   },
