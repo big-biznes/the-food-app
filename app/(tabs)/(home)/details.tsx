@@ -97,6 +97,47 @@ export default function DetailsScreen() {
           </View>
         </View>
 
+        {/* Macros */}
+        <View style={styles.macrosRow}>
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.proteinG}g</Text>
+            <Text style={styles.macroLabel}>Protein</Text>
+          </View>
+          <View style={styles.macroDivider} />
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.carbsG}g</Text>
+            <Text style={styles.macroLabel}>Carbs</Text>
+          </View>
+          <View style={styles.macroDivider} />
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.fatG}g</Text>
+            <Text style={styles.macroLabel}>Fat</Text>
+          </View>
+          <View style={styles.macroDivider} />
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.fiberG}g</Text>
+            <Text style={styles.macroLabel}>Fiber</Text>
+          </View>
+        </View>
+
+        {/* Extra nutrition */}
+        <View style={styles.macrosRow}>
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.sugarG}g</Text>
+            <Text style={styles.macroLabel}>Sugar</Text>
+          </View>
+          <View style={styles.macroDivider} />
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.sodiumMg}mg</Text>
+            <Text style={styles.macroLabel}>Sodium</Text>
+          </View>
+          <View style={styles.macroDivider} />
+          <View style={styles.macroItem}>
+            <Text style={styles.macroValue}>{meal.difficulty}</Text>
+            <Text style={styles.macroLabel}>Difficulty</Text>
+          </View>
+        </View>
+
         {/* Dietary tags */}
         {meal.dietaryTags.length > 0 && (
           <View style={styles.tagRow}>
@@ -224,6 +265,39 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   statLabel: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: '#AAAAAA',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+
+  // Macros row
+  macrosRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 20,
+    paddingVertical: 16,
+    marginBottom: 16,
+  },
+  macroItem: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+  },
+  macroDivider: {
+    width: 1,
+    backgroundColor: '#E5E5E5',
+    marginVertical: 4,
+  },
+  macroValue: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111111',
+    letterSpacing: -0.2,
+  },
+  macroLabel: {
     fontSize: 11,
     fontWeight: '500',
     color: '#AAAAAA',

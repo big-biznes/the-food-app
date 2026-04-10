@@ -68,7 +68,7 @@ function buildDescription(protein: string, carb: string, vegetable: string, sauc
   return `${p} with ${carb}, ${vegetable} and ${sauce}`;
 }
 
-function buildKeywords(protein: string, carb: string, vegetable: string, sauce: string): string[] {
+function buildKeywords(protein: string, carb: string, vegetable: string, sauce: string, tags: string): string[] {
   const kw = [protein, carb, vegetable, sauce];
 
   if (MEAT_PROTEINS.has(protein)) kw.push('hearty', 'protein');
@@ -84,21 +84,29 @@ function buildKeywords(protein: string, carb: string, vegetable: string, sauce: 
   if (carb === 'pasta') kw.push('italian');
   if (carb === 'quinoa') kw.push('healthy');
 
+  // Include CSV tags (e.g. batch-cooking, meal-prep, balanced)
+  for (const tag of tags.split(',').map(t => t.trim()).filter(Boolean)) {
+    kw.push(tag);
+  }
+
   return [...new Set(kw)];
 }
 
-function buildIngredients(
-  protein: string,
-  carb: string,
-  vegetable: string,
-  sauce: string,
-): Ingredient[] {
-  return [
-    { name: protein, amount: 300, unit: 'g' },
-    { name: carb, amount: 200, unit: 'g' },
-    { name: vegetable, amount: 150, unit: 'g' },
-    { name: sauce, amount: 2, unit: 'tbsp' },
-  ];
+/** Parse "chicken:200g; rice:150g; oil:10g" into Ingredient[]. */
+function parseIngredients(raw: string): Ingredient[] {
+  return raw
+    .split(';')
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(part => {
+      const [namePart, qtyPart] = part.split(':');
+      const name = namePart?.trim() ?? part;
+      if (!qtyPart) return { name, amount: 0, unit: '' };
+      const match = qtyPart.trim().match(/^([\d.]+)\s*([a-zA-Z]*)/);
+      const amount = match ? parseFloat(match[1]) : 0;
+      const unit = match?.[2] ?? '';
+      return { name, amount, unit };
+    });
 }
 
 /** Parse "1. Do X. 2. Do Y." into individual step strings. */
@@ -125,12 +133,20 @@ function rowToMeal(row: RawRecipe): Meal {
     description: buildDescription(row.protein, row.carb, row.vegetable, row.sauce),
     prepTime: row.prep_time_min,
     calories: row.calories,
+    proteinG: row.protein_g,
+    carbsG: row.carbs_g,
+    fatG: row.fat_g,
+    fiberG: row.fiber_g,
+    sugarG: row.sugar_g,
+    sodiumMg: row.sodium_mg,
+    difficulty: row.difficulty,
+    appliances: row.appliances.split(',').map(a => a.trim()).filter(Boolean),
     mealType: inferMealType(row.calories),
     dietaryTags: inferDietaryTags(row.protein, row.carb),
-    keywords: buildKeywords(row.protein, row.carb, row.vegetable, row.sauce),
+    keywords: buildKeywords(row.protein, row.carb, row.vegetable, row.sauce, row.tags),
     emoji: PROTEIN_EMOJI[row.protein] ?? '🍽️',
     components,
-    ingredients: buildIngredients(row.protein, row.carb, row.vegetable, row.sauce),
+    ingredients: parseIngredients(row.ingredient_quantities),
     instructions: parseInstructions(row.instructions),
   };
 }

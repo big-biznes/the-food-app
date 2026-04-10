@@ -22,6 +22,14 @@ export type Meal = {
   description: string;
   prepTime: number;
   calories: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+  fiberG: number;
+  sugarG: number;
+  sodiumMg: number;
+  difficulty: string;
+  appliances: string[];
   mealType: MealType;
   dietaryTags: DietaryRestriction[];
   keywords: string[];
