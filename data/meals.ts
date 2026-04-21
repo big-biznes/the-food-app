@@ -177,7 +177,10 @@ export function generateMealPlan(
   const compatible = ALL_MEALS.filter(m =>
     restrictions.every(r => m.dietaryTags.includes(r)),
   );
-  const pool = compatible.length >= 15 ? compatible : ALL_MEALS;
+  const hasAllTypes = (['breakfast', 'lunch', 'dinner'] as MealType[]).every(t =>
+    compatible.some(m => m.mealType === t),
+  );
+  const pool = (compatible.length >= 15 && hasAllTypes) ? compatible : ALL_MEALS;
   const scored = scoredPool(pool, cravingKeywords);
   const usedIds = new Set<string>();
   const plan: WeekPlan = {};
@@ -262,6 +265,7 @@ function pickTargetProteins(
     const filtered = exclude
       ? candidates.filter(([p]) => p !== exclude)
       : candidates;
+    if (filtered.length === 0) return candidates[candidates.length - 1][0];
     const tw = filtered.reduce((s, [, w]) => s + w + 1, 0);
     let r = Math.random() * tw;
     for (const [p, w] of filtered) {
@@ -356,7 +360,10 @@ export function generateStructuredMealPlan(
   const compatible = ALL_MEALS.filter(m =>
     restrictions.every(r => m.dietaryTags.includes(r)),
   );
-  const pool = compatible.length >= 15 ? compatible : ALL_MEALS;
+  const hasAllTypes = (['breakfast', 'lunch', 'dinner'] as MealType[]).every(t =>
+    compatible.some(m => m.mealType === t),
+  );
+  const pool = (compatible.length >= 15 && hasAllTypes) ? compatible : ALL_MEALS;
   const usedIds = new Set<string>();
 
   // Part A picks 2 proteins; Part B excludes those so the week has 4 distinct proteins

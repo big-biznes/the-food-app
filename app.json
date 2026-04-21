@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "the-food-app",
-    "slug": "the-food-app",
+    "name": "fudapp",
+    "slug": "fudapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/foodapp-logo.png",
     "scheme": "thefoodapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -42,7 +42,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "9782cc0a-f6c8-4ebe-b649-94eabd1ac7d3"
+        "projectId": "293c24db-fbf0-4960-a8e9-45986bf59bcd"
       }
     }
   }
