@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -8,6 +9,7 @@ import {
   StructuredWeekPlan,
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
+import PoolView from '@/components/home/PoolView';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -15,6 +17,8 @@ function getGreeting(): string {
   if (h < 17) return 'Good afternoon';
   return 'Good evening';
 }
+
+type SwapSource = { part: WeekPart; day: string; mealType: MealType } | null;
 
 type Props = {
   firstName: string;
@@ -25,10 +29,12 @@ type Props = {
   partLabel: Record<WeekPart, string>;
   partDays: Record<WeekPart, Day[]>;
   shoppingBanner: string | null;
+  swapSource: SwapSource;
   onPartChange: (part: WeekPart) => void;
   onDayChange: (day: string) => void;
   onAddToShoppingList: () => void;
   onRefreshMeal: (part: WeekPart, day: string, mealType: MealType) => void;
+  onSwapSelect: (part: WeekPart, day: string, mealType: MealType) => void;
 };
 
 export default function PlanPhase({
@@ -40,11 +46,19 @@ export default function PlanPhase({
   partLabel,
   partDays,
   shoppingBanner,
+  swapSource,
   onPartChange,
   onDayChange,
   onAddToShoppingList,
   onRefreshMeal,
+  onSwapSelect,
 }: Props) {
+  const [viewMode, setViewMode] = useState<'day' | 'pool'>('day');
+
+  useEffect(() => {
+    setViewMode('day');
+  }, [selectedPart]);
+
   const selectedPartDays = partDays[selectedPart];
   const validDay = selectedPartDays.includes(selectedDay as Day)
     ? selectedDay
@@ -91,34 +105,48 @@ export default function PlanPhase({
         </View>
       )}
 
-      {/* Day selector */}
+      {/* Day selector + view toggle */}
       <View style={styles.dayRowWrapper}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.dayRow}
-          style={styles.dayScrollInner}
+        {viewMode === 'day' && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.dayRow}
+            style={styles.dayScrollInner}
+          >
+            {selectedPartDays.map((day, idx) => {
+              const on = validDay === day;
+              const isToday = day === today;
+              return (
+                <TouchableOpacity
+                  key={day}
+                  style={[styles.dayChip, on && styles.dayChipOn]}
+                  onPress={() => onDayChange(day)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.dayChipText, on && styles.dayChipTextOn]}>
+                    Day {idx + 1}
+                  </Text>
+                  {isToday && (
+                    <View style={[styles.todayDot, on && styles.todayDotOn]} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        )}
+        {viewMode === 'pool' && <View style={styles.dayScrollInner} />}
+        <TouchableOpacity
+          style={styles.shopIconBtn}
+          onPress={() => setViewMode(v => v === 'day' ? 'pool' : 'day')}
+          activeOpacity={0.7}
         >
-          {selectedPartDays.map(day => {
-            const on = validDay === day;
-            const isToday = day === today;
-            return (
-              <TouchableOpacity
-                key={day}
-                style={[styles.dayChip, on && styles.dayChipOn]}
-                onPress={() => onDayChange(day)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.dayChipText, on && styles.dayChipTextOn]}>
-                  {day}
-                </Text>
-                {isToday && (
-                  <View style={[styles.todayDot, on && styles.todayDotOn]} />
-                )}
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+          <Ionicons
+            name={viewMode === 'day' ? 'grid-outline' : 'list-outline'}
+            size={19}
+            color="#111111"
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.shopIconBtn}
           onPress={onAddToShoppingList}
@@ -128,33 +156,47 @@ export default function PlanPhase({
         </TouchableOpacity>
       </View>
 
-      {/* Meal cards */}
-      <View style={styles.mealList}>
-        {selectedPart === 'C' ? (
-          <>
-            <MealCard
-              meal={plan.C[validDay].lunch}
-              onRefresh={() => onRefreshMeal('C', validDay, 'lunch')}
-            />
-            <MealCard meal={plan.C[validDay].dinner} />
-          </>
-        ) : (
-          <>
-            <MealCard
-              meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
-              onRefresh={() => onRefreshMeal(selectedPart, validDay, 'breakfast')}
-            />
-            <MealCard
-              meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
-              onRefresh={() => onRefreshMeal(selectedPart, validDay, 'lunch')}
-            />
-            <MealCard
-              meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
-              onRefresh={() => onRefreshMeal(selectedPart, validDay, 'dinner')}
-            />
-          </>
-        )}
-      </View>
+      {/* Meal cards — day view */}
+      {viewMode === 'day' && (
+        <View style={styles.mealList}>
+          {selectedPart === 'C' ? (
+            <>
+              <MealCard
+                meal={plan.C[validDay].lunch}
+                onRefresh={() => onRefreshMeal('C', validDay, 'lunch')}
+              />
+              <MealCard meal={plan.C[validDay].dinner} />
+            </>
+          ) : (
+            <>
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
+                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'breakfast')}
+              />
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
+                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'lunch')}
+              />
+              <MealCard
+                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
+                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'dinner')}
+              />
+            </>
+          )}
+        </View>
+      )}
+
+      {/* Meal cards — pool view */}
+      {viewMode === 'pool' && (
+        <PoolView
+          plan={plan}
+          selectedPart={selectedPart}
+          partDays={partDays}
+          swapSource={swapSource}
+          onRefreshMeal={onRefreshMeal}
+          onSwapSelect={onSwapSelect}
+        />
+      )}
     </ScrollView>
   );
 }

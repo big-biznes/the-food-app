@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { TouchableOpacity, Text, Animated, Easing, StyleSheet } from 'react-native';
+import { useState, useRef, useEffect } from 'react';
+import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
@@ -55,10 +55,21 @@ export default function HomeScreen() {
   };
 
   const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
+  const [swapSource, setSwapSource] = useState<{ part: WeekPart; day: string; mealType: MealType } | null>(null);
+  const swapBannerAnim = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const spinAnim = useRef(new Animated.Value(0)).current;
   const spinLoopRef = useRef<Animated.CompositeAnimation | null>(null);
+
+  useEffect(() => {
+    Animated.spring(swapBannerAnim, {
+      toValue: swapSource ? 1 : 0,
+      useNativeDriver: true,
+      speed: 18,
+      bounciness: 5,
+    }).start();
+  }, [swapSource]);
 
   function runWithLoading(action: () => void) {
     fadeAnim.setValue(0);
@@ -115,6 +126,7 @@ export default function HomeScreen() {
   function applyNewPlan(newPlan: StructuredWeekPlan) {
     setPlanEatingOutDay(user?.eatingOutDay ?? 'Sun');
     setPlan(newPlan);
+    setSwapSource(null);
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);
     const days = partDays[todayPart];
@@ -144,6 +156,64 @@ export default function HomeScreen() {
     setSelectedPart(part);
     const days = partDays[part];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
+    setSwapSource(null);
+  }
+
+  function handleSwapSelect(part: WeekPart, day: string, mealType: MealType) {
+    if (!swapSource) {
+      setSwapSource({ part, day, mealType });
+      return;
+    }
+
+    // Same card → cancel
+    if (swapSource.part === part && swapSource.day === day && swapSource.mealType === mealType) {
+      setSwapSource(null);
+      return;
+    }
+
+    // Ineligible → alert, keep swapSource active so user can pick again
+    const eligible = swapSource.mealType === 'breakfast'
+      ? mealType === 'breakfast'
+      : mealType !== 'breakfast';
+    if (!eligible) {
+      Alert.alert('Cannot swap', 'Breakfasts can only be swapped with other breakfasts.');
+      return;
+    }
+
+    const src = swapSource;
+    setSwapSource(null);
+
+    setPlan(prev => {
+      if (!prev) return prev;
+      const srcDayPlan = (prev[src.part] as Record<string, DayPlan>)[src.day];
+      const dstDayPlan = (prev[part] as Record<string, DayPlan>)[day];
+      const srcMeal = srcDayPlan[src.mealType];
+      const dstMeal = dstDayPlan[mealType];
+
+      if (src.part === part) {
+        // Same part — merge both day updates into one spread to avoid key collision
+        return {
+          ...prev,
+          [part]: {
+            ...prev[part],
+            [src.day]: { ...srcDayPlan, [src.mealType]: dstMeal },
+            [day]: { ...dstDayPlan, [mealType]: srcMeal },
+          },
+        };
+      }
+
+      return {
+        ...prev,
+        [src.part]: {
+          ...prev[src.part],
+          [src.day]: { ...srcDayPlan, [src.mealType]: dstMeal },
+        },
+        [part]: {
+          ...prev[part],
+          [day]: { ...dstDayPlan, [mealType]: srcMeal },
+        },
+      };
+    });
   }
 
   function handleRefreshMeal(part: WeekPart, day: string, mealType: MealType) {
@@ -199,12 +269,37 @@ export default function HomeScreen() {
           partLabel={partLabel}
           partDays={partDays}
           shoppingBanner={shoppingBanner}
+          swapSource={swapSource}
           onPartChange={handlePartChange}
           onDayChange={setSelectedDay}
           onAddToShoppingList={handleAddToShoppingList}
           onRefreshMeal={handleRefreshMeal}
+          onSwapSelect={handleSwapSelect}
         />
       )}
+
+      {/* Floating swap tip */}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.swapBannerFloat,
+          {
+            opacity: swapBannerAnim,
+            transform: [
+              {
+                translateY: swapBannerAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [16, 0],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <View style={styles.swapBannerFloatInner}>
+          <Text style={styles.swapBannerFloatText}>Tap another meal to swap · Same to cancel</Text>
+        </View>
+      </Animated.View>
 
       {/* FAB — only in plan phase */}
       {!loading && plan && (
@@ -257,5 +352,30 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: -0.2,
+  },
+  swapBannerFloat: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    pointerEvents: 'none',
+  },
+  swapBannerFloatInner: {
+    backgroundColor: '#111111',
+    borderRadius: 100,
+    paddingHorizontal: 20,
+    paddingVertical: 11,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  swapBannerFloatText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    letterSpacing: -0.1,
   },
 });
