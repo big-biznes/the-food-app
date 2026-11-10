@@ -22,14 +22,21 @@ import LoadingScreen from '@/components/home/LoadingScreen';
 import SetupPhase from '@/components/home/SetupPhase';
 import PlanPhase from '@/components/home/PlanPhase';
 import CravingSheet from '@/components/home/CravingSheet';
+import { Colors } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/useTheme';
+import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 
+import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const LOADING_MS = 1400;
 
 function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
 }
 
 export default function HomeScreen() {
+  const styles = useThemedStyles(makeStyles);
+  const reducedMotion = useReducedMotionRef();
   const { user } = useAuth();
   const { replacePlanIngredients } = useShoppingContext();
   const { likedIds } = useLikes();
@@ -63,18 +70,32 @@ export default function HomeScreen() {
   const spinLoopRef = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
+    const toValue = swapSource ? 1 : 0;
+    if (reducedMotion.current) {
+      swapBannerAnim.setValue(toValue);
+      return;
+    }
     Animated.spring(swapBannerAnim, {
-      toValue: swapSource ? 1 : 0,
+      toValue,
       useNativeDriver: true,
       speed: 18,
       bounciness: 5,
     }).start();
-  }, [swapSource]);
+  }, [swapSource, swapBannerAnim, reducedMotion]);
 
   function runWithLoading(action: () => void) {
+    setLoading(true);
+    if (reducedMotion.current) {
+      fadeAnim.setValue(1);
+      spinAnim.setValue(0);
+      setTimeout(() => {
+        setLoading(false);
+        action();
+      }, LOADING_MS);
+      return;
+    }
     fadeAnim.setValue(0);
     spinAnim.setValue(0);
-    setLoading(true);
     Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
     spinLoopRef.current = Animated.loop(
       Animated.timing(spinAnim, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true }),
@@ -86,7 +107,7 @@ export default function HomeScreen() {
         setLoading(false);
         action();
       });
-    }, 1400);
+    }, LOADING_MS);
   }
 
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
@@ -112,13 +133,13 @@ export default function HomeScreen() {
 
   function toggleCraving(chip: string) {
     setSelectedCravings(prev =>
-      prev.includes(chip) ? prev.filter(c => c !== chip) : [...prev, chip],
+      prev.includes(chip) ? prev.filter(x => x !== chip) : [...prev, chip],
     );
   }
 
   function buildKeywords() {
     return [
-      ...selectedCravings.map(c => c.toLowerCase()),
+      ...selectedCravings.map(x => x.toLowerCase()),
       ...cravingText.toLowerCase().split(/\s+/).filter(Boolean),
     ];
   }
@@ -281,6 +302,9 @@ export default function HomeScreen() {
       {/* Floating swap tip */}
       <Animated.View
         pointerEvents="none"
+        accessibilityLiveRegion="polite"
+        importantForAccessibility={swapSource ? 'auto' : 'no-hide-descendants'}
+        accessibilityElementsHidden={!swapSource}
         style={[
           styles.swapBannerFloat,
           {
@@ -297,22 +321,28 @@ export default function HomeScreen() {
         ]}
       >
         <View style={styles.swapBannerFloatInner}>
-          <Text style={styles.swapBannerFloatText}>Tap another meal to swap · Same to cancel</Text>
+          <Text style={styles.swapBannerFloatText}>Tap another meal to swap, or the same one to cancel</Text>
         </View>
       </Animated.View>
 
       {/* FAB — only in plan phase */}
       {!loading && plan && (
-        <TouchableOpacity style={styles.fab} onPress={() => setShowSheet(true)} activeOpacity={0.85}>
-          <Text style={styles.fabText}>New Plan</Text>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => setShowSheet(true)}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel="Replan the week"
+        >
+          <Text style={styles.fabText}>Replan</Text>
         </TouchableOpacity>
       )}
 
       {/* Toasts — always mounted so refs are valid when show() is called */}
       <PlanToast
         ref={planToastRef}
-        message="Meal plan ready!"
-        actionLabel="Prepare shopping list?"
+        message="Your week is planned"
+        actionLabel="Make shopping list"
         actionIcon="cart-outline"
         onAction={handleAddToShoppingList}
       />
@@ -331,26 +361,21 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
   fab: {
     position: 'absolute',
     bottom: 28,
     alignSelf: 'center',
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingHorizontal: 36,
     paddingVertical: 17,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    elevation: 8,
   },
   fabText: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.onPrimary,
     letterSpacing: -0.2,
   },
   swapBannerFloat: {
@@ -362,20 +387,15 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
   },
   swapBannerFloatInner: {
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingHorizontal: 20,
     paddingVertical: 11,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    elevation: 8,
   },
   swapBannerFloatText: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.onPrimary,
     letterSpacing: -0.1,
   },
 });

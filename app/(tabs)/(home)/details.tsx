@@ -4,7 +4,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ALL_MEALS, MealType, Ingredient, formatIngredient } from '@/data/meals';
 import { DietaryRestriction } from '@/contexts/AuthContext';
+import { Colors, tileColor } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
+import { font, type } from '@/constants/type';
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
 const TYPE_ICON: Record<MealType, IoniconName> = {
@@ -40,6 +43,8 @@ function formatAmount(ing: Ingredient): string {
 }
 
 export default function DetailsScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const meal = ALL_MEALS.find(m => m.id === id);
@@ -48,7 +53,7 @@ export default function DetailsScreen() {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
-          <Ionicons name="chevron-back" size={22} color="#111111" />
+          <Ionicons name="chevron-back" size={22} color={c.text} />
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -58,7 +63,7 @@ export default function DetailsScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Back button */}
       <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
-        <Ionicons name="chevron-back" size={22} color="#111111" />
+        <Ionicons name="chevron-back" size={22} color={c.text} />
       </TouchableOpacity>
 
       <ScrollView
@@ -66,32 +71,34 @@ export default function DetailsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
-        <View style={styles.hero}>
-          <Text style={styles.heroEmoji}>{meal.emoji}</Text>
+        <View style={[styles.hero, { backgroundColor: tileColor(c, meal.mealType) }]}>
           <View style={styles.typeRow}>
-            <Ionicons name={TYPE_ICON[meal.mealType]} size={14} color="#AAAAAA" />
+            <Ionicons name={TYPE_ICON[meal.mealType]} size={14} color={c.onTile} />
             <Text style={styles.typeLabel}>{TYPE_LABEL[meal.mealType]}</Text>
           </View>
-          <Text style={styles.title}>{meal.name}</Text>
+          <Text style={styles.heroEmoji}>{meal.emoji}</Text>
+          <Text style={styles.title} accessibilityRole="header">
+            {meal.name}
+          </Text>
           <Text style={styles.description}>{meal.description}</Text>
         </View>
 
         {/* Stats */}
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
-            <Ionicons name="time-outline" size={20} color="#111111" />
+            <Ionicons name="time-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.prepTime} min</Text>
             <Text style={styles.statLabel}>Prep time</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
-            <Ionicons name="flame-outline" size={20} color="#111111" />
+            <Ionicons name="flame-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.calories}</Text>
             <Text style={styles.statLabel}>Calories</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
-            <Ionicons name="layers-outline" size={20} color="#111111" />
+            <Ionicons name="layers-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.ingredients.length}</Text>
             <Text style={styles.statLabel}>Ingredients</Text>
           </View>
@@ -173,7 +180,7 @@ export default function DetailsScreen() {
           activeOpacity={0.85}
           onPress={() => router.push({ pathname: '/cook', params: { id: meal.id } })}
         >
-          <Ionicons name="restaurant-outline" size={18} color="#FFFFFF" />
+          <Ionicons name="restaurant-outline" size={18} color={c.onPrimary} />
           <Text style={styles.fabText}>Cook</Text>
         </TouchableOpacity>
       )}
@@ -181,14 +188,14 @@ export default function DetailsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
 
   backBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 12,
@@ -197,20 +204,21 @@ const styles = StyleSheet.create({
   },
 
   scroll: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingBottom: 100,
   },
 
   // Hero
   hero: {
-    alignItems: 'center',
-    paddingTop: 16,
-    paddingBottom: 28,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    gap: 6,
   },
   heroEmoji: {
-    fontSize: 72,
-    lineHeight: 88,
-    marginBottom: 12,
+    fontSize: 64,
+    lineHeight: 76,
+    marginTop: 8,
   },
   typeRow: {
     flexDirection: 'row',
@@ -219,31 +227,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   typeLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#AAAAAA',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+    fontSize: 14,
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.onTile,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.4,
-    textAlign: 'center',
-    marginBottom: 10,
+    ...type.display,
+    fontSize: 34,
+    lineHeight: 35,
+    color: c.onTile,
   },
   description: {
+    ...type.body,
     fontSize: 15,
-    color: '#AAAAAA',
-    lineHeight: 22,
-    textAlign: 'center',
+    lineHeight: 21,
+    color: c.onTileMuted,
   },
 
   // Stats row
   statsRow: {
     flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     paddingVertical: 20,
     marginBottom: 16,
@@ -255,28 +259,26 @@ const styles = StyleSheet.create({
   },
   statDivider: {
     width: 1,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: c.surfaceAlt,
     marginVertical: 4,
   },
   statValue: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#111111',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.text,
     letterSpacing: -0.3,
   },
   statLabel: {
     fontSize: 11,
-    fontWeight: '500',
-    color: '#AAAAAA',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.textMuted,
+    },
 
   // Macros row
   macrosRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     paddingVertical: 16,
     marginBottom: 16,
@@ -288,22 +290,20 @@ const styles = StyleSheet.create({
   },
   macroDivider: {
     width: 1,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: c.surfaceAlt,
     marginVertical: 4,
   },
   macroValue: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#111111',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.text,
     letterSpacing: -0.2,
   },
   macroLabel: {
     fontSize: 11,
-    fontWeight: '500',
-    color: '#AAAAAA',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.textMuted,
+    },
 
   // Dietary tags
   tagRow: {
@@ -313,15 +313,15 @@ const styles = StyleSheet.create({
     marginBottom: 28,
   },
   tag: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 100,
+    backgroundColor: c.surface,
+    borderRadius: 8,
     paddingHorizontal: 14,
     paddingVertical: 7,
   },
   tagText: {
     fontSize: 13,
-    fontWeight: '500',
-    color: '#555555',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.textSecondary,
   },
 
   // Ingredients
@@ -330,13 +330,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#111111',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.text,
     letterSpacing: -0.2,
     marginBottom: 12,
   },
   ingredientList: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     paddingHorizontal: 18,
   },
@@ -348,18 +348,18 @@ const styles = StyleSheet.create({
   },
   ingredientRowBorder: {
     borderTopWidth: 1,
-    borderTopColor: '#EBEBEB',
+    borderTopColor: c.border,
   },
   ingredientName: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#111111',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.text,
     flex: 1,
   },
   ingredientAmount: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#AAAAAA',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.textMuted,
     marginLeft: 12,
   },
 
@@ -371,20 +371,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingHorizontal: 32,
     paddingVertical: 17,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    elevation: 8,
   },
   fabText: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.onPrimary,
     letterSpacing: -0.2,
   },
 });

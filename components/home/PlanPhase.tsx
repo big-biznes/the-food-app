@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -10,6 +10,19 @@ import {
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
 import PoolView from '@/components/home/PoolView';
+import { Colors } from '@/constants/theme';
+import { font, type } from '@/constants/type';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+
+const DAY_NAME: Record<Day, string> = {
+  Mon: 'Monday',
+  Tue: 'Tuesday',
+  Wed: 'Wednesday',
+  Thu: 'Thursday',
+  Fri: 'Friday',
+  Sat: 'Saturday',
+  Sun: 'Sunday',
+};
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -18,7 +31,17 @@ function getGreeting(): string {
   return 'Good evening';
 }
 
+/** Which meal is "up next" for a day: by the clock if it's today, else breakfast. */
+function nextMealType(isToday: boolean, available: MealType[]): MealType {
+  if (!isToday) return available[0];
+  const h = new Date().getHours();
+  const wanted: MealType = h < 10 ? 'breakfast' : h < 15 ? 'lunch' : 'dinner';
+  if (available.includes(wanted)) return wanted;
+  return wanted === 'breakfast' ? available[0] : available[available.length - 1];
+}
+
 type SwapSource = { part: WeekPart; day: string; mealType: MealType } | null;
+type ViewMode = 'day' | 'pool';
 
 type Props = {
   firstName: string;
@@ -37,6 +60,8 @@ type Props = {
   onSwapSelect: (part: WeekPart, day: string, mealType: MealType) => void;
 };
 
+const ICON_HIT_SLOP = { top: 4, bottom: 4, left: 4, right: 4 };
+
 export default function PlanPhase({
   firstName,
   plan,
@@ -53,16 +78,61 @@ export default function PlanPhase({
   onRefreshMeal,
   onSwapSelect,
 }: Props) {
-  const [viewMode, setViewMode] = useState<'day' | 'pool'>('day');
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
 
-  useEffect(() => {
-    setViewMode('day');
-  }, [selectedPart]);
+  // View mode is scoped to the part it was chosen for, so switching parts
+  // falls back to the day view without an effect.
+  const [viewState, setViewState] = useState<{ part: WeekPart; mode: ViewMode }>({
+    part: selectedPart,
+    mode: 'day',
+  });
+  const viewMode: ViewMode = viewState.part === selectedPart ? viewState.mode : 'day';
+
+  function toggleViewMode() {
+    setViewState({ part: selectedPart, mode: viewMode === 'day' ? 'pool' : 'day' });
+  }
 
   const selectedPartDays = partDays[selectedPart];
-  const validDay = selectedPartDays.includes(selectedDay as Day)
-    ? selectedDay
-    : selectedPartDays[0];
+  const validDay = (
+    selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0]
+  ) as Day;
+  const isToday = validDay === today;
+
+  // Meals for the selected day, in eating order.
+  const dayMeals: { mealType: MealType; node: React.ReactNode }[] =
+    selectedPart === 'C'
+      ? [
+          {
+            mealType: 'lunch',
+            node: (
+              <MealCard
+                key="lunch"
+                size="hero"
+                meal={plan.C[validDay].lunch}
+                onRefresh={() => onRefreshMeal('C', validDay, 'lunch')}
+              />
+            ),
+          },
+          {
+            mealType: 'dinner',
+            node: <MealCard key="dinner" meal={plan.C[validDay].dinner} />,
+          },
+        ]
+      : (['breakfast', 'lunch', 'dinner'] as MealType[]).map(mealType => ({
+          mealType,
+          node: (
+            <MealCard
+              key={mealType}
+              meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay][mealType]}
+              onRefresh={() => onRefreshMeal(selectedPart, validDay, mealType)}
+            />
+          ),
+        }));
+
+  const heroType = nextMealType(isToday, dayMeals.map(m => m.mealType));
+  const heroMeal = dayMeals.find(m => m.mealType === heroType)!;
+  const restMeals = dayMeals.filter(m => m.mealType !== heroType);
 
   return (
     <ScrollView
@@ -73,121 +143,115 @@ export default function PlanPhase({
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.greeting}>
-          {getGreeting()}, {firstName} 👋
+          {getGreeting()}, {firstName}
         </Text>
-        <Text style={styles.subText}>Here's your week</Text>
+        <Text style={styles.headline} accessibilityRole="header">
+          {viewMode === 'pool' ? partLabel[selectedPart] : isToday ? 'Today' : DAY_NAME[validDay]}
+        </Text>
       </View>
 
-      {/* Part selector */}
-      <View style={styles.partRow}>
+      {/* Part tabs */}
+      <View style={styles.tabRow} accessibilityRole="tablist">
         {(['A', 'B', 'C'] as WeekPart[]).map(part => {
           const on = selectedPart === part;
           return (
             <TouchableOpacity
               key={part}
-              style={[styles.partChip, on && styles.partChipOn]}
+              style={[styles.tab, on && styles.tabOn]}
               onPress={() => onPartChange(part)}
               activeOpacity={0.7}
+              hitSlop={{ top: 6, bottom: 6 }}
+              accessibilityRole="tab"
+              accessibilityLabel={partLabel[part]}
+              accessibilityState={{ selected: on }}
             >
-              <Text style={[styles.partChipText, on && styles.partChipTextOn]}>
-                {partLabel[part]}
-              </Text>
+              <Text style={[styles.tabText, on && styles.tabTextOn]}>{partLabel[part]}</Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
-      {/* Shopping banner */}
-      {shoppingBanner && (
-        <View style={styles.shopBanner}>
-          <Ionicons name="cart-outline" size={13} color="#111111" />
-          <Text style={styles.shopBannerText}>{shoppingBanner}</Text>
-        </View>
-      )}
-
-      {/* Day selector + view toggle */}
+      {/* Day tabs + view controls */}
       <View style={styles.dayRowWrapper}>
-        {viewMode === 'day' && (
+        {viewMode === 'day' ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.dayRow}
-            style={styles.dayScrollInner}
+            style={styles.flex}
           >
             {selectedPartDays.map((day, idx) => {
               const on = validDay === day;
-              const isToday = day === today;
+              const dayIsToday = day === today;
               return (
                 <TouchableOpacity
                   key={day}
-                  style={[styles.dayChip, on && styles.dayChipOn]}
+                  style={styles.dayTab}
                   onPress={() => onDayChange(day)}
                   activeOpacity={0.7}
+                  hitSlop={{ top: 6, bottom: 6 }}
+                  accessibilityRole="tab"
+                  accessibilityLabel={dayIsToday ? `Day ${idx + 1}, today` : `Day ${idx + 1}`}
+                  accessibilityState={{ selected: on }}
                 >
-                  <Text style={[styles.dayChipText, on && styles.dayChipTextOn]}>
+                  <Text style={[styles.dayTabText, on && styles.dayTabTextOn]}>
                     Day {idx + 1}
                   </Text>
-                  {isToday && (
-                    <View style={[styles.todayDot, on && styles.todayDotOn]} />
-                  )}
+                  {dayIsToday && <View style={styles.todayDot} />}
                 </TouchableOpacity>
               );
             })}
           </ScrollView>
+        ) : (
+          <Text style={[styles.flex, styles.poolHint]}>All meals in this part</Text>
         )}
-        {viewMode === 'pool' && <View style={styles.dayScrollInner} />}
         <TouchableOpacity
-          style={styles.shopIconBtn}
-          onPress={() => setViewMode(v => v === 'day' ? 'pool' : 'day')}
+          style={styles.iconBtn}
+          onPress={toggleViewMode}
           activeOpacity={0.7}
+          hitSlop={ICON_HIT_SLOP}
+          accessibilityRole="button"
+          accessibilityLabel={viewMode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
         >
           <Ionicons
-            name={viewMode === 'day' ? 'grid-outline' : 'list-outline'}
-            size={19}
-            color="#111111"
+            name={viewMode === 'day' ? 'grid-outline' : 'calendar-outline'}
+            size={18}
+            color={c.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.shopIconBtn}
+          style={styles.iconBtn}
           onPress={onAddToShoppingList}
           activeOpacity={0.7}
+          hitSlop={ICON_HIT_SLOP}
+          accessibilityRole="button"
+          accessibilityLabel="Add this part to the shopping list"
         >
-          <Ionicons name="cart-outline" size={19} color="#111111" />
+          <Ionicons name="cart-outline" size={18} color={c.text} />
         </TouchableOpacity>
       </View>
 
-      {/* Meal cards — day view */}
-      {viewMode === 'day' && (
-        <View style={styles.mealList}>
-          {selectedPart === 'C' ? (
-            <>
-              <MealCard
-                meal={plan.C[validDay].lunch}
-                onRefresh={() => onRefreshMeal('C', validDay, 'lunch')}
-              />
-              <MealCard meal={plan.C[validDay].dinner} />
-            </>
-          ) : (
-            <>
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].breakfast}
-                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'breakfast')}
-              />
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].lunch}
-                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'lunch')}
-              />
-              <MealCard
-                meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay].dinner}
-                onRefresh={() => onRefreshMeal(selectedPart, validDay, 'dinner')}
-              />
-            </>
-          )}
+      {/* Shop-today note */}
+      {shoppingBanner && (
+        <View style={styles.note} accessibilityLiveRegion="polite" accessibilityRole="text">
+          <Text style={styles.noteText}>{shoppingBanner}</Text>
         </View>
       )}
 
-      {/* Meal cards — pool view */}
-      {viewMode === 'pool' && (
+      {viewMode === 'day' ? (
+        <View style={styles.mealList}>
+          {heroMeal.node}
+          {restMeals.length > 0 && (
+            <View style={styles.halfRow}>
+              {restMeals.map(m => (
+                <View key={m.mealType} style={styles.half}>
+                  {m.node}
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+      ) : (
         <PoolView
           plan={plan}
           selectedPart={selectedPart}
@@ -201,82 +265,69 @@ export default function PlanPhase({
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  scroll: {
-    paddingHorizontal: 24,
-    paddingBottom: 120,
-  },
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    flex: { flex: 1 },
+    scroll: {
+      paddingHorizontal: 20,
+      paddingBottom: 120,
+    },
 
-  header: { paddingTop: 20, marginBottom: 24 },
-  greeting: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-  },
-  subText: { fontSize: 15, color: '#AAAAAA', marginTop: 4 },
+    header: { paddingTop: 16, marginBottom: 16, gap: 4 },
+    greeting: { ...type.label, fontSize: 15, lineHeight: 20, color: c.textMuted },
+    headline: { ...type.display, color: c.text },
 
-  partRow: { flexDirection: 'row', gap: 8, marginBottom: 12 },
-  partChip: {
-    flex: 1,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-  },
-  partChipOn: { backgroundColor: '#111111' },
-  partChipText: { fontSize: 12, fontWeight: '600', color: '#AAAAAA' },
-  partChipTextOn: { color: '#FFFFFF' },
+    tabRow: {
+      flexDirection: 'row',
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+      marginBottom: 12,
+    },
+    tab: {
+      paddingVertical: 10,
+      paddingRight: 20,
+      marginBottom: -1,
+      borderBottomWidth: 2,
+      borderBottomColor: 'transparent',
+    },
+    tabOn: { borderBottomColor: c.text },
+    tabText: { fontFamily: font.semibold, fontSize: 15, lineHeight: 19, color: c.textMuted },
+    tabTextOn: { color: c.text },
 
-  shopBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 100,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  shopBannerText: { fontSize: 13, fontWeight: '500', color: '#111111' },
+    dayRowWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 16,
+      gap: 8,
+    },
+    dayRow: { gap: 18, alignItems: 'center' },
+    dayTab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8 },
+    dayTabText: { fontFamily: font.medium, fontSize: 15, lineHeight: 19, color: c.textMuted },
+    dayTabTextOn: { color: c.text, fontFamily: font.bold },
+    todayDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: c.butter },
+    poolHint: { ...type.small, color: c.textMuted },
+    iconBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      borderWidth: 1.5,
+      borderColor: c.text,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
 
-  dayRowWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-    gap: 8,
-  },
-  dayScrollInner: { flex: 1 },
-  dayRow: { gap: 8 },
-  shopIconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    minWidth: 52,
-  },
-  dayChipOn: { backgroundColor: '#111111' },
-  dayChipText: { fontSize: 13, fontWeight: '600', color: '#AAAAAA' },
-  dayChipTextOn: { color: '#FFFFFF' },
-  todayDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#111111',
-    marginTop: 3,
-  },
-  todayDotOn: { backgroundColor: '#FFFFFF' },
+    note: {
+      backgroundColor: c.butter,
+      borderRadius: 8,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      alignSelf: 'flex-start',
+      marginBottom: 16,
+      transform: [{ rotate: '-1deg' }],
+    },
+    noteText: { fontFamily: font.semibold, fontSize: 14, lineHeight: 18, color: c.onTile },
 
-  mealList: { gap: 16, marginBottom: 32 },
-});
+    mealList: { gap: 12, marginBottom: 32 },
+    halfRow: { flexDirection: 'row', gap: 12 },
+    half: { flex: 1 },
+  });

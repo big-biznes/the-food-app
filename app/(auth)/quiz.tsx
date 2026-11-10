@@ -13,7 +13,10 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, Goal, Gender, DietaryRestriction } from '@/contexts/AuthContext';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
+import { font, type } from '@/constants/type';
 const TOTAL_STEPS = 8;
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -41,6 +44,8 @@ const RESTRICTIONS: { value: DietaryRestriction; label: string }[] = [
 ];
 
 export default function QuizScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { completeProfile } = useAuth();
 
@@ -174,7 +179,7 @@ export default function QuizScreen() {
                 onPress={handleBack}
                 activeOpacity={0.7}
               >
-                <Ionicons name="chevron-back" size={22} color="#111111" />
+                <Ionicons name="chevron-back" size={22} color={c.text} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.nextButton, !canContinue() && styles.nextButtonDisabled]}
@@ -197,14 +202,16 @@ export default function QuizScreen() {
 // ─── Step sub-components ─────────────────────────────────────────────────────
 
 function StepName({ name, setName }: { name: string; setName: (v: string) => void }) {
+  const { colors: c } = useTheme();
+  const step = useThemedStyles(makeStep);
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What's your name?</Text>
-      <Text style={step.hint}>We'll use this to personalize your experience</Text>
+      <Text style={step.question}>What’s your name?</Text>
+      <Text style={step.hint}>We’ll use this to personalize your experience</Text>
       <TextInput
         style={step.textInput}
         placeholder="Your name"
-        placeholderTextColor="#C5C5C5"
+        placeholderTextColor={c.textFaint}
         value={name}
         onChangeText={setName}
         autoFocus
@@ -221,9 +228,10 @@ function StepGoal({
   goal: Goal | null;
   setGoal: (v: Goal) => void;
 }) {
+  const step = useThemedStyles(makeStep);
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What's your goal?</Text>
+      <Text style={step.question}>What’s your goal?</Text>
       <Text style={step.hint}>This helps us calculate your ideal meals</Text>
       <View style={step.cardList}>
         {GOALS.map(item => {
@@ -256,9 +264,10 @@ function StepGender({
   gender: Gender | null;
   setGender: (v: Gender) => void;
 }) {
+  const step = useThemedStyles(makeStep);
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What's your gender?</Text>
+      <Text style={step.question}>What’s your gender?</Text>
       <Text style={step.hint}>Used for more accurate meal suggestions</Text>
       <View style={step.chipRow}>
         {GENDERS.map(item => {
@@ -296,6 +305,8 @@ function StepNumber({
   min: number;
   max: number;
 }) {
+  const { colors: c } = useTheme();
+  const step = useThemedStyles(makeStep);
   const num = parseInt(value, 10);
   const showError = value.length > 0 && (isNaN(num) || num < min || num > max);
 
@@ -306,7 +317,7 @@ function StepNumber({
         <TextInput
           style={[step.numberInput, showError && step.numberInputError]}
           placeholder="—"
-          placeholderTextColor="#C5C5C5"
+          placeholderTextColor={c.textFaint}
           value={value}
           onChangeText={setValue}
           keyboardType="number-pad"
@@ -329,6 +340,7 @@ function StepRestrictions({
   restrictions: DietaryRestriction[];
   toggle: (r: DietaryRestriction) => void;
 }) {
+  const step = useThemedStyles(makeStep);
   return (
     <View style={step.wrap}>
       <Text style={step.question}>Any dietary restrictions?</Text>
@@ -361,10 +373,11 @@ function StepEatingOutDay({
   day: string | null;
   setDay: (v: string) => void;
 }) {
+  const step = useThemedStyles(makeStep);
   return (
     <View style={step.wrap}>
       <Text style={step.question}>Which day do you eat out?</Text>
-      <Text style={step.hint}>We'll skip meal planning for that day</Text>
+      <Text style={step.hint}>We’ll skip meal planning for that day</Text>
       <View style={step.chipRow}>
         {DAYS_OF_WEEK.map(d => {
           const selected = day === d;
@@ -386,8 +399,8 @@ function StepEatingOutDay({
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
   flex: { flex: 1 },
   container: {
     flex: 1,
@@ -401,18 +414,18 @@ const styles = StyleSheet.create({
   },
   stepLabel: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#AAAAAA',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.textMuted,
   },
   progressTrack: {
     height: 3,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 2,
     marginBottom: 36,
   },
   progressFill: {
     height: 3,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 2,
   },
   scroll: { flex: 1 },
@@ -431,80 +444,74 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: 29,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.bg,
     borderWidth: 1.5,
-    borderColor: '#111111',
+    borderColor: c.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   nextButton: {
     flex: 1,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingVertical: 18,
     alignItems: 'center',
   },
   nextButtonDisabled: {
-    backgroundColor: '#D0D0D0',
+    backgroundColor: c.surfaceStrong,
   },
   nextButtonText: {
-    color: '#FFFFFF',
+    color: c.onPrimary,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: font.semibold, fontWeight: '600',
   },
 });
 
-const step = StyleSheet.create({
+const makeStep = (c: Colors) => StyleSheet.create({
   wrap: {
     paddingTop: 4,
   },
-  question: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-    marginBottom: 8,
-  },
+  question: { ...type.display, fontSize: 32, lineHeight: 33, letterSpacing: -0.9, color: c.text, marginBottom: 8 },
   hint: {
-    fontSize: 15,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 15,
+    color: c.textMuted,
     marginBottom: 32,
   },
   textInput: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 18,
-    fontSize: 18,
-    color: '#111111',
+    fontFamily: font.regular, fontSize: 18,
+    color: c.text,
   },
   cardList: {
     gap: 12,
   },
   card: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 18,
   },
   cardSelected: {
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
     marginBottom: 3,
   },
   cardTitleSelected: {
-    color: '#FFFFFF',
+    color: c.onPrimary,
   },
   cardDesc: {
-    fontSize: 13,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.textMuted,
   },
   cardDescSelected: {
-    color: 'rgba(255,255,255,0.55)',
+    color: c.onPrimaryMuted,
   },
   chipRow: {
     flexDirection: 'row',
@@ -515,18 +522,18 @@ const step = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 100,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
   },
   chipSelected: {
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
   },
   chipText: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#111111',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.text,
   },
   chipTextSelected: {
-    color: '#FFFFFF',
+    color: c.onPrimary,
   },
   numberRow: {
     flexDirection: 'row',
@@ -534,27 +541,27 @@ const step = StyleSheet.create({
     gap: 14,
   },
   numberInput: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 18,
     fontSize: 32,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
     minWidth: 130,
     textAlign: 'center',
   },
   numberInputError: {
-    backgroundColor: '#FFF2F2',
+    backgroundColor: c.dangerBg,
   },
   unit: {
     fontSize: 18,
-    color: '#AAAAAA',
-    fontWeight: '500',
+    color: c.textMuted,
+    fontFamily: font.medium, fontWeight: '500',
   },
   errorText: {
-    fontSize: 13,
-    color: '#FF3B30',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.danger,
     marginTop: 10,
   },
 });

@@ -13,8 +13,13 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
+import { font, type } from '@/constants/type';
 export default function RegisterScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { register } = useAuth();
   const [email, setEmail] = useState('');
@@ -49,7 +54,7 @@ export default function RegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="you@example.com"
-                placeholderTextColor="#C5C5C5"
+                placeholderTextColor={c.textFaint}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -62,7 +67,7 @@ export default function RegisterScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="min. 6 characters"
-                placeholderTextColor="#C5C5C5"
+                placeholderTextColor={c.textFaint}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -77,13 +82,13 @@ export default function RegisterScreen() {
                   confirm.length > 0 && !passwordsMatch && styles.inputError,
                 ]}
                 placeholder="repeat password"
-                placeholderTextColor="#C5C5C5"
+                placeholderTextColor={c.textFaint}
                 value={confirm}
                 onChangeText={setConfirm}
                 secureTextEntry
               />
               {confirm.length > 0 && !passwordsMatch && (
-                <Text style={styles.errorText}>Passwords don't match</Text>
+                <Text style={styles.errorText}>Passwords don’t match</Text>
               )}
             </View>
           </View>
@@ -95,7 +100,7 @@ export default function RegisterScreen() {
                 onPress={() => router.back()}
                 activeOpacity={0.7}
               >
-                <Ionicons name="chevron-back" size={22} color="#111111" />
+                <Ionicons name="chevron-back" size={22} color={c.text} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.primaryButton, !canSubmit && styles.primaryButtonDisabled]}
@@ -122,25 +127,18 @@ export default function RegisterScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
   flex: { flex: 1 },
   container: {
     flexGrow: 1,
     paddingHorizontal: 24,
     paddingBottom: 32,
   },
-  title: {
-    paddingTop: 8,
-    fontSize: 30,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.5,
-    marginBottom: 6,
-  },
+  title: { ...type.display, fontSize: 36, lineHeight: 37, color: c.text, paddingTop: 8, marginBottom: 6 },
   subtitle: {
-    fontSize: 16,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 16,
+    color: c.textMuted,
     marginBottom: 40,
   },
   form: {
@@ -151,23 +149,23 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
-    color: '#111111',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.text,
   },
   input: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 16,
     paddingHorizontal: 18,
     paddingVertical: 16,
-    fontSize: 16,
-    color: '#111111',
+    fontFamily: font.regular, fontSize: 16,
+    color: c.text,
   },
   inputError: {
-    backgroundColor: '#FFF2F2',
+    backgroundColor: c.dangerBg,
   },
   errorText: {
-    fontSize: 13,
-    color: '#FF3B30',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.danger,
   },
   footer: {
     marginTop: 40,
@@ -184,33 +182,33 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: 29,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.bg,
     borderWidth: 1.5,
-    borderColor: '#111111',
+    borderColor: c.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   primaryButton: {
     flex: 1,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingVertical: 18,
     alignItems: 'center',
   },
   primaryButtonDisabled: {
-    backgroundColor: '#D0D0D0',
+    backgroundColor: c.surfaceStrong,
   },
   primaryButtonText: {
-    color: '#FFFFFF',
+    color: c.onPrimary,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: font.semibold, fontWeight: '600',
   },
   switchText: {
-    fontSize: 15,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 15,
+    color: c.textMuted,
   },
   switchLink: {
-    color: '#111111',
+    color: c.text,
     fontWeight: '600',
   },
 });

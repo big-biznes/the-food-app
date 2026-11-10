@@ -4,10 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ALL_MEALS } from '@/data/meals';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
+import { font, type } from '@/constants/type';
 const { width: SCREEN_W } = Dimensions.get('window');
 
 export default function CookScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const meal = ALL_MEALS.find(m => m.id === id);
@@ -18,12 +23,12 @@ export default function CookScreen() {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
-          <Ionicons name="close" size={22} color="#111111" />
+          <Ionicons name="close" size={22} color={c.text} />
         </TouchableOpacity>
         <View style={styles.emptyState}>
           <Text style={styles.emptyEmoji}>🍳</Text>
           <Text style={styles.emptyTitle}>No instructions</Text>
-          <Text style={styles.emptyHint}>This recipe doesn't have cooking steps yet.</Text>
+          <Text style={styles.emptyHint}>This recipe doesn’t have cooking steps yet.</Text>
         </View>
       </SafeAreaView>
     );
@@ -39,7 +44,7 @@ export default function CookScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
-          <Ionicons name="close" size={22} color="#111111" />
+          <Ionicons name="close" size={22} color={c.text} />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle} numberOfLines={1}>{meal.name}</Text>
@@ -69,7 +74,7 @@ export default function CookScreen() {
             onPress={() => setStep(s => s - 1)}
             activeOpacity={0.7}
           >
-            <Ionicons name="chevron-back" size={20} color="#111111" />
+            <Ionicons name="chevron-back" size={20} color={c.text} />
             <Text style={styles.backStepText}>Back</Text>
           </TouchableOpacity>
         ) : (
@@ -85,16 +90,16 @@ export default function CookScreen() {
           activeOpacity={0.85}
         >
           <Text style={styles.nextBtnText}>{isLast ? 'Done' : 'Next step'}</Text>
-          {!isLast && <Ionicons name="chevron-forward" size={18} color="#FFFFFF" />}
-          {isLast && <Ionicons name="checkmark" size={18} color="#FFFFFF" />}
+          {!isLast && <Ionicons name="chevron-forward" size={18} color={c.onPrimary} />}
+          {isLast && <Ionicons name="checkmark" size={18} color={c.onPrimary} />}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
 
   // Header
   header: {
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -119,27 +124,27 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#111111',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.text,
     letterSpacing: -0.2,
   },
   headerSub: {
-    fontSize: 13,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.textMuted,
     marginTop: 2,
   },
 
   // Progress bar
   progressTrack: {
     height: 4,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: c.surfaceAlt,
     marginHorizontal: 24,
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#111111',
+    backgroundColor: c.butter,
     borderRadius: 2,
   },
 
@@ -147,30 +152,28 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 36,
+    paddingHorizontal: 24,
+    gap: 20,
   },
   stepNumberWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#F5F5F5',
+    width: 48,
+    height: 48,
+    borderRadius: 10,
+    backgroundColor: c.butter,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 28,
   },
   stepNumber: {
     fontSize: 22,
-    fontWeight: '800',
-    color: '#111111',
+    fontFamily: font.extrabold, fontWeight: '800',
+    color: c.onTile,
   },
   stepText: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: '#111111',
-    lineHeight: 30,
-    textAlign: 'center',
-    letterSpacing: -0.2,
+    ...type.title,
+    fontSize: 26,
+    lineHeight: 31,
+    letterSpacing: -0.5,
+    color: c.text,
   },
 
   // Bottom bar
@@ -192,25 +195,25 @@ const styles = StyleSheet.create({
   backStepPlaceholder: { width: 72 },
   backStepText: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
   },
   nextBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     borderRadius: 100,
     paddingHorizontal: 28,
     paddingVertical: 16,
   },
   doneBtn: {
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
   },
   nextBtnText: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.onPrimary,
   },
 
   // Empty state
@@ -221,7 +224,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 32,
   },
-  emptyEmoji: { fontSize: 56, marginBottom: 4 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#111111' },
-  emptyHint: { fontSize: 14, color: '#AAAAAA', textAlign: 'center' },
+  emptyEmoji: { fontFamily: font.regular, fontSize: 56, marginBottom: 4 },
+  emptyTitle: { fontSize: 20, fontFamily: font.bold, fontWeight: '700', color: c.text },
+  emptyHint: { fontFamily: font.regular, fontSize: 14, color: c.textMuted, textAlign: 'center' },
 });

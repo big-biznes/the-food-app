@@ -4,26 +4,38 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  SectionList,
   Modal,
   Animated,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { ALL_MEALS } from '@/data/meals';
+import { ALL_MEALS, Meal } from '@/data/meals';
 import { useLikes } from '@/contexts/LikesContext';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import ReactionRow from './ReactionRow';
 
-const SCREEN_H = Dimensions.get('window').height;
-
+import { font, type } from '@/constants/type';
 type Props = {
   visible: boolean;
   onClose: () => void;
 };
 
+type Section = {
+  key: 'liked' | 'passed';
+  title: string;
+  liked: boolean;
+  first: boolean;
+  data: Meal[];
+};
+
 export default function ReactionsSheet({ visible, onClose }: Props) {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const { height: screenHeight } = useWindowDimensions();
   const { likedIds, dislikedIds, toggle } = useLikes();
   const insets = useSafeAreaInsets();
 
@@ -46,14 +58,24 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  const likedMeals = useMemo(
-    () => ALL_MEALS.filter(m => likedIds.includes(m.id)),
-    [likedIds],
-  );
-  const dislikedMeals = useMemo(
-    () => ALL_MEALS.filter(m => dislikedIds.includes(m.id)),
-    [dislikedIds],
-  );
+  const sections = useMemo<Section[]>(() => {
+    const liked = ALL_MEALS.filter(m => likedIds.includes(m.id));
+    const passed = ALL_MEALS.filter(m => dislikedIds.includes(m.id));
+    const out: Section[] = [];
+    if (liked.length > 0) {
+      out.push({ key: 'liked', title: `${liked.length} liked`, liked: true, first: true, data: liked });
+    }
+    if (passed.length > 0) {
+      out.push({
+        key: 'passed',
+        title: `${passed.length} passed`,
+        liked: false,
+        first: out.length === 0,
+        data: passed,
+      });
+    }
+    return out;
+  }, [likedIds, dislikedIds]);
 
   const totalSeen = likedIds.length + dislikedIds.length;
 
@@ -68,129 +90,117 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
     >
       <Animated.View style={[styles.backdrop, { opacity: backdropAnim }]}>
         <TouchableOpacity
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           activeOpacity={1}
           onPress={close}
+          accessibilityRole="button"
+          accessibilityLabel="Close"
         />
       </Animated.View>
 
       <Animated.View style={[styles.container, { transform: [{ translateY: slideAnim }] }]}>
-        <View style={styles.card}>
-          <View style={styles.dragZone} {...panResponder.panHandlers} hitSlop={{ top: 24 }}>
+        <View style={[styles.card, { maxHeight: screenHeight * 0.78 }]}>
+          <View
+            style={styles.dragZone}
+            {...panResponder.panHandlers}
+            hitSlop={{ top: 24 }}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
+            accessibilityHint="Drag down or double tap to close"
+            onAccessibilityTap={close}
+          >
             <View style={styles.handle} />
           </View>
 
           <View style={styles.titleRow}>
-            <Text style={styles.title}>Your reactions</Text>
+            <Text style={styles.title} accessibilityRole="header">
+              Your reactions
+            </Text>
             <Text style={styles.titleSub}>{totalSeen} seen</Text>
           </View>
 
-          <ScrollView
+          <SectionList
+            sections={sections}
+            keyExtractor={meal => meal.id}
             showsVerticalScrollIndicator={false}
+            stickySectionHeadersEnabled={false}
             contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 24 }]}
-          >
-            {totalSeen === 0 && (
+            initialNumToRender={12}
+            ListEmptyComponent={
               <View style={styles.emptyState}>
                 <Text style={styles.emptyEmoji}>👆</Text>
-                <Text style={styles.emptyText}>
-                  Start swiping to see your reactions here
+                <Text style={styles.emptyText}>Start swiping to see your reactions here</Text>
+              </View>
+            }
+            renderSectionHeader={({ section }) => (
+              <View style={[styles.sectionHeader, !section.first && styles.sectionHeaderSpaced]}>
+                <Ionicons
+                  name={section.liked ? 'heart' : 'close-circle'}
+                  size={13}
+                  color={section.liked ? c.text : c.textMuted}
+                />
+                <Text
+                  style={[styles.sectionLabel, !section.liked && styles.sectionLabelMuted]}
+                  accessibilityRole="header"
+                >
+                  {section.title}
                 </Text>
               </View>
             )}
-
-            {likedMeals.length > 0 && (
-              <>
-                <View style={styles.sectionHeader}>
-                  <Ionicons name="heart" size={13} color="#111111" />
-                  <Text style={styles.sectionLabel}>Liked · {likedMeals.length}</Text>
-                </View>
-                {likedMeals.map(meal => (
-                  <ReactionRow
-                    key={meal.id}
-                    meal={meal}
-                    liked
-                    onToggle={() => toggle(meal.id)}
-                  />
-                ))}
-              </>
+            renderItem={({ item, section }) => (
+              <ReactionRow meal={item} liked={section.liked} onToggle={() => toggle(item.id)} />
             )}
-
-            {dislikedMeals.length > 0 && (
-              <>
-                <View
-                  style={[
-                    styles.sectionHeader,
-                    likedMeals.length > 0 && styles.sectionHeaderSpaced,
-                  ]}
-                >
-                  <Ionicons name="close-circle" size={13} color="#AAAAAA" />
-                  <Text style={[styles.sectionLabel, styles.sectionLabelMuted]}>
-                    Passed · {dislikedMeals.length}
-                  </Text>
-                </View>
-                {dislikedMeals.map(meal => (
-                  <ReactionRow
-                    key={meal.id}
-                    meal={meal}
-                    liked={false}
-                    onToggle={() => toggle(meal.id)}
-                  />
-                ))}
-              </>
-            )}
-          </ScrollView>
+          />
         </View>
       </Animated.View>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-  },
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    maxHeight: SCREEN_H * 0.78,
-    paddingHorizontal: 24,
-  },
-  dragZone: { paddingTop: 12, paddingBottom: 16, alignItems: 'center' },
-  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: '#E0E0E0' },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 10,
-    marginBottom: 20,
-  },
-  title: { fontSize: 22, fontWeight: '700', color: '#111111', letterSpacing: -0.3 },
-  titleSub: { fontSize: 14, color: '#AAAAAA' },
-  scroll: { gap: 2 },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 10,
-    marginTop: 4,
-  },
-  sectionHeaderSpaced: { marginTop: 24 },
-  sectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#111111',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  sectionLabelMuted: { color: '#AAAAAA' },
-  emptyState: { alignItems: 'center', paddingVertical: 40, gap: 10 },
-  emptyEmoji: { fontSize: 36 },
-  emptyText: { fontSize: 14, color: '#AAAAAA', textAlign: 'center' },
-});
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFill,
+      backgroundColor: c.backdrop,
+    },
+    container: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    card: {
+      backgroundColor: c.bg,
+      borderTopLeftRadius: 28,
+      borderTopRightRadius: 28,
+      paddingHorizontal: 24,
+    },
+    dragZone: { paddingTop: 12, paddingBottom: 16, alignItems: 'center' },
+    handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: c.surfaceStrong },
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: 10,
+      marginBottom: 20,
+    },
+    title: { ...type.title, color: c.text },
+    titleSub: { fontFamily: font.regular, fontSize: 14, color: c.textMuted, fontVariant: ['tabular-nums'] },
+    scroll: { gap: 2 },
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 10,
+      marginTop: 4,
+    },
+    sectionHeaderSpaced: { marginTop: 24 },
+    sectionLabel: {
+      fontSize: 12,
+      fontFamily: font.bold, fontWeight: '700',
+      color: c.text,
+      },
+    sectionLabelMuted: { color: c.textMuted },
+    emptyState: { alignItems: 'center', paddingVertical: 40, gap: 10 },
+    emptyEmoji: { fontFamily: font.regular, fontSize: 36 },
+    emptyText: { fontFamily: font.regular, fontSize: 14, color: c.textMuted, textAlign: 'center' },
+  });

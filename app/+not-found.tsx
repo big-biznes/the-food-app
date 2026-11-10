@@ -1,7 +1,10 @@
 import { Link, Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
+import { Colors } from '@/constants/theme';
+import { useThemedStyles } from '@/hooks/useTheme';
 
 export default function NotFoundScreen() {
+  const styles = useThemedStyles(makeStyles);
   return (
     <>
       <Stack.Screen options={{ title: "Oops! This screen doesn't exist." }} />
@@ -11,7 +14,7 @@ export default function NotFoundScreen() {
     </>
   );
 }
-const styles = StyleSheet.create({
+const makeStyles = (c: Colors) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',

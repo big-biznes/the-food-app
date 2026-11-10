@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Animated, Dimensions, PanResponder } from 'react-native';
+import { Animated, PanResponder, useWindowDimensions } from 'react-native';
+import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 
 /**
  * Shared hook for the slide-up bottom sheet pattern used throughout the app.
@@ -8,9 +9,13 @@ import { Animated, Dimensions, PanResponder } from 'react-native';
  * @param onClosed - Optional callback fired after the close animation completes.
  */
 export function useBottomSheet(onClosed?: () => void) {
-  const slideAnim = useRef(
-    new Animated.Value(Dimensions.get('screen').height),
-  ).current;
+  const { height: screenHeight } = useWindowDimensions();
+  const heightRef = useRef(screenHeight);
+  heightRef.current = screenHeight;
+
+  const reducedMotion = useReducedMotionRef();
+
+  const slideAnim = useRef(new Animated.Value(screenHeight)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
 
   // Keep onClosed stable inside the pan responder closure.
@@ -18,6 +23,12 @@ export function useBottomSheet(onClosed?: () => void) {
   onClosedRef.current = onClosed;
 
   const closeRef = useRef(() => {
+    if (reducedMotion.current) {
+      backdropAnim.setValue(0);
+      slideAnim.setValue(heightRef.current);
+      onClosedRef.current?.();
+      return;
+    }
     Animated.parallel([
       Animated.timing(backdropAnim, {
         toValue: 0,
@@ -25,9 +36,9 @@ export function useBottomSheet(onClosed?: () => void) {
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
-        toValue: Dimensions.get('screen').height,
+        toValue: heightRef.current,
         duration: 280,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }),
     ]).start(() => onClosedRef.current?.());
   });
@@ -42,10 +53,12 @@ export function useBottomSheet(onClosed?: () => void) {
       onPanResponderRelease: (_, g) => {
         if (g.dy > 80 || g.vy > 0.5) {
           closeRef.current();
+        } else if (reducedMotion.current) {
+          slideAnim.setValue(0);
         } else {
           Animated.spring(slideAnim, {
             toValue: 0,
-            useNativeDriver: false,
+            useNativeDriver: true,
             damping: 22,
             mass: 1,
             stiffness: 220,
@@ -56,7 +69,12 @@ export function useBottomSheet(onClosed?: () => void) {
   ).current;
 
   function open() {
-    slideAnim.setValue(Dimensions.get('screen').height);
+    if (reducedMotion.current) {
+      slideAnim.setValue(0);
+      backdropAnim.setValue(1);
+      return;
+    }
+    slideAnim.setValue(heightRef.current);
     backdropAnim.setValue(0);
     Animated.parallel([
       Animated.timing(backdropAnim, {
@@ -66,7 +84,7 @@ export function useBottomSheet(onClosed?: () => void) {
       }),
       Animated.spring(slideAnim, {
         toValue: 0,
-        useNativeDriver: false,
+        useNativeDriver: true,
         damping: 22,
         mass: 1,
         stiffness: 220,

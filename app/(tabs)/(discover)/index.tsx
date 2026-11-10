@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { ALL_MEALS, Meal } from '@/data/meals';
@@ -7,21 +13,32 @@ import { useLikes } from '@/contexts/LikesContext';
 import { useAuth } from '@/contexts/AuthContext';
 import SwipeCard from '@/components/discover/SwipeCard';
 import ReactionsSheet from '@/components/discover/ReactionsSheet';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useReducedMotion, useScreenReader } from '@/hooks/useReducedMotion';
 
+import { font, type } from '@/constants/type';
 const EXPERT_SWIPE_COUNT = 3;
 const ACTIONS_BAR_HEIGHT = 100;
 
 export default function DiscoverScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const reducedMotion = useReducedMotion();
   const { user, updateProfile } = useAuth();
   const { like, dislike, likedIds, dislikedIds } = useLikes();
 
+  // Screen-reader users always get the Like / Pass buttons, even in expert mode,
+  // so the swipe gesture is never the only way to act.
+  const screenReader = useScreenReader();
+
   const expertMode = user?.discoverExpertMode ?? false;
-  const expertAnim = useRef(new Animated.Value(expertMode ? 0 : 1)).current;
+  const showButtons = !expertMode || screenReader;
+  const expertAnim = useRef(new Animated.Value(showButtons ? 1 : 0)).current;
 
   useEffect(() => {
-    if (expertMode) expertAnim.setValue(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    expertAnim.setValue(showButtons ? 1 : 0);
+  }, [showButtons, expertAnim]);
 
   const animatedActionsHeight = expertAnim.interpolate({
     inputRange: [0, 1],
@@ -53,11 +70,17 @@ export default function DiscoverScreen() {
       swipeOnlyStreak.current += 1;
       if (swipeOnlyStreak.current >= EXPERT_SWIPE_COUNT) {
         updateProfile({ discoverExpertMode: true });
-        Animated.timing(expertAnim, {
-          toValue: 0,
-          duration: 250,
-          useNativeDriver: false,
-        }).start();
+        if (!screenReader) {
+          if (reducedMotion) {
+            expertAnim.setValue(0);
+          } else {
+            Animated.timing(expertAnim, {
+              toValue: 0,
+              duration: 250,
+              useNativeDriver: false,
+            }).start();
+          }
+        }
       }
     }
   }
@@ -73,15 +96,19 @@ export default function DiscoverScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
         <View style={styles.headerText}>
-          <Text style={styles.title}>Discover</Text>
+          <Text style={styles.title} accessibilityRole="header">
+            Discover
+          </Text>
           <Text style={styles.subText}>Swipe right to save, left to skip</Text>
         </View>
         <TouchableOpacity
           style={styles.headerBtn}
           onPress={() => setSheetVisible(true)}
           activeOpacity={0.75}
+          accessibilityRole="button"
+          accessibilityLabel={`Your reactions, ${likedIds.length} liked`}
         >
-          <Ionicons name="heart-outline" size={19} color="#111111" />
+          <Ionicons name="heart-outline" size={19} color={c.text} />
           {totalSeen > 0 && (
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{likedIds.length}</Text>
@@ -94,16 +121,17 @@ export default function DiscoverScreen() {
         {!current && (
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>🍽️</Text>
-            <Text style={styles.emptyTitle}>You've seen them all</Text>
+            <Text style={styles.emptyTitle}>You’ve seen them all</Text>
             <Text style={styles.emptyHint}>
               {likedIds.length > 0
-                ? "We'll work your favourites into your next plan."
+                ? 'We’ll work your favourites into your next plan.'
                 : 'Like a few to shape your next plan.'}
             </Text>
             <TouchableOpacity
               style={styles.resetBtn}
               onPress={() => setIndex(0)}
               activeOpacity={0.8}
+              accessibilityRole="button"
             >
               <Text style={styles.resetBtnText}>Start over</Text>
             </TouchableOpacity>
@@ -127,7 +155,9 @@ export default function DiscoverScreen() {
           styles.actionsWrapper,
           { opacity: expertAnim, maxHeight: animatedActionsHeight },
         ]}
-        pointerEvents={expertMode ? 'none' : 'auto'}
+        pointerEvents={showButtons ? 'auto' : 'none'}
+        importantForAccessibility={showButtons ? 'auto' : 'no-hide-descendants'}
+        accessibilityElementsHidden={!showButtons}
       >
         {current && (
           <View style={styles.actions}>
@@ -135,15 +165,19 @@ export default function DiscoverScreen() {
               style={[styles.actionBtn, styles.actionPass]}
               onPress={() => handleButtonSwipe('left', current)}
               activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={`Pass on ${current.name}`}
             >
-              <Ionicons name="close" size={28} color="#111111" />
+              <Ionicons name="close" size={28} color={c.text} />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.actionBtn, styles.actionLike]}
               onPress={() => handleButtonSwipe('right', current)}
               activeOpacity={0.85}
+              accessibilityRole="button"
+              accessibilityLabel={`Like ${current.name}`}
             >
-              <Ionicons name="heart" size={26} color="#FFFFFF" />
+              <Ionicons name="heart" size={26} color={c.onPrimary} />
             </TouchableOpacity>
           </View>
         )}
@@ -157,87 +191,82 @@ export default function DiscoverScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: c.bg },
 
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    marginBottom: 8,
-  },
-  headerText: { flex: 1 },
-  title: { fontSize: 26, fontWeight: '700', color: '#111111', letterSpacing: -0.3 },
-  subText: { fontSize: 15, color: '#AAAAAA', marginTop: 4 },
-  headerBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badge: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    minWidth: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: '#111111',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  badgeText: { fontSize: 9, fontWeight: '700', color: '#FFFFFF' },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+      paddingTop: 20,
+      marginBottom: 8,
+    },
+    headerText: { flex: 1 },
+    title: { ...type.display, fontSize: 36, lineHeight: 37, color: c.text },
+    subText: { fontFamily: font.regular, fontSize: 15, color: c.textMuted, marginTop: 4 },
+    headerBtn: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: c.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    badge: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      minWidth: 16,
+      height: 16,
+      borderRadius: 8,
+      backgroundColor: c.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 3,
+    },
+    badgeText: { fontSize: 9, fontFamily: font.bold, fontWeight: '700', color: c.onPrimary, fontVariant: ['tabular-nums'] },
 
-  deckArea: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
+    deckArea: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 24,
+    },
 
-  actionsWrapper: { overflow: 'hidden' },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 28,
-    paddingBottom: 28,
-    paddingTop: 8,
-  },
-  actionBtn: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  actionPass: { backgroundColor: '#F5F5F5' },
-  actionLike: { backgroundColor: '#111111' },
+    actionsWrapper: { overflow: 'hidden' },
+    actions: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 28,
+      paddingBottom: 28,
+      paddingTop: 8,
+    },
+    actionBtn: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    actionPass: { backgroundColor: c.surface },
+    actionLike: { backgroundColor: c.primary },
 
-  empty: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    paddingHorizontal: 32,
-  },
-  emptyEmoji: { fontSize: 56, marginBottom: 4 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#111111', letterSpacing: -0.2 },
-  emptyHint: { fontSize: 14, color: '#AAAAAA', textAlign: 'center', marginBottom: 16 },
-  resetBtn: {
-    backgroundColor: '#111111',
-    borderRadius: 100,
-    paddingHorizontal: 28,
-    paddingVertical: 14,
-  },
-  resetBtnText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
-});
-
+    empty: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      paddingHorizontal: 32,
+    },
+    emptyEmoji: { fontFamily: font.regular, fontSize: 56, marginBottom: 4 },
+    emptyTitle: { fontSize: 20, fontFamily: font.bold, fontWeight: '700', color: c.text, letterSpacing: -0.2 },
+    emptyHint: { fontFamily: font.regular, fontSize: 14, color: c.textMuted, textAlign: 'center', marginBottom: 16 },
+    resetBtn: {
+      backgroundColor: c.primary,
+      borderRadius: 100,
+      paddingHorizontal: 28,
+      paddingVertical: 14,
+    },
+    resetBtnText: { color: c.onPrimary, fontSize: 15, fontFamily: font.semibold, fontWeight: '600' },
+  });

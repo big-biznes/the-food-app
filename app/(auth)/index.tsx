@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/contexts/AuthContext';
+import { Colors } from '@/constants/theme';
+import { font, type } from '@/constants/type';
+import { useThemedStyles } from '@/hooks/useTheme';
 
 const DEV_PROFILE = {
   name: 'Alex',
@@ -18,6 +20,7 @@ const DEV_PROFILE = {
 };
 
 export default function WelcomeScreen() {
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { devLogin } = useAuth();
 
@@ -28,18 +31,37 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar style="light" />
       <View style={styles.container}>
+        <View style={styles.brand}>
+          <Image
+            source={require('@/assets/images/foodapp-logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+            accessible
+            accessibilityLabel="fudapp"
+          />
+          <Text style={styles.wordmark}>fudapp</Text>
+        </View>
+
         <View style={styles.hero}>
-          <View style={styles.logoWrapper}>
-            <Image
-              source={require('@/assets/images/foodapp-logo.png')}
-              style={styles.logo}
-              resizeMode="contain"
-            />
+          <View style={styles.tiles} accessible={false} importantForAccessibility="no-hide-descendants">
+            <View style={[styles.tile, styles.tileButter]}>
+              <Text style={styles.tileEmoji}>🥣</Text>
+            </View>
+            <View style={[styles.tile, styles.tilePea]}>
+              <Text style={styles.tileEmoji}>🥪</Text>
+            </View>
+            <View style={[styles.tile, styles.tileBeet]}>
+              <Text style={styles.tileEmoji}>🍝</Text>
+            </View>
           </View>
-          <Text style={styles.title}>fudapp</Text>
-          <Text style={styles.tagline}>Smart meals.{'\n'}Zero stress.</Text>
+          <Text style={styles.headline} accessibilityRole="header">
+            Dinner,{'\n'}decided.
+          </Text>
+          <Text style={styles.tagline}>
+            A week of cheap, quick meals and the shopping list to match. Planned in one tap.
+          </Text>
         </View>
 
         <View style={styles.actions}>
@@ -47,28 +69,28 @@ export default function WelcomeScreen() {
             style={styles.primaryButton}
             onPress={() => router.push('/(auth)/register')}
             activeOpacity={0.8}
+            accessibilityRole="button"
           >
-            <Text style={styles.primaryButtonText}>Get started</Text>
+            <Text style={styles.primaryButtonText}>Start planning</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={() => router.push('/(auth)/login')}
             activeOpacity={0.8}
+            accessibilityRole="button"
           >
             <Text style={styles.secondaryButtonText}>Sign in</Text>
           </TouchableOpacity>
 
           {__DEV__ && (
-            <>
-              <View style={styles.devDivider} />
-              <TouchableOpacity
-                style={styles.devButton}
-                onPress={handleDevSkip}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.devButtonText}>DEV  ·  Skip login</Text>
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity
+              style={styles.devButton}
+              onPress={handleDevSkip}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+            >
+              <Text style={styles.devButtonText}>Dev: skip login</Text>
+            </TouchableOpacity>
           )}
         </View>
       </View>
@@ -76,89 +98,55 @@ export default function WelcomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#161516',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-    justifyContent: 'space-between',
-  },
-  hero: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-  },
-  logoWrapper: {
-    backgroundColor: 'transparent',
-    borderRadius: 32,
-    marginBottom: 4,
-    overflow: 'hidden',
-  },
-  logo: {
-    width: 180,
-    height: 180,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: -0.5,
-  },
-  tagline: {
-    fontSize: 18,
-    color: '#888888',
-    textAlign: 'center',
-    lineHeight: 27,
-  },
-  actions: {
-    gap: 12,
-  },
-  primaryButton: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 100,
-    paddingVertical: 18,
-    alignItems: 'center',
-  },
-  primaryButtonText: {
-    color: '#000000',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: '#FFFFFF',
-    borderRadius: 100,
-    paddingVertical: 18,
-    alignItems: 'center',
-  },
-  secondaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  devDivider: {
-    height: 1,
-    backgroundColor: '#2A2A2A',
-    marginVertical: 4,
-  },
-  devButton: {
-    borderWidth: 1,
-    borderColor: '#3A3A3A',
-    borderStyle: 'dashed',
-    borderRadius: 100,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  devButtonText: {
-    color: '#555555',
-    fontSize: 13,
-    fontWeight: '500',
-    letterSpacing: 0.3,
-  },
-});
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: c.bg },
+    container: {
+      flex: 1,
+      paddingHorizontal: 20,
+      paddingTop: 12,
+      paddingBottom: 24,
+    },
+    brand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    logo: { width: 36, height: 36, borderRadius: 8 },
+    wordmark: { fontFamily: font.extrabold, fontSize: 20, letterSpacing: -0.4, color: c.text },
+
+    hero: { flex: 1, justifyContent: 'center', gap: 18 },
+    tiles: { flexDirection: 'row', gap: 10, marginBottom: 6 },
+    tile: {
+      width: 72,
+      height: 72,
+      borderRadius: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    tileButter: { backgroundColor: c.butter, transform: [{ rotate: '-4deg' }] },
+    tilePea: { backgroundColor: c.pea, transform: [{ rotate: '2deg' }] },
+    tileBeet: { backgroundColor: c.beet, transform: [{ rotate: '-2deg' }] },
+    tileEmoji: { fontSize: 36, lineHeight: 44 },
+    headline: { ...type.display, fontSize: 56, lineHeight: 54, letterSpacing: -2, color: c.text },
+    tagline: { ...type.body, fontSize: 17, lineHeight: 24, color: c.textSecondary, maxWidth: 320 },
+
+    actions: { gap: 10 },
+    primaryButton: {
+      backgroundColor: c.primary,
+      borderRadius: 100,
+      paddingVertical: 18,
+      alignItems: 'center',
+    },
+    primaryButtonText: { fontFamily: font.bold, fontSize: 17, color: c.onPrimary },
+    secondaryButton: {
+      borderWidth: 1.5,
+      borderColor: c.text,
+      borderRadius: 100,
+      paddingVertical: 17,
+      alignItems: 'center',
+    },
+    secondaryButtonText: { fontFamily: font.bold, fontSize: 17, color: c.text },
+    devButton: {
+      marginTop: 8,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    devButtonText: { ...type.small, color: c.textMuted },
+  });

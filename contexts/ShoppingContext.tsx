@@ -25,7 +25,25 @@ type ShoppingContextType = {
   finishShopping: () => void;
   addPantryItem: (name: string) => void;
   deletePantryItem: (id: string) => void;
+  /** Restores the items removed by the most recent delete / clear. Returns false if nothing to undo. */
+  undoLastRemoval: () => boolean;
 };
+
+type Removal =
+  | { kind: 'shopping'; entries: { item: ShoppingItem; index: number }[] }
+  | { kind: 'pantry'; entries: { item: PantryItem; index: number }[] };
+
+/** Re-insert removed entries at their original positions (skipping any that were re-added). */
+function restore<T extends { id: string }>(list: T[], entries: { item: T; index: number }[]): T[] {
+  const next = [...list];
+  const present = new Set(next.map(i => i.id));
+  for (const { item, index } of [...entries].sort((a, b) => a.index - b.index)) {
+    if (present.has(item.id)) continue;
+    next.splice(Math.min(index, next.length), 0, item);
+    present.add(item.id);
+  }
+  return next;
+}
 
 /** Strip quantity/unit prefix from a formatted ingredient string to get the base name.
  *  e.g. "400g chicken breast" → "chicken breast"
@@ -66,6 +84,11 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
   // without needing it as a dependency or triggering extra state updates.
   const pantryRef = useRef(pantryItems);
   pantryRef.current = pantryItems;
+  const shoppingRef = useRef(shoppingItems);
+  shoppingRef.current = shoppingItems;
+
+  // Most recent destructive action, kept so the UI can offer "Undo".
+  const lastRemoval = useRef<Removal | null>(null);
 
   const addShoppingItems = useCallback((names: string[]) => {
     setShoppingItems(prev => {
@@ -127,10 +150,18 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deleteShoppingItem = useCallback((id: string) => {
+    const index = shoppingRef.current.findIndex(item => item.id === id);
+    if (index < 0) return;
+    lastRemoval.current = { kind: 'shopping', entries: [{ item: shoppingRef.current[index], index }] };
     setShoppingItems(prev => prev.filter(item => item.id !== id));
   }, []);
 
   const clearChecked = useCallback(() => {
+    const entries = shoppingRef.current
+      .map((item, index) => ({ item, index }))
+      .filter(e => e.item.checked);
+    if (entries.length === 0) return;
+    lastRemoval.current = { kind: 'shopping', entries };
     setShoppingItems(prev => prev.filter(item => !item.checked));
   }, []);
 
@@ -156,7 +187,22 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deletePantryItem = useCallback((id: string) => {
+    const index = pantryRef.current.findIndex(item => item.id === id);
+    if (index < 0) return;
+    lastRemoval.current = { kind: 'pantry', entries: [{ item: pantryRef.current[index], index }] };
     setPantryItems(prev => prev.filter(item => item.id !== id));
+  }, []);
+
+  const undoLastRemoval = useCallback(() => {
+    const removal = lastRemoval.current;
+    if (!removal) return false;
+    lastRemoval.current = null;
+    if (removal.kind === 'shopping') {
+      setShoppingItems(prev => restore(prev, removal.entries));
+    } else {
+      setPantryItems(prev => restore(prev, removal.entries));
+    }
+    return true;
   }, []);
 
   return (
@@ -174,6 +220,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         finishShopping,
         addPantryItem,
         deletePantryItem,
+        undoLastRemoval,
       }}
     >
       {children}

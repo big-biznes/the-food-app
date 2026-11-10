@@ -11,7 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, DietaryRestriction, Goal } from '@/contexts/AuthContext';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
+import { font, type } from '@/constants/type';
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 type MacroBalance = 'balanced' | 'low-carb' | 'high-protein' | 'custom';
@@ -48,6 +51,8 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
 ];
 
 export default function SettingsScreen() {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { user, logout, updateProfile } = useAuth();
 
   // Plan settings
@@ -220,8 +225,8 @@ export default function SettingsScreen() {
             <Switch
               value={notifications}
               onValueChange={setNotifications}
-              trackColor={{ false: '#E5E5E5', true: '#111111' }}
-              thumbColor="#FFFFFF"
+              trackColor={{ false: c.border, true: c.primary }}
+              thumbColor={c.bg}
             />
           </View>
 
@@ -278,10 +283,12 @@ export default function SettingsScreen() {
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function SectionHeader({ label }: { label: string }) {
+  const sectionStyles = useThemedStyles(makeSectionStyles);
   return <Text style={sectionStyles.header}>{label}</Text>;
 }
 
 function RowLabel({ label, hint }: { label: string; hint?: string }) {
+  const sectionStyles = useThemedStyles(makeSectionStyles);
   return (
     <View style={sectionStyles.rowLabelWrapper}>
       <Text style={sectionStyles.rowLabel}>{label}</Text>
@@ -291,6 +298,7 @@ function RowLabel({ label, hint }: { label: string; hint?: string }) {
 }
 
 function Divider() {
+  const sectionStyles = useThemedStyles(makeSectionStyles);
   return <View style={sectionStyles.divider} />;
 }
 
@@ -303,11 +311,15 @@ function Chip({
   selected: boolean;
   onPress: () => void;
 }) {
+  const chipStyles = useThemedStyles(makeChipStyles);
   return (
     <TouchableOpacity
       style={[chipStyles.chip, selected && chipStyles.chipOn]}
       onPress={onPress}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ selected }}
     >
       <Text style={[chipStyles.label, selected && chipStyles.labelOn]}>
         {label}
@@ -317,18 +329,26 @@ function Chip({
 }
 
 function LinkRow({ label, onPress }: { label: string; onPress: () => void }) {
+  const { colors: c } = useTheme();
+  const sectionStyles = useThemedStyles(makeSectionStyles);
   return (
-    <TouchableOpacity style={sectionStyles.linkRow} onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={sectionStyles.linkRow}
+      onPress={onPress}
+      activeOpacity={0.7}
+      accessibilityRole="link"
+      accessibilityLabel={label}
+    >
       <Text style={sectionStyles.linkLabel}>{label}</Text>
-      <Ionicons name="chevron-forward" size={16} color="#CCCCCC" />
+      <Ionicons name="chevron-forward" size={16} color={c.textFaint} />
     </TouchableOpacity>
   );
 }
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' },
+const makeStyles = (c: Colors) => StyleSheet.create({
+  safe: { flex: 1, backgroundColor: c.bg },
 
   scroll: {
     paddingHorizontal: 24,
@@ -339,18 +359,13 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     marginBottom: 24,
   },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#111111',
-    letterSpacing: -0.3,
-  },
+  title: { ...type.display, fontSize: 36, lineHeight: 37, color: c.text },
 
   // User card
   userCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     marginBottom: 32,
@@ -360,32 +375,32 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontFamily: font.bold, fontWeight: '700',
+    color: c.onPrimary,
   },
   userInfo: {
     flex: 1,
   },
   userName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
   },
   userEmail: {
-    fontSize: 13,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.textMuted,
     marginTop: 2,
   },
 
   // Section card
   section: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 18,
     marginBottom: 8,
@@ -401,12 +416,12 @@ const styles = StyleSheet.create({
 
   rowLabel: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
   },
   rowHint: {
-    fontSize: 13,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.textMuted,
     marginTop: 2,
   },
 
@@ -422,32 +437,30 @@ const styles = StyleSheet.create({
   },
   destructiveText: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#E53935',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.danger,
   },
 
   logoutBtn: {
     marginTop: 24,
     borderWidth: 1.5,
-    borderColor: '#E5E5E5',
+    borderColor: c.border,
     borderRadius: 100,
     paddingVertical: 16,
     alignItems: 'center',
   },
   logoutText: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
   },
 });
 
-const sectionStyles = StyleSheet.create({
+const makeSectionStyles = (c: Colors) => StyleSheet.create({
   header: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#AAAAAA',
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.textMuted,
     marginBottom: 10,
     marginTop: 16,
   },
@@ -456,17 +469,17 @@ const sectionStyles = StyleSheet.create({
   },
   rowLabel: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#111111',
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
   },
   rowHint: {
-    fontSize: 13,
-    color: '#AAAAAA',
+    fontFamily: font.regular, fontSize: 13,
+    color: c.textMuted,
     marginTop: 2,
   },
   divider: {
     height: 1,
-    backgroundColor: '#EBEBEB',
+    backgroundColor: c.surfaceAlt,
     marginVertical: 14,
   },
   linkRow: {
@@ -477,27 +490,27 @@ const sectionStyles = StyleSheet.create({
   },
   linkLabel: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#111111',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.text,
   },
 });
 
-const chipStyles = StyleSheet.create({
+const makeChipStyles = (c: Colors) => StyleSheet.create({
   chip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 100,
-    backgroundColor: '#EBEBEB',
+    backgroundColor: c.surfaceAlt,
   },
   chipOn: {
-    backgroundColor: '#111111',
+    backgroundColor: c.primary,
   },
   label: {
     fontSize: 13,
-    fontWeight: '500',
-    color: '#111111',
+    fontFamily: font.medium, fontWeight: '500',
+    color: c.text,
   },
   labelOn: {
-    color: '#FFFFFF',
+    color: c.onPrimary,
   },
 });

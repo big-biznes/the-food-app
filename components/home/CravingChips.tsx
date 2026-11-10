@@ -1,4 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Colors } from '@/constants/theme';
+import { font } from '@/constants/type';
+import { useThemedStyles } from '@/hooks/useTheme';
 
 export const CRAVING_CHIPS = [
   'Spicy', 'Light', 'Hearty', 'Fresh',
@@ -12,6 +15,8 @@ type Props = {
 };
 
 export default function CravingChips({ selected, onToggle }: Props) {
+  const styles = useThemedStyles(makeStyles);
+
   return (
     <View style={styles.grid}>
       {CRAVING_CHIPS.map(chip => {
@@ -22,6 +27,10 @@ export default function CravingChips({ selected, onToggle }: Props) {
             style={[styles.chip, on && styles.chipOn]}
             onPress={() => onToggle(chip)}
             activeOpacity={0.7}
+            hitSlop={{ top: 5, bottom: 5 }}
+            accessibilityRole="button"
+            accessibilityLabel={chip}
+            accessibilityState={{ selected: on }}
           >
             <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
           </TouchableOpacity>
@@ -31,15 +40,16 @@ export default function CravingChips({ selected, onToggle }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  chip: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 100,
-    backgroundColor: '#F5F5F5',
-  },
-  chipOn: { backgroundColor: '#111111' },
-  chipText: { fontSize: 14, fontWeight: '500', color: '#111111' },
-  chipTextOn: { color: '#FFFFFF' },
-});
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+    chip: {
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      borderRadius: 8,
+      backgroundColor: c.surface,
+    },
+    chipOn: { backgroundColor: c.primary },
+    chipText: { fontFamily: font.semibold, fontSize: 15, lineHeight: 19, color: c.text },
+    chipTextOn: { color: c.onPrimary },
+  });

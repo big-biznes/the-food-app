@@ -1,17 +1,21 @@
+import { ColorValue } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from '@/hooks/useTheme';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
 function tabIcon(name: IoniconName) {
-  return ({ color, size }: { color: string; size: number }) => (
-    <Ionicons name={name} size={size} color={color} />
-  );
+  function TabIcon({ color, size }: { color: ColorValue; size: number }) {
+    return <Ionicons name={name} size={size} color={color as string} />;
+  }
+  return TabIcon;
 }
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const { colors: c } = useTheme();
 
   return (
     <Tabs
@@ -19,36 +23,33 @@ export default function TabLayout() {
         animation: 'fade',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: c.bg,
           borderTopWidth: 1,
-          borderTopColor: '#F0F0F0',
-          elevation: 0,
-          shadowOpacity: 0,
-          shadowColor: 'transparent',
+          borderTopColor: c.border,
           height: 64 + insets.bottom,
           paddingTop: insets.bottom,
           paddingBottom: insets.bottom,
         },
-        tabBarActiveTintColor: '#111111',
-        tabBarInactiveTintColor: '#CCCCCC',
+        tabBarActiveTintColor: c.text,
+        tabBarInactiveTintColor: c.textFaint,
         tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
         name="(home)"
-        options={{ tabBarIcon: tabIcon('home-outline') }}
+        options={{ title: 'Home', tabBarIcon: tabIcon('home-outline') }}
       />
       <Tabs.Screen
         name="(discover)"
-        options={{ tabBarIcon: tabIcon('sparkles-outline') }}
+        options={{ title: 'Discover', tabBarIcon: tabIcon('sparkles-outline') }}
       />
       <Tabs.Screen
         name="(shopping)"
-        options={{ tabBarIcon: tabIcon('cart-outline') }}
+        options={{ title: 'Shopping', tabBarIcon: tabIcon('cart-outline') }}
       />
       <Tabs.Screen
         name="settings"
-        options={{ tabBarIcon: tabIcon('settings-outline') }}
+        options={{ title: 'Settings', tabBarIcon: tabIcon('settings-outline') }}
       />
       {/* Hide auto-discovered groups from tab bar */}
       <Tabs.Screen name="(settings)" options={{ href: null }} />

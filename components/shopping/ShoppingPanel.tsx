@@ -1,8 +1,20 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Animated, StyleSheet } from 'react-native';
+import { useCallback } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Animated,
+  StyleSheet,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ShoppingItem } from '@/contexts/ShoppingContext';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import ShoppingRow from './ShoppingRow';
 
+import { font } from '@/constants/type';
 type Props = {
   input: string;
   onInputChange: (text: string) => void;
@@ -16,6 +28,10 @@ type Props = {
   fabAnim: Animated.Value;
 };
 
+function keyExtractor(item: ShoppingItem) {
+  return item.id;
+}
+
 export default function ShoppingPanel({
   input,
   onInputChange,
@@ -28,20 +44,38 @@ export default function ShoppingPanel({
   onFinishShopping,
   fabAnim,
 }: Props) {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const hasChecked = checkedCount > 0;
+
+  const renderItem = useCallback(
+    ({ item }: { item: ShoppingItem }) => (
+      <ShoppingRow item={item} onToggle={onToggle} onDelete={onDelete} />
+    ),
+    [onToggle, onDelete],
+  );
+
   return (
     <View style={styles.panel}>
       <View style={styles.addRow}>
         <TextInput
           style={styles.addInput}
           placeholder="Add an item…"
-          placeholderTextColor="#C5C5C5"
+          placeholderTextColor={c.textFaint}
           value={input}
           onChangeText={onInputChange}
           onSubmitEditing={onAdd}
           returnKeyType="done"
+          accessibilityLabel="Add an item to the shopping list"
         />
-        <TouchableOpacity style={styles.addBtn} onPress={onAdd} activeOpacity={0.8}>
-          <Ionicons name="add" size={22} color="#FFFFFF" />
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={onAdd}
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Add item"
+        >
+          <Ionicons name="add" size={22} color={c.onPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -50,49 +84,53 @@ export default function ShoppingPanel({
           <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
           <TouchableOpacity
             onPress={onClearChecked}
-            activeOpacity={checkedCount > 0 ? 0.7 : 1}
-            disabled={checkedCount === 0}
+            activeOpacity={hasChecked ? 0.7 : 1}
+            disabled={!hasChecked}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessibilityRole="button"
+            accessibilityLabel="Clear checked items"
+            accessibilityState={{ disabled: !hasChecked }}
           >
-            <Text style={[styles.clearText, checkedCount === 0 && styles.clearTextDim]}>
+            <Text style={[styles.clearText, !hasChecked && styles.clearTextDim]}>
               Clear
             </Text>
           </TouchableOpacity>
         </View>
 
-        <ScrollView
+        <FlatList
           style={styles.flex}
+          data={items}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-        >
-          {items.length === 0 && (
+          initialNumToRender={16}
+          ListEmptyComponent={
             <View style={styles.emptyState}>
               <Text style={styles.emptyIcon}>🛒</Text>
               <Text style={styles.emptyText}>Your list is empty</Text>
               <Text style={styles.emptyHint}>Add items above to get started</Text>
             </View>
-          )}
-          {items.map(item => (
-            <ShoppingRow
-              key={item.id}
-              item={item}
-              onToggle={onToggle}
-              onDelete={onDelete}
-            />
-          ))}
-        </ScrollView>
+          }
+        />
 
         <Animated.View
           style={[styles.fabWrap, { transform: [{ translateY: fabAnim }] }]}
-          pointerEvents={checkedCount > 0 ? 'auto' : 'none'}
+          pointerEvents={hasChecked ? 'auto' : 'none'}
+          importantForAccessibility={hasChecked ? 'auto' : 'no-hide-descendants'}
+          accessibilityElementsHidden={!hasChecked}
         >
           <TouchableOpacity
             style={styles.fab}
             onPress={onFinishShopping}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Finish shopping"
+            accessibilityHint="Moves checked items to your pantry"
           >
             <Text style={styles.fabText}>Finish shopping</Text>
-            <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
+            <Ionicons name="checkmark-circle" size={20} color={c.onPrimary} />
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -100,72 +138,72 @@ export default function ShoppingPanel({
   );
 }
 
-const styles = StyleSheet.create({
-  panel: { flex: 1 },
-  flex: { flex: 1 },
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    panel: { flex: 1 },
+    flex: { flex: 1 },
 
-  addRow: {
-    flexDirection: 'row',
-    marginHorizontal: 24,
-    marginBottom: 16,
-    gap: 10,
-  },
-  addInput: {
-    flex: 1,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 100,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    fontSize: 15,
-    color: '#111111',
-  },
-  addBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#111111',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    addRow: {
+      flexDirection: 'row',
+      marginHorizontal: 20,
+      marginBottom: 16,
+      gap: 10,
+    },
+    addInput: {
+      flex: 1,
+      backgroundColor: c.surface,
+      borderRadius: 100,
+      paddingHorizontal: 18,
+      paddingVertical: 14,
+      fontFamily: font.regular, fontSize: 15,
+      color: c.text,
+    },
+    addBtn: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: c.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
 
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingBottom: 8,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#AAAAAA',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  clearText: { fontSize: 13, fontWeight: '600', color: '#111111' },
-  clearTextDim: { color: '#DDDDDD' },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+      paddingBottom: 8,
+    },
+    sectionLabel: {
+      fontSize: 13,
+      fontFamily: font.semibold, fontWeight: '600',
+      color: c.textMuted,
+      fontVariant: ['tabular-nums'],
+    },
+    clearText: { fontSize: 13, fontFamily: font.semibold, fontWeight: '600', color: c.text },
+    clearTextDim: { color: c.textFaint },
 
-  listContent: { paddingHorizontal: 24, paddingBottom: 100 },
+    listContent: { paddingHorizontal: 20, paddingBottom: 100 },
 
-  emptyState: { alignItems: 'center', marginTop: 64 },
-  emptyIcon: { fontSize: 48, marginBottom: 16 },
-  emptyText: { fontSize: 17, fontWeight: '600', color: '#111111', marginBottom: 6 },
-  emptyHint: { fontSize: 14, color: '#AAAAAA' },
+    emptyState: { alignItems: 'center', marginTop: 64 },
+    emptyIcon: { fontFamily: font.regular, fontSize: 48, marginBottom: 16 },
+    emptyText: { fontSize: 17, fontFamily: font.semibold, fontWeight: '600', color: c.text, marginBottom: 6 },
+    emptyHint: { fontFamily: font.regular, fontSize: 14, color: c.textMuted },
 
-  fabWrap: {
-    position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
-  },
-  fab: {
-    backgroundColor: '#111111',
-    borderRadius: 100,
-    paddingVertical: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  fabText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
-});
+    fabWrap: {
+      position: 'absolute',
+      bottom: 20,
+      left: 24,
+      right: 24,
+    },
+    fab: {
+      backgroundColor: c.primary,
+      borderRadius: 100,
+      paddingVertical: 18,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+    },
+    fabText: { color: c.onPrimary, fontSize: 16, fontFamily: font.semibold, fontWeight: '600' },
+  });

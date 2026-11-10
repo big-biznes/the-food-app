@@ -2,7 +2,11 @@ import { useRef } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
+import { Colors } from '@/constants/theme';
+import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
+import { font } from '@/constants/type';
 type Props = {
   meal: Meal;
   liked: boolean;
@@ -10,15 +14,22 @@ type Props = {
 };
 
 export default function ReactionRow({ meal, liked, onToggle }: Props) {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const reducedMotion = useReducedMotion();
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   function handleToggle() {
-    Animated.sequence([
-      Animated.timing(fadeAnim, { toValue: 0, duration: 120, useNativeDriver: true }),
-      Animated.timing(fadeAnim, { toValue: 1, duration: 120, useNativeDriver: true }),
-    ]).start();
+    if (!reducedMotion) {
+      Animated.sequence([
+        Animated.timing(fadeAnim, { toValue: 0, duration: 120, useNativeDriver: true }),
+        Animated.timing(fadeAnim, { toValue: 1, duration: 120, useNativeDriver: true }),
+      ]).start();
+    }
     onToggle();
   }
+
+  const mealType = meal.mealType[0].toUpperCase() + meal.mealType.slice(1);
 
   return (
     <View style={styles.row}>
@@ -28,7 +39,7 @@ export default function ReactionRow({ meal, liked, onToggle }: Props) {
           {meal.name}
         </Text>
         <Text style={styles.meta}>
-          {meal.mealType[0].toUpperCase() + meal.mealType.slice(1)} · {meal.prepTime} min
+          {mealType}, {meal.prepTime} min
         </Text>
       </View>
       <Animated.View style={{ opacity: fadeAnim }}>
@@ -37,11 +48,14 @@ export default function ReactionRow({ meal, liked, onToggle }: Props) {
           onPress={handleToggle}
           activeOpacity={0.75}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          accessibilityRole="button"
+          accessibilityLabel={liked ? `Unlike ${meal.name}` : `Like ${meal.name}`}
+          accessibilityState={{ selected: liked }}
         >
           <Ionicons
             name={liked ? 'heart' : 'heart-outline'}
             size={18}
-            color={liked ? '#FFFFFF' : '#AAAAAA'}
+            color={liked ? c.onPrimary : c.textMuted}
           />
         </TouchableOpacity>
       </Animated.View>
@@ -49,26 +63,27 @@ export default function ReactionRow({ meal, liked, onToggle }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
-  },
-  emoji: { fontSize: 28, width: 36, textAlign: 'center' },
-  text: { flex: 1, gap: 2 },
-  name: { fontSize: 15, fontWeight: '600', color: '#111111' },
-  meta: { fontSize: 12, color: '#AAAAAA' },
-  btn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnActive: { backgroundColor: '#111111' },
-});
+const makeStyles = (c: Colors) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    emoji: { fontFamily: font.regular, fontSize: 28, width: 36, textAlign: 'center' },
+    text: { flex: 1, gap: 2 },
+    name: { fontSize: 15, fontFamily: font.semibold, fontWeight: '600', color: c.text },
+    meta: { fontFamily: font.regular, fontSize: 12, color: c.textMuted, fontVariant: ['tabular-nums'] },
+    btn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: c.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    btnActive: { backgroundColor: c.primary },
+  });
