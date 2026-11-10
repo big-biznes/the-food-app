@@ -17,10 +17,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/foodapp-logo.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/icon-adaptive-foreground.png",
+        "backgroundColor": "#181817"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.kebabzter.thefoodapp"
     },
     "web": {
@@ -33,10 +32,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/foodapp-logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#181817"
         }
       ]
     ],
