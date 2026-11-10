@@ -161,6 +161,9 @@ const makeStyles = (c: Colors) =>
       paddingHorizontal: 14,
       paddingVertical: 10,
       gap: 10,
+      // Knockout ring so the ink toast stays separate from the ink "eating out" card.
+      borderWidth: 3,
+      borderColor: c.bg,
     },
     left: {
       flex: 1,

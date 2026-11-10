@@ -371,6 +371,9 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     borderRadius: 100,
     paddingHorizontal: 36,
     paddingVertical: 17,
+    // Knockout ring: keeps the button separate from the ink "eating out" card when it scrolls underneath.
+    borderWidth: 3,
+    borderColor: c.bg,
   },
   fabText: {
     fontSize: 16,
