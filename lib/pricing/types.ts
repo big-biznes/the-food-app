@@ -60,7 +60,7 @@ export type StoreTotal = {
   chainId: string;
   totalCents: number;
   found: ItemChoice[];
-  /** Item ids this chain has no product for. */
+  /** Item ids we have no price for at this chain (the store may still sell them). */
   missing: string[];
 };
 

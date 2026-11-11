@@ -81,22 +81,29 @@ export default function ShoppingPanel({
         </TouchableOpacity>
       </View>
 
+      {items.length > 0 && (
+        <TouchableOpacity
+          style={styles.compare}
+          onPress={onComparePrices}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel="Compare store prices"
+          accessibilityHint="Shows what your list costs at each store"
+        >
+          <View style={styles.compareIcon}>
+            <Ionicons name="pricetag" size={16} color={c.onTile} />
+          </View>
+          <View style={styles.compareText}>
+            <Text style={styles.compareTitle}>Compare store prices</Text>
+            <Text style={styles.compareSub}>See where your list is cheapest</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={c.onPrimaryMuted} />
+        </TouchableOpacity>
+      )}
+
       <View style={styles.flex}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
-          {items.length > 0 && (
-            <TouchableOpacity
-              style={styles.compareBtn}
-              onPress={onComparePrices}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              accessibilityRole="button"
-              accessibilityLabel="Compare store prices"
-            >
-              <Ionicons name="pricetag-outline" size={14} color={c.text} />
-              <Text style={styles.clearText}>Compare prices</Text>
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             onPress={onClearChecked}
             activeOpacity={hasChecked ? 0.7 : 1}
@@ -182,6 +189,29 @@ const makeStyles = (c: Colors) =>
       justifyContent: 'center',
     },
 
+    compare: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      marginHorizontal: 20,
+      marginBottom: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      borderRadius: 18,
+      backgroundColor: c.primary,
+    },
+    compareIcon: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: c.butter,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    compareText: { flex: 1 },
+    compareTitle: { fontSize: 15, fontFamily: font.semibold, fontWeight: '600', color: c.onPrimary },
+    compareSub: { fontSize: 13, fontFamily: font.regular, color: c.onPrimaryMuted, marginTop: 1 },
+
     sectionHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -195,7 +225,6 @@ const makeStyles = (c: Colors) =>
       color: c.textMuted,
       fontVariant: ['tabular-nums'],
     },
-    compareBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginLeft: 'auto', marginRight: 20 },
     clearText: { fontSize: 13, fontFamily: font.semibold, fontWeight: '600', color: c.text },
     clearTextDim: { color: c.textFaint },
 

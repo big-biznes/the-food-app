@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useCallback, useRef, startTransition } from 'react';
 import { useCloudState } from '@/hooks/useCloudState';
+import type { PlanIngredient } from '@/data/meals';
 
 export type ShoppingItem = {
   id: string;
@@ -20,7 +21,7 @@ type ShoppingContextType = {
   pantryItems: PantryItem[];
   addShoppingItems: (names: string[]) => void;
   replaceShoppingItems: (names: string[]) => void;
-  replacePlanIngredients: (names: string[]) => void;
+  replacePlanIngredients: (ingredients: PlanIngredient[]) => void;
   addShoppingItem: (name: string) => void;
   toggleShoppingItem: (id: string) => void;
   deleteShoppingItem: (id: string) => void;
@@ -68,12 +69,6 @@ function extractBaseName(formatted: string): string {
   return s.toLowerCase().trim();
 }
 
-/** Returns true when the formatted string indicates the plan needs this ingredient
- *  more than once (x2, x3, …), meaning a single pantry stock is likely not enough. */
-function isMultiUse(formatted: string): boolean {
-  return /^x[2-9]\d*\s/.test(formatted.trim());
-}
-
 const ShoppingContext = createContext<ShoppingContextType | null>(null);
 
 // Items are persisted, so ids must stay unique across app launches and devices.
@@ -111,12 +106,12 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     });
   }, [setShoppingItems]);
 
-  const replacePlanIngredients = useCallback((names: string[]) => {
+  const replacePlanIngredients = useCallback((ingredients: PlanIngredient[]) => {
     const pantryNames = new Set(pantryRef.current.map(p => p.name.toLowerCase().trim()));
     const seen = new Set<string>();
     const result: ShoppingItem[] = [];
 
-    for (const name of names) {
+    for (const { name, uses } of ingredients) {
       const trimmed = name.trim();
       if (!trimmed) continue;
       const baseName = extractBaseName(trimmed);
@@ -124,7 +119,8 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
       seen.add(baseName);
 
       if (pantryNames.has(baseName)) {
-        if (isMultiUse(trimmed)) {
+        // Needed by several meals: what is in the pantry is likely not enough.
+        if (uses > 1) {
           result.push({ id: uid(), name: trimmed, checked: false, lowStock: true });
         }
       } else {

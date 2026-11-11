@@ -6,10 +6,13 @@
 //   node scripts/ingest/index.mjs --sql out.sql      write a SQL file to paste into the Supabase SQL Editor (no key needed)
 //   node scripts/ingest/index.mjs                    write (needs the env vars below)
 //   node scripts/ingest/index.mjs --date 2026-11-10  use one specific day
+//   node scripts/ingest/index.mjs --glovo            also read the chains' delivery stores (off by default:
+//                                                    the site stops answering automated requests after a while)
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (never ship this key in the app).
 
 import { readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { GLOVO_STORES, glovoProducts } from './glovo.mjs';
 import { BG_CHAINS, downloadDay, readChainRows, toProducts } from './kolkostruva.mjs';
 import { matchIngredient } from './match.mjs';
 import { kauflandOffers, lidlOffers } from './offers.mjs';
@@ -17,6 +20,7 @@ import { kauflandOffers, lidlOffers } from './offers.mjs';
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const sqlFile = args.includes('--sql') ? args[args.indexOf('--sql') + 1] : null;
+const useGlovo = args.includes('--glovo');
 const dateArg = args.includes('--date') ? args[args.indexOf('--date') + 1] : null;
 /** A retailer can be missing from a day's file, so look back a few days. */
 const LOOKBACK_DAYS = 4;
@@ -57,17 +61,18 @@ async function collectBulgaria() {
 
 /** Weekly offers from the chains' own sites. A failing site must not stop the feed import. */
 async function collectOffers() {
-  const lidlTerms = [...new Set(ingredients.flatMap(i => i.bgOffers?.include ?? []))];
+  const terms = [...new Set(ingredients.flatMap(i => i.bgOffers?.include ?? []))];
   const sources = [
-    ['kaufland_bg', () => kauflandOffers()],
-    ['lidl_bg', () => lidlOffers(lidlTerms)],
+    ['kaufland_bg', 'offers', () => kauflandOffers()],
+    ['lidl_bg', 'offers', () => lidlOffers(terms)],
+    ...(!useGlovo ? [] : Object.keys(GLOVO_STORES).map(chainId => [chainId, 'glovo', () => glovoProducts(chainId, terms)])),
   ];
   const result = [];
-  for (const [chainId, load] of sources) {
+  for (const [chainId, label, load] of sources) {
     try {
-      result.push({ chainId, date: 'offers', products: await load(), rules: 'bgOffers' });
+      result.push({ chainId, date: label, products: await load(), rules: 'bgOffers' });
     } catch (e) {
-      console.warn(`! ${chainId} offers: ${e.message}`);
+      console.warn(`! ${chainId} ${label}: ${e.message}`);
     }
   }
   return result;
@@ -117,6 +122,14 @@ for (const chain of [...(await collectBulgaria()), ...(await collectOffers())]) 
   all.push(...rows);
 }
 
+// The same article can come from two sources ("00101436", "offer:00101436",
+// "glovo:00101436"). The shelf sources win over the delivery store.
+const shelf = new Set(all.filter(r => !r.external_id.startsWith('glovo:')).map(r => `${r.chain_id}|${r.external_id.replace(/^offer:/, '')}`));
+for (let i = all.length - 1; i >= 0; i--) {
+  const r = all[i];
+  if (r.external_id.startsWith('glovo:') && shelf.has(`${r.chain_id}|${r.external_id.slice(6)}`)) all.splice(i, 1);
+}
+
 const priced = new Set(all.map(r => r.ingredient_key));
 const unpriced = ingredients.map(i => i.key).filter(k => !priced.has(k));
 console.log(`\nIngredients with a price somewhere: ${priced.size} of ${ingredients.length}`);
@@ -143,8 +156,8 @@ if (sqlFile) {
       process.exit(1);
     }
   }
-  // Offers that are no longer listed have ended.
-  const { error: delError } = await supabase.from('products').delete().like('external_id', 'offer:%').lt('updated_at', runStart);
+  // Offers and delivery listings that are no longer there have ended.
+  const { error: delError } = await supabase.from('products').delete().or('external_id.like.offer:%,external_id.like.glovo:%').lt('updated_at', runStart);
   if (delError) console.warn(`! could not remove ended offers: ${delError.message}`);
   console.log(`\nWrote ${all.length} rows.`);
 }
@@ -162,7 +175,7 @@ function toSql(rows) {
     values,
     `on conflict (chain_id, external_id) do update set ${updates};`,
     '-- Offers that are no longer listed have ended.',
-    `delete from public.products where external_id like 'offer:%' and updated_at < '${runStart}';`,
+    `delete from public.products where (external_id like 'offer:%' or external_id like 'glovo:%') and updated_at < '${runStart}';`,
     '',
   ].join('\n');
 }

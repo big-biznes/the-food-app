@@ -60,7 +60,7 @@ export default function StoreCard({ store, labels, itemCount, badge, initiallyOp
           ))}
           {store.missing.length > 0 && (
             <Text style={styles.missing}>
-              Not sold here: {store.missing.map(id => labels.get(id) ?? id).join(', ')}
+              No price found here for: {store.missing.map(id => labels.get(id) ?? id).join(', ')}
             </Text>
           )}
           {actionLabel && onAction && (
@@ -121,7 +121,7 @@ const makeStyles = (c: Colors) =>
     lineProduct: { ...type.small, color: c.textSecondary, marginTop: 2 },
     lineLeftover: { ...type.small, color: c.textMuted, marginTop: 2 },
     lineCost: { fontSize: 15, fontFamily: font.semibold, fontWeight: '600', color: c.text, fontVariant: ['tabular-nums'] },
-    missing: { ...type.small, color: c.warning, paddingTop: 12, borderTopWidth: 1, borderTopColor: c.border },
+    missing: { ...type.small, color: c.textMuted, paddingTop: 12, borderTopWidth: 1, borderTopColor: c.border },
 
     action: { backgroundColor: c.primary, borderRadius: 100, paddingVertical: 14, alignItems: 'center', marginTop: 14 },
     actionText: { color: c.onPrimary, fontSize: 15, fontFamily: font.semibold, fontWeight: '600' },

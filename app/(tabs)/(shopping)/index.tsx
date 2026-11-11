@@ -3,13 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Animated,
   Easing,
-  PanResponder,
-  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -17,20 +14,33 @@ import { useShoppingContext } from '@/contexts/ShoppingContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import ShoppingPanel from '@/components/shopping/ShoppingPanel';
 import PantryPanel from '@/components/shopping/PantryPanel';
+import SegmentTabs from '@/components/SegmentTabs';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
+import { useSwipeTabs } from '@/hooks/useSwipeTabs';
 
-import { font, type } from '@/constants/type';
-type Tab = 'list' | 'pantry';
+import { type } from '@/constants/type';
+
+const TABS = [
+  { key: 'list', label: 'List' },
+  { key: 'pantry', label: 'Pantry' },
+] as const;
+
+const TAB_KEYS = ['list', 'pantry'] as const;
 
 const FAB_HIDDEN_Y = 80;
 
 export default function ShoppingScreen() {
   const styles = useThemedStyles(makeStyles);
-  const { width: screenWidth } = useWindowDimensions();
-  const widthRef = useRef(screenWidth);
-  widthRef.current = screenWidth;
+  const {
+    active: activeTab,
+    switchTab,
+    progress: tabProgress,
+    translateX: tabTranslateX,
+    panHandlers,
+    width: screenWidth,
+  } = useSwipeTabs(TAB_KEYS);
   const reducedMotion = useReducedMotionRef();
   const router = useRouter();
   const handleComparePrices = useCallback(() => router.push('/compare'), [router]);
@@ -56,7 +66,6 @@ export default function ShoppingScreen() {
     pantryToastRef.current?.show();
   }, [finishShopping]);
 
-  const [activeTab, setActiveTab] = useState<Tab>('list');
   const [shoppingInput, setShoppingInput] = useState('');
   const [pantryInput, setPantryInput] = useState('');
 
@@ -137,67 +146,6 @@ export default function ShoppingScreen() {
     }).start();
   }, [hasChecked, fabAnim, reducedMotion]);
 
-  // Animated tab switcher.
-  const [pillWidth, setPillWidth] = useState(0);
-  const tabProgress = useRef(new Animated.Value(0)).current; // 0 = list, 1 = pantry
-  const activeTabRef = useRef<Tab>('list');
-
-  const tabTranslateX = tabProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -screenWidth],
-    extrapolate: 'clamp',
-  });
-
-  const pillTranslateX = tabProgress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, pillWidth],
-    extrapolate: 'clamp',
-  });
-
-  function switchTab(tab: Tab) {
-    activeTabRef.current = tab;
-    setActiveTab(tab);
-    const toValue = tab === 'list' ? 0 : 1;
-    if (reducedMotion.current) {
-      tabProgress.setValue(toValue);
-      return;
-    }
-    // JS driver so the list/pantry rows are tappable immediately, not only after the slide ends.
-    Animated.timing(tabProgress, {
-      toValue,
-      duration: 250,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: false,
-    }).start();
-  }
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, g) =>
-        Math.abs(g.dx) > Math.abs(g.dy) && Math.abs(g.dx) > 8,
-      onPanResponderMove: (_, g) => {
-        const base = activeTabRef.current === 'list' ? 0 : 1;
-        tabProgress.setValue(Math.max(0, Math.min(1, base - g.dx / widthRef.current)));
-      },
-      onPanResponderRelease: (_, g) => {
-        const base = activeTabRef.current === 'list' ? 0 : 1;
-        const progress = Math.max(0, Math.min(1, base - g.dx / widthRef.current));
-        const fastLeft = g.vx < -0.15;
-        const fastRight = g.vx > 0.15;
-        if ((fastLeft || progress > 0.3) && activeTabRef.current === 'list') {
-          switchTab('pantry');
-        } else if ((fastRight || progress < 0.7) && activeTabRef.current === 'pantry') {
-          switchTab('list');
-        } else {
-          switchTab(activeTabRef.current);
-        }
-      },
-      onPanResponderTerminate: () => {
-        switchTab(activeTabRef.current);
-      },
-    }),
-  ).current;
-
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ConfirmToast ref={pantryToastRef} message="Ingredients added to pantry" />
@@ -213,43 +161,10 @@ export default function ShoppingScreen() {
           </Text>
         </View>
 
-        {/* Animated segment control */}
-        <View
-          style={styles.segmentWrapper}
-          onLayout={e => setPillWidth(e.nativeEvent.layout.width / 2)}
-          accessibilityRole="tablist"
-        >
-          <Animated.View
-            style={[styles.segmentPill, { width: pillWidth, transform: [{ translateX: pillTranslateX }] }]}
-          />
-          <TouchableOpacity
-            style={styles.segmentBtn}
-            onPress={() => switchTab('list')}
-            activeOpacity={0.8}
-            accessibilityRole="tab"
-            accessibilityLabel="List"
-            accessibilityState={{ selected: activeTab === 'list' }}
-          >
-            <Text style={[styles.segmentText, activeTab === 'list' && styles.segmentTextOn]}>
-              List
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.segmentBtn}
-            onPress={() => switchTab('pantry')}
-            activeOpacity={0.8}
-            accessibilityRole="tab"
-            accessibilityLabel="Pantry"
-            accessibilityState={{ selected: activeTab === 'pantry' }}
-          >
-            <Text style={[styles.segmentText, activeTab === 'pantry' && styles.segmentTextOn]}>
-              Pantry
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <SegmentTabs tabs={TABS} active={activeTab} onChange={switchTab} progress={tabProgress} />
 
         {/* Horizontally sliding panels */}
-        <View style={styles.tabContainer} {...panResponder.panHandlers}>
+        <View style={styles.tabContainer} {...panHandlers}>
           <Animated.View
             style={[
               styles.tabSlider,
@@ -306,28 +221,6 @@ const makeStyles = (c: Colors) =>
       paddingBottom: 16,
     },
     title: { ...type.display, fontSize: 36, lineHeight: 37, color: c.text },
-
-    segmentWrapper: {
-      flexDirection: 'row',
-      marginHorizontal: 20,
-      marginBottom: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: c.border,
-    },
-    segmentPill: {
-      position: 'absolute',
-      bottom: -1,
-      left: 0,
-      height: 2,
-      backgroundColor: c.text,
-    },
-    segmentBtn: {
-      flex: 1,
-      paddingVertical: 10,
-      alignItems: 'center',
-    },
-    segmentText: { fontSize: 14, fontFamily: font.semibold, fontWeight: '600', color: c.textMuted },
-    segmentTextOn: { color: c.text },
 
     tabContainer: { flex: 1, overflow: 'hidden' },
     tabSlider: {

@@ -50,6 +50,12 @@ test('matchIngredient respects category, include and exclude', () => {
   assert.equal(m('Прясно пилешко филе XXL', '16'), 'chicken');
   assert.equal(m('Прясно пуешко филе', '16'), 'turkey');
   assert.equal(m('Пилешко филе слайс 120г', '27'), null);
+
+  const byName = [{ key: 'oil', bgOffers: { include: ['олио'], exclude: ['маслиново'] } }];
+  const n = name => matchIngredient({ name }, byName, 'bgOffers');
+  assert.equal(n('Слънчогледово олио 1 л'), 'oil');
+  assert.equal(n('Фъстък печен безцветно фолио 200г'), null); // "олио" inside "фолио"
+  assert.equal(n('Babywell Бебешко олио 250 МЛ'), null); // never an ingredient
 });
 
 test('parseKauflandOffers keeps priced, current offers', () => {

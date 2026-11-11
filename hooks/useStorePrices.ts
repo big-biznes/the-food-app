@@ -4,8 +4,8 @@ import { supabase } from '@/lib/supabase';
 import type { BaseUnit, Offer } from '@/lib/pricing';
 
 const CACHE_PREFIX = 'prices:v1:';
-/** Prices are ingested once a day, so a cached copy is good for a day. */
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+/** Within this window the saved copy is used as is; after it, prices are re-fetched in the background. */
+const FRESH_MS = 10 * 60 * 1000;
 /** Products the ingestion has not seen for this long are treated as gone. */
 const STALE_MS = 7 * 24 * 60 * 60 * 1000;
 /** A promo price is only trusted while the row is this fresh. */
@@ -60,9 +60,9 @@ async function fetchOffers(chainIds: string[]): Promise<Cached> {
 }
 
 /**
- * Current product prices for the given chains. Served from the device cache
- * when it is under a day old; otherwise fetched, falling back to the stale
- * cache when the network fails.
+ * Current product prices for the given chains. The copy saved on the device is
+ * shown immediately (and is what you get offline); unless it is only minutes
+ * old, fresh prices are fetched and replace it.
  */
 export function useStorePrices(chainIds: string[]): StorePrices & { retry: () => void } {
   const key = [...chainIds].sort().join(',');
@@ -82,10 +82,11 @@ export function useStorePrices(chainIds: string[]): StorePrices & { retry: () =>
         if (raw) cached = JSON.parse(raw) as Cached;
       } catch {}
       if (cancelled) return;
-      // An empty copy is never trusted: it usually means prices were not loaded yet.
-      if (cached && cached.offers.length > 0 && Date.now() - cached.savedAt < CACHE_TTL_MS) {
+      // Show the saved copy straight away. Unless it was saved minutes ago,
+      // carry on and replace it with current prices.
+      if (cached && cached.offers.length > 0) {
         setState({ status: 'ready', offers: cached.offers, updatedAt: cached.updatedAt });
-        return;
+        if (Date.now() - cached.savedAt < FRESH_MS) return;
       }
       try {
         const fresh = await fetchOffers(key.split(','));

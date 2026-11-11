@@ -454,7 +454,10 @@ export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
   return ids;
 }
 
-export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart): string[] {
+/** One shopping-list line for a plan, and how many meals need that ingredient. */
+export type PlanIngredient = { name: string; uses: number };
+
+export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart): PlanIngredient[] {
   const groups = new Map<string, Ingredient[]>();
 
   function collect(ing: Ingredient) {
@@ -475,31 +478,28 @@ export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart)
     }
   }
 
-  const result: string[] = [];
+  const result: PlanIngredient[] = [];
+  const push = (name: string, uses: number) => result.push({ name, uses });
 
   for (const [, instances] of groups) {
     const { name, unit } = instances[0];
 
     if (unit === 'can') {
       const count = instances.length;
-      result.push(count > 1 ? `x${count} ${name}` : name);
+      push(count > 1 ? `x${count} ${name}` : name, count);
 
     } else if (!unit) {
       const total = instances.reduce((s, i) => s + i.amount, 0);
-      result.push(total > 1 ? `x${total} ${name}` : name);
+      push(total > 1 ? `x${total} ${name}` : name, total);
 
     } else if (unit === 'g' || unit === 'ml' || unit === 'kg' || unit === 'l') {
-      const allSame = instances.every(i => i.amount === instances[0].amount);
-      if (instances.length > 1 && allSame) {
-        result.push(`x${instances.length} ${instances[0].amount}${unit} ${name}`);
-      } else {
-        const total = instances.reduce((s, i) => s + i.amount, 0);
-        result.push(`${total}${unit} ${name}`);
-      }
+      // One total to buy: "400g carrots", not "x4 100g carrots".
+      const total = instances.reduce((s, i) => s + i.amount, 0);
+      push(`${total}${unit} ${name}`, instances.length);
 
     } else {
       const total = instances.reduce((s, i) => s + i.amount, 0);
-      result.push(`${total} ${unit} ${name}`);
+      push(`${total} ${unit} ${name}`, instances.length);
     }
   }
 
