@@ -40,6 +40,8 @@ export type UserProfile = {
   discoverExpertMode: boolean;
   /** How many plans the user has generated; used to give first-time users more time on tips. */
   plansCreated?: number;
+  /** How many times the user opened meal details from a Discover card (tap hint shows until 3). */
+  detailsOpened?: number;
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;

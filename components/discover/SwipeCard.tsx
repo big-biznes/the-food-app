@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, PanResponder, StyleSheet, useWindowDimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -28,9 +29,25 @@ type Props = {
    * without waiting for this one to leave the screen.
    */
   onSwipeCommit: (direction: Direction, release: SwipeRelease) => void;
+  /** A tap (touch with barely any movement) on the top card, e.g. to open the meal details. */
+  onTap?: () => void;
+  /** Small "Tap for details" hint in the corner; only shown to users who haven't used it yet. */
+  showTapHint?: boolean;
 };
 
-export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, onSwipeCommit }: Props) {
+/** A touch that moves less than this and lifts quickly counts as a tap, not a swipe. */
+const TAP_SLOP = 8;
+const TAP_MAX_MS = 300;
+
+export default function SwipeCard({
+  meal,
+  nextMeal,
+  expertMode,
+  enterScale = 1,
+  onSwipeCommit,
+  onTap,
+  showTapHint = false,
+}: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const { width: screenWidth } = useWindowDimensions();
@@ -71,6 +88,9 @@ export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, 
   commitRef.current = commit;
   const onSwipeCommitRef = useRef(onSwipeCommit);
   onSwipeCommitRef.current = onSwipeCommit;
+  const onTapRef = useRef(onTap);
+  onTapRef.current = onTap;
+  const touchStart = useRef(0);
   const thresholdRef = useRef(swipeThreshold);
   thresholdRef.current = swipeThreshold;
 
@@ -78,10 +98,22 @@ export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, 
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 4 || Math.abs(g.dy) > 4,
+      onPanResponderGrant: () => {
+        touchStart.current = Date.now();
+      },
       onPanResponderMove: (_, g) => {
         position.setValue({ x: g.dx, y: g.dy });
       },
       onPanResponderRelease: (_, g) => {
+        const isTap =
+          Math.abs(g.dx) < TAP_SLOP &&
+          Math.abs(g.dy) < TAP_SLOP &&
+          Date.now() - touchStart.current < TAP_MAX_MS;
+        if (isTap) {
+          position.setValue({ x: 0, y: 0 });
+          onTapRef.current?.();
+          return;
+        }
         if (g.dx > thresholdRef.current) {
           commitRef.current('right', g.dx, g.dy, g.vx);
         } else if (g.dx < -thresholdRef.current) {
@@ -113,6 +145,13 @@ export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, 
   const nopeOpacity = position.x.interpolate({
     inputRange: [-swipeThreshold, 0],
     outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
+
+  // The hint shares the corner with the "Like" stamp, so it fades out as soon as the card moves.
+  const hintOpacity = position.x.interpolate({
+    inputRange: [-swipeThreshold, 0, swipeThreshold],
+    outputRange: [0, 1, 0],
     extrapolate: 'clamp',
   });
 
@@ -162,13 +201,15 @@ export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, 
         ]}
         accessible
         accessibilityLabel={`${meal.name}. ${meal.description}. ${meal.prepTime} minutes, ${meal.calories} kilocalories`}
-        accessibilityHint="Swipe right to like, left to pass. Custom actions are available."
+        accessibilityHint="Double tap for details. Swipe right to like, left to pass. Custom actions are available."
         accessibilityActions={[
+          { name: 'activate', label: 'Show details' },
           { name: 'like', label: 'Like' },
           { name: 'pass', label: 'Pass' },
         ]}
         onAccessibilityAction={e => {
-          if (e.nativeEvent.actionName === 'like') commit('right');
+          if (e.nativeEvent.actionName === 'activate') onTapRef.current?.();
+          else if (e.nativeEvent.actionName === 'like') commit('right');
           else if (e.nativeEvent.actionName === 'pass') commit('left');
         }}
       >
@@ -178,6 +219,17 @@ export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, 
         <Animated.View style={[styles.stamp, styles.stampNope, { opacity: nopeOpacity }]}>
           <Animated.Text style={styles.stampNopeText}>Pass</Animated.Text>
         </Animated.View>
+        {showTapHint && (
+          <Animated.View
+            style={[styles.tapHint, { opacity: hintOpacity }]}
+            pointerEvents="none"
+            importantForAccessibility="no-hide-descendants"
+            accessibilityElementsHidden
+          >
+            <Ionicons name="hand-left-outline" size={13} color={c.onTile} />
+            <Animated.Text style={styles.tapHintText}>Tap for details</Animated.Text>
+          </Animated.View>
+        )}
         <CardContent meal={meal} />
       </Animated.View>
     </>
@@ -269,6 +321,21 @@ const makeStyles = (c: Colors) =>
       borderWidth: 3,
       zIndex: 2,
     },
+    tapHint: {
+      position: 'absolute',
+      top: 20,
+      right: 20,
+      zIndex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 100,
+      borderWidth: 1.5,
+      borderColor: c.onTileMuted,
+    },
+    tapHintText: { fontFamily: font.semibold, fontSize: 12, lineHeight: 15, color: c.onTile },
     stampLike: { right: 24, borderColor: c.onTile, transform: [{ rotate: '14deg' }] },
     stampNope: { left: 24, borderColor: c.onTileMuted, transform: [{ rotate: '-14deg' }] },
     stampLikeText: { fontFamily: font.extrabold, fontSize: 22, color: c.onTile },

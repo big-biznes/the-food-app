@@ -45,7 +45,8 @@ function formatAmount(ing: Ingredient): string {
 export default function DetailsScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const { id } = useLocalSearchParams<{ id: string }>();
+  // `from: 'discover'` when opened from a Discover card: Cook then stays in the Discover tab.
+  const { id, from } = useLocalSearchParams<{ id: string; from?: string }>();
   const router = useRouter();
   const meal = ALL_MEALS.find(m => m.id === id);
 
@@ -178,7 +179,9 @@ export default function DetailsScreen() {
         <TouchableOpacity
           style={styles.fab}
           activeOpacity={0.85}
-          onPress={() => router.push({ pathname: '/cook', params: { id: meal.id } })}
+          onPress={() =>
+            router.push({ pathname: from === 'discover' ? '/cook-meal' : '/cook', params: { id: meal.id } })
+          }
         >
           <Ionicons name="restaurant-outline" size={18} color={c.onPrimary} />
           <Text style={styles.fabText}>Cook</Text>

@@ -7,6 +7,7 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ALL_MEALS, Meal } from '@/data/meals';
 import { useLikes } from '@/contexts/LikesContext';
@@ -27,6 +28,29 @@ export default function DiscoverScreen() {
   const reducedMotion = useReducedMotion();
   const { user, updateProfile } = useAuth();
   const { like, dislike, likedIds, dislikedIds } = useLikes();
+  const router = useRouter();
+
+  // Tapping a card for details is a "pro" move: hint at it only until it's been used 3 times.
+  const TAP_HINT_UNTIL = 3;
+  const detailsOpened = user?.detailsOpened ?? 0;
+  // Only re-evaluated when this screen gains focus, so the hint never vanishes in view while the
+  // details page is fading in on top of the card — it's simply gone when the user comes back.
+  const [showTapHint, setShowTapHint] = useState(detailsOpened < TAP_HINT_UNTIL);
+  const detailsOpenedRef = useRef(detailsOpened);
+  detailsOpenedRef.current = detailsOpened;
+  const navigation = useNavigation();
+  useEffect(
+    () =>
+      navigation.addListener('focus', () => {
+        setShowTapHint(detailsOpenedRef.current < TAP_HINT_UNTIL);
+      }),
+    [navigation],
+  );
+
+  function openDetails(meal: Meal) {
+    router.push({ pathname: '/meal', params: { id: meal.id, from: 'discover' } });
+    if (detailsOpened < TAP_HINT_UNTIL) updateProfile({ detailsOpened: detailsOpened + 1 });
+  }
 
   // Screen-reader users always get the Like / Pass buttons, even in expert mode,
   // so the swipe gesture is never the only way to act.
@@ -170,6 +194,8 @@ export default function DiscoverScreen() {
             expertMode={expertMode}
             enterScale={enterScale}
             onSwipeCommit={(dir, release) => handleGestureCommit(dir, current, release)}
+            onTap={() => openDetails(current)}
+            showTapHint={showTapHint}
           />
         )}
 
