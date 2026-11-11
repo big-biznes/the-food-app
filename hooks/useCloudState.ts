@@ -1,31 +1,16 @@
 import { useCallback, useEffect, useRef, useState, Dispatch, SetStateAction } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase, UserDataColumn } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { registerFlush } from '@/lib/cloudWrites';
+import { getPrimed, readStored, setPrimed, writeStored } from '@/lib/cloudCache';
 
 const SAVE_DELAY_MS = 800;
 
-function cacheKey(userId: string, column: UserDataColumn) {
-  return `cloud:${userId}:${column}`;
-}
-
-async function readCache<T>(key: string): Promise<T | undefined> {
-  try {
-    const raw = await AsyncStorage.getItem(key);
-    return raw == null ? undefined : (JSON.parse(raw) as T);
-  } catch {
-    return undefined;
-  }
-}
-
-function writeCache(key: string, value: unknown) {
-  AsyncStorage.setItem(key, JSON.stringify(value)).catch(() => {});
-}
-
 /**
  * useState that is stored in one JSON column of the signed-in user's `user_data` row.
- * Loads from the local cache first, then from Supabase; saves changes back with a debounce.
+ * Starts from the value AuthContext loaded while signing in (lib/cloudCache), so the first render
+ * already shows real data; otherwise loads from the device cache, then Supabase.
+ * Saves changes back with a debounce.
  * Without a signed-in user (logged out / dev login) it behaves like plain useState.
  */
 export function useCloudState<T>(
@@ -33,8 +18,10 @@ export function useCloudState<T>(
   initial: T,
 ): [T, Dispatch<SetStateAction<T>>, boolean] {
   const { userId } = useAuth();
-  const [value, setValueRaw] = useState<T>(initial);
-  const [loaded, setLoaded] = useState(false);
+  const [value, setValueRaw] = useState<T>(() =>
+    userId ? (getPrimed<T>(userId, column) ?? initial) : initial,
+  );
+  const [loaded, setLoaded] = useState(() => !userId || getPrimed(userId, column) !== undefined);
 
   const initialRef = useRef(initial);
   const valueRef = useRef(value);
@@ -49,7 +36,8 @@ export function useCloudState<T>(
     if (!userId || !dirty.current) return;
     dirty.current = false;
     const current = valueRef.current;
-    writeCache(cacheKey(userId, column), current);
+    setPrimed(userId, column, current);
+    writeStored(userId, column, current);
     const { error } = await supabase
       .from('user_data')
       .upsert({ user_id: userId, [column]: current }, { onConflict: 'user_id' });
@@ -63,16 +51,24 @@ export function useCloudState<T>(
   useEffect(() => {
     let cancelled = false;
     dirty.current = false;
-    setLoaded(false);
-    setValueRaw(initialRef.current);
     if (!userId) {
+      setValueRaw(initialRef.current);
       setLoaded(true);
       return;
     }
 
+    // Already loaded during sign-in: use it, no extra request.
+    const primed = getPrimed<T>(userId, column);
+    if (primed !== undefined) {
+      setValueRaw(primed);
+      setLoaded(true);
+      return;
+    }
+
+    setValueRaw(initialRef.current);
+    setLoaded(false);
     (async () => {
-      const key = cacheKey(userId, column);
-      const cached = await readCache<T>(key);
+      const cached = await readStored<T>(userId, column);
       if (!cancelled && cached !== undefined && !dirty.current) setValueRaw(cached);
 
       const { data, error } = await supabase
@@ -87,7 +83,8 @@ export function useCloudState<T>(
         const remote = (data as Record<string, unknown> | null)?.[column] as T | null | undefined;
         if (remote != null && !dirty.current) {
           setValueRaw(remote);
-          writeCache(key, remote);
+          setPrimed(userId, column, remote);
+          writeStored(userId, column, remote);
         }
       }
       setLoaded(true);

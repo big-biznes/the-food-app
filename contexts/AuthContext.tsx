@@ -1,12 +1,19 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { flushCloudWrites } from '@/lib/cloudWrites';
+import {
+  USER_DATA_COLUMNS,
+  clearPrimed,
+  readStored,
+  removeStored,
+  setPrimed,
+  writeStored,
+} from '@/lib/cloudCache';
 
 export type DietaryRestriction =
   | 'vegetarian'
@@ -64,10 +71,10 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const profileCacheKey = (userId: string) => `cloud:${userId}:profile`;
 
 async function saveProfile(userId: string, profile: StoredProfile) {
-  AsyncStorage.setItem(profileCacheKey(userId), JSON.stringify(profile)).catch(() => {});
+  writeStored(userId, 'profile', profile);
+  setPrimed(userId, 'profile', profile);
   const { error } = await supabase
     .from('user_data')
     .upsert({ user_id: userId, profile }, { onConflict: 'user_id' });
@@ -187,25 +194,34 @@ function parseAuthUrl(url: string): { params: Record<string, string>; errorCode?
   return { params, errorCode: params.error_code };
 }
 
-async function loadProfile(userId: string): Promise<StoredProfile | null> {
+/**
+ * Loads the user's whole `user_data` row in one request (profile, plan, likes, shopping, pantry)
+ * and primes the cloud cache, so screens open with real data instead of an empty state.
+ * Runs during the "Signing you in" loader and on app start. Returns the profile.
+ */
+async function loadUserData(userId: string): Promise<StoredProfile | null> {
   const { data, error } = await supabase
     .from('user_data')
-    .select('profile')
+    .select(USER_DATA_COLUMNS.join(','))
     .eq('user_id', userId)
     .maybeSingle();
   if (!error) {
-    const profile = (data?.profile ?? null) as StoredProfile | null;
-    if (profile) AsyncStorage.setItem(profileCacheKey(userId), JSON.stringify(profile)).catch(() => {});
-    return profile;
+    const row = (data ?? {}) as Partial<Record<(typeof USER_DATA_COLUMNS)[number], unknown>>;
+    for (const column of USER_DATA_COLUMNS) {
+      const value = row[column];
+      if (value == null) continue;
+      setPrimed(userId, column, value);
+      writeStored(userId, column, value);
+    }
+    return (row.profile ?? null) as StoredProfile | null;
   }
-  // Offline: fall back to the last profile we saw on this device.
-  console.warn('[cloud] failed to load profile:', error.message);
-  try {
-    const raw = await AsyncStorage.getItem(profileCacheKey(userId));
-    return raw ? (JSON.parse(raw) as StoredProfile) : null;
-  } catch {
-    return null;
+  // Offline: fall back to the last copy saved on this device.
+  console.warn('[cloud] failed to load user data:', error.message);
+  for (const column of USER_DATA_COLUMNS) {
+    const value = await readStored(userId, column);
+    if (value !== undefined) setPrimed(userId, column, value);
   }
+  return (await readStored<StoredProfile>(userId, 'profile')) ?? null;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -240,7 +256,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     let cancelled = false;
-    loadProfile(userId).then(profile => {
+    loadUserData(userId).then(profile => {
       if (cancelled) return;
       setUser(profile ? { ...profile, email } : null);
       setProfileLoadedFor(userId);
@@ -337,6 +353,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await withTimeout(signOutNativeGoogle(), 3000, 'Google sign-out');
     // 'local' clears the session on this device without a network round trip, so it works offline.
     await withTimeout(supabase.auth.signOut({ scope: 'local' }), 3000, 'Supabase sign-out');
+    clearPrimed();
     setSession(null);
     setUser(null);
     console.log('[auth] logout: done');
@@ -345,7 +362,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const deleteAccount = useCallback(async () => {
     const { error } = await supabase.rpc('delete_own_account');
     if (error) return error.message;
-    if (userId) AsyncStorage.removeItem(profileCacheKey(userId)).catch(() => {});
+    if (userId) removeStored(userId);
+    clearPrimed();
     await withTimeout(signOutNativeGoogle(), 3000, 'Google sign-out');
     await withTimeout(supabase.auth.signOut({ scope: 'local' }), 3000, 'Supabase sign-out');
     setSession(null);
