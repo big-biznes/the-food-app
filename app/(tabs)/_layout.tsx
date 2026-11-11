@@ -13,6 +13,10 @@ export default function TabLayout() {
       screenOptions={{
         animation: 'none',
         headerShown: false,
+        // Build every tab up front so switching never waits for a screen to mount…
+        lazy: false,
+        // …and pause hidden tabs so they don't re-render on every state change.
+        freezeOnBlur: true,
       }}
     >
       <Tabs.Screen name="(home)" options={{ title: 'Week' }} />

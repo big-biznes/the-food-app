@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AccessibilityInfo, Animated, Easing, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/theme';
@@ -24,7 +24,8 @@ type Props = {
   icon?: React.ComponentProps<typeof Ionicons>['name'];
 };
 
-const HIDDEN_Y = -80;
+// Far enough up that the toast starts fully hidden behind the top edge and visibly slides in.
+const HIDDEN_Y = -140;
 const VISIBLE_MS = 2800;
 const VISIBLE_WITH_ACTION_MS = 5000;
 
@@ -40,6 +41,20 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
   const [override, setOverride] = useState<ConfirmToastShowOptions>({});
   const anim = useRef(new Animated.Value(HIDDEN_Y)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set by show(); the slide starts from onLayout, i.e. once the toast is really on screen.
+  const pendingEnter = useRef(false);
+  const visibleRef = useRef(false);
+  visibleRef.current = visible;
+
+  function startEnter() {
+    pendingEnter.current = false;
+    Animated.timing(anim, {
+      toValue: 0,
+      duration: 450,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start();
+  }
 
   useEffect(
     () => () => {
@@ -53,7 +68,7 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
       setVisible(false);
       return;
     }
-    Animated.timing(anim, { toValue: HIDDEN_Y, duration: 260, useNativeDriver: true }).start(() =>
+    Animated.timing(anim, { toValue: HIDDEN_Y, duration: 300, easing: Easing.in(Easing.cubic), useNativeDriver: true }).start(() =>
       setVisible(false),
     );
   }
@@ -73,12 +88,11 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
         anim.setValue(0);
       } else {
         anim.setValue(HIDDEN_Y);
-        Animated.spring(anim, {
-          toValue: 0,
-          useNativeDriver: true,
-          damping: 18,
-          stiffness: 200,
-        }).start();
+        // Native driver so a busy JS thread can't make the slide skip frames. Starting it is
+        // deferred to onLayout: the toast often mounts late (after e.g. the shopping-list
+        // rebuild), and a slide started earlier would be mostly over by then — a "pop".
+        if (visibleRef.current) startEnter();
+        else pendingEnter.current = true;
       }
 
       timer.current = setTimeout(
@@ -96,6 +110,9 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
   return (
     <Animated.View
       style={[styles.toast, { top: insets.top + 12, transform: [{ translateY: anim }] }]}
+      onLayout={() => {
+        if (pendingEnter.current) startEnter();
+      }}
       pointerEvents={hasAction ? 'box-none' : 'none'}
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"

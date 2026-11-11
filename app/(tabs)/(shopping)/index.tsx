@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Animated,
+  Easing,
   PanResponder,
   useWindowDimensions,
 } from 'react-native';
@@ -124,12 +125,12 @@ export default function ShoppingScreen() {
       fabAnim.setValue(toValue);
       return;
     }
-    Animated.spring(fabAnim, {
+    // JS driver: with the native driver the button ignores taps until the slide ends.
+    Animated.timing(fabAnim, {
       toValue,
-      useNativeDriver: true,
-      damping: 20,
-      stiffness: 220,
-      mass: 1,
+      duration: 220,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
     }).start();
   }, [hasChecked, fabAnim, reducedMotion]);
 
@@ -158,12 +159,12 @@ export default function ShoppingScreen() {
       tabProgress.setValue(toValue);
       return;
     }
-    Animated.spring(tabProgress, {
+    // JS driver so the list/pantry rows are tappable immediately, not only after the slide ends.
+    Animated.timing(tabProgress, {
       toValue,
-      useNativeDriver: true,
-      damping: 20,
-      stiffness: 200,
-      mass: 1,
+      duration: 250,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
     }).start();
   }
 

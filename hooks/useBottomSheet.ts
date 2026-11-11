@@ -1,14 +1,44 @@
 import { useRef } from 'react';
-import { Animated, PanResponder, useWindowDimensions } from 'react-native';
+import { Animated, Easing, PanResponder, useWindowDimensions } from 'react-native';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
+
+type Motion = { duration: number; easing: (t: number) => number };
+
+/** Curve used by iOS-style sheets (and drawer libraries that imitate them): smooth start, long soft settle. */
+const IOS_CURVE = Easing.bezier(0.32, 0.72, 0, 1);
+
+export type SheetMotion = 'ios' | 'easeOut';
+
+const MOTIONS: Record<SheetMotion, { open: Motion; close: Motion; snapBack: Motion; backdrop?: (t: number) => number }> = {
+  easeOut: {
+    open: { duration: 400, easing: Easing.out(Easing.cubic) },
+    close: { duration: 320, easing: Easing.in(Easing.cubic) },
+    snapBack: { duration: 280, easing: Easing.out(Easing.cubic) },
+  },
+  ios: {
+    open: { duration: 450, easing: IOS_CURVE },
+    close: { duration: 420, easing: IOS_CURVE },
+    snapBack: { duration: 350, easing: IOS_CURVE },
+    backdrop: IOS_CURVE,
+  },
+};
 
 /**
  * Shared hook for the slide-up bottom sheet pattern used throughout the app.
  * Provides animated values, a drag-to-dismiss pan responder, and open/close helpers.
  *
+ * The slide runs on the JS driver on purpose: with the native driver React Native's view
+ * of the sheet's position stays at the start (off-screen) until the animation ends, so
+ * buttons inside it ignore taps (any finger movement counts as "left the button") until then.
+ * The backdrop fade has no touch targets, so it stays on the native driver.
+ *
  * @param onClosed - Optional callback fired after the close animation completes.
+ * @param motion - Animation curves: 'ios' (iOS sheet curve, the app default) or 'easeOut' (ease-out cubic).
  */
-export function useBottomSheet(onClosed?: () => void) {
+export function useBottomSheet(onClosed?: () => void, motion: SheetMotion = 'ios') {
+  const motionRef = useRef(MOTIONS[motion]);
+  motionRef.current = MOTIONS[motion];
+
   const { height: screenHeight } = useWindowDimensions();
   const heightRef = useRef(screenHeight);
   heightRef.current = screenHeight;
@@ -29,16 +59,18 @@ export function useBottomSheet(onClosed?: () => void) {
       onClosedRef.current?.();
       return;
     }
+    const m = motionRef.current;
     Animated.parallel([
       Animated.timing(backdropAnim, {
         toValue: 0,
-        duration: 220,
+        duration: m.close.duration - 20,
+        easing: m.backdrop,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
         toValue: heightRef.current,
-        duration: 280,
-        useNativeDriver: true,
+        ...m.close,
+        useNativeDriver: false,
       }),
     ]).start(() => onClosedRef.current?.());
   });
@@ -56,12 +88,10 @@ export function useBottomSheet(onClosed?: () => void) {
         } else if (reducedMotion.current) {
           slideAnim.setValue(0);
         } else {
-          Animated.spring(slideAnim, {
+          Animated.timing(slideAnim, {
             toValue: 0,
-            useNativeDriver: true,
-            damping: 22,
-            mass: 1,
-            stiffness: 220,
+            ...motionRef.current.snapBack,
+            useNativeDriver: false,
           }).start();
         }
       },
@@ -76,18 +106,18 @@ export function useBottomSheet(onClosed?: () => void) {
     }
     slideAnim.setValue(heightRef.current);
     backdropAnim.setValue(0);
+    const m = motionRef.current;
     Animated.parallel([
       Animated.timing(backdropAnim, {
         toValue: 1,
-        duration: 300,
+        duration: m.open.duration - 20,
+        easing: m.backdrop,
         useNativeDriver: true,
       }),
-      Animated.spring(slideAnim, {
+      Animated.timing(slideAnim, {
         toValue: 0,
-        useNativeDriver: true,
-        damping: 22,
-        mass: 1,
-        stiffness: 220,
+        ...m.open,
+        useNativeDriver: false,
       }),
     ]).start();
   }

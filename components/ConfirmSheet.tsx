@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useBottomSheet } from '@/hooks/useBottomSheet';
+import { useBottomSheet, SheetMotion } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { font, type } from '@/constants/type';
@@ -16,6 +16,8 @@ type Props = {
   /** May be async: the button shows a spinner until it settles. Return an error message to show it in the sheet. */
   onConfirm: () => void | string | null | Promise<void | string | null>;
   onClose: () => void;
+  /** Animation curves for the slide; see useBottomSheet. */
+  motion?: SheetMotion;
 };
 
 /** In-app replacement for the native Alert confirm dialog, styled like the app's other bottom sheets. */
@@ -27,6 +29,7 @@ export default function ConfirmSheet({
   destructive = false,
   onConfirm,
   onClose,
+  motion = 'ios',
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -38,7 +41,7 @@ export default function ConfirmSheet({
   const { slideAnim, backdropAnim, panResponder, open, close } = useBottomSheet(() => {
     setModalVisible(false);
     onClose();
-  });
+  }, motion);
 
   useEffect(() => {
     if (visible) {

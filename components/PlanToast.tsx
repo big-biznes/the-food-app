@@ -58,7 +58,8 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
     }
     Animated.timing(slideAnim, {
       toValue: HIDDEN_Y,
-      duration: 260,
+      duration: 300,
+      easing: Easing.in(Easing.cubic),
       useNativeDriver: true,
     }).start(() => setVisible(false));
   }
@@ -75,12 +76,13 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
         slideAnim.setValue(0);
       } else {
         slideAnim.setValue(HIDDEN_Y);
-        Animated.spring(slideAnim, {
+        // Native driver: shown right after a plan is generated, while the JS thread is busy;
+        // a JS-driven slide would skip frames and jump into place.
+        Animated.timing(slideAnim, {
           toValue: 0,
+          duration: 380,
+          easing: Easing.out(Easing.cubic),
           useNativeDriver: true,
-          damping: 22,
-          stiffness: 220,
-          mass: 1,
         }).start();
 
         // Collapse button text to icon-only. Skipped under reduced motion so the label stays.

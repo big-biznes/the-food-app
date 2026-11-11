@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { BottomTabBarProps } from 'expo-router/build/layouts/Tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,20 +30,30 @@ export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarPr
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
+  // Tab the finger just touched: highlighted immediately, before the screen switch renders.
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
+  const activeKey = state.routes[state.index]?.key;
+
+  useEffect(() => {
+    setPendingKey(null);
+  }, [activeKey]);
 
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom + 4 }]} accessibilityRole="tablist">
       {state.routes.map((route, index) => {
         const tab = TABS[route.name];
         if (!tab) return null;
-        const focused = state.index === index;
+        const focused = pendingKey ? pendingKey === route.key : state.index === index;
 
-        function onPress() {
+        // Switch on touch-down (like native tab bars) instead of waiting for the finger to lift.
+        function onPressIn() {
+          if (route.key === activeKey || route.key === pendingKey) return;
           const event = emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-          if (!focused && !event.defaultPrevented) {
-            if (HAPTICS) Haptics.selectionAsync().catch(() => {});
-            navigateToTab(route.key);
-          }
+          if (event.defaultPrevented) return;
+          if (HAPTICS) Haptics.selectionAsync().catch(() => {});
+          setPendingKey(route.key);
+          // Let the highlight paint this frame; render the new screen on the next one.
+          requestAnimationFrame(() => navigateToTab(route.key));
         }
 
         const showTile = FEEDBACK === 'tile' && focused;
@@ -51,7 +62,9 @@ export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarPr
         return (
           <Pressable
             key={route.key}
-            onPress={onPress}
+            onPressIn={onPressIn}
+            // Screen readers activate with onPress only; a normal tap already switched on press-in.
+            onPress={onPressIn}
             style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}
             accessibilityRole="tab"
             accessibilityLabel={tab.label}
