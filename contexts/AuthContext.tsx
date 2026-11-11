@@ -38,6 +38,8 @@ export type UserProfile = {
   restrictions: DietaryRestriction[];
   eatingOutDay: string;
   discoverExpertMode: boolean;
+  /** How many plans the user has generated; used to give first-time users more time on tips. */
+  plansCreated?: number;
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;

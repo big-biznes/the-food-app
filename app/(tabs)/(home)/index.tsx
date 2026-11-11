@@ -30,6 +30,11 @@ import { useCloudState } from '@/hooks/useCloudState';
 import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const LOADING_MS = 1400;
+/**
+ * Extra time the "Your week is planned" toast stays up for new users: the full amount on their
+ * first plan, half on the second, none from the third on.
+ */
+const FIRST_PLAN_TOAST_EXTRA_MS = 7000;
 
 /** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
 type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string };
@@ -41,7 +46,7 @@ function getTodayKey(): string {
 export default function HomeScreen() {
   const styles = useThemedStyles(makeStyles);
   const reducedMotion = useReducedMotionRef();
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const { replacePlanIngredients } = useShoppingContext();
   const { likedIds } = useLikes();
 
@@ -162,7 +167,11 @@ export default function HomeScreen() {
     setSelectedPart(todayPart);
     const days = partDays[todayPart];
     setSelectedDay(days.includes(today as Day) ? today : days[0]);
-    setTimeout(() => planToastRef.current?.show(), 500);
+
+    const plansBefore = user?.plansCreated ?? 0;
+    const extraMs = plansBefore === 0 ? FIRST_PLAN_TOAST_EXTRA_MS : plansBefore === 1 ? FIRST_PLAN_TOAST_EXTRA_MS / 2 : 0;
+    if (plansBefore < 2) updateProfile({ plansCreated: plansBefore + 1 });
+    setTimeout(() => planToastRef.current?.show({ extraMs }), 500);
   }
 
   function generatePlan() {

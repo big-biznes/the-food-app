@@ -3,6 +3,7 @@ import {
   AccessibilityInfo,
   Animated,
   Easing,
+  PanResponder,
   Text,
   TouchableOpacity,
   View,
@@ -15,7 +16,8 @@ import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 
 import { font } from '@/constants/type';
 export type PlanToastHandle = {
-  show: () => void;
+  /** `extraMs` keeps the toast (and its button label) up longer, e.g. for first-time users. */
+  show: (options?: { extraMs?: number }) => void;
   dismiss: () => void;
 };
 
@@ -27,6 +29,13 @@ type Props = {
 };
 
 const HIDDEN_Y = 100;
+/** Drag distance / speed that dismisses the toast when released. */
+const DISMISS_DRAG_Y = 36;
+const DISMISS_VELOCITY = 0.5;
+/** Far enough below its resting spot that a swiped-away toast is fully off the bottom. */
+const SWIPE_OFFSCREEN_Y = 240;
+/** Slowest a swiped-away toast may leave (px/ms), so a gentle release doesn't crawl. */
+const MIN_FLING_SPEED = 0.9;
 const COLLAPSE_AFTER_MS = 3500;
 const DISMISS_AFTER_MS = 7000;
 
@@ -54,6 +63,36 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
 
   useEffect(() => clearTimers, []);
 
+  // Swipe down to dismiss. Capture only clear downward drags, so taps still reach the button.
+  const flingAwayRef = useRef<(dy: number, vy: number) => void>(() => {});
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponderCapture: (_, g) => g.dy > 6 && Math.abs(g.dy) > Math.abs(g.dx),
+      onPanResponderGrant: () => {
+        slideAnim.stopAnimation();
+      },
+      onPanResponderMove: (_, g) => {
+        // Follows the finger downwards; resists being pulled up.
+        slideAnim.setValue(g.dy > 0 ? g.dy : g.dy * 0.2);
+      },
+      onPanResponderRelease: (_, g) => {
+        if (g.dy > DISMISS_DRAG_Y || g.vy > DISMISS_VELOCITY) {
+          flingAwayRef.current(g.dy, g.vy);
+        } else {
+          Animated.timing(slideAnim, {
+            toValue: 0,
+            duration: 220,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+      onPanResponderTerminate: () => {
+        Animated.timing(slideAnim, { toValue: 0, duration: 220, useNativeDriver: true }).start();
+      },
+    }),
+  ).current;
+
   function dismissInternal() {
     clearTimers();
     if (reducedMotion.current) {
@@ -68,9 +107,30 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
     }).start(() => setVisible(false));
   }
 
+  /**
+   * Continue the swipe at the finger's speed: an ease-out curve starts at 2 × distance / duration,
+   * so pick the duration that makes that starting speed match the release velocity.
+   */
+  function flingAway(dy: number, vy: number) {
+    clearTimers();
+    const distance = Math.max(SWIPE_OFFSCREEN_Y - dy, 0);
+    const speed = Math.max(vy, MIN_FLING_SPEED);
+    const duration = Math.min(Math.max((2 * distance) / speed, 120), 380);
+    Animated.timing(slideAnim, {
+      toValue: SWIPE_OFFSCREEN_Y,
+      duration,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start(() => setVisible(false));
+  }
+  flingAwayRef.current = flingAway;
+
   useImperativeHandle(ref, () => ({
-    show() {
+    show({ extraMs = 0 } = {}) {
       clearTimers();
+      // Extra time is shared between keeping the label visible and keeping the toast up.
+      const collapseAfter = COLLAPSE_AFTER_MS + extraMs / 2;
+      const dismissAfter = DISMISS_AFTER_MS + extraMs;
       if (labelWidthRef.current != null) textWidth.setValue(labelWidthRef.current);
       textOpacity.setValue(1);
       setVisible(true);
@@ -105,11 +165,11 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
               useNativeDriver: false,
             }),
           ]).start();
-        }, COLLAPSE_AFTER_MS);
+        }, collapseAfter);
         timers.current.push(t1);
       }
 
-      const t2 = setTimeout(dismissInternal, DISMISS_AFTER_MS);
+      const t2 = setTimeout(dismissInternal, dismissAfter);
       timers.current.push(t2);
     },
     dismiss() {
@@ -122,6 +182,11 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   return (
     <Animated.View
       style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
+      {...panResponder.panHandlers}
+      accessibilityActions={[{ name: 'dismiss', label: 'Dismiss' }]}
+      onAccessibilityAction={e => {
+        if (e.nativeEvent.actionName === 'dismiss') dismissInternal();
+      }}
       accessibilityRole="alert"
       accessibilityLiveRegion="polite"
     >
