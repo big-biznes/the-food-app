@@ -26,9 +26,11 @@ type Props = {
   actionLabel: string;
   actionIcon: React.ComponentProps<typeof Ionicons>['name'];
   onAction: () => void;
+  /** Called with true when the toast starts to appear and false as soon as it starts to leave. */
+  onVisibleChange?: (visible: boolean) => void;
 };
 
-const HIDDEN_Y = 100;
+const HIDDEN_Y = 130;
 /** Drag distance / speed that dismisses the toast when released. */
 const DISMISS_DRAG_Y = 36;
 const DISMISS_VELOCITY = 0.5;
@@ -40,7 +42,7 @@ const COLLAPSE_AFTER_MS = 3500;
 const DISMISS_AFTER_MS = 7000;
 
 const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
-  { message, actionLabel, actionIcon, onAction },
+  { message, actionLabel, actionIcon, onAction, onVisibleChange },
   ref,
 ) {
   const { colors: c } = useTheme();
@@ -62,6 +64,10 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   }
 
   useEffect(() => clearTimers, []);
+
+  // A ref, so the timers and the pan responder always call the latest callback.
+  const onVisibleChangeRef = useRef(onVisibleChange);
+  onVisibleChangeRef.current = onVisibleChange;
 
   // Swipe down to dismiss. Capture only clear downward drags, so taps still reach the button.
   const flingAwayRef = useRef<(dy: number, vy: number) => void>(() => {});
@@ -95,6 +101,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
 
   function dismissInternal() {
     clearTimers();
+    onVisibleChangeRef.current?.(false);
     if (reducedMotion.current) {
       setVisible(false);
       return;
@@ -113,6 +120,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
    */
   function flingAway(dy: number, vy: number) {
     clearTimers();
+    onVisibleChangeRef.current?.(false);
     const distance = Math.max(SWIPE_OFFSCREEN_Y - dy, 0);
     const speed = Math.max(vy, MIN_FLING_SPEED);
     const duration = Math.min(Math.max((2 * distance) / speed, 120), 380);
@@ -134,6 +142,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
       if (labelWidthRef.current != null) textWidth.setValue(labelWidthRef.current);
       textOpacity.setValue(1);
       setVisible(true);
+      onVisibleChangeRef.current?.(true);
       AccessibilityInfo.announceForAccessibility(`${message} ${actionLabel}`);
 
       if (reducedMotion.current) {
@@ -229,22 +238,26 @@ const makeStyles = (c: Colors) =>
   StyleSheet.create({
     toast: {
       position: 'absolute',
-      bottom: 96,
-      left: 16,
-      right: 16,
+      // The spot the Replan button normally has; the button steps aside while the toast is up.
+      bottom: 28,
+      // As wide as its content and centred, like the Replan pill, so it never
+      // lines up edge to edge with a meal card underneath.
+      alignSelf: 'center',
+      maxWidth: '92%',
       backgroundColor: c.primary,
-      borderRadius: 20,
+      borderRadius: 100,
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 14,
-      paddingVertical: 10,
-      gap: 10,
+      paddingLeft: 18,
+      paddingRight: 8,
+      paddingVertical: 8,
+      gap: 12,
       // Knockout ring so the ink toast stays separate from the ink "eating out" card.
       borderWidth: 3,
       borderColor: c.bg,
     },
     left: {
-      flex: 1,
+      flexShrink: 1,
       flexDirection: 'row',
       alignItems: 'center',
       gap: 7,

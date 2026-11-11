@@ -17,6 +17,8 @@ export const light = {
   onPrimary: '#F7F8F3',
   primarySurface: '#245244',
   onPrimaryMuted: '#9DBDB0',
+  /** Secondary text on `primarySurface`; a step lighter than onPrimaryMuted to stay readable there. */
+  onPrimarySurfaceMuted: '#B7D0C5',
   danger: '#C8322B',
   dangerBg: '#FBE4E2',
   warning: '#B4600A',
@@ -29,6 +31,8 @@ export const light = {
   beet: '#F7A1B5',
   onTile: '#123B2F',
   onTileMuted: 'rgba(18,59,47,0.62)',
+  /** Soft ink wash behind a button that sits on a tile. */
+  onTileWash: 'rgba(18,59,47,0.12)',
 };
 
 export type Colors = typeof light;

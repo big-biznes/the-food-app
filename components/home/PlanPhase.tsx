@@ -214,8 +214,8 @@ export default function PlanPhase({
           accessibilityLabel={viewMode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
         >
           <Ionicons
-            name={viewMode === 'day' ? 'grid-outline' : 'calendar-outline'}
-            size={18}
+            name={viewMode === 'day' ? 'grid' : 'calendar'}
+            size={20}
             color={c.text}
           />
         </TouchableOpacity>
@@ -227,7 +227,7 @@ export default function PlanPhase({
           accessibilityRole="button"
           accessibilityLabel="Add this part to the shopping list"
         >
-          <Ionicons name="cart-outline" size={18} color={c.text} />
+          <Ionicons name="cart" size={21} color={c.text} />
         </TouchableOpacity>
       </View>
 
@@ -306,12 +306,12 @@ const makeStyles = (c: Colors) =>
     dayTabTextOn: { color: c.text, fontFamily: font.bold },
     todayDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: c.butter },
     poolHint: { ...type.small, color: c.textMuted },
+    // Same treatment as the buttons on the meal tiles: soft fill, no ring, heavier icon.
     iconBtn: {
       width: 40,
       height: 40,
       borderRadius: 20,
-      borderWidth: 1.5,
-      borderColor: c.text,
+      backgroundColor: c.surface,
       alignItems: 'center',
       justifyContent: 'center',
     },

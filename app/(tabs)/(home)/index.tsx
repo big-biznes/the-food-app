@@ -38,6 +38,8 @@ const LOADING_MS = 1400;
  * first plan, half on the second, none from the third on.
  */
 const FIRST_PLAN_TOAST_EXTRA_MS = 7000;
+/** How far the Replan button drops when it steps aside for the plan toast. */
+const FAB_HIDDEN_Y = 110;
 
 /** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
 type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string };
@@ -138,6 +140,26 @@ export default function HomeScreen() {
   const [selectedCravings, setSelectedCravings] = useState<string[]>([]);
   const [cravingText, setCravingText] = useState('');
   const [showSheet, setShowSheet] = useState(false);
+
+  // The Replan button steps out of the way while the "week is planned" toast is up,
+  // so the two never stack.
+  const [toastUp, setToastUp] = useState(false);
+  const fabAnim = useRef(new Animated.Value(1)).current; // 1 = shown, 0 = hidden below
+  useEffect(() => {
+    const toValue = toastUp ? 0 : 1;
+    if (reducedMotion.current) {
+      fabAnim.setValue(toValue);
+      return;
+    }
+    // Native driver, like the toast: this runs right after a plan is generated, while the
+    // JS thread is busy, and a JS-driven slide would skip frames.
+    Animated.timing(fabAnim, {
+      toValue,
+      duration: toastUp ? 200 : 260,
+      easing: toastUp ? Easing.in(Easing.cubic) : Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }, [toastUp, fabAnim, reducedMotion]);
 
   const planToastRef = useRef<PlanToastHandle>(null);
   const confirmToastRef = useRef<ConfirmToastHandle>(null);
@@ -360,15 +382,28 @@ export default function HomeScreen() {
 
       {/* FAB — only in plan phase */}
       {!loading && plan && (
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => setShowSheet(true)}
-          activeOpacity={0.85}
-          accessibilityRole="button"
-          accessibilityLabel="Replan the week"
+        <Animated.View
+          style={[
+            styles.fabWrap,
+            {
+              opacity: fabAnim,
+              transform: [{ translateY: fabAnim.interpolate({ inputRange: [0, 1], outputRange: [FAB_HIDDEN_Y, 0] }) }],
+            },
+          ]}
+          pointerEvents={toastUp ? 'none' : 'auto'}
+          importantForAccessibility={toastUp ? 'no-hide-descendants' : 'auto'}
+          accessibilityElementsHidden={toastUp}
         >
-          <Text style={styles.fabText}>Replan</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.fab}
+            onPress={() => setShowSheet(true)}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Replan the week"
+          >
+            <Text style={styles.fabText}>Replan</Text>
+          </TouchableOpacity>
+        </Animated.View>
       )}
 
       {/* Toasts — always mounted so refs are valid when show() is called */}
@@ -378,6 +413,7 @@ export default function HomeScreen() {
         actionLabel="Make shopping list"
         actionIcon="cart-outline"
         onAction={handleAddToShoppingList}
+        onVisibleChange={setToastUp}
       />
       <ConfirmToast ref={confirmToastRef} message="Added to shopping list" />
 
@@ -396,10 +432,12 @@ export default function HomeScreen() {
 
 const makeStyles = (c: Colors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: c.bg },
-  fab: {
+  fabWrap: {
     position: 'absolute',
     bottom: 28,
     alignSelf: 'center',
+  },
+  fab: {
     backgroundColor: c.primary,
     borderRadius: 100,
     paddingHorizontal: 36,

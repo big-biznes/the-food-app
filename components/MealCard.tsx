@@ -140,8 +140,8 @@ export default function MealCard({
               accessibilityState={{ selected: Boolean(selected) }}
             >
               <Ionicons
-                name="swap-horizontal-outline"
-                size={15}
+                name="swap-horizontal"
+                size={19}
                 color={selected ? tileColor(c, meal.mealType) : c.onTile}
               />
             </TouchableOpacity>
@@ -156,7 +156,7 @@ export default function MealCard({
               accessibilityLabel="Replace with another meal"
             >
               <Animated.View style={{ transform: [{ rotate: rotation }] }}>
-                <Ionicons name="refresh" size={15} color={c.onTile} />
+                <Ionicons name="refresh" size={19} color={c.onTile} />
               </Animated.View>
             </TouchableOpacity>
           )}
@@ -187,8 +187,10 @@ const makeStyles = (c: Colors) =>
       minHeight: 240,
       gap: 8,
     },
+    // A step lighter than the ink used for buttons and toasts, so those stay
+    // distinct when they float over this card.
     cardInk: {
-      backgroundColor: c.primary,
+      backgroundColor: c.primarySurface,
     },
     cardSelected: {
       borderWidth: 2,
@@ -212,12 +214,12 @@ const makeStyles = (c: Colors) =>
       gap: 8,
       alignItems: 'center',
     },
+    // No ring: a soft wash marks it as a button, and the icon is drawn larger so it reads as bold.
     actionBtn: {
       width: 32,
       height: 32,
       borderRadius: 16,
-      borderWidth: 1.5,
-      borderColor: c.onTile,
+      backgroundColor: c.onTileWash,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -225,7 +227,7 @@ const makeStyles = (c: Colors) =>
       backgroundColor: c.onTile,
     },
     inkBadge: {
-      backgroundColor: c.primarySurface,
+      backgroundColor: c.primary,
       borderRadius: 8,
       paddingHorizontal: 10,
       paddingVertical: 5,
@@ -266,5 +268,5 @@ const makeStyles = (c: Colors) =>
       fontVariant: ['tabular-nums'],
     },
     onInk: { color: c.onPrimary },
-    onInkMuted: { color: c.onPrimaryMuted },
+    onInkMuted: { color: c.onPrimarySurfaceMuted },
   });
