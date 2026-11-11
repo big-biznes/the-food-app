@@ -1,33 +1,21 @@
-import { useRef } from 'react';
-import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
+import { memo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 import { font } from '@/constants/type';
 type Props = {
   meal: Meal;
   liked: boolean;
-  onToggle: () => void;
+  /** Receives the meal id; pass a stable function so memoized rows don't all re-render. */
+  onToggle: (mealId: string) => void;
 };
 
-export default function ReactionRow({ meal, liked, onToggle }: Props) {
+function ReactionRow({ meal, liked, onToggle }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const reducedMotion = useReducedMotion();
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  function handleToggle() {
-    if (!reducedMotion) {
-      Animated.sequence([
-        Animated.timing(fadeAnim, { toValue: 0, duration: 120, useNativeDriver: true }),
-        Animated.timing(fadeAnim, { toValue: 1, duration: 120, useNativeDriver: true }),
-      ]).start();
-    }
-    onToggle();
-  }
 
   const mealType = meal.mealType[0].toUpperCase() + meal.mealType.slice(1);
 
@@ -42,26 +30,28 @@ export default function ReactionRow({ meal, liked, onToggle }: Props) {
           {mealType}, {meal.prepTime} min
         </Text>
       </View>
-      <Animated.View style={{ opacity: fadeAnim }}>
-        <TouchableOpacity
-          style={[styles.btn, liked && styles.btnActive]}
-          onPress={handleToggle}
-          activeOpacity={0.75}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          accessibilityRole="button"
-          accessibilityLabel={liked ? `Unlike ${meal.name}` : `Like ${meal.name}`}
-          accessibilityState={{ selected: liked }}
-        >
-          <Ionicons
-            name={liked ? 'heart' : 'heart-outline'}
-            size={18}
-            color={liked ? c.onPrimary : c.textMuted}
-          />
-        </TouchableOpacity>
-      </Animated.View>
+      {/* No fade on toggle: the heart and the row's section change immediately. */}
+      <TouchableOpacity
+        style={[styles.btn, liked && styles.btnActive]}
+        onPress={() => onToggle(meal.id)}
+        activeOpacity={0.75}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        accessibilityRole="button"
+        accessibilityLabel={liked ? `Unlike ${meal.name}` : `Like ${meal.name}`}
+        accessibilityState={{ selected: liked }}
+      >
+        <Ionicons
+          name={liked ? 'heart' : 'heart-outline'}
+          size={18}
+          color={liked ? c.onPrimary : c.textMuted}
+        />
+      </TouchableOpacity>
     </View>
   );
 }
+
+// Memoized so toggling one meal doesn't re-render every other row.
+export default memo(ReactionRow);
 
 const makeStyles = (c: Colors) =>
   StyleSheet.create({

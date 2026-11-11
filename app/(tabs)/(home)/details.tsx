@@ -2,7 +2,7 @@ import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { ALL_MEALS, MealType, Ingredient, formatIngredient } from '@/data/meals';
+import { findMeal, MealType, Ingredient, formatIngredient } from '@/data/meals';
 import { DietaryRestriction } from '@/contexts/AuthContext';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -48,7 +48,7 @@ export default function DetailsScreen() {
   // `from: 'discover'` when opened from a Discover card: Cook then stays in the Discover tab.
   const { id, from } = useLocalSearchParams<{ id: string; from?: string }>();
   const router = useRouter();
-  const meal = ALL_MEALS.find(m => m.id === id);
+  const meal = findMeal(id);
 
   if (!meal) {
     return (

@@ -112,6 +112,30 @@ export function setAllMeals(meals: Meal[]) {
   ALL_MEALS.splice(0, ALL_MEALS.length, ...meals);
 }
 
+// Meals we already have full copies of before the recipe list has loaded (the saved plan,
+// the cached next Discover cards), so details / cook screens work right after app start.
+const KNOWN_MEALS = new Map<string, Meal>();
+
+export function rememberMeals(meals: Iterable<Meal>) {
+  for (const meal of meals) KNOWN_MEALS.set(meal.id, meal);
+}
+
+/** Look a meal up in the full recipe list, falling back to meals we already know about. */
+export function findMeal(id: string | undefined): Meal | undefined {
+  if (!id) return undefined;
+  return ALL_MEALS.find(m => m.id === id) ?? KNOWN_MEALS.get(id);
+}
+
+/** Every meal in a plan (eating-out entries excluded). */
+export function planMeals(plan: StructuredWeekPlan): Meal[] {
+  const out: Meal[] = [];
+  for (const part of ['A', 'B'] as const) {
+    for (const day of Object.values(plan[part])) out.push(day.breakfast, day.lunch, day.dinner);
+  }
+  for (const day of Object.values(plan.C)) out.push(day.lunch);
+  return out;
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function scoredPool(

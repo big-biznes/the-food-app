@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { ALL_MEALS } from '@/data/meals';
+import { findMeal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -15,7 +15,7 @@ export default function CookScreen() {
   const styles = useThemedStyles(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const meal = ALL_MEALS.find(m => m.id === id);
+  const meal = findMeal(id);
 
   const [step, setStep] = useState(0);
 

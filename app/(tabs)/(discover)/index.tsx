@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { ALL_MEALS, Meal } from '@/data/meals';
+import { Meal, rememberMeals } from '@/data/meals';
+import { useRecipes } from '@/contexts/RecipesContext';
+import { DISCOVER_CACHED_COUNT, loadDiscoverNext, saveDiscoverNext } from '@/lib/discoverCache';
+import FullScreenLoading from '@/components/FullScreenLoading';
 import { useLikes } from '@/contexts/LikesContext';
 import { useAuth } from '@/contexts/AuthContext';
 import SwipeCard, { Direction, FlyingCard, SwipeRelease } from '@/components/discover/SwipeCard';
@@ -71,15 +74,56 @@ export default function DiscoverScreen() {
 
   const swipeOnlyStreak = useRef(0);
 
-  const initialDeck = useMemo<Meal[]>(() => {
-    const restrictions = user?.restrictions ?? [];
-    const compatible = ALL_MEALS.filter(m =>
-      restrictions.every(r => m.dietaryTags.includes(r)),
-    );
-    return [...compatible].sort(() => Math.random() - 0.5);
-  }, [user?.restrictions]);
-
+  // ── Deck ──────────────────────────────────────────────────────────────────
+  // Starts with the next cards saved last time (instant, even before the recipe list has
+  // loaded), then the rest of the compatible recipes are shuffled in behind them once ready.
+  const { meals: allMeals, ready: recipesReady } = useRecipes();
+  const restrictionsKey = (user?.restrictions ?? []).join(',');
+  const [cachedNext, setCachedNext] = useState<Meal[] | null>(null);
+  const [deck, setDeck] = useState<Meal[]>([]);
   const [index, setIndex] = useState(0);
+  const deckRef = useRef(deck);
+  deckRef.current = deck;
+  // Which restrictions the full deck was built for (null = not built yet).
+  const builtFor = useRef<string | null>(null);
+
+  useEffect(() => {
+    loadDiscoverNext().then(next => {
+      rememberMeals(next); // lets the details page open them before the list loads
+      setCachedNext(next);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (cachedNext === null) return;
+    const restrictions = restrictionsKey ? restrictionsKey.split(',') : [];
+    const fits = (m: Meal) => restrictions.every(r => m.dietaryTags.includes(r as never));
+    const shuffled = (list: Meal[]) => [...list].sort(() => Math.random() - 0.5);
+
+    if (!recipesReady) {
+      if (deckRef.current.length === 0) setDeck(cachedNext.filter(fits));
+      return;
+    }
+    if (builtFor.current === restrictionsKey) return;
+
+    if (builtFor.current === null) {
+      // First full build: keep the cards already on screen in front so nothing changes under the user.
+      const head = deckRef.current.length > 0 ? deckRef.current : cachedNext.filter(fits);
+      const headIds = new Set(head.map(m => m.id));
+      setDeck([...head, ...shuffled(allMeals.filter(m => fits(m) && !headIds.has(m.id)))]);
+    } else {
+      // Dietary restrictions changed: start a fresh deck.
+      setDeck(shuffled(allMeals.filter(fits)));
+      setIndex(0);
+    }
+    builtFor.current = restrictionsKey;
+  }, [cachedNext, recipesReady, allMeals, restrictionsKey]);
+
+  // Remember the upcoming cards for the next app start.
+  useEffect(() => {
+    if (deck.length > 0) saveDiscoverNext(deck.slice(index, index + DISCOVER_CACHED_COUNT));
+  }, [deck, index]);
+
   const [sheetVisible, setSheetVisible] = useState(false);
   // Swiped cards still animating off-screen. They sit above the deck but ignore touches.
   const [flying, setFlying] = useState<{ key: number; meal: Meal; direction: Direction; release: SwipeRelease }[]>([]);
@@ -102,8 +146,10 @@ export default function DiscoverScreen() {
     setFlying(prev => prev.filter(f => f.key !== key));
   }
 
-  const current = initialDeck[index];
-  const next = initialDeck[index + 1];
+  const current = deck[index];
+  const next = deck[index + 1];
+  // Ran out of cached cards before the full list arrived (rare): show a loader, not "seen them all".
+  const waitingForDeck = !current && !recipesReady;
   const totalSeen = likedIds.length + dislikedIds.length;
 
   function handleGestureCommit(direction: Direction, meal: Meal, release: SwipeRelease) {
@@ -163,7 +209,9 @@ export default function DiscoverScreen() {
       </View>
 
       <View style={styles.deckArea}>
-        {!current && (
+        {waitingForDeck && <FullScreenLoading title="Loading meals" subtitle="Shuffling the deck…" />}
+
+        {!current && !waitingForDeck && (
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>🍽️</Text>
             <Text style={styles.emptyTitle}>You’ve seen them all</Text>

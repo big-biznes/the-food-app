@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { Ionicons } from '@expo/vector-icons';
 import {
   useFonts,
   BricolageGrotesque_400Regular,
@@ -25,6 +26,8 @@ export default function RootLayout() {
     BricolageGrotesque_600SemiBold,
     BricolageGrotesque_700Bold,
     BricolageGrotesque_800ExtraBold,
+    // Icon font too, so icons are drawn from the first frame instead of popping in after load.
+    ...Ionicons.font,
   });
 
   useEffect(() => {

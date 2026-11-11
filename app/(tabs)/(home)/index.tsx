@@ -15,7 +15,10 @@ import {
   getAlternateMeal,
   extractUsedIds,
   extractPartIngredients,
+  planMeals,
+  rememberMeals,
 } from '@/data/meals';
+import { waitForRecipes } from '@/contexts/RecipesContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
 import LoadingScreen from '@/components/home/LoadingScreen';
@@ -54,6 +57,10 @@ export default function HomeScreen() {
   // Changing it in settings only takes effect when a new plan is generated.
   const [savedPlan, setSavedPlan] = useCloudState<SavedPlan | null>('plan', null);
   const plan = savedPlan?.plan ?? null;
+  // The plan stores full meals, so details / cook can open them before the recipe list loads.
+  useEffect(() => {
+    if (plan) rememberMeals(planMeals(plan));
+  }, [plan]);
   const planEatingOutDay = savedPlan?.eatingOutDay ?? user?.eatingOutDay ?? 'Sun';
   const setPlan = useCallback(
     (update: SetStateAction<StructuredWeekPlan | null>) =>
@@ -183,13 +190,20 @@ export default function HomeScreen() {
     );
   }
 
+  // Generating needs the full recipe list; on a fresh app start it may still be loading
+  // in the background (the "Building your plan" screen covers the short wait).
+  async function generateWhenReady() {
+    await waitForRecipes();
+    applyNewPlan(generatePlan());
+  }
+
   function handleGenerate() {
-    runWithLoading(() => applyNewPlan(generatePlan()));
+    runWithLoading(generateWhenReady);
   }
 
   function handleGenerateFromSheet() {
     setShowSheet(false);
-    runWithLoading(() => applyNewPlan(generatePlan()));
+    runWithLoading(generateWhenReady);
   }
 
   function handlePartChange(part: WeekPart) {

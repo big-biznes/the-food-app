@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { ALL_MEALS, Meal } from '@/data/meals';
+import { Meal } from '@/data/meals';
+import { useRecipes } from '@/contexts/RecipesContext';
 import { useLikes } from '@/contexts/LikesContext';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
@@ -37,6 +38,8 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
   const styles = useThemedStyles(makeStyles);
   const { height: screenHeight } = useWindowDimensions();
   const { likedIds, dislikedIds, toggle } = useLikes();
+  // From context (not ALL_MEALS directly) so the list fills in once recipes finish loading.
+  const { meals: allMeals } = useRecipes();
   const insets = useSafeAreaInsets();
 
   // Keep Modal mounted during the close animation.
@@ -59,8 +62,11 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
   }, [visible]);
 
   const sections = useMemo<Section[]>(() => {
-    const liked = ALL_MEALS.filter(m => likedIds.includes(m.id));
-    const passed = ALL_MEALS.filter(m => dislikedIds.includes(m.id));
+    // Sets make this O(meals) instead of O(meals × reactions), so a toggle re-sorts instantly.
+    const likedSet = new Set(likedIds);
+    const dislikedSet = new Set(dislikedIds);
+    const liked = allMeals.filter(m => likedSet.has(m.id));
+    const passed = allMeals.filter(m => dislikedSet.has(m.id));
     const out: Section[] = [];
     if (liked.length > 0) {
       out.push({ key: 'liked', title: `${liked.length} liked`, liked: true, first: true, data: liked });
@@ -75,7 +81,7 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
       });
     }
     return out;
-  }, [likedIds, dislikedIds]);
+  }, [likedIds, dislikedIds, allMeals]);
 
   const totalSeen = likedIds.length + dislikedIds.length;
 
@@ -148,7 +154,7 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
               </View>
             )}
             renderItem={({ item, section }) => (
-              <ReactionRow meal={item} liked={section.liked} onToggle={() => toggle(item.id)} />
+              <ReactionRow meal={item} liked={section.liked} onToggle={toggle} />
             )}
           />
         </View>
