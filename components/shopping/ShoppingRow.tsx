@@ -6,6 +6,7 @@ import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
 import { font } from '@/constants/type';
+import { chainName } from '@/data/stores';
 type Props = {
   item: ShoppingItem;
   onToggle: (id: string) => void;
@@ -32,12 +33,15 @@ const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Prop
       >
         {item.checked && <Ionicons name="checkmark" size={14} color={c.onPrimary} />}
       </TouchableOpacity>
-      <Text
-        style={[styles.name, item.checked && styles.nameChecked]}
-        numberOfLines={2}
-      >
-        {item.name}
-      </Text>
+      <View style={styles.nameWrap}>
+        <Text
+          style={[styles.name, item.checked && styles.nameChecked]}
+          numberOfLines={2}
+        >
+          {item.name}
+        </Text>
+        {item.store && !item.checked && <Text style={styles.store}>{chainName(item.store)}</Text>}
+      </View>
       {item.lowStock && !item.checked && (
         <View
           style={styles.lowStockBadge}
@@ -82,7 +86,9 @@ const makeStyles = (c: Colors) =>
       justifyContent: 'center',
     },
     checkboxChecked: { backgroundColor: c.primary, borderColor: c.primary },
-    name: { flex: 1, fontSize: 15, color: c.text, fontFamily: font.medium, fontWeight: '500' },
+    nameWrap: { flex: 1 },
+    store: { fontSize: 12, fontFamily: font.medium, color: c.textMuted, marginTop: 2 },
+    name: { fontSize: 15, color: c.text, fontFamily: font.medium, fontWeight: '500' },
     nameChecked: { color: c.textMuted, textDecorationLine: 'line-through' },
     lowStockBadge: {
       width: 22,

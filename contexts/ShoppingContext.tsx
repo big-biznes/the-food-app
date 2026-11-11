@@ -6,6 +6,8 @@ export type ShoppingItem = {
   name: string;
   checked: boolean;
   lowStock?: boolean;
+  /** Chain id chosen for this item on the compare screen. */
+  store?: string;
 };
 
 export type PantryItem = {
@@ -28,6 +30,8 @@ type ShoppingContextType = {
   deletePantryItem: (id: string) => void;
   /** Restores the items removed by the most recent delete / clear. Returns false if nothing to undo. */
   undoLastRemoval: () => boolean;
+  /** Tag items with the store to buy them at (item id → chain id) and group the list by store. */
+  assignStores: (storeByItem: Record<string, string>) => void;
 };
 
 type Removal =
@@ -209,6 +213,18 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     return true;
   }, [setShoppingItems, setPantryItems]);
 
+  const assignStores = useCallback((storeByItem: Record<string, string>) => {
+    setShoppingItems(prev => {
+      const tagged = prev.map(({ store: _old, ...item }) =>
+        storeByItem[item.id] ? { ...item, store: storeByItem[item.id] } : item,
+      );
+      // Stable sort: one block per store, untagged items last.
+      const order = [...new Set(Object.values(storeByItem))];
+      const rank = (i: ShoppingItem) => (i.store ? order.indexOf(i.store) : order.length);
+      return tagged.sort((a, b) => rank(a) - rank(b));
+    });
+  }, [setShoppingItems]);
+
   return (
     <ShoppingContext.Provider
       value={{
@@ -225,6 +241,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         addPantryItem,
         deletePantryItem,
         undoLastRemoval,
+        assignStores,
       }}
     >
       {children}

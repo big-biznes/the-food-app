@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, DietaryRestriction, Goal } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
+import StorePicker from '@/components/shopping/StorePicker';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import ConfirmSheet from '@/components/ConfirmSheet';
 
@@ -198,6 +199,12 @@ export default function SettingsScreen() {
               />
             ))}
           </View>
+        </View>
+
+        {/* ── Stores ────────────────────────────────────────────────── */}
+        <SectionHeader label="Stores" />
+        <View style={styles.section}>
+          <StorePicker />
         </View>
 
         {/* ── Application Settings ──────────────────────────────────── */}

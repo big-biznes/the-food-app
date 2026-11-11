@@ -25,6 +25,7 @@ type Props = {
   onDelete: (id: string) => void;
   onClearChecked: () => void;
   onFinishShopping: () => void;
+  onComparePrices: () => void;
   fabAnim: Animated.Value;
 };
 
@@ -42,6 +43,7 @@ export default function ShoppingPanel({
   onDelete,
   onClearChecked,
   onFinishShopping,
+  onComparePrices,
   fabAnim,
 }: Props) {
   const { colors: c } = useTheme();
@@ -82,6 +84,19 @@ export default function ShoppingPanel({
       <View style={styles.flex}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
+          {items.length > 0 && (
+            <TouchableOpacity
+              style={styles.compareBtn}
+              onPress={onComparePrices}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityRole="button"
+              accessibilityLabel="Compare store prices"
+            >
+              <Ionicons name="pricetag-outline" size={14} color={c.text} />
+              <Text style={styles.clearText}>Compare prices</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             onPress={onClearChecked}
             activeOpacity={hasChecked ? 0.7 : 1}
@@ -180,6 +195,7 @@ const makeStyles = (c: Colors) =>
       color: c.textMuted,
       fontVariant: ['tabular-nums'],
     },
+    compareBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginLeft: 'auto', marginRight: 20 },
     clearText: { fontSize: 13, fontFamily: font.semibold, fontWeight: '600', color: c.text },
     clearTextDim: { color: c.textFaint },
 

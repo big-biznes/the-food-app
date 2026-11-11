@@ -42,6 +42,10 @@ export type UserProfile = {
   plansCreated?: number;
   /** How many times the user opened meal details from a Discover card (tap hint shows until 3). */
   detailsOpened?: number;
+  /** Where the user shops; decides which store chains are offered for price comparison. */
+  country?: 'NL' | 'BG';
+  /** Ids of the store chains the user shops at (see data/stores.ts). */
+  stores?: string[];
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;

@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import ShoppingPanel from '@/components/shopping/ShoppingPanel';
@@ -31,6 +32,8 @@ export default function ShoppingScreen() {
   const widthRef = useRef(screenWidth);
   widthRef.current = screenWidth;
   const reducedMotion = useReducedMotionRef();
+  const router = useRouter();
+  const handleComparePrices = useCallback(() => router.push('/compare'), [router]);
 
   const {
     shoppingItems,
@@ -268,6 +271,7 @@ export default function ShoppingScreen() {
                 onDelete={handleDeleteShoppingItem}
                 onClearChecked={handleClearChecked}
                 onFinishShopping={handleFinishShopping}
+                onComparePrices={handleComparePrices}
                 fabAnim={fabAnim}
               />
             </View>
