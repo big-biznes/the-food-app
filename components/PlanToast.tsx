@@ -39,7 +39,11 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   const reducedMotion = useReducedMotionRef();
   const [visible, setVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(HIDDEN_Y)).current;
-  const textWidth = useRef(new Animated.Value(160)).current;
+  // The label's natural width, measured on first layout. Until it's known the label isn't
+  // width-constrained; after that the width animates from this value to 0 (icon-only).
+  const [labelWidth, setLabelWidth] = useState<number | null>(null);
+  const labelWidthRef = useRef<number | null>(null);
+  const textWidth = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -67,7 +71,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   useImperativeHandle(ref, () => ({
     show() {
       clearTimers();
-      textWidth.setValue(160);
+      if (labelWidthRef.current != null) textWidth.setValue(labelWidthRef.current);
       textOpacity.setValue(1);
       setVisible(true);
       AccessibilityInfo.announceForAccessibility(`${message} ${actionLabel}`);
@@ -134,10 +138,17 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
         hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
       >
         <Ionicons name={actionIcon} size={15} color={c.text} />
-        <Animated.View style={{ width: textWidth, overflow: 'hidden' }}>
+        <Animated.View style={labelWidth == null ? null : { width: textWidth, overflow: 'hidden' }}>
           <Animated.Text
             style={[styles.actionBtnText, { opacity: textOpacity }]}
             numberOfLines={1}
+            onLayout={e => {
+              if (labelWidthRef.current != null) return;
+              const w = Math.ceil(e.nativeEvent.layout.width);
+              labelWidthRef.current = w;
+              textWidth.setValue(w);
+              setLabelWidth(w);
+            }}
           >
             {' '}{actionLabel}
           </Animated.Text>
