@@ -14,7 +14,10 @@ create table if not exists public.chains (
 insert into public.chains (id, country, name, sort) values
   ('kaufland_bg', 'BG', 'Kaufland', 1),
   ('lidl_bg',     'BG', 'Lidl',     2),
-  ('billa_bg',    'BG', 'Billa',    3)
+  ('billa_bg',    'BG', 'Billa',    3),
+  ('ah_nl',       'NL', 'Albert Heijn', 1),
+  ('jumbo_nl',    'NL', 'Jumbo',    2),
+  ('lidl_nl',     'NL', 'Lidl',     3)
 on conflict (id) do update set country = excluded.country, name = excluded.name, sort = excluded.sort;
 
 -- One row per store product that matches an ingredient in data/ingredients.json.

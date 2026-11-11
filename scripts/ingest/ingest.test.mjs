@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { parseNlSize, toProducts as toNlProducts } from './checkjebon.mjs';
 import { parseCsv } from './csv.mjs';
 import { toProducts } from './kolkostruva.mjs';
 import { matchIngredient } from './match.mjs';
@@ -76,4 +77,53 @@ test('parseLidlSearch reads price and packaging', () => {
   const item = (productId, fullTitle, price, text) => ({ gridbox: { data: { productId, fullTitle, price: { price, packaging: text ? { text } : null } } } });
   const out = parseLidlSearch({ items: [item(1, 'Песто', 1.42, '190 g/опаковка'), item(2, 'Прясно пилешко филе', 6.69, 'за kg'), item(3, 'Броколи', null)] });
   assert.deepEqual(out.map(p => [p.externalId, p.packAmount, p.byWeight, p.priceCents]), [['offer:1', 190, false, 142], ['offer:2', 1000, true, 669]]);
+});
+
+test('parsePackSize reads Dutch unit spellings', () => {
+  assert.deepEqual(parsePackSize('200 GRAM'), { amount: 200, unit: 'g' });
+  assert.deepEqual(parsePackSize('170 GRM'), { amount: 170, unit: 'g' });
+  assert.deepEqual(parsePackSize('1 KILO'), { amount: 1000, unit: 'g' });
+  assert.deepEqual(parsePackSize('28 cl'), { amount: 280, unit: 'ml' });
+  assert.deepEqual(parsePackSize('500 Mililiters'), { amount: 500, unit: 'ml' });
+  assert.deepEqual(parsePackSize('1.5 liter'), { amount: 1500, unit: 'ml' });
+  assert.deepEqual(parsePackSize('Indomie Instant Noedels Kip 5x70g'), { amount: 350, unit: 'g' });
+});
+
+test('parseNlSize reads weights, loose goods and pieces', () => {
+  assert.deepEqual(parseNlSize('ca. 500 g'), { amount: 500, unit: 'g', byWeight: false });
+  assert.deepEqual(parseNlSize('2 x 90 g'), { amount: 180, unit: 'g', byWeight: false });
+  assert.deepEqual(parseNlSize('0,75 l'), { amount: 750, unit: 'ml', byWeight: false });
+  assert.deepEqual(parseNlSize('los per 500 g'), { amount: 500, unit: 'g', byWeight: true });
+  assert.deepEqual(parseNlSize('los per kilo'), { amount: 1000, unit: 'g', byWeight: true });
+  assert.deepEqual(parseNlSize('per stuk'), { amount: 1, unit: 'pc', byWeight: false });
+  assert.deepEqual(parseNlSize('Jumbo Gele Uien Extra Groot 3 Stuks'), { amount: 3, unit: 'pc', byWeight: false });
+  assert.equal(parseNlSize('4 pers | 20 min'), null);
+  assert.equal(parseNlSize(''), null);
+});
+
+test('checkjebon toProducts takes the size from the size text, then the name', () => {
+  const ah = toNlProducts('ah', [
+    { n: 'AH Zonnebloemolie', l: 'wi1525/ah-zonnebloemolie', p: 1.79, s: '1 l' },
+    { n: 'AH Courgette', l: 'wi4164/ah-courgette', p: 0.65, s: 'per stuk' },
+    { n: 'AH Verspakket', l: 'wi9/ah-verspakket', p: 5.49, s: '4 pers | 25 min' },
+  ]);
+  assert.deepEqual(ah.map(p => [p.externalId, p.packAmount, p.packUnit, p.priceCents]), [['wi1525', 1000, 'ml', 179], ['wi4164', 1, 'pc', 65], ['wi9', null, null, 549]]);
+
+  const jumbo = toNlProducts('jumbo', [
+    { n: 'Jumbo Kipfilet ca. 600g', l: 'jumbo-kipfilet-ca-600g-123456DS', p: 7.53, s: '' },
+    { n: 'Jumbo Varkenshaas Cul 2 Stuks ca. 650 g', l: 'jumbo-varkenshaas-9KG', p: 0.02, s: '' }, // placeholder price
+    { n: 'Jumbo Kipfilet 800 g', l: 'jumbo-kipfilet-800-g-123456DS', p: 9.51, s: '800 g' }, // same article twice: the last wins
+  ]);
+  assert.deepEqual(jumbo.map(p => [p.externalId, p.packAmount, p.priceCents]), [['123456DS', 800, 951]]);
+});
+
+test('matchIngredient applies the Dutch never-list and minAmount', () => {
+  const ingredients = [{ key: 'chicken', nl: { include: ['kipfilet'], minAmount: 250 } }, { key: 'noodles', nl: { include: ['mie nestjes'] } }];
+  const m = (name, packAmount) => matchIngredient({ name, packAmount }, ingredients, 'nl');
+  assert.equal(m('AH Scharrel kipfilet', 800), 'chicken');
+  assert.equal(m('AH Kipfilet', 150), null); // sandwich slices
+  assert.equal(m('AH Gerookte kipfilet', 300), null);
+  assert.equal(m('Olvarit Kipfilet rijst 8m+', 300), null);
+  assert.equal(m('Chaumes le crémier nestjes', 250), null); // "mie" inside "crémier"
+  assert.equal(m('Пилешки чипс', 300), null);
 });

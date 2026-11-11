@@ -7,10 +7,16 @@ export const CHAINS: Chain[] = [
   { id: 'kaufland_bg', country: 'BG', name: 'Kaufland' },
   { id: 'lidl_bg', country: 'BG', name: 'Lidl' },
   { id: 'billa_bg', country: 'BG', name: 'Billa' },
+  { id: 'ah_nl', country: 'NL', name: 'Albert Heijn' },
+  { id: 'jumbo_nl', country: 'NL', name: 'Jumbo' },
+  { id: 'lidl_nl', country: 'NL', name: 'Lidl' },
 ];
 
-/** Countries offered in the picker. The Netherlands is left out until it has a price source. */
-export const COUNTRIES: { value: Country; label: string }[] = [{ value: 'BG', label: 'Bulgaria' }];
+/** Countries offered in the picker. */
+export const COUNTRIES: { value: Country; label: string }[] = [
+  { value: 'BG', label: 'Bulgaria' },
+  { value: 'NL', label: 'Netherlands' },
+];
 
 export function chainsIn(country: Country): Chain[] {
   return CHAINS.filter(c => c.country === country);

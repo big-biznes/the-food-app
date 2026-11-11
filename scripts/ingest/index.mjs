@@ -6,12 +6,14 @@
 //   node scripts/ingest/index.mjs --sql out.sql      write a SQL file to paste into the Supabase SQL Editor (no key needed)
 //   node scripts/ingest/index.mjs                    write (needs the env vars below)
 //   node scripts/ingest/index.mjs --date 2026-11-10  use one specific day
+//   node scripts/ingest/index.mjs --country nl       one country only (nl or bg)
 //   node scripts/ingest/index.mjs --glovo            also read the chains' delivery stores (off by default:
 //                                                    the site stops answering automated requests after a while)
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (never ship this key in the app).
 
 import { readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { NL_CHAINS, downloadCheckjebon, toProducts as toNlProducts } from './checkjebon.mjs';
 import { GLOVO_STORES, glovoProducts } from './glovo.mjs';
 import { BG_CHAINS, downloadDay, readChainRows, toProducts } from './kolkostruva.mjs';
 import { matchIngredient } from './match.mjs';
@@ -22,6 +24,12 @@ const dryRun = args.includes('--dry-run');
 const sqlFile = args.includes('--sql') ? args[args.indexOf('--sql') + 1] : null;
 const useGlovo = args.includes('--glovo');
 const dateArg = args.includes('--date') ? args[args.indexOf('--date') + 1] : null;
+const country = args.includes('--country') ? String(args[args.indexOf('--country') + 1]).toUpperCase() : null;
+if (country && !['NL', 'BG'].includes(country)) {
+  console.error('--country takes nl or bg.');
+  process.exit(1);
+}
+const runs = c => !country || country === c;
 /** A retailer can be missing from a day's file, so look back a few days. */
 const LOOKBACK_DAYS = 4;
 
@@ -78,6 +86,28 @@ async function collectOffers() {
   return result;
 }
 
+/** The Dutch assortments, all from one file. A failed download must not stop the other countries. */
+async function collectNetherlands() {
+  let stores;
+  try {
+    stores = await downloadCheckjebon();
+  } catch (e) {
+    console.warn(`! checkjebon: ${e.message}`);
+    return [];
+  }
+  const result = [];
+  for (const [chainId, store] of Object.entries(NL_CHAINS)) {
+    const entries = stores.find(s => s.n === store)?.d;
+    if (!entries?.length) {
+      console.warn(`! ${chainId}: not in the checkjebon file`);
+      continue;
+    }
+    // `full`: the file lists the whole assortment, so a product missing from it is gone.
+    result.push({ chainId, date: 'checkjebon', products: toNlProducts(store, entries), rules: 'nl', full: true });
+  }
+  return result;
+}
+
 function toRows({ chainId, products, rules = 'bg' }) {
   const rows = [];
   let noSize = 0;
@@ -107,7 +137,7 @@ function toRows({ chainId, products, rules = 'bg' }) {
 function report(chainId, date, total, rows, noSize, rules = 'bg') {
   const counts = new Map();
   for (const r of rows) counts.set(r.ingredient_key, (counts.get(r.ingredient_key) ?? 0) + 1);
-  const expected = rules === 'bg' ? ingredients.filter(i => i.bg).map(i => i.key) : [];
+  const expected = rules === 'bg' || rules === 'nl' ? ingredients.filter(i => i[rules]).map(i => i.key) : [];
   const none = expected.filter(k => !counts.has(k));
   console.log(`\n${chainId} (${date}): ${total} products, ${rows.length} matched, ${noSize} matched but skipped (no pack size)`);
   console.log('  ' + [...counts].map(([k, n]) => `${k} ${n}`).join(', '));
@@ -116,10 +146,18 @@ function report(chainId, date, total, rows, noSize, rules = 'bg') {
 
 const runStart = new Date().toISOString();
 const all = [];
-for (const chain of [...(await collectBulgaria()), ...(await collectOffers())]) {
+/** Chains read from a full listing this run: their rows that were not rewritten are stale. */
+const fullChains = [];
+const chains = [
+  ...(runs('BG') ? [...(await collectBulgaria()), ...(await collectOffers())] : []),
+  ...(runs('NL') ? await collectNetherlands() : []),
+];
+for (const chain of chains) {
   const { rows, noSize } = toRows(chain);
   report(chain.chainId, chain.date, chain.products.length, rows, noSize, chain.rules);
   all.push(...rows);
+  // An empty result is more likely a broken source than an empty store: keep the old rows.
+  if (chain.full && rows.length) fullChains.push(chain.chainId);
 }
 
 // The same article can come from two sources ("00101436", "offer:00101436",
@@ -157,8 +195,14 @@ if (sqlFile) {
     }
   }
   // Offers and delivery listings that are no longer there have ended.
-  const { error: delError } = await supabase.from('products').delete().or('external_id.like.offer:%,external_id.like.glovo:%').lt('updated_at', runStart);
-  if (delError) console.warn(`! could not remove ended offers: ${delError.message}`);
+  if (runs('BG')) {
+    const { error: delError } = await supabase.from('products').delete().or('external_id.like.offer:%,external_id.like.glovo:%').lt('updated_at', runStart);
+    if (delError) console.warn(`! could not remove ended offers: ${delError.message}`);
+  }
+  if (fullChains.length) {
+    const { error: staleError } = await supabase.from('products').delete().in('chain_id', fullChains).lt('updated_at', runStart);
+    if (staleError) console.warn(`! could not remove delisted products: ${staleError.message}`);
+  }
   console.log(`\nWrote ${all.length} rows.`);
 }
 
@@ -174,8 +218,14 @@ function toSql(rows) {
     `insert into public.products (${cols.join(', ')}) values`,
     values,
     `on conflict (chain_id, external_id) do update set ${updates};`,
-    '-- Offers that are no longer listed have ended.',
-    `delete from public.products where (external_id like 'offer:%' or external_id like 'glovo:%') and updated_at < '${runStart}';`,
+    ...(!runs('BG') ? [] : [
+      '-- Offers that are no longer listed have ended.',
+      `delete from public.products where (external_id like 'offer:%' or external_id like 'glovo:%') and updated_at < '${runStart}';`,
+    ]),
+    ...(!fullChains.length ? [] : [
+      '-- Products that left a fully listed assortment.',
+      `delete from public.products where chain_id in (${fullChains.map(q).join(', ')}) and updated_at < '${runStart}';`,
+    ]),
     '',
   ].join('\n');
 }
