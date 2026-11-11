@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ALL_MEALS, Meal } from '@/data/meals';
 import { useLikes } from '@/contexts/LikesContext';
 import { useAuth } from '@/contexts/AuthContext';
-import SwipeCard from '@/components/discover/SwipeCard';
+import SwipeCard, { Direction, FlyingCard, SwipeRelease } from '@/components/discover/SwipeCard';
 import ReactionsSheet from '@/components/discover/ReactionsSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -57,12 +57,33 @@ export default function DiscoverScreen() {
 
   const [index, setIndex] = useState(0);
   const [sheetVisible, setSheetVisible] = useState(false);
+  // Swiped cards still animating off-screen. They sit above the deck but ignore touches.
+  const [flying, setFlying] = useState<{ key: number; meal: Meal; direction: Direction; release: SwipeRelease }[]>([]);
+  // Scale the new top card starts at (its size as the card underneath), so it grows instead of popping.
+  const [enterScale, setEnterScale] = useState(1);
+  const flyKey = useRef(0);
+
+  /** Advance to the next card *now* and let the swiped one fly away in its own layer. */
+  function advance(meal: Meal, direction: Direction, release: SwipeRelease) {
+    if (!reducedMotion) {
+      flyKey.current += 1;
+      const key = flyKey.current;
+      setFlying(prev => [...prev, { key, meal, direction, release }]);
+    }
+    setEnterScale(release.nextScale);
+    setIndex(i => i + 1);
+  }
+
+  function removeFlying(key: number) {
+    setFlying(prev => prev.filter(f => f.key !== key));
+  }
 
   const current = initialDeck[index];
   const next = initialDeck[index + 1];
   const totalSeen = likedIds.length + dislikedIds.length;
 
-  function handleGestureCommit(direction: 'left' | 'right', meal: Meal) {
+  function handleGestureCommit(direction: Direction, meal: Meal, release: SwipeRelease) {
+    advance(meal, direction, release);
     if (direction === 'right') like(meal.id);
     else dislike(meal.id);
 
@@ -85,10 +106,10 @@ export default function DiscoverScreen() {
     }
   }
 
-  function handleButtonSwipe(direction: 'left' | 'right', meal: Meal) {
+  function handleButtonSwipe(direction: Direction, meal: Meal) {
+    advance(meal, direction, { x: 0, y: 0, vx: 0, nextScale: 0.94 });
     if (direction === 'right') like(meal.id);
     else dislike(meal.id);
-    setIndex(i => i + 1);
     swipeOnlyStreak.current = 0;
   }
 
@@ -129,7 +150,10 @@ export default function DiscoverScreen() {
             </Text>
             <TouchableOpacity
               style={styles.resetBtn}
-              onPress={() => setIndex(0)}
+              onPress={() => {
+                setEnterScale(1);
+                setIndex(0);
+              }}
               activeOpacity={0.8}
               accessibilityRole="button"
             >
@@ -144,10 +168,21 @@ export default function DiscoverScreen() {
             meal={current}
             nextMeal={next}
             expertMode={expertMode}
-            onSwipeCommit={(dir) => handleGestureCommit(dir, current)}
-            onSwipe={() => setIndex(i => i + 1)}
+            enterScale={enterScale}
+            onSwipeCommit={(dir, release) => handleGestureCommit(dir, current, release)}
           />
         )}
+
+        {flying.map(f => (
+          <FlyingCard
+            key={f.key}
+            meal={f.meal}
+            expertMode={expertMode}
+            direction={f.direction}
+            release={f.release}
+            onDone={() => removeFlying(f.key)}
+          />
+        ))}
       </View>
 
       <Animated.View

@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { Animated, PanResponder, StyleSheet, useWindowDimensions } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { Animated, Easing, PanResponder, StyleSheet, useWindowDimensions } from 'react-native';
 import { Meal } from '@/data/meals';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -7,23 +7,30 @@ import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import CardContent from './CardContent';
 
 import { font } from '@/constants/type';
-type Direction = 'left' | 'right';
+
+export type Direction = 'left' | 'right';
+
+/** Where the card was when it was released, handed to the fly-off layer. */
+export type SwipeRelease = { x: number; y: number; vx: number; nextScale: number };
+
+/** Scale of the card waiting underneath; it grows to 1 as the top card is dragged away. */
+const UNDER_SCALE = 0.94;
 
 type Props = {
   meal: Meal;
   nextMeal: Meal | undefined;
   expertMode: boolean;
-  onSwipeCommit: (direction: Direction) => void;
-  onSwipe: () => void;
+  /** Scale this card starts at (the size it had as the card underneath), animated up to 1. */
+  enterScale?: number;
+  /**
+   * Called the moment a swipe is decided. The parent should immediately make the next card
+   * the top card and render a FlyingCard from `release`, so the user can grab the next card
+   * without waiting for this one to leave the screen.
+   */
+  onSwipeCommit: (direction: Direction, release: SwipeRelease) => void;
 };
 
-export default function SwipeCard({
-  meal,
-  nextMeal,
-  expertMode,
-  onSwipeCommit,
-  onSwipe,
-}: Props) {
+export default function SwipeCard({ meal, nextMeal, expertMode, enterScale = 1, onSwipeCommit }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const { width: screenWidth } = useWindowDimensions();
@@ -33,29 +40,35 @@ export default function SwipeCard({
   const reducedMotion = useReducedMotionRef();
 
   const position = useRef(new Animated.ValueXY()).current;
+  const scale = useRef(new Animated.Value(enterScale)).current;
 
-  function swipeOff(direction: Direction) {
+  // Grow from the "underneath" size to full size instead of popping.
+  useEffect(() => {
+    if (enterScale === 1) return;
     if (reducedMotion.current) {
-      onSwipe();
+      scale.setValue(1);
       return;
     }
-    const w = widthRef.current;
-    const toX = direction === 'right' ? w * 1.5 : -w * 1.5;
-    Animated.timing(position, {
-      toValue: { x: toX, y: 0 },
-      duration: 240,
+    Animated.timing(scale, {
+      toValue: 1,
+      duration: 160,
+      easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
-    }).start(onSwipe);
+    }).start();
+  }, [enterScale, scale, reducedMotion]);
+
+  function underScaleFor(x: number) {
+    const t = Math.min(Math.abs(x) / widthRef.current, 1);
+    return UNDER_SCALE + (1 - UNDER_SCALE) * t;
   }
 
-  function commit(direction: Direction) {
-    onSwipeCommitRef.current(direction);
-    swipeOffRef.current(direction);
+  function commit(direction: Direction, x = 0, y = 0, vx = 0) {
+    onSwipeCommitRef.current(direction, { x, y, vx, nextScale: underScaleFor(x) });
   }
 
   // Keep latest callbacks stable inside the pan responder.
-  const swipeOffRef = useRef(swipeOff);
-  swipeOffRef.current = swipeOff;
+  const commitRef = useRef(commit);
+  commitRef.current = commit;
   const onSwipeCommitRef = useRef(onSwipeCommit);
   onSwipeCommitRef.current = onSwipeCommit;
   const thresholdRef = useRef(swipeThreshold);
@@ -64,18 +77,15 @@ export default function SwipeCard({
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, g) =>
-        Math.abs(g.dx) > 4 || Math.abs(g.dy) > 4,
+      onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 4 || Math.abs(g.dy) > 4,
       onPanResponderMove: (_, g) => {
         position.setValue({ x: g.dx, y: g.dy });
       },
       onPanResponderRelease: (_, g) => {
         if (g.dx > thresholdRef.current) {
-          onSwipeCommitRef.current('right');
-          swipeOffRef.current('right');
+          commitRef.current('right', g.dx, g.dy, g.vx);
         } else if (g.dx < -thresholdRef.current) {
-          onSwipeCommitRef.current('left');
-          swipeOffRef.current('left');
+          commitRef.current('left', g.dx, g.dy, g.vx);
         } else if (reducedMotion.current) {
           position.setValue({ x: 0, y: 0 });
         } else {
@@ -108,7 +118,7 @@ export default function SwipeCard({
 
   const nextScale = position.x.interpolate({
     inputRange: [-screenWidth, 0, screenWidth],
-    outputRange: [1, 0.94, 1],
+    outputRange: [1, UNDER_SCALE, 1],
     extrapolate: 'clamp',
   });
 
@@ -118,6 +128,7 @@ export default function SwipeCard({
     <>
       {nextMeal && (
         <Animated.View
+          key={nextMeal.id}
           style={[
             styles.card,
             cardWidth,
@@ -145,6 +156,7 @@ export default function SwipeCard({
               { translateX: position.x },
               { translateY: position.y },
               { rotate },
+              { scale },
             ],
           },
         ]}
@@ -169,6 +181,70 @@ export default function SwipeCard({
         <CardContent meal={meal} />
       </Animated.View>
     </>
+  );
+}
+
+type FlyingProps = {
+  meal: Meal;
+  expertMode: boolean;
+  direction: Direction;
+  release: SwipeRelease;
+  onDone: () => void;
+};
+
+/**
+ * A swiped card leaving the screen. Rendered on top of the deck but ignores touches,
+ * so the next card can be dragged while this one is still flying away.
+ */
+export function FlyingCard({ meal, expertMode, direction, release, onDone }: FlyingProps) {
+  const { colors: c } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const { width: screenWidth } = useWindowDimensions();
+  const position = useRef(new Animated.ValueXY({ x: release.x, y: release.y })).current;
+
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    const toX = direction === 'right' ? screenWidth * 1.5 : -screenWidth * 1.5;
+    // Keep some of the finger's momentum: a fast flick leaves faster.
+    const speed = Math.min(Math.abs(release.vx), 3);
+    const duration = Math.round(260 - speed * 40);
+    Animated.timing(position, {
+      toValue: { x: toX, y: release.y + release.y * 0.5 },
+      duration,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start(() => onDoneRef.current());
+    // Runs once per flying card.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const rotate = position.x.interpolate({
+    inputRange: [-screenWidth, 0, screenWidth],
+    outputRange: ['-12deg', '0deg', '12deg'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.card,
+        { width: screenWidth - 48 },
+        { backgroundColor: tileColor(c, meal.mealType) },
+        expertMode && styles.cardExpert,
+        { transform: [{ translateX: position.x }, { translateY: position.y }, { rotate }] },
+      ]}
+      pointerEvents="none"
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden
+    >
+      <Animated.View style={[styles.stamp, direction === 'right' ? styles.stampLike : styles.stampNope]}>
+        <Animated.Text style={direction === 'right' ? styles.stampLikeText : styles.stampNopeText}>
+          {direction === 'right' ? 'Like' : 'Pass'}
+        </Animated.Text>
+      </Animated.View>
+      <CardContent meal={meal} />
+    </Animated.View>
   );
 }
 
