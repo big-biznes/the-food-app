@@ -9,10 +9,12 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, DietaryRestriction, Goal } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import ConfirmSheet from '@/components/ConfirmSheet';
 
 import { font, type } from '@/constants/type';
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -53,7 +55,9 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
 export default function SettingsScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const { user, logout, updateProfile } = useAuth();
+  const { user, logout, updateProfile, deleteAccount } = useAuth();
+  const router = useRouter();
+  const [confirm, setConfirm] = useState<'logout' | 'delete' | null>(null);
 
   // Plan settings
   const [goal, setGoal] = useState<Goal>(user?.goal ?? 'maintain');
@@ -78,25 +82,23 @@ export default function SettingsScreen() {
   }
 
   function handleDeleteAccount() {
-    Alert.alert(
-      'Delete account',
-      'This will permanently delete your account and all data. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => logout(),
-        },
-      ],
-    );
+    setConfirm('delete');
   }
 
   function handleLogout() {
-    Alert.alert('Log out', 'Are you sure you want to log out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Log out', style: 'destructive', onPress: () => logout() },
-    ]);
+    setConfirm('logout');
+  }
+
+  async function confirmLogout() {
+    await logout();
+    router.replace('/(auth)');
+  }
+
+  async function confirmDelete() {
+    const error = await deleteAccount();
+    if (error) return error;
+    router.replace('/(auth)');
+    return null;
   }
 
   function handleLink(label: string) {
@@ -276,6 +278,24 @@ export default function SettingsScreen() {
           <Text style={styles.logoutText}>Log out</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <ConfirmSheet
+        visible={confirm === 'logout'}
+        title="Log out?"
+        message="Your plan, likes and shopping list stay saved to your account."
+        confirmLabel="Log out"
+        onConfirm={confirmLogout}
+        onClose={() => setConfirm(null)}
+      />
+      <ConfirmSheet
+        visible={confirm === 'delete'}
+        title="Delete account?"
+        message="This permanently deletes your account, plan, likes and shopping list. This can't be undone."
+        confirmLabel="Delete account"
+        destructive
+        onConfirm={confirmDelete}
+        onClose={() => setConfirm(null)}
+      />
     </SafeAreaView>
   );
 }

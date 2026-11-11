@@ -1,5 +1,4 @@
 import { DietaryRestriction } from '@/contexts/AuthContext';
-import { RECIPES } from './recipes';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner';
 
@@ -102,7 +101,16 @@ export type StructuredWeekPlan = {
 
 export type WeekPlan = Record<string, DayPlan>;
 
-export const ALL_MEALS: Meal[] = RECIPES;
+/**
+ * All recipes as meals. Filled at runtime by RecipesProvider (contexts/RecipesContext.tsx),
+ * which only renders the app once this has been populated.
+ */
+export const ALL_MEALS: Meal[] = [];
+
+/** Replace the contents of ALL_MEALS in place so existing imports see the new list. */
+export function setAllMeals(meals: Meal[]) {
+  ALL_MEALS.splice(0, ALL_MEALS.length, ...meals);
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

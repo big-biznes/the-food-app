@@ -7,17 +7,21 @@ import { font } from '@/constants/type';
 type Props = {
   fadeAnim: Animated.Value;
   spinAnim: Animated.Value;
+  title?: string;
+  subtitle?: string;
 };
 
-const TITLE = 'Building your plan';
-const SUBTITLE = 'Picking meals just for you…';
-
-export default function LoadingScreen({ fadeAnim, spinAnim }: Props) {
+export default function LoadingScreen({
+  fadeAnim,
+  spinAnim,
+  title: TITLE = 'Building your plan',
+  subtitle: SUBTITLE = 'Picking meals just for you…',
+}: Props) {
   const styles = useThemedStyles(makeStyles);
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility(`${TITLE}. ${SUBTITLE}`);
-  }, []);
+  }, [TITLE, SUBTITLE]);
 
   const spin = spinAnim.interpolate({
     inputRange: [0, 1],

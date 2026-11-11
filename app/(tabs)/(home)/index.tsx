@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, SetStateAction } from 'react';
 import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,10 +25,14 @@ import CravingSheet from '@/components/home/CravingSheet';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
+import { useCloudState } from '@/hooks/useCloudState';
 
 import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const LOADING_MS = 1400;
+
+/** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
+type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string };
 
 function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
@@ -43,8 +47,16 @@ export default function HomeScreen() {
 
   // Snapshot the eating-out day used when the plan was generated.
   // Changing it in settings only takes effect when a new plan is generated.
-  const [planEatingOutDay, setPlanEatingOutDay] = useState<string>(
-    user?.eatingOutDay ?? 'Sun',
+  const [savedPlan, setSavedPlan] = useCloudState<SavedPlan | null>('plan', null);
+  const plan = savedPlan?.plan ?? null;
+  const planEatingOutDay = savedPlan?.eatingOutDay ?? user?.eatingOutDay ?? 'Sun';
+  const setPlan = useCallback(
+    (update: SetStateAction<StructuredWeekPlan | null>) =>
+      setSavedPlan(prev => {
+        const next = typeof update === 'function' ? update(prev?.plan ?? null) : update;
+        return next ? { plan: next, eatingOutDay: prev?.eatingOutDay ?? 'Sun' } : null;
+      }),
+    [setSavedPlan],
   );
 
   const { partDays, partShoppingDay, partLabel } = getWeekStructure(planEatingOutDay);
@@ -61,7 +73,6 @@ export default function HomeScreen() {
     [partShoppingDay.B]: `Shop today — ${partLabel.B} starts tomorrow`,
   };
 
-  const [plan, setPlan] = useState<StructuredWeekPlan | null>(null);
   const [swapSource, setSwapSource] = useState<{ part: WeekPart; day: string; mealType: MealType } | null>(null);
   const swapBannerAnim = useRef(new Animated.Value(0)).current;
   const [loading, setLoading] = useState(false);
@@ -145,8 +156,7 @@ export default function HomeScreen() {
   }
 
   function applyNewPlan(newPlan: StructuredWeekPlan) {
-    setPlanEatingOutDay(user?.eatingOutDay ?? 'Sun');
-    setPlan(newPlan);
+    setSavedPlan({ plan: newPlan, eatingOutDay: user?.eatingOutDay ?? 'Sun' });
     setSwapSource(null);
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);

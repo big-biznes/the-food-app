@@ -11,6 +11,7 @@ import {
   BricolageGrotesque_800ExtraBold,
 } from '@expo-google-fonts/bricolage-grotesque';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { RecipesProvider } from '@/contexts/RecipesContext';
 import { ShoppingProvider } from '@/contexts/ShoppingContext';
 import { LikesProvider } from '@/contexts/LikesContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
@@ -35,12 +36,14 @@ export default function RootLayout() {
   return (
     <AccessibilityProvider>
       <AuthProvider>
-        <ShoppingProvider>
-          <LikesProvider>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false }} />
-          </LikesProvider>
-        </ShoppingProvider>
+        <RecipesProvider>
+          <ShoppingProvider>
+            <LikesProvider>
+              <StatusBar style="dark" />
+              <Stack screenOptions={{ headerShown: false }} />
+            </LikesProvider>
+          </ShoppingProvider>
+        </RecipesProvider>
       </AuthProvider>
     </AccessibilityProvider>
   );

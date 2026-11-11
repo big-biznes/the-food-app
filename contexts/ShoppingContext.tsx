@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useRef, startTransition } from 'react';
+import React, { createContext, useContext, useCallback, useRef, startTransition } from 'react';
+import { useCloudState } from '@/hooks/useCloudState';
 
 export type ShoppingItem = {
   id: string;
@@ -71,14 +72,17 @@ function isMultiUse(formatted: string): boolean {
 
 const ShoppingContext = createContext<ShoppingContextType | null>(null);
 
-let nextId = 1;
+// Items are persisted, so ids must stay unique across app launches and devices.
 function uid() {
-  return String(nextId++);
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+const EMPTY_SHOPPING: ShoppingItem[] = [];
+const EMPTY_PANTRY: PantryItem[] = [];
+
 export function ShoppingProvider({ children }: { children: React.ReactNode }) {
-  const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([]);
-  const [pantryItems, setPantryItems] = useState<PantryItem[]>([]);
+  const [shoppingItems, setShoppingItems] = useCloudState<ShoppingItem[]>('shopping', EMPTY_SHOPPING);
+  const [pantryItems, setPantryItems] = useCloudState<PantryItem[]>('pantry', EMPTY_PANTRY);
 
   // Ref kept in sync on every render so callbacks can read current pantry
   // without needing it as a dependency or triggering extra state updates.
@@ -101,7 +105,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         .map(name => ({ id: uid(), name: name.trim(), checked: false }));
       return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
     });
-  }, []);
+  }, [setShoppingItems]);
 
   const replacePlanIngredients = useCallback((names: string[]) => {
     const pantryNames = new Set(pantryRef.current.map(p => p.name.toLowerCase().trim()));
@@ -127,7 +131,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     startTransition(() => {
       setShoppingItems(result);
     });
-  }, []);
+  }, [setShoppingItems]);
 
   const replaceShoppingItems = useCallback((names: string[]) => {
     setShoppingItems(
@@ -135,26 +139,26 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         .filter(n => n.trim())
         .map(name => ({ id: uid(), name: name.trim(), checked: false })),
     );
-  }, []);
+  }, [setShoppingItems]);
 
   const addShoppingItem = useCallback((name: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
     setShoppingItems(prev => [{ id: uid(), name: trimmed, checked: false }, ...prev]);
-  }, []);
+  }, [setShoppingItems]);
 
   const toggleShoppingItem = useCallback((id: string) => {
     setShoppingItems(prev =>
       prev.map(item => (item.id === id ? { ...item, checked: !item.checked } : item)),
     );
-  }, []);
+  }, [setShoppingItems]);
 
   const deleteShoppingItem = useCallback((id: string) => {
     const index = shoppingRef.current.findIndex(item => item.id === id);
     if (index < 0) return;
     lastRemoval.current = { kind: 'shopping', entries: [{ item: shoppingRef.current[index], index }] };
     setShoppingItems(prev => prev.filter(item => item.id !== id));
-  }, []);
+  }, [setShoppingItems]);
 
   const clearChecked = useCallback(() => {
     const entries = shoppingRef.current
@@ -163,7 +167,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     if (entries.length === 0) return;
     lastRemoval.current = { kind: 'shopping', entries };
     setShoppingItems(prev => prev.filter(item => !item.checked));
-  }, []);
+  }, [setShoppingItems]);
 
   const finishShopping = useCallback(() => {
     setShoppingItems(prev => {
@@ -178,20 +182,20 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
       });
       return prev.filter(i => !i.checked);
     });
-  }, []);
+  }, [setShoppingItems, setPantryItems]);
 
   const addPantryItem = useCallback((name: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
     setPantryItems(prev => [{ id: uid(), name: trimmed }, ...prev]);
-  }, []);
+  }, [setPantryItems]);
 
   const deletePantryItem = useCallback((id: string) => {
     const index = pantryRef.current.findIndex(item => item.id === id);
     if (index < 0) return;
     lastRemoval.current = { kind: 'pantry', entries: [{ item: pantryRef.current[index], index }] };
     setPantryItems(prev => prev.filter(item => item.id !== id));
-  }, []);
+  }, [setPantryItems]);
 
   const undoLastRemoval = useCallback(() => {
     const removal = lastRemoval.current;
@@ -203,7 +207,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
       setPantryItems(prev => restore(prev, removal.entries));
     }
     return true;
-  }, []);
+  }, [setShoppingItems, setPantryItems]);
 
   return (
     <ShoppingContext.Provider

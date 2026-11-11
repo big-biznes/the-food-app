@@ -1,7 +1,28 @@
 import type { DietaryRestriction } from '@/contexts/AuthContext';
 import type { Meal, MealType, MealComponents, Ingredient } from './meals';
-import { RAW_RECIPES } from './recipe-data';
-import type { RawRecipe } from './recipe-data';
+
+/** One row of the Supabase `recipes` table (same columns as data/recipe_dataset_1000_FINAL.csv). */
+export type RawRecipe = {
+  id: string;
+  name: string;
+  protein: string;
+  carb: string;
+  vegetable: string;
+  sauce: string;
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+  fiber_g: number;
+  sugar_g: number;
+  sodium_mg: number;
+  prep_time_min: number;
+  difficulty: string;
+  ingredient_quantities: string;
+  appliances: string;
+  tags: string;
+  instructions: string;
+};
 
 // ── Helpers: derive Meal fields from CSV columns ─────────────────────────────
 
@@ -153,4 +174,6 @@ function rowToMeal(row: RawRecipe): Meal {
 
 // ── Public exports ───────────────────────────────────────────────────────────
 
-export const RECIPES: Meal[] = RAW_RECIPES.map(rowToMeal);
+export function rowsToMeals(rows: RawRecipe[]): Meal[] {
+  return rows.map(rowToMeal);
+}

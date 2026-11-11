@@ -13,6 +13,9 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
+import GoogleButton from '@/components/auth/GoogleButton';
+import SigningInOverlay from '@/components/auth/SigningInOverlay';
+import { useSignInTransition } from '@/hooks/useSignInTransition';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -24,17 +27,27 @@ export default function LoginScreen() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const { signingIn, begin, cancel } = useSignInTransition();
+  const submitting = signingIn;
 
-  const canSubmit = email.length > 0 && password.length > 0;
+  const canSubmit = email.length > 0 && password.length > 0 && !submitting;
 
-  function handleLogin() {
+  async function handleLogin() {
     if (!canSubmit) return;
-    login(email, password);
-    router.replace('/(tabs)/(home)');
+    setError(null);
+    begin();
+    const message = await login(email, password);
+    if (message) {
+      cancel();
+      setError(message);
+    }
+    // On success useSignInTransition goes to home (or the quiz) once the profile has loaded.
   }
 
   return (
     <SafeAreaView style={styles.safe}>
+      <SigningInOverlay visible={signingIn} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -72,6 +85,9 @@ export default function LoginScreen() {
                 autoComplete="current-password"
               />
             </View>
+            {error && (
+              <Text style={styles.errorText} accessibilityRole="alert">{error}</Text>
+            )}
           </View>
 
           <View style={styles.footer}>
@@ -89,9 +105,10 @@ export default function LoginScreen() {
                 activeOpacity={0.8}
                 disabled={!canSubmit}
               >
-                <Text style={styles.primaryButtonText}>Sign in</Text>
+                <Text style={styles.primaryButtonText}>{submitting ? 'Signing in…' : 'Sign in'}</Text>
               </TouchableOpacity>
             </View>
+            <GoogleButton />
             <TouchableOpacity
               onPress={() => router.replace('/(auth)/register')}
               activeOpacity={0.7}
@@ -176,6 +193,10 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     color: c.onPrimary,
     fontSize: 16,
     fontFamily: font.semibold, fontWeight: '600',
+  },
+  errorText: {
+    fontFamily: font.regular, fontSize: 13,
+    color: c.danger,
   },
   switchText: {
     fontFamily: font.regular, fontSize: 15,

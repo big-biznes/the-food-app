@@ -1,7 +1,12 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import TabBar from '@/components/TabBar';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TabLayout() {
+  const { isLoading, isLoggedIn } = useAuth();
+  // Signed out (logout / account deleted) → back to the welcome screen.
+  if (!isLoading && !isLoggedIn) return <Redirect href="/(auth)" />;
+
   return (
     <Tabs
       tabBar={props => <TabBar {...props} />}

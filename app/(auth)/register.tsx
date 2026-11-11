@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
+import GoogleButton from '@/components/auth/GoogleButton';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -26,12 +27,23 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  const passwordsMatch = password === confirm;
-  const canSubmit = email.length > 0 && password.length >= 6 && confirm.length > 0 && passwordsMatch;
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleRegister() {
+  const passwordsMatch = password === confirm;
+  const canSubmit =
+    email.length > 0 && password.length >= 6 && confirm.length > 0 && passwordsMatch && !submitting;
+
+  async function handleRegister() {
     if (!canSubmit) return;
-    register(email, password);
+    setSubmitting(true);
+    setError(null);
+    const message = await register(email, password);
+    setSubmitting(false);
+    if (message) {
+      setError(message);
+      return;
+    }
     router.push('/(auth)/quiz');
   }
 
@@ -91,6 +103,9 @@ export default function RegisterScreen() {
                 <Text style={styles.errorText}>Passwords don’t match</Text>
               )}
             </View>
+            {error && (
+              <Text style={styles.errorText} accessibilityRole="alert">{error}</Text>
+            )}
           </View>
 
           <View style={styles.footer}>
@@ -111,6 +126,7 @@ export default function RegisterScreen() {
                 <Text style={styles.primaryButtonText}>Continue</Text>
               </TouchableOpacity>
             </View>
+            <GoogleButton />
             <TouchableOpacity
               onPress={() => router.replace('/(auth)/login')}
               activeOpacity={0.7}

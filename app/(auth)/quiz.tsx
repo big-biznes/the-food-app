@@ -47,7 +47,7 @@ export default function QuizScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const router = useRouter();
-  const { completeProfile } = useAuth();
+  const { completeProfile, logout } = useAuth();
 
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
@@ -103,8 +103,12 @@ export default function QuizScreen() {
   function handleBack() {
     if (step > 1) {
       setStep(s => s - 1);
-    } else {
+    } else if (router.canGoBack()) {
       router.back();
+    } else {
+      // Opened straight into the quiz (e.g. right after Google sign-in): back means
+      // "not now", so sign out and return to the welcome screen.
+      logout().then(() => router.replace('/(auth)'));
     }
   }
 
