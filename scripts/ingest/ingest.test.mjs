@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { parseNlSize, toProducts as toNlProducts } from './checkjebon.mjs';
 import { parseCsv } from './csv.mjs';
@@ -126,4 +127,22 @@ test('matchIngredient applies the Dutch never-list and minAmount', () => {
   assert.equal(m('Olvarit Kipfilet rijst 8m+', 300), null);
   assert.equal(m('Chaumes le crémier nestjes', 250), null); // "mie" inside "crémier"
   assert.equal(m('Пилешки чипс', 300), null);
+});
+
+test('data/ingredients.json keeps mince apart from whole meat', () => {
+  const ingredients = JSON.parse(readFileSync(new URL('../../data/ingredients.json', import.meta.url), 'utf8'));
+  const nl = (name, packAmount = 500) => matchIngredient({ name, packAmount }, ingredients, 'nl');
+  assert.equal(nl('AH Rundergehakt'), 'beef mince');
+  assert.equal(nl('AH Biefstuk 2 stuks'), 'beef');
+  assert.equal(nl('Jumbo Rund Sukadelappen 3 Stuks ca. 525 g'), 'beef');
+  assert.equal(nl('AH Scharrel kipgehakt'), 'chicken mince');
+  assert.equal(nl('AH Scharrel kipfilet'), 'chicken');
+  assert.equal(nl('Jumbo Half-om-Half Gehakt Varken-Rund 500 g'), 'mixed mince');
+  assert.equal(nl('AH Rundergehaktbal'), null);
+
+  const offer = name => matchIngredient({ name }, ingredients, 'bgOffers');
+  assert.equal(offer('Шеф Месар Телешко мляно месо'), 'beef mince');
+  assert.equal(offer('Говеждо месо от врат от свежата витрина'), 'beef');
+  assert.equal(offer('Делиа Пуешко мляно месо от бут'), 'turkey mince');
+  assert.equal(matchIngredient({ name: 'КАЙМА СМЕС 60/40', category: '25' }, ingredients, 'bg'), 'mixed mince');
 });
