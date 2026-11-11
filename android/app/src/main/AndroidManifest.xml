@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="thefoodapp"/>
+        <data android:scheme="exp+fudapp"/>
       </intent-filter>
     </activity>
   </application>

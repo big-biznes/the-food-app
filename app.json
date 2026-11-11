@@ -4,7 +4,7 @@
     "slug": "fudapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/foodapp-logo.png",
+    "icon": "./assets/images/foodapp-logo-smaller.png",
     "scheme": "thefoodapp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { Animated, View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   WeekPart,
@@ -13,6 +13,7 @@ import PoolView from '@/components/home/PoolView';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useSwipeTabs } from '@/hooks/useSwipeTabs';
 
 const DAY_NAME: Record<Day, string> = {
   Mon: 'Monday',
@@ -61,6 +62,8 @@ type Props = {
 };
 
 const ICON_HIT_SLOP = { top: 4, bottom: 4, left: 4, right: 4 };
+const PARTS: readonly WeekPart[] = ['A', 'B', 'C'];
+const H_PAD = 20;
 
 export default function PlanPhase({
   firstName,
@@ -93,46 +96,159 @@ export default function PlanPhase({
     setViewState({ part: selectedPart, mode: viewMode === 'day' ? 'pool' : 'day' });
   }
 
-  const selectedPartDays = partDays[selectedPart];
-  const validDay = (
-    selectedPartDays.includes(selectedDay as Day) ? selectedDay : selectedPartDays[0]
-  ) as Day;
+  const { translateX, panHandlers, switchTab, width } = useSwipeTabs(PARTS, {
+    active: selectedPart,
+    onChange: onPartChange,
+  });
+
+  /** The day a part shows: the chosen one if it's the open part, else today or its first day. */
+  function dayFor(part: WeekPart): Day {
+    const days = partDays[part];
+    if (part === selectedPart && days.includes(selectedDay as Day)) return selectedDay as Day;
+    return days.includes(today as Day) ? (today as Day) : days[0];
+  }
+
+  const validDay = dayFor(selectedPart);
   const isToday = validDay === today;
 
-  // Meals for the selected day, in eating order.
-  const dayMeals: { mealType: MealType; node: React.ReactNode }[] =
-    selectedPart === 'C'
-      ? [
-          {
-            mealType: 'lunch',
+  function renderMeals(part: WeekPart, day: Day) {
+    // Meals for the day, in eating order.
+    const dayMeals: { mealType: MealType; node: React.ReactNode }[] =
+      part === 'C'
+        ? [
+            {
+              mealType: 'lunch',
+              node: (
+                <MealCard
+                  key="lunch"
+                  size="hero"
+                  meal={plan.C[day].lunch}
+                  onRefresh={() => onRefreshMeal('C', day, 'lunch')}
+                />
+              ),
+            },
+            {
+              mealType: 'dinner',
+              node: <MealCard key="dinner" meal={plan.C[day].dinner} />,
+            },
+          ]
+        : (['breakfast', 'lunch', 'dinner'] as MealType[]).map(mealType => ({
+            mealType,
             node: (
               <MealCard
-                key="lunch"
-                size="hero"
-                meal={plan.C[validDay].lunch}
-                onRefresh={() => onRefreshMeal('C', validDay, 'lunch')}
+                key={mealType}
+                meal={(plan[part] as Record<string, DayPlan>)[day][mealType]}
+                onRefresh={() => onRefreshMeal(part, day, mealType)}
               />
             ),
-          },
-          {
-            mealType: 'dinner',
-            node: <MealCard key="dinner" meal={plan.C[validDay].dinner} />,
-          },
-        ]
-      : (['breakfast', 'lunch', 'dinner'] as MealType[]).map(mealType => ({
-          mealType,
-          node: (
-            <MealCard
-              key={mealType}
-              meal={(plan[selectedPart] as Record<string, DayPlan>)[validDay][mealType]}
-              onRefresh={() => onRefreshMeal(selectedPart, validDay, mealType)}
-            />
-          ),
-        }));
+          }));
 
-  const heroType = nextMealType(isToday, dayMeals.map(m => m.mealType));
-  const heroMeal = dayMeals.find(m => m.mealType === heroType)!;
-  const restMeals = dayMeals.filter(m => m.mealType !== heroType);
+    const heroType = nextMealType(day === today, dayMeals.map(m => m.mealType));
+    const heroMeal = dayMeals.find(m => m.mealType === heroType)!;
+    const restMeals = dayMeals.filter(m => m.mealType !== heroType);
+
+    return (
+      <View style={styles.mealList}>
+        {heroMeal.node}
+        {restMeals.length > 0 && (
+          <View style={styles.halfRow}>
+            {restMeals.map(m => (
+              <View key={m.mealType} style={styles.half}>
+                {m.node}
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  }
+
+  function renderPanel(part: WeekPart) {
+    const open = part === selectedPart;
+    const mode: ViewMode = open ? viewMode : 'day';
+    const day = dayFor(part);
+
+    return (
+      <>
+        {/* Day tabs + view controls */}
+        <View style={styles.dayRowWrapper}>
+          {mode === 'day' ? (
+            <View style={[styles.flex, styles.dayRow]}>
+              {partDays[part].map((d, idx) => {
+                const on = day === d;
+                const dayIsToday = d === today;
+                return (
+                  <TouchableOpacity
+                    key={d}
+                    style={styles.dayTab}
+                    onPress={() => onDayChange(d)}
+                    activeOpacity={0.7}
+                    hitSlop={{ top: 6, bottom: 6 }}
+                    accessibilityRole="tab"
+                    accessibilityLabel={dayIsToday ? `Day ${idx + 1}, today` : `Day ${idx + 1}`}
+                    accessibilityState={{ selected: on }}
+                  >
+                    <Text style={[styles.dayTabText, on && styles.dayTabTextOn]}>
+                      Day {idx + 1}
+                    </Text>
+                    {dayIsToday && <View style={styles.todayDot} />}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          ) : (
+            <Text style={[styles.flex, styles.poolHint]}>All meals in this part</Text>
+          )}
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={toggleViewMode}
+            activeOpacity={0.7}
+            hitSlop={ICON_HIT_SLOP}
+            accessibilityRole="button"
+            accessibilityLabel={mode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
+          >
+            <Ionicons name={mode === 'day' ? 'grid' : 'calendar'} size={20} color={c.text} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={onAddToShoppingList}
+            activeOpacity={0.7}
+            hitSlop={ICON_HIT_SLOP}
+            accessibilityRole="button"
+            accessibilityLabel="Add this part to the shopping list"
+          >
+            <Ionicons name="cart" size={21} color={c.text} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Shop-today note */}
+        {shoppingBanner && (
+          <View
+            style={styles.note}
+            accessibilityLiveRegion={open ? 'polite' : 'none'}
+            accessibilityRole="text"
+          >
+            <Text style={styles.noteText}>{shoppingBanner}</Text>
+          </View>
+        )}
+
+        {mode === 'day' ? (
+          renderMeals(part, day)
+        ) : (
+          <PoolView
+            plan={plan}
+            selectedPart={part}
+            partDays={partDays}
+            swapSource={swapSource}
+            onRefreshMeal={onRefreshMeal}
+            onSwapSelect={onSwapSelect}
+          />
+        )}
+      </>
+    );
+  }
+
+  const pageWidth = width - H_PAD * 2;
 
   return (
     <ScrollView
@@ -152,13 +268,13 @@ export default function PlanPhase({
 
       {/* Part tabs */}
       <View style={styles.tabRow} accessibilityRole="tablist">
-        {(['A', 'B', 'C'] as WeekPart[]).map(part => {
+        {PARTS.map(part => {
           const on = selectedPart === part;
           return (
             <TouchableOpacity
               key={part}
               style={[styles.tab, on && styles.tabOn]}
-              onPress={() => onPartChange(part)}
+              onPress={() => switchTab(part)}
               activeOpacity={0.7}
               hitSlop={{ top: 6, bottom: 6 }}
               accessibilityRole="tab"
@@ -171,96 +287,29 @@ export default function PlanPhase({
         })}
       </View>
 
-      {/* Day tabs + view controls */}
-      <View style={styles.dayRowWrapper}>
-        {viewMode === 'day' ? (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.dayRow}
-            style={styles.flex}
-          >
-            {selectedPartDays.map((day, idx) => {
-              const on = validDay === day;
-              const dayIsToday = day === today;
-              return (
-                <TouchableOpacity
-                  key={day}
-                  style={styles.dayTab}
-                  onPress={() => onDayChange(day)}
-                  activeOpacity={0.7}
-                  hitSlop={{ top: 6, bottom: 6 }}
-                  accessibilityRole="tab"
-                  accessibilityLabel={dayIsToday ? `Day ${idx + 1}, today` : `Day ${idx + 1}`}
-                  accessibilityState={{ selected: on }}
-                >
-                  <Text style={[styles.dayTabText, on && styles.dayTabTextOn]}>
-                    Day {idx + 1}
-                  </Text>
-                  {dayIsToday && <View style={styles.todayDot} />}
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        ) : (
-          <Text style={[styles.flex, styles.poolHint]}>All meals in this part</Text>
-        )}
-        <TouchableOpacity
-          style={styles.iconBtn}
-          onPress={toggleViewMode}
-          activeOpacity={0.7}
-          hitSlop={ICON_HIT_SLOP}
-          accessibilityRole="button"
-          accessibilityLabel={viewMode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
-        >
-          <Ionicons
-            name={viewMode === 'day' ? 'grid' : 'calendar'}
-            size={20}
-            color={c.text}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconBtn}
-          onPress={onAddToShoppingList}
-          activeOpacity={0.7}
-          hitSlop={ICON_HIT_SLOP}
-          accessibilityRole="button"
-          accessibilityLabel="Add this part to the shopping list"
-        >
-          <Ionicons name="cart" size={21} color={c.text} />
-        </TouchableOpacity>
+      {/* Part panels: swipe sideways to move between parts. Panels sit one
+          screen width apart; only the open one is in the layout flow, so the
+          page is as tall as what you're looking at. */}
+      <View {...panHandlers}>
+        <Animated.View style={[styles.slider, { width: pageWidth, transform: [{ translateX }] }]}>
+          {PARTS.map((part, i) => {
+            const open = part === selectedPart;
+            return (
+              <View
+                key={part}
+                style={[
+                  open ? styles.panelOpen : styles.panelAside,
+                  { width: pageWidth, left: i * width },
+                ]}
+                importantForAccessibility={open ? 'auto' : 'no-hide-descendants'}
+                accessibilityElementsHidden={!open}
+              >
+                {renderPanel(part)}
+              </View>
+            );
+          })}
+        </Animated.View>
       </View>
-
-      {/* Shop-today note */}
-      {shoppingBanner && (
-        <View style={styles.note} accessibilityLiveRegion="polite" accessibilityRole="text">
-          <Text style={styles.noteText}>{shoppingBanner}</Text>
-        </View>
-      )}
-
-      {viewMode === 'day' ? (
-        <View style={styles.mealList}>
-          {heroMeal.node}
-          {restMeals.length > 0 && (
-            <View style={styles.halfRow}>
-              {restMeals.map(m => (
-                <View key={m.mealType} style={styles.half}>
-                  {m.node}
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-      ) : (
-        <PoolView
-          plan={plan}
-          selectedPart={selectedPart}
-          partDays={partDays}
-          swapSource={swapSource}
-          onRefreshMeal={onRefreshMeal}
-          onSwapSelect={onSwapSelect}
-        />
-      )}
     </ScrollView>
   );
 }
@@ -269,7 +318,7 @@ const makeStyles = (c: Colors) =>
   StyleSheet.create({
     flex: { flex: 1 },
     scroll: {
-      paddingHorizontal: 20,
+      paddingHorizontal: H_PAD,
       paddingBottom: 120,
     },
 
@@ -300,7 +349,7 @@ const makeStyles = (c: Colors) =>
       marginBottom: 16,
       gap: 8,
     },
-    dayRow: { gap: 18, alignItems: 'center' },
+    dayRow: { flexDirection: 'row', gap: 18, alignItems: 'center' },
     dayTab: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8 },
     dayTabText: { fontFamily: font.medium, fontSize: 15, lineHeight: 19, color: c.textMuted },
     dayTabTextOn: { color: c.text, fontFamily: font.bold },
@@ -326,6 +375,10 @@ const makeStyles = (c: Colors) =>
       transform: [{ rotate: '-1deg' }],
     },
     noteText: { fontFamily: font.semibold, fontSize: 14, lineHeight: 18, color: c.onTile },
+
+    slider: { overflow: 'visible' },
+    panelOpen: { position: 'relative' },
+    panelAside: { position: 'absolute', top: 0 },
 
     mealList: { gap: 12, marginBottom: 32 },
     halfRow: { flexDirection: 'row', gap: 12 },
