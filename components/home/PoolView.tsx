@@ -63,6 +63,8 @@ export default function PoolView({
               swapSource.day === day &&
               swapSource.mealType === mealType;
             const swapFn = () => onSwapSelect(selectedPart, day, mealType);
+            // Breakfasts only swap with breakfasts; lunches and dinners swap with each other.
+            const blocked = swapSource != null && (swapSource.mealType === 'breakfast') !== (mealType === 'breakfast');
 
             return (
               <MealCard
@@ -73,6 +75,13 @@ export default function PoolView({
                 onRefresh={!swapSource ? () => onRefreshMeal(selectedPart, day, mealType) : undefined}
                 onSwapSelect={!swapSource || isSelected ? swapFn : undefined}
                 onCardTap={swapSource ? swapFn : undefined}
+                swapBlockedReason={
+                  blocked
+                    ? swapSource.mealType === 'breakfast'
+                      ? 'Breakfasts can only be swapped with other breakfasts'
+                      : 'Lunches and dinners cannot be swapped with a breakfast'
+                    : undefined
+                }
               />
             );
           })}

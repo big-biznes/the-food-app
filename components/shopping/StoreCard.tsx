@@ -43,7 +43,9 @@ export default function StoreCard({ store, labels, itemCount, badge, initiallyOp
             <Text style={styles.name}>{name}</Text>
             {badge && (
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>{badge}</Text>
+                <Text style={styles.badgeText} numberOfLines={1}>
+                  {badge}
+                </Text>
               </View>
             )}
           </View>
@@ -101,9 +103,10 @@ const makeStyles = (c: Colors) =>
     card: { backgroundColor: c.surface, borderRadius: 20, marginBottom: 12 },
     head: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 18 },
     headText: { flex: 1 },
-    nameRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-    name: { ...type.heading, color: c.text },
-    badge: { backgroundColor: c.pea, borderRadius: 100, paddingHorizontal: 10, paddingVertical: 3 },
+    // A long store name leaves no room beside it: the badge then drops below instead of being squeezed.
+    nameRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: 8, rowGap: 4 },
+    name: { ...type.heading, color: c.text, flexShrink: 1 },
+    badge: { backgroundColor: c.pea, borderRadius: 100, paddingHorizontal: 10, paddingVertical: 3, flexShrink: 0 },
     badgeText: { fontSize: 12, fontFamily: font.semibold, fontWeight: '600', color: c.onTile },
     count: { ...type.small, color: c.textMuted, marginTop: 2 },
     total: { ...type.heading, color: c.text, fontVariant: ['tabular-nums'] },

@@ -24,6 +24,8 @@ type ShoppingContextType = {
   replacePlanIngredients: (ingredients: PlanIngredient[]) => void;
   addShoppingItem: (name: string) => void;
   toggleShoppingItem: (id: string) => void;
+  /** Check or uncheck every item on the list. */
+  setAllChecked: (checked: boolean) => void;
   deleteShoppingItem: (id: string) => void;
   clearChecked: () => void;
   finishShopping: () => void;
@@ -153,6 +155,12 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     );
   }, [setShoppingItems]);
 
+  const setAllChecked = useCallback((checked: boolean) => {
+    setShoppingItems(prev =>
+      prev.every(item => item.checked === checked) ? prev : prev.map(item => (item.checked === checked ? item : { ...item, checked })),
+    );
+  }, [setShoppingItems]);
+
   const deleteShoppingItem = useCallback((id: string) => {
     const index = shoppingRef.current.findIndex(item => item.id === id);
     if (index < 0) return;
@@ -231,6 +239,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         replacePlanIngredients,
         addShoppingItem,
         toggleShoppingItem,
+        setAllChecked,
         deleteShoppingItem,
         clearChecked,
         finishShopping,

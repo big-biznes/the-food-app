@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, SetStateAction } from 'react';
-import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View, Alert } from 'react-native';
+import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
@@ -20,6 +20,7 @@ import {
 } from '@/data/meals';
 import { waitForRecipes } from '@/contexts/RecipesContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
+import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
 import LoadingScreen from '@/components/home/LoadingScreen';
 import SetupPhase from '@/components/home/SetupPhase';
@@ -40,6 +41,9 @@ const LOADING_MS = 1400;
 const FIRST_PLAN_TOAST_EXTRA_MS = 7000;
 /** How far the Replan button drops when it steps aside for the plan toast. */
 const FAB_HIDDEN_Y = 110;
+/** Wrong swap taps in a row, and the time they must fall within, before the explanation opens. */
+const SWAP_HELP_AFTER_TAPS = 3;
+const SWAP_HELP_WINDOW_MS = 5000;
 
 /** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
 type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string };
@@ -89,6 +93,9 @@ export default function HomeScreen() {
 
   const [swapSource, setSwapSource] = useState<{ part: WeekPart; day: string; mealType: MealType } | null>(null);
   const swapBannerAnim = useRef(new Animated.Value(0)).current;
+  // Times of the latest wrong swap taps in a row; three within SWAP_HELP_WINDOW_MS open the explanation.
+  const wrongSwapTaps = useRef<number[]>([]);
+  const [swapHelpVisible, setSwapHelpVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const spinAnim = useRef(new Animated.Value(0)).current;
@@ -236,6 +243,24 @@ export default function HomeScreen() {
   }
 
   function handleSwapSelect(part: WeekPart, day: string, mealType: MealType) {
+    const eligible =
+      !swapSource || (swapSource.mealType === 'breakfast' ? mealType === 'breakfast' : mealType !== 'breakfast');
+    if (!eligible) {
+      // The card itself shakes and flashes (MealCard). swapSource stays, so the user can pick again.
+      const now = Date.now();
+      wrongSwapTaps.current = [...wrongSwapTaps.current, now].slice(-SWAP_HELP_AFTER_TAPS);
+      if (
+        wrongSwapTaps.current.length === SWAP_HELP_AFTER_TAPS &&
+        now - wrongSwapTaps.current[0] <= SWAP_HELP_WINDOW_MS
+      ) {
+        wrongSwapTaps.current = [];
+        setSwapHelpVisible(true);
+      }
+      return;
+    }
+    // Any other tap ends the run of wrong ones.
+    wrongSwapTaps.current = [];
+
     if (!swapSource) {
       setSwapSource({ part, day, mealType });
       return;
@@ -244,15 +269,6 @@ export default function HomeScreen() {
     // Same card → cancel
     if (swapSource.part === part && swapSource.day === day && swapSource.mealType === mealType) {
       setSwapSource(null);
-      return;
-    }
-
-    // Ineligible → alert, keep swapSource active so user can pick again
-    const eligible = swapSource.mealType === 'breakfast'
-      ? mealType === 'breakfast'
-      : mealType !== 'breakfast';
-    if (!eligible) {
-      Alert.alert('Cannot swap', 'Breakfasts can only be swapped with other breakfasts.');
       return;
     }
 
@@ -417,6 +433,20 @@ export default function HomeScreen() {
       />
       <ConfirmToast ref={confirmToastRef} message="Added to shopping list" />
 
+      <ConfirmSheet
+        visible={swapHelpVisible}
+        title="These two can't be swapped"
+        message={
+          swapSource?.mealType === 'breakfast'
+            ? 'A breakfast can only be swapped with another breakfast. Pick a breakfast from another day, or tap the selected meal again to cancel.'
+            : 'Lunches and dinners can be swapped with each other, but not with a breakfast. Pick a lunch or dinner, or tap the selected meal again to cancel.'
+        }
+        confirmLabel="Got it"
+        hideCancel
+        onConfirm={() => setSwapHelpVisible(false)}
+        onClose={() => setSwapHelpVisible(false)}
+      />
+
       <CravingSheet
         visible={showSheet}
         onClose={() => setShowSheet(false)}
@@ -462,11 +492,14 @@ const makeStyles = (c: Colors) => StyleSheet.create({
   },
   swapBannerFloatInner: {
     backgroundColor: c.primary,
-    borderRadius: 100,
+    borderRadius: 22,
     paddingHorizontal: 20,
-    paddingVertical: 11,
+    paddingVertical: 10,
+    // Narrow enough to sit clear of the screen edges; the hint wraps onto two lines.
+    maxWidth: 240,
   },
   swapBannerFloatText: {
+    textAlign: 'center',
     fontSize: 13,
     fontFamily: font.semibold, fontWeight: '600',
     color: c.onPrimary,

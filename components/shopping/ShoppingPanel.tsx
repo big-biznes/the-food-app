@@ -22,6 +22,8 @@ type Props = {
   items: ShoppingItem[];
   checkedCount: number;
   onToggle: (id: string) => void;
+  /** Check every item, or uncheck them all when everything is already checked. */
+  onSetAllChecked: (checked: boolean) => void;
   onDelete: (id: string) => void;
   onClearChecked: () => void;
   onFinishShopping: () => void;
@@ -40,6 +42,7 @@ export default function ShoppingPanel({
   items,
   checkedCount,
   onToggle,
+  onSetAllChecked,
   onDelete,
   onClearChecked,
   onFinishShopping,
@@ -49,6 +52,7 @@ export default function ShoppingPanel({
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const hasChecked = checkedCount > 0;
+  const allChecked = items.length > 0 && checkedCount === items.length;
 
   const renderItem = useCallback(
     ({ item }: { item: ShoppingItem }) => (
@@ -104,19 +108,32 @@ export default function ShoppingPanel({
       <View style={styles.flex}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
-          <TouchableOpacity
-            onPress={onClearChecked}
-            activeOpacity={hasChecked ? 0.7 : 1}
-            disabled={!hasChecked}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            accessibilityRole="button"
-            accessibilityLabel="Clear checked items"
-            accessibilityState={{ disabled: !hasChecked }}
-          >
-            <Text style={[styles.clearText, !hasChecked && styles.clearTextDim]}>
-              Clear
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.sectionActions}>
+            {items.length > 0 && (
+              <TouchableOpacity
+                onPress={() => onSetAllChecked(!allChecked)}
+                activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                accessibilityRole="button"
+                accessibilityLabel={allChecked ? 'Deselect all items' : 'Select all items'}
+              >
+                <Text style={styles.clearText}>{allChecked ? 'Deselect all' : 'Select all'}</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              onPress={onClearChecked}
+              activeOpacity={hasChecked ? 0.7 : 1}
+              disabled={!hasChecked}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              accessibilityRole="button"
+              accessibilityLabel="Clear checked items"
+              accessibilityState={{ disabled: !hasChecked }}
+            >
+              <Text style={[styles.clearText, !hasChecked && styles.clearTextDim]}>
+                Clear
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <FlatList
@@ -225,6 +242,7 @@ const makeStyles = (c: Colors) =>
       color: c.textMuted,
       fontVariant: ['tabular-nums'],
     },
+    sectionActions: { flexDirection: 'row', alignItems: 'center', gap: 20 },
     clearText: { fontSize: 13, fontFamily: font.semibold, fontWeight: '600', color: c.text },
     clearTextDim: { color: c.textFaint },
 

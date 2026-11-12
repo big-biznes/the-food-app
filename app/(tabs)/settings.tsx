@@ -22,7 +22,6 @@ const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 type MacroBalance = 'balanced' | 'low-carb' | 'high-protein' | 'custom';
 type MeasurementSystem = 'metric' | 'imperial';
-type AppTheme = 'light' | 'dark' | 'system';
 
 const GOAL_OPTIONS: { value: Goal; label: string }[] = [
   { value: 'lose', label: 'Lose weight' },
@@ -47,12 +46,6 @@ const RESTRICTION_OPTIONS: { value: DietaryRestriction; label: string }[] = [
   { value: 'kosher', label: 'Kosher' },
 ];
 
-const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'system', label: 'System' },
-];
-
 export default function SettingsScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -74,7 +67,6 @@ export default function SettingsScreen() {
   // Application settings
   const [measurement, setMeasurement] = useState<MeasurementSystem>('metric');
   const [notifications, setNotifications] = useState(true);
-  const [theme, setTheme] = useState<AppTheme>('system');
 
   function toggleRestriction(r: DietaryRestriction) {
     setRestrictions(prev =>
@@ -237,20 +229,6 @@ export default function SettingsScreen() {
               trackColor={{ false: c.border, true: c.primary }}
               thumbColor={c.bg}
             />
-          </View>
-
-          <Divider />
-
-          <RowLabel label="Theme" />
-          <View style={styles.chipRow}>
-            {THEME_OPTIONS.map(opt => (
-              <Chip
-                key={opt.value}
-                label={opt.label}
-                selected={theme === opt.value}
-                onPress={() => setTheme(opt.value)}
-              />
-            ))}
           </View>
         </View>
 

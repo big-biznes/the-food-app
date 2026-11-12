@@ -29,7 +29,7 @@ const TABS = [
 
 const TAB_KEYS = ['list', 'pantry'] as const;
 
-const FAB_HIDDEN_Y = 80;
+const FAB_HIDDEN_Y = 130;
 
 export default function ShoppingScreen() {
   const styles = useThemedStyles(makeStyles);
@@ -50,6 +50,7 @@ export default function ShoppingScreen() {
     pantryItems,
     addShoppingItem,
     toggleShoppingItem,
+    setAllChecked,
     deleteShoppingItem,
     clearChecked,
     finishShopping,
@@ -183,6 +184,7 @@ export default function ShoppingScreen() {
                 items={shoppingItems}
                 checkedCount={checked.length}
                 onToggle={toggleShoppingItem}
+                onSetAllChecked={setAllChecked}
                 onDelete={handleDeleteShoppingItem}
                 onClearChecked={handleClearChecked}
                 onFinishShopping={handleFinishShopping}

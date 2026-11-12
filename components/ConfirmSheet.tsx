@@ -13,6 +13,8 @@ type Props = {
   confirmLabel: string;
   /** Red confirm button for irreversible actions. */
   destructive?: boolean;
+  /** Leave out the Cancel button, for a sheet that only explains something ("Got it"). */
+  hideCancel?: boolean;
   /** May be async: the button shows a spinner until it settles. Return an error message to show it in the sheet. */
   onConfirm: () => void | string | null | Promise<void | string | null>;
   onClose: () => void;
@@ -27,6 +29,7 @@ export default function ConfirmSheet({
   message,
   confirmLabel,
   destructive = false,
+  hideCancel = false,
   onConfirm,
   onClose,
   motion = 'ios',
@@ -136,15 +139,17 @@ export default function ConfirmSheet({
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.cancelBtn}
-              onPress={dismiss}
-              activeOpacity={0.7}
-              disabled={busy}
-              accessibilityRole="button"
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
+            {!hideCancel && (
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={dismiss}
+                activeOpacity={0.7}
+                disabled={busy}
+                accessibilityRole="button"
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+            )}
 
             <View style={{ height: insets.bottom + 8 }} />
           </View>

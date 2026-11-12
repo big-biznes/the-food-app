@@ -116,6 +116,7 @@ const makeStyles = (c: Colors) =>
     },
     iconWrapTile: {
       backgroundColor: c.butter,
+      borderRadius: 14,
       transform: [{ rotate: '-3deg' }],
     },
     label: {

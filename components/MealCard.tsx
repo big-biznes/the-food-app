@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { AccessibilityInfo, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Meal, EatingOutEntry, MealType } from '@/data/meals';
@@ -25,6 +26,8 @@ type Props =
       selected?: boolean;
       onSwapSelect?: () => void;
       onCardTap?: () => void;
+      /** Set while a swap is being picked and this card can't take part: a tap shakes it and says why. */
+      swapBlockedReason?: string;
     }
   | {
       meal: EatingOutEntry;
@@ -34,6 +37,7 @@ type Props =
       selected?: never;
       onSwapSelect?: never;
       onCardTap?: never;
+      swapBlockedReason?: never;
     };
 
 function kicker(dayLabel: string | undefined, typeLabel: string) {
@@ -48,6 +52,7 @@ export default function MealCard({
   selected,
   onSwapSelect,
   onCardTap,
+  swapBlockedReason,
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -55,6 +60,31 @@ export default function MealCard({
   const spinAnim = useRef(new Animated.Value(0)).current;
   const router = useRouter();
   const hero = size === 'hero';
+  // 0 → 1 over one "not allowed" shake; drives both the sideways shake and the red flash.
+  const rejectAnim = useRef(new Animated.Value(0)).current;
+
+  function reject(reason: string) {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
+    AccessibilityInfo.announceForAccessibility(reason);
+    rejectAnim.setValue(0);
+    // JS driver: the animated container holds buttons (see the app's performance conventions).
+    Animated.timing(rejectAnim, {
+      toValue: 1,
+      duration: 420,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  const shakeX = reducedMotion
+    ? 0
+    : rejectAnim.interpolate({
+        inputRange: [0, 0.15, 0.35, 0.55, 0.75, 1],
+        outputRange: [0, -8, 7, -5, 3, 0],
+      });
+  const flashOpacity = rejectAnim.interpolate({
+    inputRange: [0, 0.2, 1],
+    outputRange: [0, 0.45, 0],
+  });
 
   function handleRefresh() {
     if (!onRefresh) return;
@@ -104,73 +134,78 @@ export default function MealCard({
   const typeLabel = TYPE_LABEL[meal.mealType];
 
   return (
-    <TouchableOpacity
-      style={[
-        styles.card,
-        { backgroundColor: tileColor(c, meal.mealType) },
-        hero && styles.cardHero,
-        selected && styles.cardSelected,
-      ]}
-      activeOpacity={0.85}
-      onPress={() => {
-        if (onCardTap) {
-          onCardTap();
-          return;
-        }
-        router.push({ pathname: '/details', params: { id: meal.id } });
-      }}
-      accessibilityRole="button"
-      accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${meal.calories} kilocalories`}
-      accessibilityHint={onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe'}
-      accessibilityState={{ selected: Boolean(selected) }}
-    >
-      <View style={styles.topRow}>
-        <Text style={styles.kicker} numberOfLines={1}>
-          {kicker(dayLabel, typeLabel)}
-        </Text>
-        <View style={styles.actionRow}>
-          {onSwapSelect !== undefined && (
-            <TouchableOpacity
-              style={[styles.actionBtn, selected && styles.actionBtnSelected]}
-              onPress={onSwapSelect}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              accessibilityRole="button"
-              accessibilityLabel={selected ? 'Cancel swap' : 'Swap this meal'}
-              accessibilityState={{ selected: Boolean(selected) }}
-            >
-              <Ionicons
-                name="swap-horizontal"
-                size={19}
-                color={selected ? tileColor(c, meal.mealType) : c.onTile}
-              />
-            </TouchableOpacity>
-          )}
-          {onRefresh && (
-            <TouchableOpacity
-              style={styles.actionBtn}
-              onPress={handleRefresh}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              accessibilityRole="button"
-              accessibilityLabel="Replace with another meal"
-            >
-              <Animated.View style={{ transform: [{ rotate: rotation }] }}>
-                <Ionicons name="refresh" size={19} color={c.onTile} />
-              </Animated.View>
-            </TouchableOpacity>
-          )}
+    <Animated.View style={{ transform: [{ translateX: shakeX }] }}>
+      <TouchableOpacity
+        style={[
+          styles.card,
+          { backgroundColor: tileColor(c, meal.mealType) },
+          hero && styles.cardHero,
+          selected && styles.cardSelected,
+        ]}
+        activeOpacity={0.85}
+        onPress={() => {
+          if (swapBlockedReason) {
+            reject(swapBlockedReason);
+            // Still reported, so the screen can count repeated wrong taps.
+            onCardTap?.();
+            return;
+          }
+          if (onCardTap) {
+            onCardTap();
+            return;
+          }
+          router.push({ pathname: '/details', params: { id: meal.id } });
+        }}
+        accessibilityRole="button"
+        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${meal.calories} kilocalories`}
+        accessibilityHint={swapBlockedReason ?? (onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe')}
+        accessibilityState={{ selected: Boolean(selected) }}
+      >
+        <View style={styles.topRow}>
+          <Text style={styles.kicker} numberOfLines={1}>
+            {kicker(dayLabel, typeLabel)}
+          </Text>
+          <View style={styles.actionRow}>
+            {onSwapSelect !== undefined && (
+              <TouchableOpacity
+                style={[styles.actionBtn, selected && styles.actionBtnSelected]}
+                onPress={onSwapSelect}
+                activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                accessibilityRole="button"
+                accessibilityLabel={selected ? 'Cancel swap' : 'Swap this meal'}
+                accessibilityState={{ selected: Boolean(selected) }}
+              >
+                <Ionicons name="swap-horizontal" size={19} color={selected ? tileColor(c, meal.mealType) : c.onTile} />
+              </TouchableOpacity>
+            )}
+            {onRefresh && (
+              <TouchableOpacity
+                style={styles.actionBtn}
+                onPress={handleRefresh}
+                activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                accessibilityRole="button"
+                accessibilityLabel="Replace with another meal"
+              >
+                <Animated.View style={{ transform: [{ rotate: rotation }] }}>
+                  <Ionicons name="refresh" size={19} color={c.onTile} />
+                </Animated.View>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-      </View>
 
-      <Text style={[styles.emoji, hero && styles.emojiHero]}>{meal.emoji}</Text>
-      <Text style={[styles.name, hero && styles.nameHero]} numberOfLines={hero ? 3 : 2}>
-        {meal.name}
-      </Text>
-      <Text style={styles.meta} numberOfLines={1}>
-        {meal.prepTime} min, {meal.calories} kcal
-      </Text>
-    </TouchableOpacity>
+        <Text style={[styles.emoji, hero && styles.emojiHero]}>{meal.emoji}</Text>
+        <Text style={[styles.name, hero && styles.nameHero]} numberOfLines={hero ? 3 : 2}>
+          {meal.name}
+        </Text>
+        <Text style={styles.meta} numberOfLines={1}>
+          {meal.prepTime} min, {meal.calories} kcal
+        </Text>
+        <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
+      </TouchableOpacity>
+    </Animated.View>
   );
 }
 
@@ -195,6 +230,12 @@ const makeStyles = (c: Colors) =>
     cardSelected: {
       borderWidth: 2,
       borderColor: c.onTile,
+    },
+    // Red wash over the whole card for a moment when a swap isn't allowed here.
+    rejectFlash: {
+      ...StyleSheet.absoluteFill,
+      borderRadius: 16,
+      backgroundColor: c.danger,
     },
     topRow: {
       flexDirection: 'row',
