@@ -3,10 +3,39 @@
     "id": "b-banana-peanut-butter-oatmeal",
     "name": "Banana Peanut Butter Oatmeal",
     "description": "Creamy stovetop oats with sliced banana and a spoon of peanut butter",
-    "mealType": "breakfast", "prepTime": 10, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🥣", "main": "oats", "tags": ["comfort", "quick"],
-    "ingredients": [{"item": "oats", "g": 60}, {"item": "milk", "ml": 250}, {"item": "banana", "pieces": 1}, {"item": "peanut butter", "g": 15}],
-    "seasonings": ["pinch of salt", "pinch of cinnamon"],
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 60
+      },
+      {
+        "item": "milk",
+        "ml": 250
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "peanut butter",
+        "g": 15
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "pinch of cinnamon"
+    ],
     "instructions": [
       "Put the oats, milk and a pinch of salt in a small pot over medium heat",
       "Simmer for 4 to 5 minutes, stirring often, until thick and creamy",
@@ -18,10 +47,39 @@
     "id": "b-apple-cinnamon-oatmeal",
     "name": "Apple Cinnamon Oatmeal",
     "description": "Warm oats cooked with diced apple, cinnamon and a drizzle of honey",
-    "mealType": "breakfast", "prepTime": 12, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🍎", "main": "oats", "tags": ["comfort", "quick"],
-    "ingredients": [{"item": "oats", "g": 60}, {"item": "milk", "ml": 250}, {"item": "apple", "pieces": 1}, {"item": "honey", "g": 10}],
-    "seasonings": ["1/2 tsp cinnamon", "pinch of salt"],
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍎",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 60
+      },
+      {
+        "item": "milk",
+        "ml": 250
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp cinnamon",
+      "pinch of salt"
+    ],
     "instructions": [
       "Core the apple and cut it into small cubes",
       "Put the oats, milk, cinnamon, salt and two thirds of the apple in a small pot",
@@ -33,10 +91,37 @@
     "id": "b-coconut-berry-overnight-oats",
     "name": "Coconut Berry Overnight Oats",
     "description": "No-cook oats soaked overnight in coconut milk, topped with berries",
-    "mealType": "breakfast", "prepTime": 5, "difficulty": "quick", "appliances": [],
-    "emoji": "🫐", "main": "oats", "tags": ["fresh", "quick"],
-    "ingredients": [{"item": "oats", "g": 60}, {"item": "coconut milk", "g": 80}, {"item": "blueberries", "g": 80}, {"item": "strawberries", "g": 80}],
-    "seasonings": ["120 ml water", "pinch of salt"],
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🫐",
+    "main": "oats",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 60
+      },
+      {
+        "item": "coconut milk",
+        "g": 80
+      },
+      {
+        "item": "blueberries",
+        "g": 80
+      },
+      {
+        "item": "strawberries",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "{120} ml water",
+      "pinch of salt"
+    ],
     "instructions": [
       "Stir the oats, coconut milk, water and salt together in a jar or bowl",
       "Cover and leave in the fridge overnight, or for at least 4 hours",
@@ -48,10 +133,30 @@
     "id": "b-peanut-butter-banana-toast",
     "name": "Peanut Butter Banana Toast",
     "description": "Toasted wholemeal bread with peanut butter and banana slices",
-    "mealType": "breakfast", "prepTime": 5, "difficulty": "quick", "appliances": [],
-    "emoji": "🍌", "main": "bread", "tags": ["quick"],
-    "ingredients": [{"item": "bread", "pieces": 2}, {"item": "peanut butter", "g": 30}, {"item": "banana", "pieces": 1}],
-    "seasonings": ["pinch of cinnamon"],
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍌",
+    "main": "bread",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "peanut butter",
+        "g": 30
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
     "instructions": [
       "Toast the bread until golden",
       "Spread the peanut butter over both slices",
@@ -62,10 +167,39 @@
     "id": "b-avocado-tomato-toast",
     "name": "Avocado Tomato Toast",
     "description": "Smashed avocado on toast with fresh tomato, lemon and olive oil",
-    "mealType": "breakfast", "prepTime": 8, "difficulty": "quick", "appliances": [],
-    "emoji": "🥑", "main": "avocado", "tags": ["fresh", "light", "quick"],
-    "ingredients": [{"item": "bread", "pieces": 2}, {"item": "avocado", "pieces": 1}, {"item": "tomato", "g": 100}, {"item": "olive oil", "g": 5}],
-    "seasonings": ["salt", "black pepper", "squeeze of lemon juice", "pinch of chili flakes"],
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥑",
+    "main": "avocado",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice",
+      "pinch of chili flakes"
+    ],
     "instructions": [
       "Toast the bread",
       "Halve the avocado, scoop the flesh into a bowl and mash it with a fork, salt, pepper and a squeeze of lemon",
@@ -77,10 +211,38 @@
     "id": "b-avocado-egg-toast",
     "name": "Avocado Toast with Fried Eggs",
     "description": "Wholemeal toast with smashed avocado and two fried eggs",
-    "mealType": "breakfast", "prepTime": 10, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🍳", "main": "eggs", "tags": ["hearty", "quick"],
-    "ingredients": [{"item": "bread", "pieces": 2}, {"item": "avocado", "pieces": 1}, {"item": "eggs", "pieces": 2}, {"item": "oil", "g": 5}],
-    "seasonings": ["salt", "black pepper", "pinch of chili flakes"],
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of chili flakes"
+    ],
     "instructions": [
       "Toast the bread",
       "Mash the avocado with salt and pepper and spread it over the toast",
@@ -92,9 +254,33 @@
     "id": "b-greek-yogurt-berry-bowl",
     "name": "Greek Yogurt Berry Bowl",
     "description": "Thick Greek yogurt with blueberries, strawberries and honey",
-    "mealType": "breakfast", "prepTime": 5, "difficulty": "quick", "appliances": [],
-    "emoji": "🍓", "main": "greek yogurt", "tags": ["fresh", "light", "quick"],
-    "ingredients": [{"item": "greek yogurt", "g": 250}, {"item": "blueberries", "g": 75}, {"item": "strawberries", "g": 75}, {"item": "honey", "g": 15}],
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍓",
+    "main": "greek yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "greek yogurt",
+        "g": 250
+      },
+      {
+        "item": "blueberries",
+        "g": 75
+      },
+      {
+        "item": "strawberries",
+        "g": 75
+      },
+      {
+        "item": "honey",
+        "g": 15
+      }
+    ],
     "seasonings": [],
     "instructions": [
       "Spoon the yogurt into a bowl",
@@ -106,10 +292,36 @@
     "id": "b-apple-bircher-muesli",
     "name": "Apple Bircher Muesli",
     "description": "Oats soaked in yogurt with grated apple and honey",
-    "mealType": "breakfast", "prepTime": 10, "difficulty": "quick", "appliances": [],
-    "emoji": "🥣", "main": "yogurt", "tags": ["fresh", "light"],
-    "ingredients": [{"item": "yogurt", "g": 200}, {"item": "oats", "g": 40}, {"item": "apple", "pieces": 1}, {"item": "honey", "g": 10}],
-    "seasonings": ["pinch of cinnamon"],
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥣",
+    "main": "yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "yogurt",
+        "g": 200
+      },
+      {
+        "item": "oats",
+        "g": 40
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
     "instructions": [
       "Coarsely grate the apple, leaving the core behind",
       "Stir the oats, yogurt, grated apple and cinnamon together in a bowl",
@@ -121,10 +333,42 @@
     "id": "b-spinach-feta-scrambled-eggs",
     "name": "Spinach and Feta Scrambled Eggs",
     "description": "Soft scrambled eggs with wilted spinach, feta and fresh tomato",
-    "mealType": "breakfast", "prepTime": 10, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🍳", "main": "eggs", "tags": ["mediterranean", "quick"],
-    "ingredients": [{"item": "eggs", "pieces": 3}, {"item": "spinach", "g": 80}, {"item": "feta", "g": 40}, {"item": "tomato", "g": 100}, {"item": "butter", "g": 5}],
-    "seasonings": ["black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "feta",
+        "g": 40
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
     "instructions": [
       "Beat the eggs with a little pepper; the feta is salty, so add no salt",
       "Melt the butter in a pan over medium heat and wilt the spinach for about 1 minute",
@@ -136,10 +380,41 @@
     "id": "b-veggie-omelette",
     "name": "Pepper and Mushroom Omelette",
     "description": "A folded three-egg omelette filled with peppers, mushrooms and onion",
-    "mealType": "breakfast", "prepTime": 12, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🍳", "main": "eggs", "tags": ["light", "quick"],
-    "ingredients": [{"item": "eggs", "pieces": 3}, {"item": "peppers", "g": 60}, {"item": "mushrooms", "g": 60}, {"item": "onion", "g": 30}, {"item": "oil", "g": 5}],
-    "seasonings": ["salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "mushrooms",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Dice the pepper and onion and slice the mushrooms",
       "Heat the oil in a non-stick pan and cook the vegetables for 4 to 5 minutes until soft, then tip them onto a plate",
@@ -151,10 +426,42 @@
     "id": "b-ham-cheese-omelette",
     "name": "Ham and Cheese Omelette with Toast",
     "description": "A quick omelette with ham and melted cheese, served with buttered toast",
-    "mealType": "breakfast", "prepTime": 10, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🧀", "main": "eggs", "tags": ["comfort", "hearty", "quick"],
-    "ingredients": [{"item": "eggs", "pieces": 2}, {"item": "ham", "g": 40}, {"item": "cheese", "g": 30}, {"item": "bread", "pieces": 1}, {"item": "butter", "g": 5}],
-    "seasonings": ["black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "ham",
+        "g": 40
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
     "instructions": [
       "Beat the eggs with pepper, cut the ham into strips and grate the cheese",
       "Melt half the butter in a non-stick pan over medium heat and pour in the eggs",
@@ -166,10 +473,38 @@
     "id": "b-bacon-eggs-toast",
     "name": "Bacon and Eggs with Toast",
     "description": "Crispy bacon, fried eggs and pan-warmed tomato with toast",
-    "mealType": "breakfast", "prepTime": 15, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🥓", "main": "eggs", "tags": ["hearty", "comfort"],
-    "ingredients": [{"item": "bacon", "g": 50}, {"item": "eggs", "pieces": 2}, {"item": "bread", "pieces": 2}, {"item": "tomato", "g": 100}],
-    "seasonings": ["black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥓",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bacon",
+        "g": 50
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
     "instructions": [
       "Lay the bacon in a cold pan and cook over medium heat for 5 to 6 minutes, turning once, until crisp, then move it to a plate",
       "Halve the tomato and fry it cut side down in the bacon fat for 2 minutes",
@@ -181,10 +516,46 @@
     "id": "b-tofu-scramble-toast",
     "name": "Tofu Scramble on Toast",
     "description": "Golden scrambled tofu with spinach and peppers on wholemeal toast",
-    "mealType": "breakfast", "prepTime": 15, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🧈", "main": "tofu", "tags": ["hearty"],
-    "ingredients": [{"item": "tofu", "g": 150}, {"item": "spinach", "g": 60}, {"item": "peppers", "g": 60}, {"item": "onion", "g": 30}, {"item": "oil", "g": 5}, {"item": "bread", "pieces": 2}],
-    "seasonings": ["1/2 tsp turmeric", "salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧈",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "spinach",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 5
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp turmeric",
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Finely dice the onion and pepper and cook them in the oil over medium heat for 3 minutes",
       "Crumble the tofu into the pan with your hands and add the turmeric, salt and pepper",
@@ -196,10 +567,42 @@
     "id": "b-chickpea-potato-hash",
     "name": "Chickpea and Potato Breakfast Hash",
     "description": "Crispy pan-fried potatoes with chickpeas, onion and spinach",
-    "mealType": "breakfast", "prepTime": 25, "difficulty": "balanced", "appliances": ["stovetop"],
-    "emoji": "🥔", "main": "chickpeas", "tags": ["hearty"],
-    "ingredients": [{"item": "potatoes", "g": 200}, {"item": "chickpeas", "g": 120}, {"item": "onion", "g": 50}, {"item": "spinach", "g": 50}, {"item": "oil", "g": 10}],
-    "seasonings": ["1/2 tsp smoked paprika", "salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "chickpeas",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp smoked paprika",
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Cut the potatoes into 1 cm cubes and dice the onion",
       "Heat the oil in a wide pan and fry the potatoes over medium heat for 12 to 15 minutes, turning now and then, until golden and tender",
@@ -211,25 +614,89 @@
     "id": "b-shakshuka",
     "name": "Shakshuka",
     "description": "Eggs poached in a spiced tomato and pepper sauce",
-    "mealType": "breakfast", "prepTime": 25, "difficulty": "balanced", "appliances": ["stovetop"],
-    "emoji": "🍅", "main": "eggs", "tags": ["mediterranean", "spicy", "comfort"],
-    "ingredients": [{"item": "eggs", "pieces": 2}, {"item": "chopped tomatoes", "g": 250}, {"item": "peppers", "g": 80}, {"item": "onion", "g": 60}, {"item": "garlic", "pieces": 2}, {"item": "olive oil", "g": 10}],
-    "seasonings": ["1 tsp ground cumin", "1 tsp paprika", "pinch of chili flakes", "salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "eggs",
+    "tags": [
+      "mediterranean",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 250
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "pinch of chili flakes",
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Slice the onion and pepper and finely chop the garlic",
       "Heat the olive oil in a small pan and soften the onion and pepper for 5 minutes, then add the garlic and spices for 1 minute",
       "Pour in the chopped tomatoes, season and simmer for 8 to 10 minutes until slightly thickened",
-      "Make two wells in the sauce, crack in the eggs, cover and cook 4 to 5 minutes until the whites are set"
+      "Make {n:eggs} wells in the sauce, crack in the eggs, cover and cook 4 to 5 minutes until the whites are set"
     ]
   },
   {
     "id": "b-cottage-cheese-apple-bowl",
     "name": "Cottage Cheese Bowl with Apple and Honey",
     "description": "High-protein cottage cheese with crisp apple, honey and cinnamon",
-    "mealType": "breakfast", "prepTime": 5, "difficulty": "quick", "appliances": [],
-    "emoji": "🍏", "main": "cottage cheese", "tags": ["light", "fresh", "quick"],
-    "ingredients": [{"item": "cottage cheese", "g": 200}, {"item": "apple", "pieces": 1}, {"item": "honey", "g": 10}],
-    "seasonings": ["pinch of cinnamon"],
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍏",
+    "main": "cottage cheese",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "cottage cheese",
+        "g": 200
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
     "instructions": [
       "Spoon the cottage cheese into a bowl",
       "Core the apple and cut it into thin slices or small cubes",
@@ -240,10 +707,46 @@
     "id": "b-pancakes-strawberries",
     "name": "Pancakes with Strawberries",
     "description": "Thin homemade pancakes with fresh strawberries and honey",
-    "mealType": "breakfast", "prepTime": 25, "difficulty": "balanced", "appliances": ["stovetop"],
-    "emoji": "🥞", "main": "flour", "tags": ["comfort"],
-    "ingredients": [{"item": "flour", "g": 60}, {"item": "eggs", "pieces": 1}, {"item": "milk", "ml": 120}, {"item": "butter", "g": 10}, {"item": "strawberries", "g": 100}, {"item": "honey", "g": 15}],
-    "seasonings": ["pinch of salt"],
+    "mealType": "breakfast",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥞",
+    "main": "flour",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "flour",
+        "g": 60
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "milk",
+        "ml": 120
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "strawberries",
+        "g": 100
+      },
+      {
+        "item": "honey",
+        "g": 15
+      }
+    ],
+    "seasonings": [
+      "pinch of salt"
+    ],
     "instructions": [
       "Whisk the flour, egg, milk and salt into a smooth batter and let it rest for 5 minutes",
       "Melt a little of the butter in a non-stick pan over medium heat",
@@ -255,10 +758,36 @@
     "id": "b-banana-egg-pancakes",
     "name": "Banana Egg Pancakes",
     "description": "Flourless two-ingredient pancakes with blueberries",
-    "mealType": "breakfast", "prepTime": 12, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🥞", "main": "eggs", "tags": ["light", "quick"],
-    "ingredients": [{"item": "banana", "pieces": 1}, {"item": "eggs", "pieces": 2}, {"item": "blueberries", "g": 60}, {"item": "oil", "g": 5}],
-    "seasonings": ["pinch of cinnamon"],
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥞",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "blueberries",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
     "instructions": [
       "Mash the banana very smooth in a bowl, then whisk in the eggs and cinnamon",
       "Heat the oil in a non-stick pan over medium-low heat",
@@ -270,10 +799,48 @@
     "id": "b-breakfast-burrito",
     "name": "Breakfast Burrito",
     "description": "A warm tortilla filled with scrambled eggs, beans, cheese and tomato",
-    "mealType": "breakfast", "prepTime": 12, "difficulty": "quick", "appliances": ["stovetop"],
-    "emoji": "🌯", "main": "eggs", "tags": ["mexican", "hearty", "quick"],
-    "ingredients": [{"item": "tortilla", "pieces": 1}, {"item": "eggs", "pieces": 2}, {"item": "kidney beans", "g": 60}, {"item": "cheese", "g": 25}, {"item": "tomato", "g": 60}, {"item": "oil", "g": 5}],
-    "seasonings": ["pinch of ground cumin", "salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "eggs",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 25
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of ground cumin",
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Dice the tomato, grate the cheese and drain the beans",
       "Heat the oil in a pan, warm the beans with the cumin for 1 minute, then pour in the beaten eggs and scramble until just set",
@@ -285,15 +852,1446 @@
     "id": "b-sweet-potato-bean-hash",
     "name": "Sweet Potato and Bean Hash",
     "description": "Pan-fried sweet potato with kidney beans, peppers and onion",
-    "mealType": "breakfast", "prepTime": 25, "difficulty": "balanced", "appliances": ["stovetop"],
-    "emoji": "🍠", "main": "sweet potato", "tags": ["hearty", "mexican"],
-    "ingredients": [{"item": "sweet potato", "g": 200}, {"item": "kidney beans", "g": 100}, {"item": "peppers", "g": 60}, {"item": "onion", "g": 50}, {"item": "olive oil", "g": 10}],
-    "seasonings": ["1/2 tsp ground cumin", "1/2 tsp smoked paprika", "salt", "black pepper"],
+    "mealType": "breakfast",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍠",
+    "main": "sweet potato",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "sweet potato",
+        "g": 200
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp ground cumin",
+      "1/2 tsp smoked paprika",
+      "salt",
+      "black pepper"
+    ],
     "instructions": [
       "Peel the sweet potato and cut it into 1 cm cubes; dice the onion and pepper",
       "Heat the olive oil in a wide pan and fry the sweet potato over medium heat for 10 to 12 minutes until tender and browned",
       "Add the onion, pepper and spices and cook 4 more minutes",
       "Stir in the drained beans, heat through for 2 minutes and season to taste"
+    ]
+  },
+  {
+    "id": "b-spicy-egg-avocado-taco",
+    "name": "Spicy Egg and Avocado Breakfast Taco",
+    "description": "Tortilla with chili scrambled eggs, avocado and tomato",
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌮",
+    "main": "eggs",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Beat the eggs with the chili flakes and salt and scramble them in the oil over medium heat for 2 minutes",
+      "Mash the avocado with lime juice and a pinch of salt",
+      "Warm the tortilla in a dry pan, spread with the avocado and top with the eggs and diced tomato"
+    ]
+  },
+  {
+    "id": "b-chili-scrambled-eggs-toast",
+    "name": "Chili Scrambled Eggs on Toast",
+    "description": "Soft scrambled eggs with chili and tomato on buttered toast",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "eggs",
+    "tags": [
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "butter",
+        "g": 5
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Beat the eggs with the chili flakes and salt",
+      "Melt the butter in a pan over medium-low heat, add the diced tomato for 1 minute, then pour in the eggs",
+      "Stir gently for 2 to 3 minutes until softly set",
+      "Pile onto the toasted bread"
+    ]
+  },
+  {
+    "id": "b-spicy-tofu-bean-wrap",
+    "name": "Spicy Tofu and Bean Breakfast Wrap",
+    "description": "Tortilla with chili tofu scramble, kidney beans and peppers",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "tofu",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 120
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1/2 tsp ground cumin",
+      "1/2 tsp turmeric",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the peppers and cook them in the oil for 2 minutes",
+      "Crumble in the tofu with the chili flakes, cumin, turmeric and salt and cook for 4 minutes",
+      "Add the drained kidney beans and heat through",
+      "Warm the tortilla, add the filling and roll up"
+    ]
+  },
+  {
+    "id": "b-harissa-chickpeas-toast",
+    "name": "Harissa Chickpeas on Toast",
+    "description": "Warm spiced chickpeas with tomato and spinach on toast",
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "spinach",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp harissa paste",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Warm the olive oil in a pan and cook the diced tomato with the harissa for 2 minutes",
+      "Add the drained chickpeas and cook for 3 minutes, lightly crushing some of them",
+      "Stir in the spinach until wilted and season with salt and lemon juice",
+      "Spoon over the toasted bread"
+    ]
+  },
+  {
+    "id": "b-menemen",
+    "name": "Menemen",
+    "description": "Turkish eggs scrambled into soft tomatoes and peppers, with bread",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "eggs",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "tomato",
+        "g": 200
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1/2 tsp paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and peppers and soften them in the olive oil for 4 minutes",
+      "Add the chopped tomato, chili flakes, paprika and salt and cook for 5 minutes until saucy",
+      "Pour in the lightly beaten eggs and stir gently for 2 minutes until just set",
+      "Serve from the pan with the bread"
+    ]
+  },
+  {
+    "id": "b-yogurt-banana-oat-bowl",
+    "name": "Yogurt, Banana and Oat Bowl",
+    "description": "Plain yogurt with banana, strawberries and a handful of oats",
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍌",
+    "main": "yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "yogurt",
+        "g": 200
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "oats",
+        "g": 30
+      },
+      {
+        "item": "strawberries",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Spoon the yogurt into a bowl and stir in the oats",
+      "Slice the banana and strawberries",
+      "Top the yogurt with the fruit and a pinch of cinnamon"
+    ]
+  },
+  {
+    "id": "b-cottage-cheese-tomato-toast",
+    "name": "Cottage Cheese and Tomato Toast",
+    "description": "Toast piled with cottage cheese, tomato and cucumber",
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍅",
+    "main": "cottage cheese",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "cottage cheese",
+        "g": 150
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "pinch of salt",
+      "pinch of dried oregano"
+    ],
+    "instructions": [
+      "Toast the bread",
+      "Spread the cottage cheese over both slices",
+      "Top with the sliced tomato and cucumber and season with salt, pepper and oregano"
+    ]
+  },
+  {
+    "id": "b-fruit-salad-yogurt",
+    "name": "Fruit Salad with Yogurt",
+    "description": "Apple, banana and berries with plain yogurt",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍓",
+    "main": "yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "yogurt",
+        "g": 150
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "strawberries",
+        "g": 100
+      },
+      {
+        "item": "blueberries",
+        "g": 60
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Core and dice the apple and slice the banana and strawberries",
+      "Toss all the fruit, including the blueberries, with a squeeze of lemon juice",
+      "Serve with the yogurt spooned over"
+    ]
+  },
+  {
+    "id": "b-banana-berry-porridge",
+    "name": "Dairy-Free Banana Berry Porridge",
+    "description": "Oats cooked in water with mashed banana, blueberries and peanut butter",
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 60
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "blueberries",
+        "g": 60
+      },
+      {
+        "item": "peanut butter",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "{300} ml water",
+      "pinch of salt",
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Mash half the banana and put it in a pot with the oats, water and salt",
+      "Simmer for 5 minutes, stirring, until thick and creamy",
+      "Stir in half the blueberries",
+      "Serve topped with the remaining banana, sliced, the rest of the blueberries, the peanut butter and cinnamon"
+    ]
+  },
+  {
+    "id": "b-strawberry-banana-smoothie-bowl",
+    "name": "Strawberry Banana Smoothie Bowl",
+    "description": "Thick blended yogurt and fruit bowl topped with oats and honey",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍓",
+    "main": "greek yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "greek yogurt",
+        "g": 200
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "strawberries",
+        "g": 120
+      },
+      {
+        "item": "oats",
+        "g": 25
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Blend the yogurt with half the banana and two thirds of the strawberries until smooth and thick",
+      "Pour into a bowl",
+      "Top with the remaining banana and strawberries, sliced, the oats and the honey"
+    ]
+  },
+  {
+    "id": "b-french-toast",
+    "name": "French Toast with Strawberries",
+    "description": "Egg-soaked bread fried in butter, with strawberries and honey",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍞",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 3
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "milk",
+        "ml": 80
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "strawberries",
+        "g": 80
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp cinnamon",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Beat the eggs with the milk, cinnamon and salt in a shallow dish",
+      "Soak each slice of bread in the mixture for 20 seconds per side",
+      "Fry in the butter over medium heat for 2 to 3 minutes per side until golden",
+      "Serve topped with the sliced strawberries and the honey"
+    ]
+  },
+  {
+    "id": "b-full-cooked-breakfast",
+    "name": "Full Cooked Breakfast",
+    "description": "Bacon, fried eggs, mushrooms and tomato with buttered toast",
+    "mealType": "breakfast",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bacon",
+        "g": 50
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "mushrooms",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the bacon in a dry pan over medium heat for 5 to 6 minutes until crisp and move it to a plate",
+      "Fry the halved mushrooms and the halved tomato in the bacon fat for 4 minutes",
+      "Push them aside and fry the eggs for 2 to 3 minutes until the whites are set",
+      "Serve everything with the toasted, buttered bread and a little pepper"
+    ]
+  },
+  {
+    "id": "b-egg-ham-cheese-toastie",
+    "name": "Egg, Ham and Cheese Toastie",
+    "description": "Pan-toasted sandwich with a fried egg, ham and melted cheese",
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "ham",
+        "g": 40
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Fry the egg in half the butter for 2 minutes, flip it and cook 30 seconds more",
+      "Layer the ham, egg and sliced cheese between the bread",
+      "Toast the sandwich in the remaining butter over medium heat for 2 minutes per side until golden and the cheese melts"
+    ]
+  },
+  {
+    "id": "b-salmon-scrambled-eggs-toast",
+    "name": "Scrambled Eggs with Salmon on Toast",
+    "description": "Soft scrambled eggs folded with flaked salmon on buttered toast",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 70
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Fry the salmon in a non-stick pan over medium heat for 3 minutes per side, then break it into flakes",
+      "Melt the butter in the pan, pour in the beaten eggs and stir gently for 2 minutes until softly set",
+      "Fold in the salmon",
+      "Serve on the toasted bread with pepper and lemon juice"
+    ]
+  },
+  {
+    "id": "b-banana-oat-pancakes",
+    "name": "Banana Oat Pancakes",
+    "description": "Blender pancakes made from oats, banana and egg, with blueberries",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥞",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 50
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "milk",
+        "ml": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      },
+      {
+        "item": "blueberries",
+        "g": 60
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Blend the oats, banana, egg, milk, cinnamon and salt into a smooth batter and let it stand for 2 minutes",
+      "Heat the oil in a non-stick pan over medium heat",
+      "Cook small pancakes for about 2 minutes per side until golden",
+      "Serve topped with the blueberries"
+    ]
+  },
+  {
+    "id": "b-cheese-tomato-omelette",
+    "name": "Cheese and Tomato Omelette",
+    "description": "Three-egg omelette with melted cheese and fresh tomato",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Beat the eggs with salt and pepper and dice the tomato",
+      "Melt the butter in a non-stick pan over medium heat and pour in the eggs",
+      "When almost set, scatter the grated cheese and tomato over one half",
+      "Fold over and cook 1 more minute"
+    ]
+  },
+  {
+    "id": "b-avocado-chickpea-smash-toast",
+    "name": "Avocado and Chickpea Smash on Toast",
+    "description": "Toast topped with avocado and chickpeas mashed with lemon",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥑",
+    "main": "chickpeas",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "chickpeas",
+        "g": 80
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of paprika"
+    ],
+    "instructions": [
+      "Toast the bread",
+      "Mash the avocado and drained chickpeas roughly with the juice of the lemon, salt and pepper",
+      "Pile onto the toast and dust with paprika"
+    ]
+  },
+  {
+    "id": "b-tofu-vegetable-scramble",
+    "name": "Tofu and Vegetable Scramble",
+    "description": "Scrambled tofu with mushrooms, spinach and tomato",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍄",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "mushrooms",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp turmeric",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Slice the mushrooms and fry them in the oil for 3 minutes",
+      "Crumble in the tofu with the turmeric, salt and pepper and cook for 4 minutes",
+      "Add the diced tomato and spinach and cook until the spinach wilts"
+    ]
+  },
+  {
+    "id": "b-rice-porridge-cinnamon-apple",
+    "name": "Creamy Rice Porridge with Cinnamon Apple",
+    "description": "Rice simmered in milk until creamy, topped with apple and honey",
+    "mealType": "breakfast",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "rice",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "milk",
+        "ml": 300
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp cinnamon",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Put the rice, milk and salt in a pot and bring to a gentle simmer",
+      "Cook on low heat for 25 to 30 minutes, stirring often, until the rice is soft and the porridge is creamy",
+      "Dice the apple and stir half of it in for the last 5 minutes",
+      "Serve topped with the remaining apple, the honey and the cinnamon"
+    ]
+  },
+  {
+    "id": "b-feta-tomato-egg-toast",
+    "name": "Feta, Tomato and Egg Toast",
+    "description": "Toast with crumbled feta, tomato, olive oil and a fried egg",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "eggs",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "feta",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 120
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of dried oregano",
+      "black pepper"
+    ],
+    "instructions": [
+      "Toast the bread and top it with the sliced tomato and crumbled feta",
+      "Fry the egg in the olive oil for 2 to 3 minutes",
+      "Put the egg on top and finish with oregano and pepper"
+    ]
+  },
+  {
+    "id": "b-big-breakfast-burrito",
+    "name": "Big Breakfast Burrito",
+    "description": "Two tortillas filled with scrambled eggs, beans, cheese and tomato",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "eggs",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp ground cumin",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Warm the drained kidney beans with the cumin in the oil for 1 minute",
+      "Pour in the beaten eggs, season and scramble until just set",
+      "Warm the tortillas in a dry pan",
+      "Divide the eggs and beans, grated cheese and diced tomato between them, fold in the sides and roll up"
+    ]
+  },
+  {
+    "id": "b-protein-oats",
+    "name": "Peanut Butter Protein Oats",
+    "description": "Thick oats with Greek yogurt, peanut butter and banana",
+    "mealType": "breakfast",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 80
+      },
+      {
+        "item": "milk",
+        "ml": 250
+      },
+      {
+        "item": "greek yogurt",
+        "g": 100
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Simmer the oats with the milk and salt for 4 to 5 minutes, stirring, until thick",
+      "Take off the heat and stir in half the yogurt",
+      "Top with the rest of the yogurt, the sliced banana, the peanut butter and cinnamon"
+    ]
+  },
+  {
+    "id": "b-egg-bacon-cheese-sandwich",
+    "name": "Egg, Bacon and Cheese Sandwich",
+    "description": "Triple-decker toasted sandwich with fried eggs, bacon and cheese",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 3
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "bacon",
+        "g": 40
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Fry the bacon in a dry pan over medium heat for 4 to 5 minutes until crisp and set it aside",
+      "Fry the eggs in the bacon fat for 2 minutes, flip and cook 30 seconds more",
+      "Toast the bread and butter it",
+      "Stack the sandwich with the eggs, bacon and sliced cheese between the slices and season with pepper"
+    ]
+  },
+  {
+    "id": "b-salmon-avocado-egg-toast",
+    "name": "Salmon, Avocado and Egg Toast",
+    "description": "Toast with avocado, flaked salmon and fried eggs",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥑",
+    "main": "eggs",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "salmon",
+        "g": 80
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Fry the salmon in a non-stick pan over medium heat for 3 minutes per side and break it into flakes",
+      "Fry the eggs in the same pan for 2 to 3 minutes",
+      "Toast the bread and spread it with the avocado mashed with lemon juice and salt",
+      "Top with the salmon and eggs and season with pepper"
+    ]
+  },
+  {
+    "id": "b-loaded-potato-omelette",
+    "name": "Loaded Potato, Ham and Cheese Omelette",
+    "description": "Three-egg omelette over fried potatoes with ham and cheese",
+    "mealType": "breakfast",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "cheese",
+        "g": 40
+      },
+      {
+        "item": "ham",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into small cubes and fry them in the oil over medium heat for 10 to 12 minutes until golden and tender",
+      "Add the ham cut into strips for 1 minute",
+      "Pour over the beaten eggs, seasoned with salt and pepper, and cook gently for 3 minutes until almost set",
+      "Scatter with the grated cheese, cover for 1 minute until it melts and fold in half"
+    ]
+  },
+  {
+    "id": "b-tofu-scramble-burrito",
+    "name": "Tofu Scramble Burrito",
+    "description": "Two tortillas filled with spiced tofu scramble and kidney beans",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "tofu",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp turmeric",
+      "1/2 tsp ground cumin",
+      "1/2 tsp smoked paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Crumble the tofu into the hot oil with the turmeric, cumin, paprika and salt and cook for 5 minutes",
+      "Add the drained kidney beans and heat through for 2 minutes",
+      "Warm the tortillas in a dry pan",
+      "Divide the filling between them, fold in the sides and roll up"
+    ]
+  },
+  {
+    "id": "b-peanut-butter-overnight-oats",
+    "name": "Peanut Butter Banana Overnight Oats",
+    "description": "Dairy-free overnight oats with coconut milk, peanut butter and banana",
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥜",
+    "main": "oats",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 90
+      },
+      {
+        "item": "coconut milk",
+        "g": 60
+      },
+      {
+        "item": "peanut butter",
+        "g": 30
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "{180} ml water",
+      "pinch of salt",
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Stir the oats, coconut milk, water, salt and half the peanut butter together in a jar or bowl",
+      "Cover and leave in the fridge overnight, or for at least 4 hours",
+      "Stir well, loosen with a splash of water if needed and top with the sliced banana, the remaining peanut butter and cinnamon"
+    ]
+  },
+  {
+    "id": "b-greek-yogurt-power-bowl",
+    "name": "Greek Yogurt Power Bowl",
+    "description": "Big bowl of Greek yogurt with banana, blueberries, peanut butter and honey",
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🫐",
+    "main": "greek yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "greek yogurt",
+        "g": 300
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "blueberries",
+        "g": 80
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      },
+      {
+        "item": "honey",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Spoon the yogurt into a bowl",
+      "Slice the banana and arrange it on top with the blueberries",
+      "Add the peanut butter in small spoonfuls, drizzle with the honey and dust with cinnamon"
+    ]
+  },
+  {
+    "id": "b-cheesy-egg-quesadilla",
+    "name": "Cheesy Egg and Spinach Quesadilla",
+    "description": "Crisp tortillas filled with scrambled egg, spinach and melted cheese",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "cheese",
+        "g": 50
+      },
+      {
+        "item": "spinach",
+        "g": 40
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Melt the butter in a pan, wilt the spinach for 30 seconds, then pour in the beaten eggs and scramble until just set",
+      "Cover one tortilla with half the grated cheese, the eggs and the rest of the cheese, and top with the second tortilla",
+      "Wipe out the pan and cook the quesadilla over medium heat for 2 minutes per side until crisp",
+      "Cut into wedges"
+    ]
+  },
+  {
+    "id": "b-banana-pancake-stack",
+    "name": "Banana Pancake Stack",
+    "description": "Thick pancakes with banana, butter and honey",
+    "mealType": "breakfast",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥞",
+    "main": "flour",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "flour",
+        "g": 80
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "milk",
+        "ml": 150
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "honey",
+        "g": 15
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Whisk the flour, eggs, milk and salt into a smooth, thick batter and rest it for 5 minutes",
+      "Melt a little of the butter in a non-stick pan over medium heat",
+      "Cook small thick pancakes for about 2 minutes per side until golden, adding butter as needed",
+      "Stack them with the sliced banana, drizzle with the honey and dust with cinnamon"
     ]
   }
 ]

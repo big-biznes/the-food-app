@@ -1,4 +1,6 @@
 import type { DietaryRestriction } from '@/contexts/AuthContext';
+import { CATEGORIES } from './meals';
+import { renderText } from './portions';
 import type { Ingredient, Meal, MealType } from './meals';
 
 /**
@@ -32,6 +34,9 @@ export type RawRecipe = {
 };
 
 function rowToMeal(row: RawRecipe): Meal {
+  // Numbers that follow the portion are written as markers; show them for the standard recipe.
+  const hasMarkers = [...row.instructions, ...row.seasonings].some(t => t.includes('{'));
+  const plain = (texts: string[]) => texts.map(t => renderText(t, 1, row.ingredients));
   return {
     id: `r_${row.id}`,
     name: row.name,
@@ -48,12 +53,14 @@ function rowToMeal(row: RawRecipe): Meal {
     appliances: row.appliances,
     mealType: row.meal_type,
     dietaryTags: row.dietary_tags,
+    tags: row.keywords.filter(k => CATEGORIES.includes(k)),
     keywords: row.keywords,
     emoji: row.emoji,
     main: row.main,
     ingredients: row.ingredients,
-    seasonings: row.seasonings,
-    instructions: row.instructions,
+    seasonings: hasMarkers ? plain(row.seasonings) : row.seasonings,
+    instructions: hasMarkers ? plain(row.instructions) : row.instructions,
+    ...(hasMarkers ? { templates: { instructions: row.instructions, seasonings: row.seasonings } } : {}),
   };
 }
 

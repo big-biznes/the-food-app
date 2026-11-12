@@ -25,6 +25,7 @@ export type DietaryRestriction =
   | 'kosher';
 
 export type Goal = 'lose' | 'gain' | 'maintain';
+export type Activity = 'low' | 'light' | 'active' | 'very';
 export type Gender = 'male' | 'female' | 'other';
 
 export type UserProfile = {
@@ -35,6 +36,8 @@ export type UserProfile = {
   age: number;
   heightCm: number;
   weightKg: number;
+  /** How active the user is day to day; sets their energy target (data/portions.ts). */
+  activity?: Activity;
   restrictions: DietaryRestriction[];
   eatingOutDay: string;
   discoverExpertMode: boolean;

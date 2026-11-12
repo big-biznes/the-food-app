@@ -11,7 +11,7 @@
 //                                             (env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { buildAll, indexIngredients, toSql, toSqlParts } from './lib.mjs';
+import { AUTHORED_TAGS, COMPUTED_TAGS, MEAL_TYPES, buildAll, indexIngredients, toSql, toSqlParts } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const root = new URL('../../', import.meta.url);
@@ -35,6 +35,22 @@ const { rows, warnings } = built;
 
 const count = type => rows.filter(r => r.meal_type === type).length;
 console.log(`${rows.length} recipes: ${count('breakfast')} breakfast, ${count('lunch')} lunch, ${count('dinner')} dinner`);
+
+// A plan focused on a category needs a week of different meals from it.
+const WEEK = 7;
+const thin = [];
+console.log('\nRecipes per category (a focused week needs 7 of a meal type):');
+console.log('  ' + ''.padEnd(14) + MEAL_TYPES.map(t => t.padStart(10)).join(''));
+for (const tag of [...AUTHORED_TAGS, ...COMPUTED_TAGS]) {
+  const counts = MEAL_TYPES.map(type => rows.filter(r => r.meal_type === type && r.keywords.includes(tag)).length);
+  console.log('  ' + tag.padEnd(14) + counts.map(n => String(n).padStart(10)).join(''));
+  MEAL_TYPES.forEach((type, i) => {
+    // Breakfasts rarely belong to a cuisine; that is not a gap.
+    if (counts[i] < WEEK && !(type === 'breakfast' && AUTHORED_TAGS.indexOf(tag) < 4)) thin.push(`${tag} ${type} (${counts[i]})`);
+  });
+}
+if (thin.length) console.log(`\nToo few for a full focused week, the plan fills up with the closest other meals:\n  ${thin.join(', ')}`);
+
 if (warnings.length) console.log(`\n${warnings.length} to look at:\n` + warnings.map(w => `  ${w}`).join('\n'));
 if (problems.length) {
   console.error(`\n${problems.length} problems, nothing written:\n` + problems.map(p => `  ${p}`).join('\n'));

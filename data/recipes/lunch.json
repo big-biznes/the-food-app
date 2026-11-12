@@ -1,0 +1,4578 @@
+[
+  {
+    "id": "l-chicken-fried-rice",
+    "name": "Chicken Fried Rice",
+    "description": "Wok-fried rice with chicken, egg, peas and carrots",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "chicken",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "1 tsp grated ginger"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and spread on a plate to steam dry",
+      "Cut the chicken into small pieces, dice the onion and carrots, and fry them in the oil over high heat for 5 minutes until the chicken is cooked through",
+      "Add the peas and ginger, then push everything aside, crack in the egg and scramble it in the empty half of the pan",
+      "Add the rice and soy sauce and stir-fry for 2 minutes until everything is hot and coated"
+    ]
+  },
+  {
+    "id": "l-teriyaki-salmon-rice-bowl",
+    "name": "Teriyaki Salmon Rice Bowl",
+    "description": "Glazed salmon over rice with broccoli and carrot",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍣",
+    "main": "salmon",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "broccoli",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "teriyaki",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "sesame seeds if you have them"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes; add the broccoli florets to the pot for the last 3 minutes, then drain",
+      "Heat the oil in a pan over medium-high heat and cook the salmon for 3 minutes per side",
+      "Pour the teriyaki over the salmon and let it bubble for 1 minute, spooning the glaze over the fish",
+      "Serve the salmon on the rice with the broccoli and the carrots, coarsely grated, and pour over any glaze left in the pan"
+    ]
+  },
+  {
+    "id": "l-tofu-broccoli-stir-fry",
+    "name": "Tofu and Broccoli Stir-Fry",
+    "description": "Crispy tofu with broccoli and peppers in a garlic soy sauce, on rice",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥦",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "broccoli",
+        "g": 120
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Pat the tofu dry, cut it into cubes and fry it in the oil over medium-high heat for 6 minutes, turning, until golden on all sides",
+      "Add the broccoli in small florets, the sliced peppers and a splash of water and stir-fry for 4 minutes",
+      "Stir in the chopped garlic, ginger, pepper and soy sauce, cook 1 more minute and serve over the rice"
+    ]
+  },
+  {
+    "id": "l-shrimp-noodle-stir-fry",
+    "name": "Shrimp Noodle Stir-Fry",
+    "description": "Quick stir-fried noodles with shrimp, peppers and carrot",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍜",
+    "main": "shrimp",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 130
+      },
+      {
+        "item": "noodles",
+        "g": 70
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Cook the noodles in boiling water according to the packet, usually 4 minutes, then drain and rinse briefly",
+      "Slice the peppers and onion and cut the carrots into thin strips, then stir-fry them in the oil over high heat for 3 minutes",
+      "Add the shrimp and ginger and cook for 2 to 3 minutes until the shrimp are pink",
+      "Toss in the noodles and soy sauce, heat through for 1 minute and finish with lime juice"
+    ]
+  },
+  {
+    "id": "l-peanut-chicken-noodle-salad",
+    "name": "Peanut Chicken Noodle Salad",
+    "description": "Cold noodles with chicken, cucumber and a peanut dressing",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥜",
+    "main": "chicken",
+    "tags": [
+      "asian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "noodles",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "peanut butter",
+        "g": 20
+      },
+      {
+        "item": "soy sauce",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "squeeze of lime juice",
+      "2 tbsp warm water"
+    ],
+    "instructions": [
+      "Simmer the chicken in lightly salted water for 12 minutes until cooked through, then shred it with two forks",
+      "Cook the noodles according to the packet, drain and rinse under cold water until cool",
+      "Whisk the peanut butter with the soy sauce, lime juice and warm water into a pourable dressing",
+      "Cut the cucumber and carrots into thin strips and toss everything together with the dressing"
+    ]
+  },
+  {
+    "id": "l-egg-fried-rice",
+    "name": "Egg Fried Rice with Peas",
+    "description": "Simple fried rice with scrambled egg, peas and carrot",
+    "mealType": "lunch",
+    "prepTime": 18,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "peas",
+        "g": 60
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "soy sauce",
+        "g": 12
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry for a few minutes",
+      "Finely dice the onion and carrots and fry them in the oil over high heat for 3 minutes, then add the peas",
+      "Push the vegetables aside, crack in the eggs and scramble them until just set",
+      "Add the rice and soy sauce, stir-fry for 2 minutes and season with pepper"
+    ]
+  },
+  {
+    "id": "l-spicy-beef-lettuce-cups",
+    "name": "Spicy Beef Lettuce Cups",
+    "description": "Chili-garlic beef mince with rice, served in crisp lettuce leaves",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥬",
+    "main": "beef mince",
+    "tags": [
+      "asian",
+      "spicy",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "lettuce",
+        "g": 80
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 12
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1 tsp grated ginger",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Brown the beef mince in the oil over high heat for 5 minutes, breaking it up",
+      "Add the chopped garlic, ginger, chili flakes and soy sauce and cook for 2 minutes",
+      "Separate the lettuce into cups, fill them with rice, beef and the grated carrots and finish with lime juice"
+    ]
+  },
+  {
+    "id": "l-coconut-chickpea-curry",
+    "name": "Spicy Coconut Chickpea Curry",
+    "description": "Chickpeas and spinach simmered in a spiced coconut tomato sauce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "chickpeas",
+    "tags": [
+      "asian",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "coconut milk",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil over medium heat for 4 minutes, then add the chopped garlic, curry powder and chili flakes for 1 minute",
+      "Add the chopped tomatoes, coconut milk and drained chickpeas and simmer for 10 minutes",
+      "Stir in the spinach until it wilts and season with salt"
+    ]
+  },
+  {
+    "id": "l-teriyaki-chicken-rice-bowl",
+    "name": "Teriyaki Chicken Rice Bowl",
+    "description": "Sticky teriyaki chicken with rice, broccoli and carrot",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍗",
+    "main": "chicken",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "broccoli",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "teriyaki",
+        "g": 35
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "sesame seeds if you have them"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, adding the broccoli florets and sliced carrots for the last 3 minutes, then drain",
+      "Cut the chicken into bite-sized pieces and fry in the oil over medium-high heat for 6 minutes until golden and cooked through",
+      "Add the teriyaki and let it bubble for 1 minute until sticky",
+      "Serve the chicken and its sauce over the rice and vegetables"
+    ]
+  },
+  {
+    "id": "l-ginger-turkey-noodle-soup",
+    "name": "Ginger Turkey Noodle Soup",
+    "description": "Light broth with turkey, noodles, mushrooms and spinach",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍲",
+    "main": "turkey",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey",
+        "g": 110
+      },
+      {
+        "item": "noodles",
+        "g": 50
+      },
+      {
+        "item": "mushrooms",
+        "g": 60
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 12
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{500} ml water",
+      "1 tbsp grated ginger"
+    ],
+    "instructions": [
+      "Slice the turkey thinly and brown it in the oil in a pot for 3 minutes with the chopped garlic and ginger",
+      "Add the water, stock cube, sliced carrots and mushrooms and simmer for 6 minutes",
+      "Add the noodles and cook for 4 minutes until soft",
+      "Stir in the spinach and soy sauce and serve as soon as the spinach wilts"
+    ]
+  },
+  {
+    "id": "l-spicy-tofu-fried-rice",
+    "name": "Spicy Tofu Fried Rice",
+    "description": "Fried rice with golden tofu, peas, peppers and chili",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "tofu",
+    "tags": [
+      "asian",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "peppers",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1 tsp grated ginger"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry",
+      "Cut the tofu into small cubes and fry in the oil over high heat for 5 minutes until golden",
+      "Add the diced carrots and peppers, the peas, ginger and chili flakes and stir-fry for 3 minutes",
+      "Add the rice and soy sauce and fry for 2 more minutes"
+    ]
+  },
+  {
+    "id": "l-spicy-tuna-rice-bowl",
+    "name": "Spicy Tuna Rice Bowl",
+    "description": "Rice bowl with tuna, avocado, cucumber and a spicy soy dressing",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "tuna",
+    "tags": [
+      "asian",
+      "spicy",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 100
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "carrots",
+        "g": 40
+      },
+      {
+        "item": "soy sauce",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp sriracha or other chili sauce",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it cool slightly",
+      "Mix the drained tuna with the soy sauce, chili sauce and lime juice",
+      "Dice the avocado and cucumber and grate the carrots",
+      "Fill a bowl with the rice and arrange the tuna, avocado, cucumber and carrots on top"
+    ]
+  },
+  {
+    "id": "l-chicken-fajita-wraps",
+    "name": "Chicken Fajita Wraps",
+    "description": "Spiced chicken, peppers and onion in warm tortillas",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "chicken",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "peppers",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Slice the chicken, peppers and onion into strips and toss the chicken with the cumin, paprika and salt",
+      "Fry the chicken in the oil over high heat for 5 minutes until browned and cooked through",
+      "Add the peppers and onion and cook for 4 minutes until soft with charred edges",
+      "Warm the tortillas in a dry pan, fill them and finish with lime juice"
+    ]
+  },
+  {
+    "id": "l-bean-cheese-quesadilla",
+    "name": "Bean and Cheese Quesadilla",
+    "description": "Crisp tortilla filled with kidney beans, corn and melted cheese",
+    "mealType": "lunch",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "kidney beans",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "cheese",
+        "g": 40
+      },
+      {
+        "item": "corn",
+        "g": 40
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp ground cumin",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Roughly mash the drained kidney beans with the cumin and salt, then stir in the corn",
+      "Spread the beans over one tortilla, scatter over the grated cheese and top with the second tortilla",
+      "Cook in a dry pan over medium heat for 2 to 3 minutes per side until crisp and the cheese has melted",
+      "Cut into wedges and serve with the diced tomato"
+    ]
+  },
+  {
+    "id": "l-chicken-burrito-bowl",
+    "name": "Chicken Burrito Bowl",
+    "description": "Rice bowl with spiced chicken, beans, corn, tomato and lettuce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chicken",
+    "tags": [
+      "mexican",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "lettuce",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Cut the chicken into small pieces, coat with the cumin, paprika and salt and fry in the oil for 6 minutes until cooked through",
+      "Warm the drained kidney beans and corn in the same pan for 1 minute",
+      "Fill a bowl with the rice, chicken, beans and corn, top with diced tomato and shredded lettuce and squeeze over lime juice"
+    ]
+  },
+  {
+    "id": "l-beef-tacos",
+    "name": "Beef Tacos",
+    "description": "Spiced beef mince in soft tortillas with lettuce, tomato and cheese",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌮",
+    "main": "beef mince",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 120
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "lettuce",
+        "g": 40
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      },
+      {
+        "item": "onion",
+        "g": 30
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Brown the beef mince with the diced onion in a dry pan over high heat for 6 minutes",
+      "Stir in the cumin, paprika, chili flakes, salt and a splash of water and cook for 2 more minutes",
+      "Warm the tortillas in a dry pan",
+      "Fill them with the beef, shredded lettuce, diced tomato and grated cheese"
+    ]
+  },
+  {
+    "id": "l-sweet-potato-bean-burrito",
+    "name": "Sweet Potato and Bean Burrito",
+    "description": "Burrito filled with spiced sweet potato, kidney beans and corn",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍠",
+    "main": "kidney beans",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "sweet potato",
+        "g": 150
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "corn",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1/2 tsp smoked paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Peel the sweet potato and cut it into 1 cm cubes",
+      "Fry it in the oil over medium heat for 12 minutes, turning now and then, until tender and browned",
+      "Add the drained kidney beans, corn, cumin, paprika and salt and cook for 2 minutes, lightly crushing some of the beans",
+      "Warm the tortilla, pile the filling down the middle, add lime juice, fold in the sides and roll up"
+    ]
+  },
+  {
+    "id": "l-shrimp-avocado-tacos",
+    "name": "Shrimp and Avocado Tacos",
+    "description": "Chili-lime shrimp in tortillas with avocado, tomato and lettuce",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "mexican",
+      "spicy",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 130
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "lettuce",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1/2 tsp ground cumin",
+      "squeeze of lime juice",
+      "salt"
+    ],
+    "instructions": [
+      "Toss the shrimp with the chili flakes, cumin and salt and fry in the oil over high heat for 2 to 3 minutes until pink",
+      "Mash the avocado with lime juice and a pinch of salt",
+      "Warm the tortillas in a dry pan and spread them with the avocado",
+      "Top with the shrimp, diced tomato and shredded lettuce"
+    ]
+  },
+  {
+    "id": "l-chicken-tortilla-soup",
+    "name": "Chicken Tortilla Soup",
+    "description": "Tomato broth with chicken, beans and corn, topped with crisp tortilla strips",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍲",
+    "main": "chicken",
+    "tags": [
+      "mexican",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1/2 tsp chili flakes",
+      "1 stock cube",
+      "{300} ml water",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Cut the tortilla into thin strips and toast them in a dry pot over medium heat for 3 minutes until crisp, then set aside",
+      "Soften the diced onion in the oil for 3 minutes, then add the cumin and chili flakes",
+      "Add the chopped tomatoes, water, stock cube and the chicken in small pieces and simmer for 12 minutes",
+      "Stir in the drained kidney beans and corn, heat for 2 minutes, add lime juice and serve topped with the tortilla strips"
+    ]
+  },
+  {
+    "id": "l-smoky-bean-chili",
+    "name": "Smoky Bean Chili",
+    "description": "Kidney bean and vegetable chili with rice",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "kidney beans",
+    "tags": [
+      "mexican",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 150
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "1 tsp ground cumin",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Dice the onion and peppers and soften them in the oil for 5 minutes, then stir in the paprika, cumin and chili flakes",
+      "Add the chopped tomatoes and drained kidney beans and simmer for 12 minutes until thick",
+      "Stir in the corn, season with salt and serve over the rice"
+    ]
+  },
+  {
+    "id": "l-huevos-rancheros",
+    "name": "Huevos Rancheros",
+    "description": "Fried eggs on tortillas with beans and a spicy tomato sauce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 120
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1/2 tsp ground cumin",
+      "salt"
+    ],
+    "instructions": [
+      "Soften the diced onion in half the oil for 3 minutes, add the chili flakes and cumin, then the chopped tomatoes, and simmer for 6 minutes",
+      "Stir in the drained kidney beans and warm through",
+      "Fry the eggs in the remaining oil for 2 to 3 minutes until the whites are set",
+      "Warm the tortillas in a dry pan, spoon over the beans and sauce and top each with an egg"
+    ]
+  },
+  {
+    "id": "l-turkey-taco-salad",
+    "name": "Turkey Taco Salad",
+    "description": "Spiced turkey mince over lettuce with tomato, corn, beans and avocado",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "turkey mince",
+    "tags": [
+      "mexican",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 130
+      },
+      {
+        "item": "lettuce",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Brown the turkey mince in the oil over high heat for 6 minutes with the cumin, paprika and salt",
+      "Shred the lettuce and dice the tomato and avocado",
+      "Arrange the lettuce in a bowl and top with the turkey, tomato, corn, drained kidney beans and avocado",
+      "Squeeze over lime juice"
+    ]
+  },
+  {
+    "id": "l-tofu-fajita-bowl",
+    "name": "Tofu Fajita Bowl",
+    "description": "Spiced tofu with peppers, onion and corn over rice",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🫑",
+    "main": "tofu",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 120
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Cut the tofu into strips, coat with the cumin, paprika and salt and fry in the oil over medium-high heat for 5 minutes",
+      "Add the sliced peppers and onion and cook for 5 minutes until soft and lightly charred",
+      "Stir in the corn and serve over the rice with lime juice"
+    ]
+  },
+  {
+    "id": "l-bean-corn-avocado-salad",
+    "name": "Bean, Corn and Avocado Salad",
+    "description": "No-cook salad of kidney beans, corn, peppers, tomato and avocado",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥑",
+    "main": "kidney beans",
+    "tags": [
+      "mexican",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 150
+      },
+      {
+        "item": "corn",
+        "g": 80
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp ground cumin",
+      "squeeze of lime juice",
+      "salt",
+      "handful of fresh coriander"
+    ],
+    "instructions": [
+      "Drain and rinse the kidney beans and corn",
+      "Dice the peppers, tomato and avocado",
+      "Toss everything with the olive oil, cumin, lime juice, salt and coriander"
+    ]
+  },
+  {
+    "id": "l-caprese-pasta-salad",
+    "name": "Caprese Pasta Salad",
+    "description": "Cold pasta with mozzarella, tomato, spinach and pesto",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "mozzarella",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "pasta",
+        "g": 75
+      },
+      {
+        "item": "mozzarella",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 150
+      },
+      {
+        "item": "pesto",
+        "g": 20
+      },
+      {
+        "item": "spinach",
+        "g": 30
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet, drain and rinse under cold water",
+      "Dice the tomato and tear the mozzarella into pieces",
+      "Toss the pasta with the pesto, tomato, mozzarella and spinach and season with pepper"
+    ]
+  },
+  {
+    "id": "l-tuna-pasta-salad",
+    "name": "Tuna Pasta Salad",
+    "description": "Pasta salad with tuna, corn, tomato and cucumber in a lemon olive oil dressing",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "tuna",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 100
+      },
+      {
+        "item": "pasta",
+        "g": 70
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice",
+      "salt",
+      "black pepper",
+      "pinch of dried oregano"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet, drain and rinse under cold water",
+      "Dice the tomato and cucumber",
+      "Toss the pasta with the drained tuna, corn, tomato, cucumber, olive oil, lemon juice and oregano and season"
+    ]
+  },
+  {
+    "id": "l-minestrone",
+    "name": "Minestrone",
+    "description": "Chunky vegetable and bean soup with pasta and parmesan",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "kidney beans",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "pasta",
+        "g": 40
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "zucchini",
+        "g": 80
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "parmesan",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{400} ml water",
+      "1 tsp dried oregano",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the onion, carrots and zucchini and soften them in the olive oil in a pot for 5 minutes",
+      "Add the chopped tomatoes, water, stock cube and oregano and simmer for 10 minutes",
+      "Add the pasta and drained kidney beans and cook for 8 to 10 minutes until the pasta is tender",
+      "Serve topped with the grated parmesan and black pepper"
+    ]
+  },
+  {
+    "id": "l-chicken-pesto-pasta",
+    "name": "Chicken Pesto Pasta",
+    "description": "Pasta with pan-fried chicken, pesto, spinach and tomato",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "chicken",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "pasta",
+        "g": 70
+      },
+      {
+        "item": "pesto",
+        "g": 25
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a little of the water",
+      "Cut the chicken into strips, season and fry in a non-stick pan over medium-high heat for 6 minutes until golden",
+      "Add the diced tomato and spinach and cook for 1 minute until the spinach wilts",
+      "Toss in the pasta, pesto and a splash of the pasta water"
+    ]
+  },
+  {
+    "id": "l-spinach-mushroom-frittata",
+    "name": "Spinach and Mushroom Frittata",
+    "description": "Thick Italian omelette with mushrooms, spinach and parmesan, with bread",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "spinach",
+        "g": 60
+      },
+      {
+        "item": "mushrooms",
+        "g": 80
+      },
+      {
+        "item": "parmesan",
+        "g": 15
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Slice the mushrooms and onion and fry them in the olive oil in a small non-stick pan for 5 minutes",
+      "Add the spinach and let it wilt",
+      "Beat the eggs with the grated parmesan, salt and pepper, pour over the vegetables and cook over low heat, covered, for 6 to 8 minutes until set",
+      "Slide onto a plate and serve with the bread"
+    ]
+  },
+  {
+    "id": "l-pasta-e-ceci",
+    "name": "Pasta e Ceci",
+    "description": "Thick Italian chickpea and pasta soup with tomato and garlic",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "chickpeas",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "pasta",
+        "g": 50
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "carrots",
+        "g": 40
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{350} ml water",
+      "1 tsp dried rosemary",
+      "black pepper"
+    ],
+    "instructions": [
+      "Finely dice the onion and carrots and soften them in the olive oil for 5 minutes, then add the chopped garlic and rosemary",
+      "Add the chopped tomatoes, water, stock cube and drained chickpeas and simmer for 8 minutes",
+      "Crush some of the chickpeas against the side of the pot to thicken the soup",
+      "Add the pasta and cook for 8 to 10 minutes, stirring, until tender, then season with pepper"
+    ]
+  },
+  {
+    "id": "l-turkey-bolognese",
+    "name": "Quick Turkey Bolognese",
+    "description": "Lean turkey mince in a tomato sauce with pasta",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "turkey mince",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 120
+      },
+      {
+        "item": "pasta",
+        "g": 70
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "carrots",
+        "g": 40
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Finely dice the onion and carrots and soften them in the olive oil for 4 minutes",
+      "Add the turkey mince and brown it for 5 minutes, then stir in the chopped garlic and oregano",
+      "Add the chopped tomatoes and simmer for 10 minutes",
+      "Meanwhile cook the pasta in salted boiling water, drain and toss with the sauce"
+    ]
+  },
+  {
+    "id": "l-garlic-shrimp-spaghetti",
+    "name": "Garlic Chili Shrimp Spaghetti",
+    "description": "Spaghetti with shrimp, garlic, chili, tomato and spinach",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "italian",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 130
+      },
+      {
+        "item": "pasta",
+        "g": 75
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "spinach",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a little of the water",
+      "Warm the olive oil in a pan and gently fry the sliced garlic and chili flakes for 1 minute",
+      "Add the shrimp and diced tomato and cook for 3 minutes until the shrimp are pink",
+      "Toss in the pasta, spinach and a splash of pasta water and finish with lemon juice"
+    ]
+  },
+  {
+    "id": "l-salmon-pesto-pasta",
+    "name": "Salmon and Pea Pesto Pasta",
+    "description": "Pasta with flaked salmon, peas and pesto",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 110
+      },
+      {
+        "item": "pasta",
+        "g": 65
+      },
+      {
+        "item": "pesto",
+        "g": 20
+      },
+      {
+        "item": "peas",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet, adding the peas for the last 2 minutes, then drain",
+      "Fry the salmon in a non-stick pan over medium heat for 3 to 4 minutes per side, then break it into flakes",
+      "Toss the pasta and peas with the pesto and fold in the salmon",
+      "Season with pepper and lemon juice"
+    ]
+  },
+  {
+    "id": "l-roasted-vegetable-chickpea-pasta",
+    "name": "Vegetable and Chickpea Pasta",
+    "description": "Pasta with zucchini, peppers and chickpeas in tomato sauce",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "chickpeas",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "pasta",
+        "g": 65
+      },
+      {
+        "item": "zucchini",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "tomato sauce",
+        "g": 120
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain",
+      "Dice the zucchini and peppers and fry them in the olive oil over medium-high heat for 7 minutes until soft and browned",
+      "Add the drained chickpeas, tomato sauce and oregano and simmer for 5 minutes",
+      "Toss with the pasta and season"
+    ]
+  },
+  {
+    "id": "l-chicken-caprese-salad",
+    "name": "Chicken Caprese Salad",
+    "description": "Sliced chicken with mozzarella, tomato, lettuce and pesto",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chicken",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "mozzarella",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 150
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "pesto",
+        "g": 15
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the chicken and fry it in the olive oil over medium heat for 5 to 6 minutes per side until cooked through, then slice",
+      "Slice the tomato and mozzarella and arrange them over the lettuce",
+      "Top with the chicken and spoon over the pesto"
+    ]
+  },
+  {
+    "id": "l-greek-chicken-salad",
+    "name": "Greek Chicken Salad",
+    "description": "Grilled chicken over cucumber, tomato and lettuce with feta",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chicken",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "feta",
+        "g": 40
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 120
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "squeeze of lemon juice",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the chicken with the oregano, salt and pepper and fry in half the olive oil over medium heat for 5 to 6 minutes per side, then slice",
+      "Chop the cucumber, tomato and lettuce and put them in a bowl",
+      "Top with the chicken and crumbled feta and dress with the remaining olive oil and lemon juice"
+    ]
+  },
+  {
+    "id": "l-chickpea-couscous-salad",
+    "name": "Chickpea Couscous Salad",
+    "description": "Lemony couscous with chickpeas, cucumber, tomato and peppers",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍋",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "couscous",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "{80} ml boiling water",
+      "salt",
+      "handful of fresh parsley",
+      "1/2 tsp ground cumin"
+    ],
+    "instructions": [
+      "Put the couscous in a bowl with a pinch of salt, pour over the boiling water, cover and leave for 5 minutes, then fluff with a fork",
+      "Dice the cucumber, tomato and peppers",
+      "Mix everything with the drained chickpeas, olive oil, the juice of the lemon, cumin and chopped parsley"
+    ]
+  },
+  {
+    "id": "l-chickpea-feta-wrap",
+    "name": "Chickpea and Feta Wrap",
+    "description": "Tortilla with crushed chickpeas, feta, cucumber, tomato and yogurt",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🌯",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "feta",
+        "g": 30
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "yogurt",
+        "g": 40
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp ground cumin",
+      "squeeze of lemon juice",
+      "black pepper"
+    ],
+    "instructions": [
+      "Roughly crush the drained chickpeas with a fork and mix them with the yogurt, cumin, lemon juice and pepper",
+      "Dice the cucumber and tomato and crumble the feta",
+      "Spread the chickpeas over the tortilla, top with the vegetables and feta and roll up tightly"
+    ]
+  },
+  {
+    "id": "l-turkish-eggs",
+    "name": "Turkish Eggs with Garlic Yogurt",
+    "description": "Poached eggs on garlic yogurt with chili butter and bread",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "greek yogurt",
+        "g": 150
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "1/2 tsp paprika",
+      "salt",
+      "splash of vinegar"
+    ],
+    "instructions": [
+      "Stir the finely grated garlic and a pinch of salt into the yogurt and spread it in a shallow bowl",
+      "Poach the eggs in barely simmering water with a splash of vinegar for 3 minutes and lift them onto the yogurt",
+      "Melt the butter with the chili flakes and paprika until it foams and pour it over the eggs",
+      "Serve with the toasted bread"
+    ]
+  },
+  {
+    "id": "l-tuna-chickpea-salad",
+    "name": "Tuna and Chickpea Salad",
+    "description": "No-cook salad of tuna, chickpeas, tomato and cucumber with lemon",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥗",
+    "main": "tuna",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 100
+      },
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 120
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 20
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Drain the tuna and chickpeas",
+      "Dice the tomato and cucumber and slice the onion very thinly",
+      "Toss everything with the olive oil, the juice of the lemon, salt, pepper and chopped parsley"
+    ]
+  },
+  {
+    "id": "l-lemony-lentil-soup",
+    "name": "Lemony Lentil Soup",
+    "description": "Smooth-ish lentil and carrot soup with spinach and lemon",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍋",
+    "main": "lentils",
+    "tags": [
+      "mediterranean",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 70
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 100
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 stock cube",
+      "{450} ml water",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the onion and carrots and soften them in the olive oil for 5 minutes, then add the chopped garlic and cumin",
+      "Add the rinsed lentils, chopped tomatoes, water and stock cube and simmer for 20 minutes until the lentils are soft",
+      "Stir in the spinach until wilted",
+      "Add the juice of the lemon and black pepper"
+    ]
+  },
+  {
+    "id": "l-chicken-gyros-wrap",
+    "name": "Chicken Gyros Wrap",
+    "description": "Oregano chicken in a tortilla with yogurt, cucumber, tomato and onion",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "chicken",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "greek yogurt",
+        "g": 50
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 20
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "1/2 tsp paprika",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cut the chicken into thin strips, toss with the oregano, paprika and salt and fry in the olive oil over high heat for 5 to 6 minutes",
+      "Slice the cucumber, tomato and onion",
+      "Warm the tortilla, spread it with the yogurt and fill with the chicken and vegetables",
+      "Squeeze over lemon juice and roll up"
+    ]
+  },
+  {
+    "id": "l-salmon-couscous-bowl",
+    "name": "Salmon Couscous Bowl",
+    "description": "Flaked salmon over lemon couscous with cucumber, tomato and spinach",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 120
+      },
+      {
+        "item": "couscous",
+        "g": 50
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 30
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "{70} ml boiling water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Fry the salmon in the olive oil over medium heat for 3 to 4 minutes per side and break into flakes",
+      "Dice the cucumber and tomato",
+      "Serve the couscous on the spinach with the vegetables and salmon, with the juice of the lemon squeezed over"
+    ]
+  },
+  {
+    "id": "l-quinoa-greek-salad",
+    "name": "Quinoa Greek Salad",
+    "description": "Quinoa with chickpeas, feta, cucumber, tomato and peppers",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "quinoa",
+        "g": 60
+      },
+      {
+        "item": "chickpeas",
+        "g": 60
+      },
+      {
+        "item": "feta",
+        "g": 40
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 120
+      },
+      {
+        "item": "peppers",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "squeeze of lemon juice",
+      "salt"
+    ],
+    "instructions": [
+      "Rinse the quinoa and simmer it in salted water for 12 to 15 minutes, then drain and let it cool a little",
+      "Dice the cucumber, tomato and peppers",
+      "Toss the quinoa with the vegetables, drained chickpeas, olive oil, oregano and lemon juice",
+      "Crumble the feta over the top"
+    ]
+  },
+  {
+    "id": "l-spanish-omelette",
+    "name": "Spanish Potato Omelette",
+    "description": "Thick omelette of potato and onion cooked in olive oil",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "eggs",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into thin slices and slice the onion",
+      "Cook them gently in the olive oil in a small non-stick pan, covered, for 12 to 15 minutes until soft but not browned",
+      "Beat the eggs with salt and pepper, stir in the potatoes and onion, and pour everything back into the pan",
+      "Cook over low heat for 5 minutes, flip using a plate and cook 3 more minutes until set"
+    ]
+  },
+  {
+    "id": "l-garlic-shrimp-couscous",
+    "name": "Garlic Shrimp with Zucchini Couscous",
+    "description": "Chili-garlic shrimp over couscous with zucchini and lemon",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 140
+      },
+      {
+        "item": "couscous",
+        "g": 60
+      },
+      {
+        "item": "zucchini",
+        "g": 120
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "{80} ml boiling water",
+      "salt"
+    ],
+    "instructions": [
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Dice the zucchini and fry it in the olive oil over high heat for 4 minutes",
+      "Add the shrimp, sliced garlic and chili flakes and cook for 2 to 3 minutes until the shrimp are pink",
+      "Serve over the couscous with the juice of the lemon"
+    ]
+  },
+  {
+    "id": "l-beef-kofta-wrap",
+    "name": "Beef Kofta Wrap",
+    "description": "Spiced beef kofta in a tortilla with yogurt, cucumber, tomato and lettuce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "beef mince",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 120
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "yogurt",
+        "g": 50
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1/2 tsp paprika",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Mix the beef mince with the cumin, paprika, chili flakes and salt and shape it into {3} short sausages",
+      "Fry them in a dry non-stick pan over medium-high heat for 8 minutes, turning, until browned and cooked through",
+      "Slice the cucumber and tomato and shred the lettuce",
+      "Warm the tortilla, spread with the yogurt, add the kofta and vegetables and roll up"
+    ]
+  },
+  {
+    "id": "l-mediterranean-tofu-bowl",
+    "name": "Mediterranean Tofu Couscous Bowl",
+    "description": "Oregano tofu with zucchini, peppers and tomato over couscous",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥙",
+    "main": "tofu",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 140
+      },
+      {
+        "item": "couscous",
+        "g": 55
+      },
+      {
+        "item": "zucchini",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "{75} ml boiling water",
+      "squeeze of lemon juice",
+      "salt"
+    ],
+    "instructions": [
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Cut the tofu into cubes and fry in the olive oil over medium-high heat for 5 minutes until golden",
+      "Add the diced zucchini and peppers with the oregano and cook for 5 minutes",
+      "Serve over the couscous with the diced tomato and a squeeze of lemon"
+    ]
+  },
+  {
+    "id": "l-chicken-shawarma-rice-bowl",
+    "name": "Chicken Shawarma Rice Bowl",
+    "description": "Spiced chicken over rice with garlic yogurt, cucumber and tomato",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍗",
+    "main": "chicken",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 85
+      },
+      {
+        "item": "greek yogurt",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "1/2 tsp ground coriander",
+      "salt"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the chicken thinly and coat it with the cumin, paprika, chili flakes, coriander and salt",
+      "Fry in the olive oil over high heat for 6 minutes until browned at the edges",
+      "Serve over the rice with the diced cucumber and tomato and a spoon of yogurt"
+    ]
+  },
+  {
+    "id": "l-lentil-feta-salad",
+    "name": "Lentil and Feta Salad",
+    "description": "Warm lentils with feta, tomato, cucumber and spinach",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "lentils",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 70
+      },
+      {
+        "item": "feta",
+        "g": 40
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "splash of red wine vinegar",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Simmer the rinsed lentils in unsalted water for 20 to 25 minutes until tender but still holding their shape, then drain",
+      "Dice the tomato and cucumber",
+      "Toss the warm lentils with the olive oil, vinegar, salt and pepper, then fold in the spinach, tomato and cucumber",
+      "Crumble the feta over the top"
+    ]
+  },
+  {
+    "id": "l-chicken-salad-wrap",
+    "name": "Chicken Salad Wrap",
+    "description": "Tortilla with chicken, lettuce, tomato, cucumber and a yogurt dressing",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "chicken",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 50
+      },
+      {
+        "item": "yogurt",
+        "g": 40
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the chicken and fry it in a non-stick pan over medium heat for 5 to 6 minutes per side, then slice",
+      "Stir the mustard and a pinch of salt into the yogurt",
+      "Shred the lettuce and slice the tomato and cucumber",
+      "Spread the yogurt over the tortilla, add the chicken and vegetables and roll up"
+    ]
+  },
+  {
+    "id": "l-egg-salad-sandwich",
+    "name": "Egg Salad Sandwich",
+    "description": "Chopped egg in a mustard yogurt dressing with lettuce and cucumber",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "yogurt",
+        "g": 30
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      },
+      {
+        "item": "cucumber",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the eggs for 9 minutes, cool them under cold water and peel",
+      "Chop the eggs and mix with the yogurt, mustard, salt and pepper",
+      "Pile onto one slice of bread with the lettuce and sliced cucumber and top with the second slice"
+    ]
+  },
+  {
+    "id": "l-tuna-melt-toastie",
+    "name": "Tuna Melt Toastie",
+    "description": "Pan-toasted sandwich with tuna, corn and melted cheese",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "tuna",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 90
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "corn",
+        "g": 40
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Mix the drained tuna with the corn and pepper",
+      "Butter one side of each slice of bread and put one slice butter side down in a pan",
+      "Top with the tuna and grated cheese and the second slice, butter side up",
+      "Toast over medium heat for 2 to 3 minutes per side until golden and the cheese has melted"
+    ]
+  },
+  {
+    "id": "l-stuffed-sweet-potato-chickpeas",
+    "name": "Stuffed Sweet Potato with Chickpeas",
+    "description": "Baked sweet potato filled with spiced chickpeas and spinach",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop",
+      "microwave"
+    ],
+    "emoji": "🍠",
+    "main": "chickpeas",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "sweet potato",
+        "g": 300
+      },
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp smoked paprika",
+      "1/2 tsp ground cumin",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Prick the sweet potato all over and microwave on high for 8 to 10 minutes, turning once, until soft",
+      "Warm the drained chickpeas in the olive oil with the paprika, cumin and salt for 3 minutes",
+      "Stir in the spinach until it wilts",
+      "Split the sweet potato, fill it with the chickpeas and finish with lemon juice"
+    ]
+  },
+  {
+    "id": "l-chicken-vegetable-soup",
+    "name": "Chicken and Vegetable Soup",
+    "description": "Clear soup with chicken, potato, carrot and peas",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍲",
+    "main": "chicken",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "potatoes",
+        "g": 150
+      },
+      {
+        "item": "carrots",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{500} ml water",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil in a pot for 3 minutes",
+      "Add the diced potatoes and carrots, the water, stock cube and the whole piece of chicken and simmer for 18 minutes",
+      "Lift out the chicken, shred it with two forks and return it to the pot with the peas",
+      "Cook 2 more minutes and season with pepper and parsley"
+    ]
+  },
+  {
+    "id": "l-ham-cheese-spinach-omelette",
+    "name": "Ham, Cheese and Spinach Omelette",
+    "description": "Three-egg omelette with ham, cheese and spinach, with toast",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "ham",
+        "g": 40
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "spinach",
+        "g": 40
+      },
+      {
+        "item": "butter",
+        "g": 5
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Beat the eggs with pepper, cut the ham into strips and grate the cheese",
+      "Melt the butter in a non-stick pan, wilt the spinach for 30 seconds and pour in the eggs",
+      "When almost set, scatter the ham and cheese over one half and fold over",
+      "Cook 1 more minute and serve with the toasted bread"
+    ]
+  },
+  {
+    "id": "l-warm-salmon-potato-salad",
+    "name": "Warm Salmon and Potato Salad",
+    "description": "Flaked salmon with potatoes and green beans in a lemon yogurt dressing",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "salmon",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 120
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "green beans",
+        "g": 80
+      },
+      {
+        "item": "yogurt",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the green beans for the last 5, then drain",
+      "Fry the salmon in the olive oil over medium heat for 3 to 4 minutes per side and break into flakes",
+      "Mix the yogurt with the mustard, the juice of the lemon, salt and pepper",
+      "Toss the warm potatoes and beans in the dressing and fold in the salmon"
+    ]
+  },
+  {
+    "id": "l-turkey-bacon-avocado-sandwich",
+    "name": "Turkey, Bacon and Avocado Sandwich",
+    "description": "Toasted sandwich with turkey, crisp bacon, avocado and tomato",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "turkey",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "turkey",
+        "g": 100
+      },
+      {
+        "item": "bacon",
+        "g": 25
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "lettuce",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Fry the bacon in a dry pan over medium heat for 4 minutes until crisp and set it aside",
+      "Slice the turkey thinly, season and fry it in the bacon fat for 4 minutes until cooked through",
+      "Toast the bread and spread it with the mashed avocado",
+      "Layer on the turkey, bacon, sliced tomato and lettuce"
+    ]
+  },
+  {
+    "id": "l-chicken-quinoa-bowl",
+    "name": "Chicken Quinoa Bowl",
+    "description": "Quinoa with chicken, broccoli and carrot in a lemon olive oil dressing",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chicken",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "quinoa",
+        "g": 60
+      },
+      {
+        "item": "broccoli",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Rinse the quinoa and simmer it in salted water for 12 to 15 minutes, adding the broccoli florets for the last 3, then drain",
+      "Season the chicken and fry it in half the olive oil for 5 to 6 minutes per side, then slice",
+      "Grate the carrots",
+      "Serve the quinoa and broccoli topped with the chicken and carrots, dressed with the remaining olive oil and the juice of the lemon"
+    ]
+  },
+  {
+    "id": "l-beef-potato-hash",
+    "name": "Beef and Potato Hash",
+    "description": "Skillet of beef mince, crisp potatoes, onion and peas",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "beef mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 120
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into 1 cm cubes and fry them in the oil over medium heat for 12 minutes, turning, until golden and tender",
+      "Push them aside, add the beef mince and diced onion and brown for 6 minutes",
+      "Stir in the peas, paprika, salt and pepper and cook 2 more minutes"
+    ]
+  },
+  {
+    "id": "l-pork-schnitzel-sandwich",
+    "name": "Pork Schnitzel Sandwich",
+    "description": "Thin breaded pork cutlet in bread with lettuce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "pork",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 120
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "flour",
+        "g": 15
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "1 tsp mustard",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Flatten the pork between two sheets of baking paper until about 1 cm thick and season it",
+      "Coat it in the flour, then in the beaten egg, then in the flour again",
+      "Fry in the oil over medium-high heat for 3 minutes per side until golden and cooked through",
+      "Spread the bread with mustard, add the lettuce and schnitzel and squeeze over lemon juice"
+    ]
+  },
+  {
+    "id": "l-tofu-scramble-wrap",
+    "name": "Tofu Scramble Wrap",
+    "description": "Tortilla filled with scrambled tofu, spinach, peppers and tomato",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp turmeric",
+      "1/2 tsp ground cumin",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the peppers and cook them in the oil for 3 minutes",
+      "Crumble in the tofu with the turmeric, cumin, salt and pepper and cook for 5 minutes",
+      "Stir in the spinach and diced tomato until the spinach wilts",
+      "Warm the tortilla, add the scramble and roll up"
+    ]
+  },
+  {
+    "id": "l-fish-finger-sandwich",
+    "name": "Crispy Fish Sandwich",
+    "description": "Pan-fried breaded white fish in bread with lettuce and lemon yogurt",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "white fish",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 140
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "flour",
+        "g": 15
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      },
+      {
+        "item": "yogurt",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cut the fish into thick strips, season and coat in the flour, then the beaten egg, then the flour again",
+      "Fry in the oil over medium-high heat for 2 to 3 minutes per side until golden",
+      "Stir lemon juice into the yogurt",
+      "Fill the bread with the lettuce, fish and yogurt sauce"
+    ]
+  },
+  {
+    "id": "l-shrimp-avocado-salad",
+    "name": "Shrimp and Avocado Salad",
+    "description": "Quick salad of pan-fried shrimp, avocado, tomato and cucumber with lemon",
+    "mealType": "lunch",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "shrimp",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 140
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "lettuce",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Fry the shrimp in half the olive oil over high heat for 2 to 3 minutes until pink and season",
+      "Dice the avocado, tomato and cucumber and tear the lettuce",
+      "Toss the salad with the remaining olive oil and the juice of the lemon and top with the shrimp"
+    ]
+  },
+  {
+    "id": "l-chicken-burger",
+    "name": "Chicken Burger",
+    "description": "Juicy chicken mince patty in bread with cheese, lettuce and tomato",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍔",
+    "main": "chicken mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken mince",
+        "g": 140
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "salt",
+      "black pepper",
+      "1 tsp mustard"
+    ],
+    "instructions": [
+      "Mix the chicken mince with the paprika, salt and pepper and shape into a flat patty",
+      "Fry in the oil over medium heat for 5 minutes per side until cooked through, laying the cheese on top for the last minute",
+      "Toast the bread and spread with mustard",
+      "Add the lettuce, patty and sliced tomato"
+    ]
+  },
+  {
+    "id": "l-turkey-vegetable-rice-skillet",
+    "name": "Turkey and Vegetable Rice Skillet",
+    "description": "One-pan turkey mince with rice, zucchini and peppers in tomato sauce",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "turkey mince",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "zucchini",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "tomato sauce",
+        "g": 100
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "{200} ml water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Brown the turkey mince in the oil in a lidded pan for 5 minutes",
+      "Add the diced zucchini and peppers and the paprika and cook for 3 minutes",
+      "Stir in the rice, tomato sauce, water and salt, cover and simmer on low heat for 15 minutes until the rice is tender",
+      "Season with pepper"
+    ]
+  },
+  {
+    "id": "l-meatball-sandwich",
+    "name": "Meatball Sandwich",
+    "description": "Meatballs in tomato sauce with melted cheese in bread",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "mixed mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "mixed mince",
+        "g": 110
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "tomato sauce",
+        "g": 80
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the mixed mince with the oregano, salt and pepper and roll it into {5} small balls",
+      "Fry them in a dry non-stick pan for 6 minutes, turning, until browned",
+      "Add the tomato sauce and simmer for 5 minutes until the meatballs are cooked through",
+      "Spoon onto the bread, top with the grated cheese and close the sandwich"
+    ]
+  },
+  {
+    "id": "l-egg-potato-green-bean-salad",
+    "name": "Egg, Potato and Green Bean Salad",
+    "description": "Warm salad of potatoes, green beans, tomato and boiled eggs",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "eggs",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "green beans",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "splash of vinegar",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, for 15 minutes, adding the eggs for the last 8 minutes and the green beans for the last 5",
+      "Drain, cool the eggs under cold water, peel and quarter them",
+      "Whisk the olive oil with the mustard, vinegar, salt and pepper",
+      "Toss the potatoes, beans and tomato wedges in the dressing and top with the eggs"
+    ]
+  },
+  {
+    "id": "l-chicken-bacon-corn-chowder",
+    "name": "Chicken, Bacon and Corn Chowder",
+    "description": "Creamy soup with chicken, bacon, potato and corn",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "chicken",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 110
+      },
+      {
+        "item": "bacon",
+        "g": 20
+      },
+      {
+        "item": "potatoes",
+        "g": 150
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "milk",
+        "ml": 150
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{250} ml water",
+      "black pepper"
+    ],
+    "instructions": [
+      "Fry the chopped bacon with the butter in a pot for 3 minutes, then add the diced onion for 3 minutes",
+      "Add the diced potatoes, the chicken in small pieces, the water and stock cube and simmer for 15 minutes",
+      "Stir in the corn and milk and heat gently for 3 minutes without boiling",
+      "Lightly crush some of the potatoes to thicken and season with pepper"
+    ]
+  },
+  {
+    "id": "l-chicken-avocado-rice-bowl",
+    "name": "Chicken and Avocado Rice Bowl",
+    "description": "Rice bowl with sliced chicken, avocado, corn and tomato",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥑",
+    "main": "chicken",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "squeeze of lime juice",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Season the chicken and fry it in a non-stick pan over medium heat for 5 to 6 minutes per side, then slice",
+      "Dice the avocado and tomato",
+      "Top the rice with the chicken, avocado, corn and tomato and squeeze over lime juice"
+    ]
+  },
+  {
+    "id": "l-beef-burger-wedges",
+    "name": "Beef Burger with Potato Wedges",
+    "description": "Cheeseburger with lettuce and tomato and oven wedges",
+    "mealType": "lunch",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🍔",
+    "main": "beef mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 150
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      },
+      {
+        "item": "lettuce",
+        "g": 20
+      },
+      {
+        "item": "tomato",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 220°C, cut the potatoes into wedges, toss with the oil, paprika and salt and roast for 25 minutes, turning once",
+      "Season the beef mince, shape it into a patty and fry in a dry pan over medium-high heat for 4 minutes per side",
+      "Lay the cheese on the patty for the last minute so it melts",
+      "Serve in the bread with the lettuce and sliced tomato, with the wedges on the side"
+    ]
+  },
+  {
+    "id": "l-steak-sandwich",
+    "name": "Steak and Onion Sandwich",
+    "description": "Seared beef with soft onions and cheese in toasted bread",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥩",
+    "main": "beef",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 140
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 25
+      },
+      {
+        "item": "butter",
+        "g": 8
+      },
+      {
+        "item": "lettuce",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Slice the onion and cook it in the butter over medium heat for 6 minutes until soft and golden, then push aside",
+      "Season the beef and sear it in the same pan over high heat for 2 minutes per side, rest for 2 minutes and slice thinly",
+      "Toast the bread and spread with mustard",
+      "Fill with the lettuce, beef, onions and sliced cheese"
+    ]
+  },
+  {
+    "id": "l-pork-apple-salad",
+    "name": "Pork and Apple Salad",
+    "description": "Pan-fried pork strips over lettuce with apple, cucumber and a mustard dressing",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍏",
+    "main": "pork",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 130
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "lettuce",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "splash of vinegar",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the pork into thin strips, season and fry in half the olive oil over high heat for 4 to 5 minutes",
+      "Slice the apple and cucumber thinly and tear the lettuce",
+      "Whisk the remaining olive oil with the mustard, vinegar, salt and pepper",
+      "Toss the salad in the dressing, top with the pork and serve with the bread"
+    ]
+  },
+  {
+    "id": "l-chicken-pesto-panini",
+    "name": "Chicken Pesto Panini",
+    "description": "Pressed sandwich with chicken, mozzarella, tomato and pesto",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥪",
+    "main": "chicken",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "bread",
+        "pieces": 3
+      },
+      {
+        "item": "mozzarella",
+        "g": 60
+      },
+      {
+        "item": "pesto",
+        "g": 25
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the chicken and fry it in a non-stick pan over medium heat for 5 to 6 minutes per side, then slice",
+      "Spread the pesto on the bread and layer on the chicken, sliced mozzarella and sliced tomato to make a double-decker sandwich",
+      "Toast it in the dry pan over medium heat, pressing down with a spatula, for 2 to 3 minutes per side until the cheese melts"
+    ]
+  },
+  {
+    "id": "l-beef-bean-burrito",
+    "name": "Beef and Bean Lunch Burritos",
+    "description": "Two burritos with spiced beef mince, kidney beans and cheese",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "beef mince",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 140
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Brown the beef mince in a dry pan over high heat for 6 minutes",
+      "Add the cumin, paprika, salt, drained kidney beans and a splash of water and cook for 2 minutes",
+      "Warm the tortillas in a dry pan",
+      "Fill them with the beef and beans, grated cheese and diced tomato, fold in the sides and roll up"
+    ]
+  },
+  {
+    "id": "l-salmon-avocado-rice-bowl",
+    "name": "Salmon and Avocado Rice Bowl",
+    "description": "Pan-fried salmon over rice with avocado, cucumber and soy",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍣",
+    "main": "salmon",
+    "tags": [
+      "asian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 140
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "soy sauce",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "squeeze of lime juice",
+      "sesame seeds if you have them"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Fry the salmon in a non-stick pan over medium heat for 3 to 4 minutes per side and break into large flakes",
+      "Slice the avocado and cucumber",
+      "Top the rice with the salmon, avocado and cucumber and dress with the soy sauce and lime juice"
+    ]
+  },
+  {
+    "id": "l-peanut-chicken-noodles",
+    "name": "Peanut Chicken Noodles",
+    "description": "Warm noodles with chicken and carrot in a peanut soy sauce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥜",
+    "main": "chicken",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "noodles",
+        "g": 90
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "3 tbsp hot water",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Cook the noodles according to the packet and drain",
+      "Slice the chicken and stir-fry it in the oil over high heat for 5 minutes with the carrots cut into thin strips",
+      "Whisk the peanut butter with the soy sauce, hot water and lime juice",
+      "Toss the noodles and sauce through the chicken and heat for 1 minute"
+    ]
+  },
+  {
+    "id": "l-tuna-pesto-pasta",
+    "name": "Tuna Pesto Pasta",
+    "description": "Pasta with tuna, peas and pesto",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "tuna",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 120
+      },
+      {
+        "item": "pasta",
+        "g": 105
+      },
+      {
+        "item": "pesto",
+        "g": 30
+      },
+      {
+        "item": "peas",
+        "g": 60
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet, adding the peas for the last 2 minutes, then drain",
+      "Toss with the pesto and the drained tuna",
+      "Season with pepper and lemon juice"
+    ]
+  },
+  {
+    "id": "l-beef-egg-fried-rice",
+    "name": "Beef and Egg Fried Rice",
+    "description": "Fried rice with beef strips, scrambled egg and peas",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "beef",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 130
+      },
+      {
+        "item": "rice",
+        "g": 90
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "1 tsp grated ginger"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry",
+      "Slice the beef thinly and sear it in the oil over very high heat for 2 minutes with the ginger",
+      "Push it aside, scramble the eggs in the gap, then add the peas",
+      "Add the rice and soy sauce and stir-fry for 2 minutes"
+    ]
+  },
+  {
+    "id": "l-chicken-feta-chickpea-couscous",
+    "name": "Chicken, Feta and Chickpea Couscous",
+    "description": "Couscous with oregano chicken, chickpeas, cucumber and feta",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥙",
+    "main": "chicken",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "couscous",
+        "g": 80
+      },
+      {
+        "item": "chickpeas",
+        "g": 80
+      },
+      {
+        "item": "feta",
+        "g": 40
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "{100} ml boiling water",
+      "1 tsp dried oregano",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Season the chicken with the oregano and salt and fry in half the olive oil for 5 to 6 minutes per side, then slice",
+      "Mix the couscous with the drained chickpeas, diced cucumber, remaining olive oil and lemon juice",
+      "Top with the chicken and crumbled feta"
+    ]
+  },
+  {
+    "id": "l-tofu-peanut-rice-bowl",
+    "name": "Tofu Peanut Rice Bowl",
+    "description": "Golden tofu over rice with carrot, cucumber and a peanut soy sauce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥜",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 200
+      },
+      {
+        "item": "rice",
+        "g": 85
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "g": 12
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "3 tbsp hot water",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Cut the tofu into cubes and fry in the oil over medium-high heat for 6 minutes until golden",
+      "Whisk the peanut butter with the soy sauce, hot water and lime juice",
+      "Serve the tofu over the rice with the grated carrots and sliced cucumber and pour over the sauce"
+    ]
+  },
+  {
+    "id": "l-lentil-chickpea-power-bowl",
+    "name": "Lentil and Chickpea Power Bowl",
+    "description": "Warm lentils and chickpeas with avocado and tomato",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥑",
+    "main": "lentils",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 80
+      },
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "splash of red wine vinegar",
+      "1/2 tsp ground cumin",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Simmer the rinsed lentils in unsalted water for 20 to 25 minutes until tender, adding the drained chickpeas for the last 2 minutes, then drain",
+      "Toss with the olive oil, vinegar, cumin, salt and pepper",
+      "Dice the tomato and avocado and fold them through"
+    ]
+  },
+  {
+    "id": "l-turkey-cheese-quesadilla",
+    "name": "Turkey and Cheese Quesadilla",
+    "description": "Crisp tortillas with turkey, peppers and melted cheese",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "turkey",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey",
+        "g": 140
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "cheese",
+        "g": 50
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "1/2 tsp ground cumin",
+      "salt"
+    ],
+    "instructions": [
+      "Slice the turkey thinly, season with the paprika, cumin and salt and fry in the oil with the diced peppers for 6 minutes",
+      "Cover one tortilla with half the grated cheese, the turkey and peppers and the rest of the cheese, and top with the second tortilla",
+      "Cook in a clean dry pan over medium heat for 3 minutes per side until golden",
+      "Cut into wedges"
+    ]
+  },
+  {
+    "id": "l-bacon-egg-potato-hash",
+    "name": "Bacon, Egg and Potato Hash",
+    "description": "Crisp potatoes with bacon and onion, topped with three fried eggs",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥓",
+    "main": "eggs",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "bacon",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into 1 cm cubes and fry them in the oil over medium heat for 12 minutes until golden",
+      "Add the chopped bacon and diced onion with the paprika and cook for 5 minutes until the bacon is crisp",
+      "Make {n:eggs} gaps in the hash, crack in the eggs, cover and cook for 3 minutes until the whites are set",
+      "Season with pepper"
+    ]
+  },
+  {
+    "id": "l-creamy-garlic-shrimp-pasta",
+    "name": "Creamy Garlic Shrimp Pasta",
+    "description": "Pasta with shrimp and spinach in a garlic parmesan cream sauce",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 160
+      },
+      {
+        "item": "pasta",
+        "g": 95
+      },
+      {
+        "item": "cream sauce",
+        "g": 80
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "parmesan",
+        "g": 15
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a little of the water",
+      "Fry the shrimp in a non-stick pan over high heat for 2 minutes with the sliced garlic",
+      "Add the cream sauce, spinach and a splash of pasta water and simmer for 2 minutes",
+      "Toss in the pasta and grated parmesan and finish with pepper and lemon juice"
+    ]
+  },
+  {
+    "id": "l-chicken-meatball-sub",
+    "name": "Chicken Meatball Sub",
+    "description": "Chicken meatballs in tomato sauce with melted mozzarella in bread",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥖",
+    "main": "chicken mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken mince",
+        "g": 160
+      },
+      {
+        "item": "bread",
+        "pieces": 3
+      },
+      {
+        "item": "tomato sauce",
+        "g": 100
+      },
+      {
+        "item": "mozzarella",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Season the chicken mince with the oregano, salt and pepper and roll it into {6} balls",
+      "Brown them in a non-stick pan for 6 minutes, turning",
+      "Add the tomato sauce, cover and simmer for 6 minutes until cooked through",
+      "Pile the meatballs and sauce onto the bread, top with the sliced mozzarella and let it melt for a minute before closing the sandwich"
+    ]
+  }
+]

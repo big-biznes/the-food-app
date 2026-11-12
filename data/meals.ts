@@ -1,4 +1,6 @@
 import { DietaryRestriction } from '@/contexts/AuthContext';
+import { goalScore, personalize } from './portions';
+import type { Targets } from './portions';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner';
 
@@ -27,6 +29,8 @@ export type Meal = {
   appliances: string[];
   mealType: MealType;
   dietaryTags: DietaryRestriction[];
+  /** The categories the meal belongs to (see CATEGORIES); absent on meals saved before they existed. */
+  tags?: string[];
   keywords: string[];
   emoji: string;
   /** Key of the ingredient the dish is built around: "chicken", "eggs", "oats". */
@@ -35,6 +39,12 @@ export type Meal = {
   /** Salt, spices, water: listed with the recipe, never counted or put on the shopping list. */
   seasonings?: string[];
   instructions: string[];
+  /**
+   * The steps and seasonings as written in the cookbook, when they contain numbers that
+   * depend on the portion ("roll into {8} balls"). `instructions` and `seasonings` hold
+   * the same text filled in for the standard recipe; data/portions.ts fills it in per person.
+   */
+  templates?: { instructions: string[]; seasonings: string[] };
 };
 
 /** The main ingredient. Meals saved before recipes had `main` carry it as the protein of `components`. */
@@ -53,6 +63,80 @@ function sideIngredients(meal: Meal): string[] {
 
 const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
 
+// ── Categories a plan can focus on ───────────────────────────────────────────
+// Recipes get these from scripts/recipes/lib.mjs: quick, light and hearty are
+// computed from the recipe, the others are written by the recipe's author.
+
+/** Where a dish comes from. A dish has at most one or two; a plan asking for several wants any of them. */
+export const CUISINES = ['asian', 'italian', 'mediterranean', 'mexican'];
+/** What a dish is like. A plan asking for several wants dishes that are all of them. */
+export const QUALITIES = ['spicy', 'light', 'hearty', 'fresh', 'comfort', 'quick'];
+export const CATEGORIES = [...CUISINES, ...QUALITIES];
+
+export type Focus = { cuisines: string[]; qualities: string[] };
+
+/** The focus in a list of chosen chips or typed words; anything that is not a category is ignored. */
+export function toFocus(words: string[]): Focus {
+  const chosen = new Set(words.map(w => w.toLowerCase().trim()));
+  return { cuisines: CUISINES.filter(c => chosen.has(c)), qualities: QUALITIES.filter(q => chosen.has(q)) };
+}
+
+const hasFocus = (focus: Focus) => focus.cuisines.length + focus.qualities.length > 0;
+
+function tagsOf(meal: Meal): string[] {
+  return meal.tags ?? meal.keywords.filter(k => CATEGORIES.includes(k));
+}
+
+/** Calories that bound the lightest and the heaviest third of each meal type in a set of meals. */
+type CalorieThirds = Record<MealType, { low: number; high: number }>;
+
+function calorieThirds(meals: Meal[]): CalorieThirds {
+  const out = {} as CalorieThirds;
+  for (const type of MEAL_TYPES) {
+    const kcal = meals.filter(m => m.mealType === type).map(m => m.calories).sort((a, b) => a - b);
+    const at = (share: number) => kcal[Math.floor(share * (kcal.length - 1))] ?? 0;
+    out[type] = { low: at(1 / 3), high: at(2 / 3) };
+  }
+  return out;
+}
+
+/** "Quick" when nothing is truly quick: still on the table in half an hour. */
+const NEARLY_QUICK_MINUTES = 30;
+
+/**
+ * How well a meal fits the focus; higher is better, 0 when there is no focus.
+ *
+ * The cuisine counts for more than all qualities together, so a Mexican plan
+ * stays Mexican before it gets light or quick. A quality that is measured
+ * (light, hearty, quick) gives half credit to the meals that come closest, so
+ * asking for "light" still means the lightest dishes when none is truly light.
+ */
+function focusFit(meal: Meal, focus: Focus, thirds: CalorieThirds): number {
+  const tags = tagsOf(meal);
+  let fit = 0;
+  if (focus.cuisines.some(c => tags.includes(c))) fit += focus.qualities.length + 1;
+  for (const q of focus.qualities) {
+    if (tags.includes(q)) fit += 1;
+    else if (q === 'light' && meal.calories <= thirds[meal.mealType].low) fit += 0.5;
+    else if (q === 'hearty' && meal.calories >= thirds[meal.mealType].high) fit += 0.5;
+    else if (q === 'quick' && meal.prepTime <= NEARLY_QUICK_MINUTES) fit += 0.5;
+  }
+  return fit;
+}
+
+/** The meals that fit the focus best out of `meals` (all of them when there is no focus). */
+function bestFitting<T extends { focus: number }>(meals: T[]): T[] {
+  const best = Math.max(...meals.map(m => m.focus));
+  return meals.filter(m => m.focus === best);
+}
+
+type ScoredMeal = Meal & { score: number; focus: number };
+
+/** Drop the scoring fields again, so only the meal itself is stored in a plan. */
+function plain({ score: _score, focus: _focus, ...meal }: ScoredMeal): Meal {
+  return meal;
+}
+
 /**
  * Meals that fit the user's dietary restrictions. A meal type with nothing that
  * fits keeps all of its meals, so a plan can always be filled.
@@ -67,6 +151,8 @@ function compatiblePool(restrictions: DietaryRestriction[]): Meal[] {
 
 /** Format a single ingredient for display on the meal card */
 export function formatIngredient(ing: Ingredient): string {
+  // "2 eggs" already names the ingredient; "2 cloves" needs it: "2 cloves garlic".
+  if (ing.label) return ing.label.includes(ing.name.replace(/s$/, '')) ? ing.label : `${ing.label} ${ing.name}`;
   if (!ing.unit) {
     return ing.amount > 1 ? `${ing.amount} ${ing.name}` : ing.name;
   }
@@ -169,7 +255,10 @@ function scoredPool(
   meals: Meal[],
   keywords: string[],
   likedIds: string[] = [],
-): (Meal & { score: number })[] {
+  focus: Focus = { cuisines: [], qualities: [] },
+  targets: Targets | null = null,
+): ScoredMeal[] {
+  const thirds = calorieThirds(meals);
   // Collect what liked meals are made of so we can boost meals that share
   // ingredients with things the user enjoyed.
   const likedSet = new Set(likedIds);
@@ -185,7 +274,8 @@ function scoredPool(
   }
 
   return meals.map(m => {
-    let score = 0;
+    // Meals that suit the person's goal and need little scaling to fit their day.
+    let score = goalScore(m, targets);
 
     // Keyword match score
     if (keywords.length > 0) {
@@ -205,22 +295,23 @@ function scoredPool(
       score += Math.min(3, sideIngredients(m).filter(name => likedSides.has(name)).length);
     }
 
-    return { ...m, score };
+    return { ...m, score, focus: focusFit(m, focus, thirds) };
   });
 }
 
 function pickMeal(
-  pool: (Meal & { score: number })[],
+  pool: ScoredMeal[],
   mealType: MealType,
   usedIds: Set<string>,
 ): Meal {
   const typePool = pool.filter(m => m.mealType === mealType);
   const unused = typePool.filter(m => !usedIds.has(m.id));
-  const source = unused.length > 0 ? unused : typePool;
+  // The focus comes first: only the best-fitting meals that are still unused compete.
+  const source = bestFitting(unused.length > 0 ? unused : typePool);
 
   const sorted = [...source].sort((a, b) => b.score - a.score);
   const topN = sorted.slice(0, Math.min(3, sorted.length));
-  const { score: _s, ...pick } = topN[Math.floor(Math.random() * topN.length)];
+  const pick = plain(topN[Math.floor(Math.random() * topN.length)]);
 
   usedIds.add(pick.id);
   return pick;
@@ -287,17 +378,21 @@ export function getWeekStructure(eatingOutDay: string): WeekStructure {
  * `excludeProteins` ensures Part B doesn't repeat Part A's proteins.
  */
 function pickTargetProteins(
-  pool: (Meal & { score: number })[],
+  pool: ScoredMeal[],
   excludeProteins: Set<string>,
 ): [string, string] {
-  const cooked = pool.filter(m => m.mealType !== 'breakfast');
+  // With a focus, only the lunches and dinners that fit it best get a say, so the
+  // part is planned around proteins the focus can actually be cooked with.
+  const all = pool.filter(m => m.mealType !== 'breakfast');
+  const cooked = all.length > 0 ? bestFitting(all) : all;
   const proteinScore = new Map<string, number>();
   for (const m of cooked) {
     const p = mainOf(m);
     if (excludeProteins.has(p)) continue;
-    proteinScore.set(p, (proteinScore.get(p) ?? 0) + m.score);
+    // Every meal counts once on top of its score, so a protein with many suitable
+    // meals is likelier than one with a single recipe, also when nothing is scored.
+    proteinScore.set(p, (proteinScore.get(p) ?? 0) + m.score + 1);
   }
-  // Sort by aggregate score descending, pick from the top candidates
   const ranked = [...proteinScore.entries()].sort((a, b) => b[1] - a[1]);
   if (ranked.length === 0) {
     // Fallback: ignore exclusions
@@ -311,18 +406,17 @@ function pickTargetProteins(
     const b = fallback[1]?.[0] ?? fallback[0]?.[0] ?? 'beef';
     return [a, b];
   }
-  // Pick from top 4 candidates with a weighted random for variety
-  const candidates = ranked.slice(0, Math.min(4, ranked.length));
-  const totalWeight = candidates.reduce((s, [, w]) => s + w + 1, 0); // +1 so zero-score proteins still have a chance
+  // Weighted random over every protein, for variety from week to week
+  const candidates = ranked;
   function weightedPick(exclude?: string): string {
     const filtered = exclude
       ? candidates.filter(([p]) => p !== exclude)
       : candidates;
     if (filtered.length === 0) return candidates[candidates.length - 1][0];
-    const tw = filtered.reduce((s, [, w]) => s + w + 1, 0);
+    const tw = filtered.reduce((s, [, w]) => s + w, 0);
     let r = Math.random() * tw;
     for (const [p, w] of filtered) {
-      r -= w + 1;
+      r -= w;
       if (r <= 0) return p;
     }
     return filtered[filtered.length - 1][0];
@@ -343,7 +437,7 @@ function nonProteinSharingScore(meal: Meal, picked: Meal[]): number {
 }
 
 function pickMealWithSharing(
-  pool: (Meal & { score: number })[],
+  pool: ScoredMeal[],
   mealType: MealType,
   usedIds: Set<string>,
   pickedInPart: Meal[],
@@ -351,7 +445,9 @@ function pickMealWithSharing(
 ): Meal {
   const typePool = pool.filter(m => m.mealType === mealType);
   const unused = typePool.filter(m => !usedIds.has(m.id));
-  const source = unused.length > 0 ? unused : typePool;
+  // The focus comes first: only the best-fitting meals that are still unused compete,
+  // and ingredient sharing and the part's proteins decide among those.
+  const source = bestFitting(unused.length > 0 ? unused : typePool);
 
   const boosted = source.map(m => {
     let bonus = nonProteinSharingScore(m, pickedInPart);
@@ -366,7 +462,7 @@ function pickMealWithSharing(
 
   const sorted = [...boosted].sort((a, b) => b.score - a.score);
   const topN = sorted.slice(0, Math.min(5, sorted.length));
-  const { score: _s, ...pick } = topN[Math.floor(Math.random() * topN.length)];
+  const pick = plain(topN[Math.floor(Math.random() * topN.length)]);
 
   usedIds.add(pick.id);
   return pick;
@@ -379,8 +475,10 @@ function generatePartPlan(
   usedIds: Set<string>,
   likedIds: string[] = [],
   excludeProteins: Set<string> = new Set(),
+  focus?: Focus,
+  targets: Targets | null = null,
 ): { plan: Record<string, DayPlan>; proteins: Set<string> } {
-  const scored = scoredPool(pool, keywords, likedIds);
+  const scored = scoredPool(pool, keywords, likedIds, focus, targets);
   const [prot1, prot2] = pickTargetProteins(scored, excludeProteins);
   const targetProteins = new Set([prot1, prot2]);
   const pickedInPart: Meal[] = [];
@@ -403,18 +501,23 @@ export function generateStructuredMealPlan(
   keywords: string[],
   eatingOutDay: string = 'Sun',
   likedIds: string[] = [],
+  /** Categories the plan should focus on (chip names); see CATEGORIES. */
+  focusOn: string[] = [],
+  /** The person's energy targets, to favour meals that suit their goal; see data/portions.ts. */
+  targets: Targets | null = null,
 ): StructuredWeekPlan {
+  const focus = toFocus(focusOn);
   const { partDays } = getWeekStructure(eatingOutDay);
 
   const pool = compatiblePool(restrictions);
   const usedIds = new Set<string>();
 
   // Part A picks 2 proteins; Part B excludes those so the week has 4 distinct proteins
-  const resultA = generatePartPlan(partDays.A, pool, keywords, usedIds, likedIds);
-  const resultB = generatePartPlan(partDays.B, pool, keywords, usedIds, likedIds, resultA.proteins);
+  const resultA = generatePartPlan(partDays.A, pool, keywords, usedIds, likedIds, new Set(), focus, targets);
+  const resultB = generatePartPlan(partDays.B, pool, keywords, usedIds, likedIds, resultA.proteins, focus, targets);
 
   // Part C: eating-out day — one cooked lunch + eating-out dinner
-  const cScored = scoredPool(pool, keywords, likedIds);
+  const cScored = scoredPool(pool, keywords, likedIds, focus, targets);
   const cLunch = pickMeal(cScored, 'lunch', usedIds);
   const partC: Record<string, PartCDayPlan> = {
     [partDays.C[0]]: { lunch: cLunch, dinner: EATING_OUT },
@@ -425,7 +528,9 @@ export function generateStructuredMealPlan(
   const plan: StructuredWeekPlan = { A: partA, B: partB, C: partC };
 
   // ── Liked-meal injection ────────────────────────────────────────────────────
-  if (likedIds.length > 0) {
+  // Not for a focused plan: a liked meal that fits the focus is already favoured,
+  // and one that does not fit would break it.
+  if (likedIds.length > 0 && !hasFocus(focus)) {
     const planIds = extractUsedIds(plan);
     const alreadyHasLiked = likedIds.some(id => planIds.has(id));
     if (!alreadyHasLiked) {
@@ -468,8 +573,14 @@ export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
 /** One shopping-list line for a plan, and how many meals need that ingredient. */
 export type PlanIngredient = { name: string; uses: number };
 
-export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart): PlanIngredient[] {
+export function extractPartIngredients(
+  plan: StructuredWeekPlan,
+  part: WeekPart,
+  /** The person's energy targets, so the list is for the portions they will cook. */
+  targets: Targets | null = null,
+): PlanIngredient[] {
   const groups = new Map<string, Ingredient[]>();
+  const ingredientsOf = (meal: Meal) => personalize(meal, targets).ingredients;
 
   function collect(ing: Ingredient) {
     const key = ing.name.toLowerCase().trim();
@@ -479,12 +590,12 @@ export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart)
 
   if (part === 'C') {
     for (const dayPlan of Object.values(plan.C)) {
-      for (const ing of dayPlan.lunch.ingredients) collect(ing);
+      for (const ing of ingredientsOf(dayPlan.lunch)) collect(ing);
     }
   } else {
     for (const dayPlan of Object.values(plan[part])) {
       for (const meal of [dayPlan.breakfast, dayPlan.lunch, dayPlan.dinner]) {
-        for (const ing of meal.ingredients) collect(ing);
+        for (const ing of ingredientsOf(meal)) collect(ing);
       }
     }
   }
@@ -521,6 +632,8 @@ export function getAlternateMeal(
   current: Meal,
   usedIds: Set<string>,
   restrictions: DietaryRestriction[],
+  /** Categories the plan was made for, so a replacement stays in theme. */
+  focusOn: string[] = [],
 ): Meal {
   const fresh = ALL_MEALS.filter(
     m =>
@@ -529,7 +642,12 @@ export function getAlternateMeal(
       !usedIds.has(m.id) &&
       restrictions.every(r => m.dietaryTags.includes(r)),
   );
-  if (fresh.length > 0) return fresh[Math.floor(Math.random() * fresh.length)];
+  if (fresh.length > 0) {
+    const focus = toFocus(focusOn);
+    const thirds = calorieThirds(ALL_MEALS);
+    const fitting = bestFitting(fresh.map(meal => ({ meal, focus: focusFit(meal, focus, thirds) })));
+    return fitting[Math.floor(Math.random() * fitting.length)].meal;
+  }
 
   const compatible = ALL_MEALS.filter(
     m =>

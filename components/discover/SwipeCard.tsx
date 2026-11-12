@@ -1,3 +1,4 @@
+import { usePersonalMeal } from '@/hooks/usePortions';
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, PanResponder, StyleSheet, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -50,6 +51,8 @@ export default function SwipeCard({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  // Calories for the portion this user will cook.
+  const personal = usePersonalMeal(meal);
   const { width: screenWidth } = useWindowDimensions();
   const widthRef = useRef(screenWidth);
   widthRef.current = screenWidth;
@@ -200,7 +203,7 @@ export default function SwipeCard({
           },
         ]}
         accessible
-        accessibilityLabel={`${meal.name}. ${meal.description}. ${meal.prepTime} minutes, ${meal.calories} kilocalories`}
+        accessibilityLabel={`${meal.name}. ${meal.description}. ${meal.prepTime} minutes, ${personal.calories} kilocalories`}
         accessibilityHint="Double tap for details. Swipe right to like, left to pass. Custom actions are available."
         accessibilityActions={[
           { name: 'activate', label: 'Show details' },

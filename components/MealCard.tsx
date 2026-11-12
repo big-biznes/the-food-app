@@ -1,3 +1,4 @@
+import { usePersonalMeal } from '@/hooks/usePortions';
 import { useRef } from 'react';
 import { AccessibilityInfo, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -56,6 +57,8 @@ export default function MealCard({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  // Calories for the portion this user will cook.
+  const personal = usePersonalMeal('isEatingOut' in meal ? undefined : meal);
   const reducedMotion = useReducedMotion();
   const spinAnim = useRef(new Animated.Value(0)).current;
   const router = useRouter();
@@ -157,7 +160,7 @@ export default function MealCard({
           router.push({ pathname: '/details', params: { id: meal.id } });
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${meal.calories} kilocalories`}
+        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${(personal ?? meal).calories} kilocalories`}
         accessibilityHint={swapBlockedReason ?? (onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe')}
         accessibilityState={{ selected: Boolean(selected) }}
       >
@@ -201,7 +204,7 @@ export default function MealCard({
           {meal.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {meal.prepTime} min, {meal.calories} kcal
+          {meal.prepTime} min, {(personal ?? meal).calories} kcal
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
       </TouchableOpacity>

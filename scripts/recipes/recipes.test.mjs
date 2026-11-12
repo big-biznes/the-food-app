@@ -22,7 +22,7 @@ const recipe = (over = {}) => ({
   appliances: ['stovetop'],
   emoji: '🍳',
   main: 'eggs',
-  tags: ['quick'],
+  tags: ['comfort'],
   ingredients: [{ item: 'eggs', pieces: 2 }, { item: 'bread', pieces: 2 }],
   seasonings: ['salt'],
   instructions: ['Toast the bread', 'Fry the eggs and put them on the toast'],
@@ -68,6 +68,7 @@ test('a recipe cannot bring its own numbers or unknown ingredients', () => {
   assert.match(errors(recipe({ main: 'bacon' })), /main must be/);
   assert.match(errors(recipe({ mealType: 'brunch' })), /mealType/);
   assert.match(errors(recipe({ tags: ['yummy'] })), /unknown tag/);
+  assert.match(errors(recipe({ tags: ['quick'] })), /worked out from the recipe/);
   assert.match(errors(recipe({ instructions: ['Cook it'] })), /at least 2 steps/);
   assert.equal(buildRecipe(recipe({ calories: 1 }), defs).row.calories, Math.round(1.1 * 143 + 0.7 * 252));
 });
@@ -108,4 +109,25 @@ test('every ingredient has nutrition data per 100 g', () => {
     assert.ok(Math.abs(estimate - kcal) <= Math.max(25, kcal * 0.15), `${ing.key}: ${kcal} kcal but macros give ${Math.round(estimate)}`);
     assert.ok(ing.per100g.source, `${ing.key}: source`);
   }
+});
+
+test('quick, light, hearty and spicy follow from the recipe itself', () => {
+  const categories = r => buildRecipe(r, defs).row.keywords.filter(k => ['spicy', 'comfort', 'quick', 'light', 'hearty'].includes(k));
+  // 334 kcal in 8 minutes
+  assert.deepEqual(categories(recipe()), ['comfort', 'quick', 'light']);
+  assert.deepEqual(categories(recipe({ prepTime: 25, tags: [] })), ['light']);
+  // 3 eggs, 3 slices and 60 g bacon: 737 kcal, 42 g protein
+  const big = recipe({ tags: [], ingredients: [{ item: 'eggs', pieces: 3 }, { item: 'bread', pieces: 3 }, { item: 'bacon', g: 60 }] });
+  assert.deepEqual(categories(big), ['quick', 'hearty']);
+  assert.deepEqual(categories(recipe({ tags: [], seasonings: ['pinch of chili flakes'] })), ['spicy', 'quick', 'light']);
+});
+
+test('portion markers in steps and seasonings are checked', () => {
+  const errors = r => buildRecipe(r, defs).errors.join('; ');
+  const ok = recipe({ instructions: ['Toast the bread', 'Make {n:eggs} gaps, add the eggs and shape into {4} patties'], seasonings: ['{200} ml water'] });
+  assert.equal(errors(ok), '');
+  assert.match(errors(recipe({ instructions: ['Toast the bread', 'Fry {n:bacon} rashers'] })), /must be \{number\} or \{n:ingredient/);
+  assert.match(errors(recipe({ instructions: ['Toast the bread', 'Fry the {eggs}'] })), /must be \{number\}/);
+  assert.match(errors(recipe({ ingredients: [{ item: 'eggs', pieces: 2 }, { item: 'oats', g: 50 }], instructions: ['Soak', 'Add {n:oats} oats'] })), /not counted in pieces/);
+  assert.match(errors(recipe({ seasonings: ['{200 ml water'] })), /unbalanced braces/);
 });

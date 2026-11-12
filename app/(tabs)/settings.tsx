@@ -11,7 +11,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, DietaryRestriction, Goal } from '@/contexts/AuthContext';
+import { useAuth, Activity, DietaryRestriction, Goal } from '@/contexts/AuthContext';
+import { useTargets } from '@/hooks/usePortions';
 import { Colors } from '@/constants/theme';
 import StorePicker from '@/components/shopping/StorePicker';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -27,6 +28,13 @@ const GOAL_OPTIONS: { value: Goal; label: string }[] = [
   { value: 'lose', label: 'Lose weight' },
   { value: 'maintain', label: 'Maintain' },
   { value: 'gain', label: 'Gain muscle' },
+];
+
+const ACTIVITY_OPTIONS: { value: Activity; label: string }[] = [
+  { value: 'low', label: 'Mostly sitting' },
+  { value: 'light', label: 'Lightly active' },
+  { value: 'active', label: 'Active' },
+  { value: 'very', label: 'Very active' },
 ];
 
 const MACRO_OPTIONS: { value: MacroBalance; label: string }[] = [
@@ -55,6 +63,7 @@ export default function SettingsScreen() {
 
   // Plan settings
   const [goal, setGoal] = useState<Goal>(user?.goal ?? 'maintain');
+  const targets = useTargets();
   const [macroBalance, setMacroBalance] = useState<MacroBalance>('balanced');
 
   const [eatingOutDay, setEatingOutDay] = useState<string>(user?.eatingOutDay ?? 'Fri');
@@ -69,9 +78,10 @@ export default function SettingsScreen() {
   const [notifications, setNotifications] = useState(true);
 
   function toggleRestriction(r: DietaryRestriction) {
-    setRestrictions(prev =>
-      prev.includes(r) ? prev.filter(x => x !== r) : [...prev, r],
-    );
+    const next = restrictions.includes(r) ? restrictions.filter(x => x !== r) : [...restrictions, r];
+    setRestrictions(next);
+    // Saved straight away, like the eating-out day: plans and Discover read it from the profile.
+    updateProfile({ restrictions: next });
   }
 
   function handleDeleteAccount() {
@@ -133,14 +143,34 @@ export default function SettingsScreen() {
         {/* ── Plan Settings ─────────────────────────────────────────── */}
         <SectionHeader label="Plan" />
         <View style={styles.section}>
-          <RowLabel label="Weight goal" />
+          <RowLabel
+            label="Weight goal"
+            hint={targets ? `About ${targets.kcal.toLocaleString('en')} kcal a day; portions are sized to match` : undefined}
+          />
           <View style={styles.chipRow}>
             {GOAL_OPTIONS.map(opt => (
               <Chip
                 key={opt.value}
                 label={opt.label}
                 selected={goal === opt.value}
-                onPress={() => setGoal(opt.value)}
+                onPress={() => {
+                  setGoal(opt.value);
+                  updateProfile({ goal: opt.value });
+                }}
+              />
+            ))}
+          </View>
+
+          <Divider />
+
+          <RowLabel label="Activity level" hint="Work and exercise together, on a normal week" />
+          <View style={styles.chipRow}>
+            {ACTIVITY_OPTIONS.map(opt => (
+              <Chip
+                key={opt.value}
+                label={opt.label}
+                selected={(user?.activity ?? 'light') === opt.value}
+                onPress={() => updateProfile({ activity: opt.value })}
               />
             ))}
           </View>

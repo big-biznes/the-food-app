@@ -12,12 +12,12 @@ import {
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, Goal, Gender, DietaryRestriction } from '@/contexts/AuthContext';
+import { useAuth, Goal, Gender, Activity, DietaryRestriction } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
 import { font, type } from '@/constants/type';
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 9;
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -25,6 +25,13 @@ const GOALS: { value: Goal; label: string; desc: string }[] = [
   { value: 'lose', label: 'Lose weight', desc: 'Reduce body fat' },
   { value: 'gain', label: 'Gain weight', desc: 'Build muscle & mass' },
   { value: 'maintain', label: 'Maintain', desc: 'Stay where I am' },
+];
+
+const ACTIVITIES: { value: Activity; label: string; desc: string }[] = [
+  { value: 'low', label: 'Mostly sitting', desc: 'Desk job, little exercise' },
+  { value: 'light', label: 'Lightly active', desc: 'Some walking, exercise once or twice a week' },
+  { value: 'active', label: 'Active', desc: 'On my feet a lot, or exercise most days' },
+  { value: 'very', label: 'Very active', desc: 'Physical job or hard training every day' },
 ];
 
 const GENDERS: { value: Gender; label: string }[] = [
@@ -56,6 +63,7 @@ export default function QuizScreen() {
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [activity, setActivity] = useState<Activity | null>(null);
   const [restrictions, setRestrictions] = useState<DietaryRestriction[]>([]);
   const [eatingOutDay, setEatingOutDay] = useState<string | null>(null);
 
@@ -68,8 +76,9 @@ export default function QuizScreen() {
       case 4: return !isNaN(n(age)) && n(age) >= 1 && n(age) <= 120;
       case 5: return !isNaN(n(height)) && n(height) >= 50 && n(height) <= 300;
       case 6: return !isNaN(n(weight)) && n(weight) >= 20 && n(weight) <= 500;
-      case 7: return true;
-      case 8: return eatingOutDay !== null;
+      case 7: return activity !== null;
+      case 8: return true;
+      case 9: return eatingOutDay !== null;
       default: return false;
     }
   }
@@ -93,6 +102,7 @@ export default function QuizScreen() {
       age: parseInt(age, 10),
       heightCm: parseInt(height, 10),
       weightKg: parseInt(weight, 10),
+      activity: activity!,
       restrictions,
       eatingOutDay: eatingOutDay!,
       discoverExpertMode: false,
@@ -168,10 +178,11 @@ export default function QuizScreen() {
                 max={500}
               />
             )}
-            {step === 7 && (
+            {step === 7 && <StepActivity activity={activity} setActivity={setActivity} />}
+            {step === 8 && (
               <StepRestrictions restrictions={restrictions} toggle={toggleRestriction} />
             )}
-            {step === 8 && (
+            {step === 9 && (
               <StepEatingOutDay day={eatingOutDay} setDay={setEatingOutDay} />
             )}
           </ScrollView>
@@ -246,6 +257,44 @@ function StepGoal({
               style={[step.card, selected && step.cardSelected]}
               onPress={() => setGoal(item.value)}
               activeOpacity={0.7}
+            >
+              <Text style={[step.cardTitle, selected && step.cardTitleSelected]}>
+                {item.label}
+              </Text>
+              <Text style={[step.cardDesc, selected && step.cardDescSelected]}>
+                {item.desc}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function StepActivity({
+  activity,
+  setActivity,
+}: {
+  activity: Activity | null;
+  setActivity: (v: Activity) => void;
+}) {
+  const step = useThemedStyles(makeStep);
+  return (
+    <View style={step.wrap}>
+      <Text style={step.question}>How active are you?</Text>
+      <Text style={step.hint}>Work and exercise together, on a normal week</Text>
+      <View style={step.cardList}>
+        {ACTIVITIES.map(item => {
+          const selected = activity === item.value;
+          return (
+            <TouchableOpacity
+              key={item.value}
+              style={[step.card, selected && step.cardSelected]}
+              onPress={() => setActivity(item.value)}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityState={{ selected }}
             >
               <Text style={[step.cardTitle, selected && step.cardTitleSelected]}>
                 {item.label}

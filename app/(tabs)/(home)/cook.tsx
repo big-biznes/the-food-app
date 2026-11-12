@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { findMeal } from '@/data/meals';
+import { findMeal, formatIngredient } from '@/data/meals';
+import { stepIngredients } from '@/data/portions';
+import { usePersonalMeal } from '@/hooks/usePortions';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -15,7 +17,8 @@ export default function CookScreen() {
   const styles = useThemedStyles(makeStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const meal = findMeal(id);
+  // Steps and amounts for the portion this user cooks.
+  const meal = usePersonalMeal(findMeal(id));
 
   const [step, setStep] = useState(0);
 
@@ -38,6 +41,8 @@ export default function CookScreen() {
   const total = steps.length;
   const progress = (step + 1) / total;
   const isLast = step === total - 1;
+  // How much of each ingredient this step uses, in the user's portion.
+  const used = stepIngredients(steps[step], meal.ingredients).map(formatIngredient);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -64,6 +69,11 @@ export default function CookScreen() {
           <Text style={styles.stepNumber}>{step + 1}</Text>
         </View>
         <Text style={styles.stepText}>{steps[step]}</Text>
+        {used.length > 0 && (
+          <Text style={styles.stepAmounts} accessibilityLabel={`For this step: ${used.join(', ')}`}>
+            {used.join('  ·  ')}
+          </Text>
+        )}
       </View>
 
       {/* Bottom nav */}
@@ -174,6 +184,13 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     lineHeight: 31,
     letterSpacing: -0.5,
     color: c.text,
+  },
+  stepAmounts: {
+    fontFamily: font.medium,
+    fontSize: 15,
+    lineHeight: 22,
+    color: c.textMuted,
+    marginTop: 18,
   },
 
   // Bottom bar

@@ -6,6 +6,7 @@ import { findMeal, MealType, Ingredient, formatIngredient } from '@/data/meals';
 import { DietaryRestriction } from '@/contexts/AuthContext';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { usePersonalMeal, useTargets } from '@/hooks/usePortions';
 
 import { font, type } from '@/constants/type';
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -49,7 +50,9 @@ export default function DetailsScreen() {
   // `from: 'discover'` when opened from a Discover card: Cook then stays in the Discover tab.
   const { id, from } = useLocalSearchParams<{ id: string; from?: string }>();
   const router = useRouter();
-  const meal = findMeal(id);
+  // The recipe with amounts and nutrition sized for this user.
+  const meal = usePersonalMeal(findMeal(id));
+  const targets = useTargets();
 
   if (!meal) {
     return (
@@ -175,8 +178,14 @@ export default function DetailsScreen() {
           {meal.seasonings && meal.seasonings.length > 0 && (
             <Text style={styles.footnote}>From the cupboard: {meal.seasonings.join(', ')}</Text>
           )}
+          {targets && meal.portion != null && (
+            <Text style={styles.footnote}>
+              {meal.portion === 1 ? 'The standard recipe fits your day' : `Sized for you: ${meal.portion}× the standard recipe`}, towards{' '}
+              {targets.kcal.toLocaleString('en')} kcal a day for your goal.
+            </Text>
+          )}
           <Text style={styles.footnote}>
-            Nutrition is per serving, estimated from the raw ingredient amounts above. Seasonings are not counted.
+            Nutrition is for the amounts above, estimated from the raw ingredients. Seasonings are not counted.
           </Text>
         </View>
       </ScrollView>

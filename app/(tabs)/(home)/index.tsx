@@ -17,8 +17,10 @@ import {
   extractPartIngredients,
   planMeals,
   rememberMeals,
+  CATEGORIES,
 } from '@/data/meals';
 import { waitForRecipes } from '@/contexts/RecipesContext';
+import { useTargets } from '@/hooks/usePortions';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
@@ -46,7 +48,8 @@ const SWAP_HELP_AFTER_TAPS = 3;
 const SWAP_HELP_WINDOW_MS = 5000;
 
 /** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
-type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string };
+/** `focus`: the categories the plan was generated for, so replaced meals stay in theme. */
+type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string; focus?: string[] };
 
 function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
@@ -58,6 +61,7 @@ export default function HomeScreen() {
   const { user, updateProfile } = useAuth();
   const { replacePlanIngredients } = useShoppingContext();
   const { likedIds } = useLikes();
+  const targets = useTargets();
 
   // Snapshot the eating-out day used when the plan was generated.
   // Changing it in settings only takes effect when a new plan is generated.
@@ -72,7 +76,7 @@ export default function HomeScreen() {
     (update: SetStateAction<StructuredWeekPlan | null>) =>
       setSavedPlan(prev => {
         const next = typeof update === 'function' ? update(prev?.plan ?? null) : update;
-        return next ? { plan: next, eatingOutDay: prev?.eatingOutDay ?? 'Sun' } : null;
+        return next ? { plan: next, eatingOutDay: prev?.eatingOutDay ?? 'Sun', focus: prev?.focus } : null;
       }),
     [setSavedPlan],
   );
@@ -179,7 +183,7 @@ export default function HomeScreen() {
     planToastRef.current?.dismiss();
     setTimeout(() => confirmToastRef.current?.show(), 50);
     requestAnimationFrame(() => {
-      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart));
+      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart, targets));
     });
   }
 
@@ -189,15 +193,23 @@ export default function HomeScreen() {
     );
   }
 
-  function buildKeywords() {
-    return [
+  /**
+   * What the user asked for, split in two: categories (a chip, or the same word
+   * typed) are the plan's focus; any other typed word is matched against ingredients.
+   */
+  function buildCraving() {
+    const words = [
       ...selectedCravings.map(x => x.toLowerCase()),
-      ...cravingText.toLowerCase().split(/\s+/).filter(Boolean),
+      ...cravingText.toLowerCase().split(/[\s,]+/).filter(Boolean),
     ];
+    return {
+      focus: [...new Set(words.filter(w => CATEGORIES.includes(w)))],
+      keywords: words.filter(w => !CATEGORIES.includes(w)),
+    };
   }
 
-  function applyNewPlan(newPlan: StructuredWeekPlan) {
-    setSavedPlan({ plan: newPlan, eatingOutDay: user?.eatingOutDay ?? 'Sun' });
+  function applyNewPlan(newPlan: StructuredWeekPlan, focus: string[]) {
+    setSavedPlan({ plan: newPlan, eatingOutDay: user?.eatingOutDay ?? 'Sun', focus });
     setSwapSource(null);
     const todayPart = getTodayPart();
     setSelectedPart(todayPart);
@@ -210,20 +222,25 @@ export default function HomeScreen() {
     setTimeout(() => planToastRef.current?.show({ extraMs }), 500);
   }
 
-  function generatePlan() {
-    return generateStructuredMealPlan(
+  /** Generate a plan for the current craving and show it. */
+  function createPlan() {
+    const { focus, keywords } = buildCraving();
+    const newPlan = generateStructuredMealPlan(
       user?.restrictions ?? [],
-      buildKeywords(),
+      keywords,
       user?.eatingOutDay ?? 'Sun',
       likedIds,
+      focus,
+      targets,
     );
+    applyNewPlan(newPlan, focus);
   }
 
   // Generating needs the full recipe list; on a fresh app start it may still be loading
   // in the background (the "Building your plan" screen covers the short wait).
   async function generateWhenReady() {
     await waitForRecipes();
-    applyNewPlan(generatePlan());
+    createPlan();
   }
 
   function handleGenerate() {
@@ -314,7 +331,7 @@ export default function HomeScreen() {
 
     if (part === 'C') {
       if (mealType !== 'lunch') return;
-      const alternate = getAlternateMeal(plan.C[day].lunch, usedIds, user?.restrictions ?? []);
+      const alternate = getAlternateMeal(plan.C[day].lunch, usedIds, user?.restrictions ?? [], savedPlan?.focus);
       setPlan(prev =>
         prev ? { ...prev, C: { ...prev.C, [day]: { ...prev.C[day], lunch: alternate } } } : prev,
       );
@@ -322,7 +339,7 @@ export default function HomeScreen() {
     }
 
     const partPlan = plan[part] as Record<string, DayPlan>;
-    const alternate = getAlternateMeal(partPlan[day][mealType], usedIds, user?.restrictions ?? []);
+    const alternate = getAlternateMeal(partPlan[day][mealType], usedIds, user?.restrictions ?? [], savedPlan?.focus);
     setPlan(prev =>
       prev
         ? {

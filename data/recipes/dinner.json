@@ -1,0 +1,5047 @@
+[
+  {
+    "id": "d-chicken-teriyaki-stir-fry",
+    "name": "Chicken Teriyaki Stir-Fry",
+    "description": "Chicken, broccoli and peppers in teriyaki sauce over rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍗",
+    "main": "chicken",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "broccoli",
+        "g": 120
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "teriyaki",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the chicken and stir-fry it in the oil over high heat for 5 minutes until browned",
+      "Add the broccoli florets, sliced peppers, ginger and a splash of water and cook for 4 minutes",
+      "Pour in the teriyaki, toss for 1 minute until glossy and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-beef-broccoli-stir-fry",
+    "name": "Beef and Broccoli Stir-Fry",
+    "description": "Tender beef strips and broccoli in a garlic soy sauce with rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥩",
+    "main": "beef",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 100
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "soy sauce",
+        "g": 20
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the beef thinly against the grain and sear it in half the oil over very high heat for 2 minutes, then set it aside",
+      "Stir-fry the broccoli florets in the remaining oil with a splash of water for 4 minutes",
+      "Return the beef with the chopped garlic, ginger and soy sauce, toss for 1 minute and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-thai-coconut-chicken-curry",
+    "name": "Thai Coconut Chicken Curry",
+    "description": "Chicken, peppers and green beans in a spicy coconut sauce with rice",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "chicken",
+    "tags": [
+      "asian",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "coconut milk",
+        "g": 120
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "green beans",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp red curry paste",
+      "squeeze of lime juice",
+      "salt"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the onion and soften it in the oil for 3 minutes, then fry the curry paste with it for 1 minute",
+      "Add the chicken in bite-sized pieces and cook for 3 minutes, then pour in the coconut milk",
+      "Add the sliced peppers and halved green beans and simmer for 10 minutes until the chicken is cooked and the beans are tender",
+      "Finish with lime juice and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-garlic-shrimp-noodles",
+    "name": "Garlic Shrimp Noodles",
+    "description": "Stir-fried noodles with shrimp, zucchini, carrot and plenty of garlic",
+    "mealType": "dinner",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 160
+      },
+      {
+        "item": "noodles",
+        "g": 85
+      },
+      {
+        "item": "zucchini",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "soy sauce",
+        "g": 18
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "black pepper",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Cook the noodles according to the packet, drain and rinse briefly",
+      "Cut the zucchini and carrots into thin strips and stir-fry them in the oil over high heat for 3 minutes",
+      "Add the shrimp and sliced garlic and cook for 2 to 3 minutes until the shrimp turn pink",
+      "Toss in the noodles and soy sauce, heat through and finish with pepper and lime juice"
+    ]
+  },
+  {
+    "id": "d-tofu-coconut-curry",
+    "name": "Tofu Coconut Curry",
+    "description": "Tofu, spinach and peppers in a spiced coconut sauce with rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥥",
+    "main": "tofu",
+    "tags": [
+      "asian",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "coconut milk",
+        "g": 100
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry paste",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the onion and peppers and cook them in the oil for 4 minutes, then stir in the curry paste for 1 minute",
+      "Add the coconut milk and the tofu, cut into cubes, and simmer gently for 8 minutes",
+      "Stir in the spinach until wilted, season with salt and lime juice and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-pork-fried-rice",
+    "name": "Pork Fried Rice",
+    "description": "Fried rice with pork, egg, peas and carrot",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "pork",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 140
+      },
+      {
+        "item": "rice",
+        "g": 85
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "peas",
+        "g": 60
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "soy sauce",
+        "g": 18
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry",
+      "Cut the pork into small strips and fry in the oil over high heat for 4 minutes until browned",
+      "Add the diced onion and carrots and the peas and stir-fry for 3 minutes",
+      "Push everything aside, scramble the egg in the gap, then add the rice and soy sauce and fry for 2 minutes"
+    ]
+  },
+  {
+    "id": "d-teriyaki-salmon-green-beans",
+    "name": "Teriyaki Salmon with Green Beans",
+    "description": "Oven-glazed salmon with green beans and rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "teriyaki",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "sesame seeds if you have them"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the rice in salted water for 10 to 12 minutes, then drain",
+      "Toss the green beans with the oil on a baking tray, put the salmon next to them and brush it with half the teriyaki",
+      "Roast for 12 minutes until the salmon flakes easily",
+      "Brush the salmon with the remaining teriyaki and serve with the beans and rice"
+    ]
+  },
+  {
+    "id": "d-chicken-chow-mein",
+    "name": "Chicken Chow Mein",
+    "description": "Stir-fried noodles with chicken, carrot, peppers and onion",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍜",
+    "main": "chicken",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "noodles",
+        "g": 85
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "soy sauce",
+        "g": 20
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the noodles according to the packet, drain and rinse briefly",
+      "Slice the chicken thinly and stir-fry it in the oil over high heat for 4 minutes",
+      "Add the sliced onion, peppers and carrots and the ginger and cook for 3 minutes",
+      "Add the noodles and soy sauce and toss over the heat for 2 minutes"
+    ]
+  },
+  {
+    "id": "d-spicy-beef-green-bean-rice",
+    "name": "Spicy Beef and Green Bean Rice Bowl",
+    "description": "Chili-garlic beef mince with blistered green beans over rice",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "beef mince",
+    "tags": [
+      "asian",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "soy sauce",
+        "g": 18
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp chili flakes",
+      "1 tsp grated ginger"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Fry the green beans, cut into short lengths, in the oil over high heat for 4 minutes until blistered, then set aside",
+      "Brown the beef mince in the same pan for 5 minutes, then add the chopped garlic, ginger and chili flakes",
+      "Return the beans, add the soy sauce, toss for 1 minute and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-turkey-zucchini-stir-fry",
+    "name": "Turkey and Zucchini Stir-Fry",
+    "description": "Lean turkey mince stir-fried with zucchini and carrot, served with rice",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥒",
+    "main": "turkey mince",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 65
+      },
+      {
+        "item": "zucchini",
+        "g": 150
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Brown the turkey mince in the oil over high heat for 5 minutes, breaking it up",
+      "Add the zucchini in half-moons, the carrots in thin strips, the chopped garlic and the ginger and stir-fry for 4 minutes",
+      "Stir in the soy sauce and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-vegetable-egg-fried-rice",
+    "name": "Vegetable Egg Fried Rice",
+    "description": "Big bowl of fried rice with three eggs, peas, corn and carrot",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "rice",
+        "g": 85
+      },
+      {
+        "item": "peas",
+        "g": 70
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 18
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry",
+      "Dice the carrots and fry them in the oil over high heat for 3 minutes, then add the peas and corn",
+      "Push the vegetables aside, crack in the eggs and scramble until just set",
+      "Add the rice and soy sauce and stir-fry for 2 to 3 minutes"
+    ]
+  },
+  {
+    "id": "d-soy-ginger-fish",
+    "name": "Soy-Ginger Fish with Rice",
+    "description": "Gently steamed white fish with spinach, carrot and a soy-ginger sauce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "white fish",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 170
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "g": 15
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp grated ginger",
+      "3 tbsp water"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Warm the oil in a lidded pan and soften the sliced garlic, ginger and thinly sliced carrots for 2 minutes",
+      "Lay the fish on top, add the soy sauce and water, cover and steam over low heat for 6 to 8 minutes",
+      "Add the spinach for the last minute and serve everything over the rice with the pan juices"
+    ]
+  },
+  {
+    "id": "d-coconut-lentil-dal",
+    "name": "Coconut Lentil Dal",
+    "description": "Creamy spiced lentils with tomato, spinach and coconut, served with rice",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍲",
+    "main": "lentils",
+    "tags": [
+      "asian",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 80
+      },
+      {
+        "item": "coconut milk",
+        "g": 80
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "{350} ml water",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil for 4 minutes, then add the chopped garlic, curry powder and chili flakes for 1 minute",
+      "Add the rinsed lentils, chopped tomatoes and water and simmer for 20 to 25 minutes until the lentils are soft",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes and drain",
+      "Stir the coconut milk and spinach into the lentils, cook 2 more minutes, season with salt and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-chili-con-carne",
+    "name": "Chili con Carne",
+    "description": "Slow-simmered beef and bean chili with rice",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "beef mince",
+    "tags": [
+      "mexican",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 150
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Soften the diced onion and peppers in the oil for 5 minutes, then add the beef mince and brown it for 5 minutes",
+      "Stir in the chopped garlic, cumin, paprika and chili flakes for 1 minute",
+      "Add the chopped tomatoes and drained kidney beans and simmer gently for 20 minutes until thick",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes, drain and serve with the chili"
+    ]
+  },
+  {
+    "id": "d-chicken-enchiladas",
+    "name": "Chicken Enchiladas",
+    "description": "Tortillas rolled around chicken and peppers, baked in tomato sauce with cheese",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🫔",
+    "main": "chicken",
+    "tags": [
+      "mexican",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 140
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "tomato sauce",
+        "g": 150
+      },
+      {
+        "item": "cheese",
+        "g": 40
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C",
+      "Fry the chicken in small pieces with the diced onion and peppers in the oil for 7 minutes, then stir in the cumin, paprika, salt and a third of the tomato sauce",
+      "Divide the filling between the tortillas, roll them up and place them seam side down in a small baking dish",
+      "Pour over the remaining tomato sauce, scatter with the grated cheese and bake for 15 minutes until bubbling"
+    ]
+  },
+  {
+    "id": "d-beef-bean-burritos",
+    "name": "Beef and Bean Burritos",
+    "description": "Tortillas filled with spiced beef mince, kidney beans, cheese and tomato",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "beef mince",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 130
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "cheese",
+        "g": 25
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 40
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Brown the beef mince with the diced onion in a dry pan over high heat for 6 minutes",
+      "Add the cumin, paprika, salt, the drained kidney beans and a splash of water and cook for 3 minutes",
+      "Warm the tortillas in a dry pan",
+      "Fill them with the beef and beans, grated cheese and diced tomato, fold in the sides and roll up tightly"
+    ]
+  },
+  {
+    "id": "d-fish-tacos",
+    "name": "Fish Tacos",
+    "description": "Pan-fried white fish in tortillas with lettuce, tomato and a lime yogurt sauce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "white fish",
+    "tags": [
+      "mexican",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 170
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "yogurt",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "1/2 tsp ground cumin",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Season the fish with the paprika, cumin and salt and fry in the oil over medium-high heat for 3 minutes per side, then break into large flakes",
+      "Stir lime juice and a pinch of salt into the yogurt",
+      "Warm the tortillas in a dry pan",
+      "Fill them with shredded lettuce, the fish and diced tomato and drizzle with the yogurt sauce"
+    ]
+  },
+  {
+    "id": "d-sweet-potato-bean-chili",
+    "name": "Sweet Potato and Bean Chili",
+    "description": "Thick vegan chili with sweet potato, kidney beans, peppers and corn",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍠",
+    "main": "kidney beans",
+    "tags": [
+      "mexican",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "sweet potato",
+        "g": 200
+      },
+      {
+        "item": "kidney beans",
+        "g": 150
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "1/2 tsp chili flakes",
+      "{150} ml water",
+      "salt"
+    ],
+    "instructions": [
+      "Soften the diced onion and peppers in the oil for 5 minutes, then stir in the cumin, paprika and chili flakes",
+      "Add the sweet potato in 2 cm cubes, the chopped tomatoes and the water and simmer, covered, for 20 minutes until the sweet potato is tender",
+      "Stir in the drained kidney beans and corn and cook for 5 more minutes",
+      "Season with salt"
+    ]
+  },
+  {
+    "id": "d-loaded-chicken-burrito-bowl",
+    "name": "Loaded Chicken Burrito Bowl",
+    "description": "Rice bowl with spiced chicken, beans, corn, tomato and avocado",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥑",
+    "main": "chicken",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Coat the chicken, cut into strips, with the cumin, paprika and salt and fry in the oil for 7 minutes until cooked through",
+      "Warm the drained kidney beans and corn in the pan for 1 minute",
+      "Serve the rice topped with the chicken, beans, corn, diced tomato and sliced avocado, with lime juice squeezed over"
+    ]
+  },
+  {
+    "id": "d-pork-tacos-corn-salsa",
+    "name": "Pork Tacos with Corn Salsa",
+    "description": "Seared pork strips in tortillas with a fresh corn and tomato salsa",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌮",
+    "main": "pork",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 150
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 30
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Mix the corn with the diced tomato, finely diced onion, lime juice and a pinch of salt",
+      "Cut the pork into thin strips and coat with the cumin, paprika and salt",
+      "Fry the pork in the oil over high heat for 4 to 5 minutes until browned and cooked through",
+      "Warm the tortillas and fill them with the pork and salsa"
+    ]
+  },
+  {
+    "id": "d-shrimp-fajitas",
+    "name": "Shrimp Fajitas",
+    "description": "Sizzling shrimp with peppers and onion in warm tortillas",
+    "mealType": "dinner",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 170
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "peppers",
+        "g": 120
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Slice the peppers and onion and fry them in the oil over high heat for 5 minutes until soft and charred at the edges",
+      "Add the shrimp with the cumin, paprika, chili flakes and salt and cook for 2 to 3 minutes until pink",
+      "Warm the tortillas in a dry pan",
+      "Fill them with the shrimp and vegetables and squeeze over lime juice"
+    ]
+  },
+  {
+    "id": "d-turkey-bean-chili",
+    "name": "Turkey and Bean Chili",
+    "description": "Lean turkey mince chili with kidney beans and peppers, served with rice",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🦃",
+    "main": "turkey mince",
+    "tags": [
+      "mexican",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 150
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Soften the diced onion and peppers in the oil for 5 minutes, then add the turkey mince and brown it for 5 minutes",
+      "Stir in the cumin, paprika and chili flakes, then the chopped tomatoes and drained kidney beans",
+      "Simmer for 15 minutes until thick and season with salt",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes, drain and serve with the chili"
+    ]
+  },
+  {
+    "id": "d-mexican-stuffed-peppers",
+    "name": "Mexican Stuffed Peppers",
+    "description": "Peppers filled with mince, rice and corn, baked with cheese",
+    "mealType": "dinner",
+    "prepTime": 50,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🫑",
+    "main": "mixed mince",
+    "tags": [
+      "mexican",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "peppers",
+        "g": 250
+      },
+      {
+        "item": "mixed mince",
+        "g": 120
+      },
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "tomato sauce",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the rice in salted water for 10 minutes, then drain",
+      "Brown the mince in a dry pan for 5 minutes and stir in the cumin, paprika, salt, corn, rice and tomato sauce",
+      "Halve the peppers lengthways, remove the seeds and fill them with the mixture",
+      "Place in a baking dish, cover with foil and bake for 20 minutes, then uncover, top with the grated cheese and bake 10 more minutes"
+    ]
+  },
+  {
+    "id": "d-tofu-bean-tacos",
+    "name": "Tofu and Bean Tacos",
+    "description": "Crumbled spiced tofu and kidney beans in tortillas with tomato and lettuce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌮",
+    "main": "tofu",
+    "tags": [
+      "mexican",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "lettuce",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "1/2 tsp chili flakes",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Crumble the tofu into the hot oil and fry over medium-high heat for 6 minutes until golden",
+      "Add the cumin, paprika, chili flakes, salt and drained kidney beans and cook for 2 minutes",
+      "Warm the tortillas in a dry pan",
+      "Fill them with the tofu and beans, diced tomato and shredded lettuce and finish with lime juice"
+    ]
+  },
+  {
+    "id": "d-chicken-quesadillas",
+    "name": "Chicken Quesadillas",
+    "description": "Crisp tortillas with chicken, peppers and melted cheese, with fresh tomato",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "chicken",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 130
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "cheese",
+        "g": 50
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "1/2 tsp ground cumin",
+      "salt"
+    ],
+    "instructions": [
+      "Cut the chicken into small pieces, season with the paprika, cumin and salt and fry in the oil for 6 minutes with the diced peppers",
+      "Cover one tortilla with half the grated cheese, the chicken and peppers and the rest of the cheese, then top with the second tortilla",
+      "Cook in a clean dry pan over medium heat for 3 minutes per side until golden and melted",
+      "Cut into wedges and serve with the diced tomato"
+    ]
+  },
+  {
+    "id": "d-beef-burrito-salad-bowl",
+    "name": "Beef Burrito Salad Bowl",
+    "description": "Seared beef over lettuce with rice, beans, corn, tomato and avocado",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "beef",
+    "tags": [
+      "mexican",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 150
+      },
+      {
+        "item": "lettuce",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "rice",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it cool a little",
+      "Rub the beef with the cumin, paprika and salt and sear it in the oil over high heat for 2 to 3 minutes per side, then rest it for 3 minutes and slice thinly",
+      "Shred the lettuce and dice the tomato and avocado",
+      "Build the bowl with the lettuce, rice, drained kidney beans, corn, tomato and avocado, top with the beef and squeeze over lime juice"
+    ]
+  },
+  {
+    "id": "d-spaghetti-bolognese",
+    "name": "Spaghetti Bolognese",
+    "description": "Classic beef and tomato ragù with spaghetti and parmesan",
+    "mealType": "dinner",
+    "prepTime": 45,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "beef mince",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 140
+      },
+      {
+        "item": "pasta",
+        "g": 90
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "carrots",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "parmesan",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Finely dice the onion and carrots and soften them in the olive oil for 6 minutes",
+      "Add the beef mince and brown it well for 6 minutes, then stir in the chopped garlic and oregano",
+      "Add the chopped tomatoes, season and simmer gently for 25 minutes, adding a splash of water if it gets too thick",
+      "Cook the pasta in salted boiling water, drain, toss with the sauce and serve with the grated parmesan"
+    ]
+  },
+  {
+    "id": "d-creamy-chicken-mushroom-pasta",
+    "name": "Creamy Chicken and Mushroom Pasta",
+    "description": "Pasta in a garlic cream sauce with chicken, mushrooms and parmesan",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍄",
+    "main": "chicken",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "pasta",
+        "g": 85
+      },
+      {
+        "item": "mushrooms",
+        "g": 100
+      },
+      {
+        "item": "cream sauce",
+        "g": 80
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "parmesan",
+        "g": 10
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a little of the water",
+      "Fry the chicken in strips in the oil over medium-high heat for 5 minutes, then add the sliced mushrooms for 4 minutes",
+      "Add the chopped garlic, then the cream sauce and a splash of pasta water and simmer for 2 minutes",
+      "Toss in the pasta and parmesan and season with pepper"
+    ]
+  },
+  {
+    "id": "d-pesto-salmon-potatoes",
+    "name": "Pesto Salmon with Potatoes and Green Beans",
+    "description": "Baked salmon with a pesto crust, boiled potatoes and green beans",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 150
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "pesto",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the green beans for the last 5",
+      "Put the salmon on a lined tray, spread the pesto over the top and bake for 12 minutes",
+      "Drain the potatoes and beans and season them",
+      "Serve with the salmon and a squeeze of lemon"
+    ]
+  },
+  {
+    "id": "d-pork-ragu-penne",
+    "name": "Pork Ragù with Penne",
+    "description": "Rich pork mince and tomato sauce with penne",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "pork mince",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "pork mince",
+        "g": 130
+      },
+      {
+        "item": "pasta",
+        "g": 85
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "carrots",
+        "g": 40
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "pinch of fennel seeds",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Finely dice the onion and carrots and soften them in the olive oil for 5 minutes",
+      "Add the pork mince and brown it for 6 minutes, then add the chopped garlic, oregano and fennel seeds",
+      "Add the chopped tomatoes and simmer for 20 minutes",
+      "Cook the pasta in salted boiling water, drain and toss with the ragù"
+    ]
+  },
+  {
+    "id": "d-lentil-bolognese",
+    "name": "Lentil Bolognese",
+    "description": "Hearty vegan lentil and tomato sauce with pasta",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "lentils",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 75
+      },
+      {
+        "item": "pasta",
+        "g": 80
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "{300} ml water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Finely dice the onion and carrots and soften them in the olive oil for 5 minutes, then add the chopped garlic and oregano",
+      "Add the rinsed lentils, chopped tomatoes and water and simmer for 25 minutes until the lentils are tender and the sauce is thick",
+      "Cook the pasta in salted boiling water and drain",
+      "Season the sauce and serve over the pasta"
+    ]
+  },
+  {
+    "id": "d-chicken-parmesan-bake",
+    "name": "Chicken Parmesan Bake",
+    "description": "Chicken baked in tomato sauce under mozzarella and parmesan, with pasta",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🧀",
+    "main": "chicken",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 170
+      },
+      {
+        "item": "tomato sauce",
+        "g": 150
+      },
+      {
+        "item": "mozzarella",
+        "g": 50
+      },
+      {
+        "item": "parmesan",
+        "g": 15
+      },
+      {
+        "item": "pasta",
+        "g": 70
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C, season the chicken and brown it in the olive oil for 2 minutes per side",
+      "Put it in a small baking dish, pour over the tomato sauce mixed with the oregano and top with the sliced mozzarella and grated parmesan",
+      "Bake for 20 minutes until the chicken is cooked through and the cheese is golden",
+      "Meanwhile cook the pasta in salted boiling water, drain and serve with the chicken and its sauce"
+    ]
+  },
+  {
+    "id": "d-shrimp-arrabbiata",
+    "name": "Shrimp Arrabbiata",
+    "description": "Spaghetti with shrimp in a spicy garlic tomato sauce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "shrimp",
+    "tags": [
+      "italian",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 160
+      },
+      {
+        "item": "pasta",
+        "g": 90
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp chili flakes",
+      "salt",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain",
+      "Gently fry the sliced garlic and chili flakes in the olive oil for 1 minute",
+      "Add the chopped tomatoes and simmer for 8 minutes",
+      "Add the shrimp and cook for 3 minutes until pink, then toss with the pasta and parsley"
+    ]
+  },
+  {
+    "id": "d-chicken-mushroom-risotto",
+    "name": "Chicken and Mushroom Risotto",
+    "description": "Creamy rice with chicken, mushrooms, peas and parmesan",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "chicken",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 120
+      },
+      {
+        "item": "rice",
+        "g": 90
+      },
+      {
+        "item": "mushrooms",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "parmesan",
+        "g": 25
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "peas",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{600} ml hot water",
+      "black pepper"
+    ],
+    "instructions": [
+      "Melt half the butter in a wide pan and cook the chicken in small pieces with the diced onion and sliced mushrooms for 6 minutes",
+      "Add the chopped garlic and rice and stir for 1 minute",
+      "Dissolve the stock cube in the hot water and add it a ladle at a time, stirring often, for about 20 minutes until the rice is creamy and just tender",
+      "Stir in the peas for the last 3 minutes, then the remaining butter and the grated parmesan, and season with pepper"
+    ]
+  },
+  {
+    "id": "d-eggs-in-purgatory",
+    "name": "Eggs in Purgatory",
+    "description": "Eggs baked in a spicy garlic tomato sauce, with bread for dipping",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "eggs",
+    "tags": [
+      "italian",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 250
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "parmesan",
+        "g": 15
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp chili flakes",
+      "salt",
+      "pinch of dried oregano"
+    ],
+    "instructions": [
+      "Gently fry the sliced garlic and chili flakes in the olive oil for 1 minute",
+      "Add the chopped tomatoes, oregano and salt and simmer for 8 minutes until thickened",
+      "Make {n:eggs} wells, crack in the eggs, cover and cook for 4 to 5 minutes until the whites are set",
+      "Scatter with the grated parmesan and serve with the toasted bread"
+    ]
+  },
+  {
+    "id": "d-turkey-meatballs-pasta",
+    "name": "Turkey Meatballs in Tomato Sauce",
+    "description": "Tender turkey meatballs simmered in tomato sauce, with pasta and parmesan",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "turkey mince",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 160
+      },
+      {
+        "item": "pasta",
+        "g": 80
+      },
+      {
+        "item": "tomato sauce",
+        "g": 180
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      },
+      {
+        "item": "parmesan",
+        "g": 10
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Mix the turkey mince with the finely chopped garlic, half the oregano, salt and pepper and roll into {8} small balls",
+      "Brown the meatballs in the olive oil for 5 minutes, then add the diced onion for 2 minutes",
+      "Pour in the tomato sauce with the remaining oregano and simmer, covered, for 12 minutes",
+      "Cook the pasta in salted boiling water, drain and serve with the meatballs, sauce and grated parmesan"
+    ]
+  },
+  {
+    "id": "d-tuna-pasta-bake",
+    "name": "Tuna Pasta Bake",
+    "description": "Creamy baked pasta with tuna, corn and peas under a cheese crust",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🧀",
+    "main": "tuna",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 120
+      },
+      {
+        "item": "pasta",
+        "g": 85
+      },
+      {
+        "item": "cream sauce",
+        "g": 80
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and cook the pasta in salted boiling water for 2 minutes less than the packet says, then drain",
+      "Mix the pasta with the drained tuna, cream sauce, corn and peas and season",
+      "Tip into a small baking dish and scatter over the grated cheese",
+      "Bake for 15 minutes until golden and bubbling"
+    ]
+  },
+  {
+    "id": "d-chickpea-spinach-pasta",
+    "name": "Chickpea and Spinach Pasta",
+    "description": "Garlicky tomato pasta with chickpeas and wilted spinach",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "chickpeas",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 130
+      },
+      {
+        "item": "pasta",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "pinch of dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain",
+      "Gently fry the sliced garlic in the olive oil for 1 minute, then add the chopped tomatoes, drained chickpeas and oregano",
+      "Simmer for 8 minutes, then stir in the spinach until wilted",
+      "Toss with the pasta and season"
+    ]
+  },
+  {
+    "id": "d-greek-chicken-traybake",
+    "name": "Greek Chicken Traybake",
+    "description": "Chicken roasted with potatoes, zucchini, peppers and lemon, finished with feta",
+    "mealType": "dinner",
+    "prepTime": 45,
+    "difficulty": "weekend",
+    "appliances": [
+      "oven"
+    ],
+    "emoji": "🍋",
+    "main": "chicken",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 170
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "zucchini",
+        "g": 120
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "feta",
+        "g": 30
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "2 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 210°C",
+      "Cut the potatoes into small wedges and toss them on a tray with half the olive oil, salt and half the oregano, then roast for 15 minutes",
+      "Add the chicken, the zucchini and peppers in chunks, the remaining olive oil and oregano and the lemon cut into wedges",
+      "Roast for 20 more minutes until the chicken is cooked through, then crumble over the feta"
+    ]
+  },
+  {
+    "id": "d-baked-fish-tomato-potatoes",
+    "name": "Baked Fish with Tomatoes and Potatoes",
+    "description": "White fish baked on sliced potatoes with tomato, onion and garlic",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "oven"
+    ],
+    "emoji": "🐟",
+    "main": "white fish",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 180
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "tomato",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C",
+      "Slice the potatoes and onion thinly, toss with the olive oil, sliced garlic, salt and oregano and spread in a baking dish",
+      "Bake for 20 minutes until almost tender",
+      "Lay the sliced tomato and the fish on top, season and bake for 12 more minutes, then scatter with parsley"
+    ]
+  },
+  {
+    "id": "d-beef-kofta-couscous",
+    "name": "Beef Kofta with Couscous",
+    "description": "Spiced beef kofta with couscous, cucumber-tomato salad and yogurt",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍢",
+    "main": "beef mince",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 150
+      },
+      {
+        "item": "couscous",
+        "g": 70
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "yogurt",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "{90} ml boiling water",
+      "salt"
+    ],
+    "instructions": [
+      "Mix the beef mince with the cumin, paprika, chili flakes and salt and shape into {4} short sausages",
+      "Fry them in the olive oil over medium-high heat for 8 to 10 minutes, turning, until cooked through",
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Serve the kofta on the couscous with the diced cucumber and tomato and the yogurt"
+    ]
+  },
+  {
+    "id": "d-spanish-chickpea-spinach-stew",
+    "name": "Spanish Chickpea and Spinach Stew",
+    "description": "Garlicky chickpeas and spinach in a smoky tomato sauce, with bread",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥘",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 200
+      },
+      {
+        "item": "spinach",
+        "g": 150
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "1/2 tsp ground cumin",
+      "1/2 tsp chili flakes",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the olive oil for 4 minutes, then add the sliced garlic, paprika, cumin and chili flakes for 1 minute",
+      "Add the chopped tomatoes and drained chickpeas and simmer for 10 minutes",
+      "Stir in the spinach a handful at a time until it wilts and season with salt",
+      "Serve with the bread"
+    ]
+  },
+  {
+    "id": "d-lemon-herb-salmon-couscous",
+    "name": "Lemon Herb Salmon with Couscous",
+    "description": "Pan-fried salmon with lemon couscous and green beans",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 150
+      },
+      {
+        "item": "couscous",
+        "g": 65
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "{85} ml boiling water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the green beans in salted water for 5 minutes and drain",
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes, then fluff and stir in half the juice of the lemon",
+      "Season the salmon with the oregano, salt and pepper and fry in the olive oil for 3 to 4 minutes per side",
+      "Serve the salmon on the couscous with the beans and the rest of the lemon juice"
+    ]
+  },
+  {
+    "id": "d-harissa-chicken-chickpeas",
+    "name": "Harissa Chicken with Chickpeas and Couscous",
+    "description": "Spicy chicken with peppers and chickpeas over couscous",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "chicken",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 160
+      },
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "couscous",
+        "g": 80
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tbsp harissa paste",
+      "{100} ml boiling water",
+      "salt",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Coat the chicken, cut into chunks, with the harissa and a pinch of salt",
+      "Fry the sliced onion and peppers in the olive oil for 4 minutes, add the chicken and cook for 7 minutes until browned and cooked through",
+      "Add the drained chickpeas and warm through for 2 minutes",
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes, fluff and serve under the chicken with lemon juice"
+    ]
+  },
+  {
+    "id": "d-stuffed-peppers-feta",
+    "name": "Rice-Stuffed Peppers with Feta",
+    "description": "Peppers filled with rice, chickpeas and feta, baked in tomato sauce",
+    "mealType": "dinner",
+    "prepTime": 55,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🫑",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "peppers",
+        "g": 300
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "chickpeas",
+        "g": 60
+      },
+      {
+        "item": "feta",
+        "g": 60
+      },
+      {
+        "item": "tomato sauce",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the rice in salted water for 10 minutes, then drain",
+      "Soften the diced onion in the olive oil for 4 minutes and mix it with the rice, drained chickpeas, crumbled feta, oregano and half the tomato sauce",
+      "Cut the tops off the peppers, remove the seeds and fill them with the mixture",
+      "Stand them in a baking dish, spoon over the remaining tomato sauce, cover with foil and bake for 35 minutes"
+    ]
+  },
+  {
+    "id": "d-pork-souvlaki-potatoes",
+    "name": "Pork Souvlaki with Potatoes and Tzatziki",
+    "description": "Oregano pork with roast potatoes and a cucumber garlic yogurt",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🍢",
+    "main": "pork",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 160
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "greek yogurt",
+        "g": 80
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "2 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 210°C, cut the potatoes into wedges, toss with half the olive oil and salt and roast for 30 minutes",
+      "Cut the pork into chunks and toss with the remaining olive oil, oregano, half the juice of the lemon, salt and pepper",
+      "Grate the cucumber, squeeze out the water and mix it with the yogurt, finely grated garlic and a pinch of salt",
+      "Fry the pork over high heat for 6 to 8 minutes until browned and serve with the potatoes, tzatziki and remaining lemon"
+    ]
+  },
+  {
+    "id": "d-shrimp-tomato-feta",
+    "name": "Shrimp with Tomato and Feta",
+    "description": "Shrimp simmered in a garlic tomato sauce with feta, served with rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 170
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 250
+      },
+      {
+        "item": "feta",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "rice",
+        "g": 70
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Soften the diced onion in the olive oil for 4 minutes, add the sliced garlic and oregano, then the chopped tomatoes, and simmer for 8 minutes",
+      "Add the shrimp and cook for 3 minutes until pink",
+      "Crumble in the feta, let it soften for 1 minute and serve with the rice, pepper and parsley"
+    ]
+  },
+  {
+    "id": "d-turkey-kofta-rice",
+    "name": "Turkey Kofta with Rice and Yogurt",
+    "description": "Herbed turkey kofta with rice, cucumber, tomato and yogurt",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🦃",
+    "main": "turkey mince",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "yogurt",
+        "g": 80
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp dried oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Mix the turkey mince with the cumin, oregano, salt and pepper and shape into {4} small patties",
+      "Fry them in the olive oil over medium heat for 4 to 5 minutes per side until cooked through",
+      "Serve with the rice, diced cucumber and tomato and the yogurt"
+    ]
+  },
+  {
+    "id": "d-mujadara",
+    "name": "Mujadara",
+    "description": "Lentils and rice with deeply caramelised onions and a tomato cucumber salad",
+    "mealType": "dinner",
+    "prepTime": 45,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧅",
+    "main": "lentils",
+    "tags": [
+      "mediterranean",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 70
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 150
+      },
+      {
+        "item": "olive oil",
+        "g": 15
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "{450} ml water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Slice the onion thinly and fry it in the olive oil over medium heat for 20 minutes, stirring often, until deep brown, then lift half onto a plate",
+      "Add the rinsed lentils, cumin and water to the pan and simmer for 10 minutes",
+      "Add the rice and salt, cover and cook on low heat for 15 minutes until the water is absorbed",
+      "Serve topped with the reserved onion, with the diced cucumber and tomato on the side"
+    ]
+  },
+  {
+    "id": "d-ratatouille-baked-eggs",
+    "name": "Ratatouille with Baked Eggs",
+    "description": "Zucchini, peppers and tomato stew with eggs and potatoes",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍆",
+    "main": "eggs",
+    "tags": [
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "zucchini",
+        "g": 150
+      },
+      {
+        "item": "peppers",
+        "g": 120
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 250
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried thyme or oregano",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes and drain",
+      "Dice the onion, zucchini and peppers and cook them in the olive oil for 8 minutes, then add the sliced garlic and thyme",
+      "Add the chopped tomatoes and simmer for 12 minutes until thick, then season",
+      "Make {n:eggs} wells, crack in the eggs, cover and cook 5 minutes until set, and serve with the potatoes"
+    ]
+  },
+  {
+    "id": "d-tofu-souvlaki-bowl",
+    "name": "Tofu Souvlaki Bowl",
+    "description": "Lemon-oregano tofu over couscous with cucumber, tomato and peppers",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥙",
+    "main": "tofu",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "couscous",
+        "g": 70
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "2 tsp dried oregano",
+      "{90} ml boiling water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Pour the boiling water over the couscous with a pinch of salt, cover for 5 minutes and fluff with a fork",
+      "Cut the tofu into cubes, toss with the oregano, salt, pepper and half the juice of the lemon and fry in the olive oil for 6 minutes until golden",
+      "Dice the cucumber, tomato and peppers",
+      "Serve the tofu over the couscous with the raw vegetables and the rest of the lemon juice"
+    ]
+  },
+  {
+    "id": "d-beef-chickpea-tagine",
+    "name": "Beef and Chickpea Tagine",
+    "description": "Slow-cooked spiced beef with chickpeas and carrots, served with couscous",
+    "mealType": "dinner",
+    "prepTime": 75,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥘",
+    "main": "beef",
+    "tags": [
+      "mediterranean",
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 150
+      },
+      {
+        "item": "chickpeas",
+        "g": 80
+      },
+      {
+        "item": "couscous",
+        "g": 75
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp cinnamon",
+      "1/2 tsp chili flakes",
+      "{250} ml water",
+      "salt"
+    ],
+    "instructions": [
+      "Cut the beef into chunks and brown it in the olive oil for 4 minutes, then add the diced onion for 3 minutes",
+      "Stir in the cumin, paprika, cinnamon and chili flakes, then the chopped tomatoes, sliced carrots and water",
+      "Cover and simmer on low heat for 50 to 60 minutes until the beef is tender, adding the drained chickpeas for the last 10 minutes",
+      "Pour {100} ml boiling water over the couscous with a pinch of salt, cover for 5 minutes, fluff and serve with the tagine"
+    ]
+  },
+  {
+    "id": "d-salmon-nicoise-salad",
+    "name": "Salmon Niçoise Salad",
+    "description": "Warm salmon with potatoes, green beans, egg, tomato and lettuce",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "salmon",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 140
+      },
+      {
+        "item": "potatoes",
+        "g": 200
+      },
+      {
+        "item": "green beans",
+        "g": 100
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "splash of red wine vinegar",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, for 15 minutes, adding the egg for the last 8 minutes and the green beans for the last 5, then drain",
+      "Fry the salmon in a little of the olive oil for 3 to 4 minutes per side",
+      "Whisk the remaining olive oil with the mustard, vinegar, salt and pepper",
+      "Arrange the lettuce, potatoes, beans, tomato wedges and quartered egg on a plate, top with the salmon and pour over the dressing"
+    ]
+  },
+  {
+    "id": "d-lemon-garlic-chicken-potatoes",
+    "name": "Lemon Garlic Chicken with Potatoes and Green Beans",
+    "description": "Pan-roasted chicken with boiled potatoes and green beans",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍋",
+    "main": "chicken",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 170
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 12
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried thyme",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the green beans for the last 5, then drain",
+      "Season the chicken with the thyme, salt and pepper and fry it in the oil over medium heat for 6 minutes per side",
+      "Add the sliced garlic and the juice of the lemon to the pan for the last minute",
+      "Serve the chicken with the potatoes and beans and spoon over the pan juices"
+    ]
+  },
+  {
+    "id": "d-cottage-pie",
+    "name": "Cottage Pie",
+    "description": "Beef mince with carrots and peas under a mashed potato top",
+    "mealType": "dinner",
+    "prepTime": 55,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🥧",
+    "main": "beef mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 150
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "milk",
+        "ml": 40
+      },
+      {
+        "item": "tomato paste",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{150} ml water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the potatoes, cut into chunks, for 15 minutes, then drain and mash with the butter and milk",
+      "Brown the beef mince with the diced onion and carrots in a dry pan for 8 minutes",
+      "Stir in the tomato paste, water and stock cube and simmer for 10 minutes, then add the peas",
+      "Tip into a small baking dish, spread the mash on top and bake for 20 minutes until golden"
+    ]
+  },
+  {
+    "id": "d-salmon-mash-peas",
+    "name": "Salmon with Mash and Peas",
+    "description": "Pan-fried salmon with buttery mashed potatoes and peas",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 150
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "peas",
+        "g": 80
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "milk",
+        "ml": 40
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the peas for the last 2, then drain",
+      "Lift out the peas and mash the potatoes with the butter and milk",
+      "Season the salmon and fry it in a non-stick pan over medium heat for 3 to 4 minutes per side",
+      "Serve with the mash, peas and the lemon cut into wedges"
+    ]
+  },
+  {
+    "id": "d-chicken-spinach-curry",
+    "name": "Chicken and Spinach Curry",
+    "description": "Tomato-based chicken curry with spinach and yogurt, served with rice",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "chicken",
+    "tags": [
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 160
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "yogurt",
+        "g": 60
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "1 tsp grated ginger",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil for 5 minutes, then add the chopped garlic, ginger, curry powder and chili flakes for 1 minute",
+      "Add the chicken in chunks and cook for 3 minutes, then the chopped tomatoes, and simmer for 15 minutes",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes and drain",
+      "Stir the spinach into the curry until wilted, take it off the heat, stir in the yogurt and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-pork-mustard-cream-mash",
+    "name": "Pork in Mustard Cream Sauce with Mash",
+    "description": "Pork medallions in a creamy mustard sauce with mash and green beans",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "pork",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 160
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "cream sauce",
+        "g": 60
+      },
+      {
+        "item": "green beans",
+        "g": 100
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "2 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the green beans for the last 5, then drain",
+      "Lift out the beans and mash the potatoes with the butter",
+      "Slice the pork into medallions, season and fry in a non-stick pan for 3 minutes per side",
+      "Stir the cream sauce and mustard into the pan, simmer for 2 minutes and serve over the pork with the mash and beans"
+    ]
+  },
+  {
+    "id": "d-slow-cooker-beef-stew",
+    "name": "Slow Cooker Beef Stew",
+    "description": "Tender beef with potatoes, carrots and peas in a rich gravy",
+    "mealType": "dinner",
+    "prepTime": 240,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "slow cooker"
+    ],
+    "emoji": "🍲",
+    "main": "beef",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 170
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "carrots",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "tomato paste",
+        "g": 15
+      },
+      {
+        "item": "flour",
+        "g": 10
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{300} ml water",
+      "1 tsp dried thyme",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the beef into chunks, toss it in the flour and brown it in the oil in a pan for 4 minutes",
+      "Put it in the slow cooker with the potatoes and carrots in chunks, the diced onion, tomato paste, water, stock cube and thyme",
+      "Cook on high for 4 hours or on low for 7 to 8 hours until the beef falls apart",
+      "Stir in the peas for the last 10 minutes and season"
+    ]
+  },
+  {
+    "id": "d-oven-fish-and-chips",
+    "name": "Oven Fish and Chips",
+    "description": "Crisp-coated white fish with oven chips and peas",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🍟",
+    "main": "white fish",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 180
+      },
+      {
+        "item": "potatoes",
+        "g": 350
+      },
+      {
+        "item": "peas",
+        "g": 80
+      },
+      {
+        "item": "flour",
+        "g": 15
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "oil",
+        "g": 15
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "1/2 tsp paprika"
+    ],
+    "instructions": [
+      "Heat the oven to 220°C, cut the potatoes into chips, toss with two thirds of the oil and salt and roast for 30 minutes, turning once",
+      "Season the fish and coat it in the flour mixed with the paprika, then the beaten egg, then the flour again",
+      "Fry it in the remaining oil over medium-high heat for 3 minutes per side until golden",
+      "Boil the peas for 2 minutes and serve everything with the lemon cut into wedges"
+    ]
+  },
+  {
+    "id": "d-turkey-sweet-potato-mash",
+    "name": "Turkey Steaks with Sweet Potato Mash",
+    "description": "Pan-fried turkey with sweet potato mash and broccoli",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🦃",
+    "main": "turkey",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "turkey",
+        "g": 170
+      },
+      {
+        "item": "sweet potato",
+        "g": 300
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "butter",
+        "g": 8
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Peel the sweet potato, cut it into chunks and boil for 12 minutes, adding the broccoli florets for the last 4, then drain",
+      "Lift out the broccoli and mash the sweet potato with the butter and a pinch of salt",
+      "Season the turkey with the paprika, salt and pepper and fry in the oil over medium heat for 4 to 5 minutes per side",
+      "Serve the turkey with the mash and broccoli"
+    ]
+  },
+  {
+    "id": "d-chicken-meatballs-mushroom-sauce",
+    "name": "Chicken Meatballs in Mushroom Sauce",
+    "description": "Chicken mince meatballs in a creamy mushroom sauce with rice",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍄",
+    "main": "chicken mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken mince",
+        "g": 160
+      },
+      {
+        "item": "mushrooms",
+        "g": 100
+      },
+      {
+        "item": "cream sauce",
+        "g": 70
+      },
+      {
+        "item": "rice",
+        "g": 70
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of dried thyme"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Season the chicken mince, roll it into {8} small balls and brown them in the oil for 6 minutes",
+      "Add the diced onion and sliced mushrooms with the thyme and cook for 5 minutes",
+      "Pour in the cream sauce with a splash of water, simmer for 4 minutes and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-meatballs-tomato-mash",
+    "name": "Meatballs in Tomato Sauce with Mash",
+    "description": "Mixed mince meatballs braised in tomato sauce, with mashed potatoes",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍅",
+    "main": "mixed mince",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "mixed mince",
+        "g": 150
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "tomato sauce",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 40
+      },
+      {
+        "item": "butter",
+        "g": 8
+      },
+      {
+        "item": "milk",
+        "ml": 30
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, drain and mash with the butter and milk",
+      "Mix the mixed mince with the finely diced onion, paprika, salt and pepper and roll into {8} balls",
+      "Brown them in a dry non-stick pan for 6 minutes, turning",
+      "Add the tomato sauce, cover and simmer for 10 minutes, then serve with the mash"
+    ]
+  },
+  {
+    "id": "d-pork-mince-potato-skillet",
+    "name": "Pork and Potato Skillet",
+    "description": "Pork mince fried with potatoes, peppers and onion",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "pork mince",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "pork mince",
+        "g": 140
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "peppers",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Cut the potatoes into 1 cm cubes and fry them in the oil over medium heat for 12 minutes until golden",
+      "Push them aside and brown the pork mince for 6 minutes",
+      "Add the diced peppers and onion with the paprika and cook for 5 minutes",
+      "Season and scatter with parsley"
+    ]
+  },
+  {
+    "id": "d-lentil-shepherds-pie",
+    "name": "Lentil Shepherd's Pie",
+    "description": "Lentils, carrots and peas in gravy under olive oil mash",
+    "mealType": "dinner",
+    "prepTime": 60,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🥧",
+    "main": "lentils",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 80
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "carrots",
+        "g": 80
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "tomato paste",
+        "g": 15
+      },
+      {
+        "item": "olive oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 stock cube",
+      "{350} ml water",
+      "1 tsp dried thyme",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Soften the diced onion and carrots in a third of the olive oil for 5 minutes, then add the rinsed lentils, tomato paste, thyme, water and stock cube",
+      "Simmer for 25 minutes until the lentils are tender and the sauce is thick, then stir in the peas",
+      "Meanwhile boil the potatoes, cut into chunks, for 15 minutes, drain and mash with the remaining olive oil and salt",
+      "Heat the oven to 200°C, tip the lentils into a baking dish, cover with the mash and bake for 20 minutes"
+    ]
+  },
+  {
+    "id": "d-chickpea-sweet-potato-curry",
+    "name": "Chickpea and Sweet Potato Curry",
+    "description": "Mild coconut curry with chickpeas, sweet potato and spinach, with rice",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍠",
+    "main": "chickpeas",
+    "tags": [
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "sweet potato",
+        "g": 200
+      },
+      {
+        "item": "coconut milk",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "{200} ml water",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil for 4 minutes, then add the chopped garlic, curry powder and chili flakes",
+      "Add the sweet potato in 2 cm cubes, the coconut milk and the water and simmer for 15 minutes until tender",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes and drain",
+      "Add the drained chickpeas and spinach to the curry, cook 3 more minutes, season and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-potato-pepper-egg-hash",
+    "name": "Potato, Pepper and Egg Hash",
+    "description": "Crisp potatoes with peppers and onion, topped with three fried eggs",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "peppers",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into 1 cm cubes and fry them in two thirds of the oil over medium heat for 12 minutes until golden",
+      "Add the diced peppers and onion with the paprika and cook for 5 minutes",
+      "Fry the eggs in the remaining oil in a second pan for 2 to 3 minutes",
+      "Season the hash and serve it with the eggs on top"
+    ]
+  },
+  {
+    "id": "d-garlic-butter-shrimp-rice",
+    "name": "Garlic Butter Shrimp with Rice",
+    "description": "Shrimp in garlic butter with rice and peas",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 180
+      },
+      {
+        "item": "rice",
+        "g": 80
+      },
+      {
+        "item": "peas",
+        "g": 80
+      },
+      {
+        "item": "butter",
+        "g": 12
+      },
+      {
+        "item": "garlic",
+        "pieces": 3
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, adding the peas for the last 2, then drain",
+      "Melt the butter in a pan and gently cook the sliced garlic for 1 minute",
+      "Add the shrimp and cook for 2 to 3 minutes until pink",
+      "Squeeze in the juice of the lemon, season and serve over the rice and peas with parsley"
+    ]
+  },
+  {
+    "id": "d-tuna-fishcakes-salad",
+    "name": "Tuna Fishcakes with Salad",
+    "description": "Crisp tuna and potato cakes with lettuce and tomato",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "tuna",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 140
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "flour",
+        "g": 15
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "oil",
+        "g": 12
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, for 15 minutes, drain well and mash",
+      "Mix the mash with the drained tuna, the egg, parsley, salt and pepper and shape into {4} cakes, then dust them with the flour",
+      "Fry in the oil over medium heat for 4 minutes per side until crisp and golden",
+      "Serve with the lettuce, sliced tomato and the lemon cut into wedges"
+    ]
+  },
+  {
+    "id": "d-salmon-sweet-potato-traybake",
+    "name": "Salmon, Sweet Potato and Broccoli Traybake",
+    "description": "One-tray roast of salmon, sweet potato and broccoli with lemon",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "oven"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 150
+      },
+      {
+        "item": "sweet potato",
+        "g": 250
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oven to 210°C",
+      "Cut the sweet potato into 2 cm cubes, toss on a tray with half the olive oil, the paprika and salt and roast for 15 minutes",
+      "Add the broccoli florets tossed in the remaining olive oil and the salmon, seasoned, and roast for 12 more minutes",
+      "Squeeze over the juice of the lemon"
+    ]
+  },
+  {
+    "id": "d-steak-garlic-potatoes",
+    "name": "Steak with Garlic Potatoes and Green Beans",
+    "description": "Seared beef steak with garlic butter potatoes and green beans",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥩",
+    "main": "beef",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 180
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the potatoes, cut into chunks, in salted water for 15 minutes, adding the green beans for the last 5, then drain",
+      "Toss the potatoes in the butter with the chopped garlic over low heat for 2 minutes",
+      "Season the beef generously and sear it in the oil over very high heat for 2 to 3 minutes per side",
+      "Rest the steak for 3 minutes and serve with the potatoes and beans"
+    ]
+  },
+  {
+    "id": "d-creamy-chicken-broccoli-rice-bake",
+    "name": "Creamy Chicken and Broccoli Rice Bake",
+    "description": "Chicken, broccoli and rice baked in a cream sauce under cheese",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🧀",
+    "main": "chicken",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "broccoli",
+        "g": 120
+      },
+      {
+        "item": "cream sauce",
+        "g": 70
+      },
+      {
+        "item": "cheese",
+        "g": 25
+      },
+      {
+        "item": "onion",
+        "g": 30
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of nutmeg"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the rice in salted water for 8 minutes, adding the broccoli florets for the last 2, then drain",
+      "Cut the chicken into small pieces and fry it with the diced onion in a non-stick pan for 5 minutes",
+      "Mix everything with the cream sauce, nutmeg, salt and pepper in a small baking dish",
+      "Scatter over the grated cheese and bake for 15 minutes until golden"
+    ]
+  },
+  {
+    "id": "d-crispy-tofu-sweet-potato",
+    "name": "Crispy Tofu with Sweet Potato and Green Beans",
+    "description": "Pan-crisped tofu with roasted sweet potato and green beans",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🍠",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "sweet potato",
+        "g": 250
+      },
+      {
+        "item": "green beans",
+        "g": 120
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Heat the oven to 210°C, cut the sweet potato into wedges, toss with half the oil, the paprika and salt and roast for 25 minutes",
+      "Add the green beans to the tray for the last 10 minutes",
+      "Pat the tofu dry, cut into slabs, season and fry in the remaining oil for 4 minutes per side until crisp",
+      "Serve together with a squeeze of lemon"
+    ]
+  },
+  {
+    "id": "d-smoky-bean-potato-stew",
+    "name": "Smoky Bean and Potato Stew",
+    "description": "Kidney beans, potatoes and carrots in a smoky tomato broth",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥘",
+    "main": "kidney beans",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 180
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "carrots",
+        "g": 80
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "1 stock cube",
+      "{250} ml water",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the olive oil for 4 minutes, then stir in the paprika",
+      "Add the potatoes and carrots in chunks, the chopped tomatoes, water and stock cube and simmer for 20 minutes until tender",
+      "Stir in the drained kidney beans and cook 5 more minutes",
+      "Season with salt and pepper"
+    ]
+  },
+  {
+    "id": "d-turkey-burgers-sweet-potato-wedges",
+    "name": "Turkey Burgers with Sweet Potato Wedges",
+    "description": "Lean turkey burger with lettuce and tomato and roasted sweet potato",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🍔",
+    "main": "turkey mince",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "turkey mince",
+        "g": 160
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "sweet potato",
+        "g": 250
+      },
+      {
+        "item": "lettuce",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 60
+      },
+      {
+        "item": "oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1/2 tsp paprika",
+      "salt",
+      "black pepper",
+      "1 tsp mustard"
+    ],
+    "instructions": [
+      "Heat the oven to 220°C, cut the sweet potato into wedges, toss with most of the oil, the paprika and salt and roast for 25 minutes",
+      "Season the turkey mince, shape it into a patty and fry in the remaining oil for 5 minutes per side until cooked through",
+      "Toast the bread and spread with mustard",
+      "Add the lettuce, burger and sliced tomato and serve with the wedges"
+    ]
+  },
+  {
+    "id": "d-fish-pie",
+    "name": "Fish Pie",
+    "description": "White fish and peas in a cream sauce under cheesy mash",
+    "mealType": "dinner",
+    "prepTime": 45,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop",
+      "oven"
+    ],
+    "emoji": "🥧",
+    "main": "white fish",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "white fish",
+        "g": 170
+      },
+      {
+        "item": "potatoes",
+        "g": 300
+      },
+      {
+        "item": "peas",
+        "g": 60
+      },
+      {
+        "item": "cream sauce",
+        "g": 70
+      },
+      {
+        "item": "butter",
+        "g": 8
+      },
+      {
+        "item": "cheese",
+        "g": 20
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of nutmeg"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C and boil the potatoes, cut into chunks, for 15 minutes, then drain and mash with the butter",
+      "Cut the fish into chunks and mix it in a small baking dish with the peas, cream sauce, nutmeg, salt and pepper",
+      "Spread the mash over the top and scatter with the grated cheese",
+      "Bake for 25 minutes until golden and bubbling at the edges"
+    ]
+  },
+  {
+    "id": "d-honey-mustard-pork-rice",
+    "name": "Honey Mustard Pork with Rice and Broccoli",
+    "description": "Pork strips in a honey mustard glaze with rice and broccoli",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍯",
+    "main": "pork",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "pork",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 75
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "honey",
+        "g": 10
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "2 tsp mustard",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, adding the broccoli florets for the last 3, then drain",
+      "Cut the pork into strips, season and fry in the oil over high heat for 5 minutes until browned",
+      "Stir in the honey and mustard with a splash of water and bubble for 1 minute",
+      "Serve the pork and its glaze over the rice and broccoli"
+    ]
+  },
+  {
+    "id": "d-chicken-caesar-salad",
+    "name": "Chicken Caesar-Style Salad",
+    "description": "Chicken over crisp lettuce with croutons, parmesan and a lemon yogurt dressing",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "chicken",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 170
+      },
+      {
+        "item": "lettuce",
+        "g": 100
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "parmesan",
+        "g": 20
+      },
+      {
+        "item": "yogurt",
+        "g": 50
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "1 small grated garlic clove if you like",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the bread into cubes and fry them in half the olive oil for 3 minutes until crisp, then set aside",
+      "Season the chicken and fry it in the remaining olive oil for 5 to 6 minutes per side, then slice",
+      "Mix the yogurt with the mustard, the juice of the lemon, half the grated parmesan, salt and pepper",
+      "Toss the torn lettuce in the dressing and top with the chicken, croutons and remaining parmesan"
+    ]
+  },
+  {
+    "id": "d-thai-beef-noodle-salad",
+    "name": "Thai Beef Noodle Salad",
+    "description": "Seared beef with cold noodles, cucumber, carrot and a chili-lime dressing",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "beef",
+    "tags": [
+      "asian",
+      "spicy",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 150
+      },
+      {
+        "item": "noodles",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 60
+      },
+      {
+        "item": "lettuce",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "g": 12
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "juice of half a lime",
+      "1/2 tsp chili flakes",
+      "handful of fresh mint or coriander"
+    ],
+    "instructions": [
+      "Cook the noodles according to the packet, drain and rinse under cold water",
+      "Sear the beef in the oil over very high heat for 2 minutes per side, rest it for 3 minutes and slice thinly",
+      "Mix the soy sauce with the lime juice and chili flakes",
+      "Toss the noodles with the cucumber and carrots cut into thin strips, the shredded lettuce and the dressing, and top with the beef and herbs"
+    ]
+  },
+  {
+    "id": "d-chickpea-avocado-quinoa-salad",
+    "name": "Chickpea, Avocado and Quinoa Salad",
+    "description": "Big salad of quinoa, chickpeas, avocado, tomato and cucumber",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥑",
+    "main": "chickpeas",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "quinoa",
+        "g": 60
+      },
+      {
+        "item": "avocado",
+        "pieces": 1
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      },
+      {
+        "item": "lemon",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "handful of fresh parsley"
+    ],
+    "instructions": [
+      "Rinse the quinoa and simmer it in salted water for 12 to 15 minutes, then drain and cool slightly",
+      "Dice the avocado, tomato and cucumber",
+      "Toss the quinoa with the drained chickpeas, the vegetables, olive oil, the juice of the lemon, salt, pepper and parsley"
+    ]
+  },
+  {
+    "id": "d-chicken-alfredo",
+    "name": "Chicken Alfredo",
+    "description": "Pasta in a parmesan cream sauce with chicken and broccoli",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "chicken",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 180
+      },
+      {
+        "item": "pasta",
+        "g": 110
+      },
+      {
+        "item": "cream sauce",
+        "g": 100
+      },
+      {
+        "item": "parmesan",
+        "g": 20
+      },
+      {
+        "item": "broccoli",
+        "g": 100
+      },
+      {
+        "item": "butter",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "pinch of nutmeg"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet, adding the broccoli florets for the last 3 minutes, then drain and keep a little of the water",
+      "Slice the chicken, season and fry it in the butter over medium-high heat for 6 minutes",
+      "Add the cream sauce, nutmeg and a splash of pasta water and simmer for 2 minutes",
+      "Toss in the pasta, broccoli and grated parmesan and season with pepper"
+    ]
+  },
+  {
+    "id": "d-beef-stroganoff",
+    "name": "Beef Stroganoff",
+    "description": "Beef strips and mushrooms in a creamy sauce over rice",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍄",
+    "main": "beef",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "beef",
+        "g": 180
+      },
+      {
+        "item": "mushrooms",
+        "g": 150
+      },
+      {
+        "item": "cream sauce",
+        "g": 90
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "rice",
+        "g": 100
+      },
+      {
+        "item": "butter",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp mustard",
+      "1 tsp paprika",
+      "salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Slice the beef into thin strips, season and sear it in half the butter over very high heat for 2 minutes, then set aside",
+      "Cook the sliced onion and mushrooms in the remaining butter for 6 minutes, then stir in the paprika and mustard",
+      "Add the cream sauce, simmer for 2 minutes, return the beef to warm through and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-creamy-salmon-spinach-pasta",
+    "name": "Creamy Salmon and Spinach Pasta",
+    "description": "Pasta with flaked salmon and spinach in a garlic cream sauce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🐟",
+    "main": "salmon",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "salmon",
+        "g": 160
+      },
+      {
+        "item": "pasta",
+        "g": 100
+      },
+      {
+        "item": "cream sauce",
+        "g": 80
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      }
+    ],
+    "seasonings": [
+      "salt",
+      "black pepper",
+      "squeeze of lemon juice"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a little of the water",
+      "Fry the salmon in a non-stick pan over medium heat for 3 to 4 minutes per side, then break it into flakes",
+      "Add the sliced garlic for 30 seconds, then the cream sauce, spinach and a splash of pasta water",
+      "Toss in the pasta and finish with pepper and lemon juice"
+    ]
+  },
+  {
+    "id": "d-peanut-tofu-stir-fry",
+    "name": "Peanut Tofu Stir-Fry",
+    "description": "Crisp tofu with broccoli and peppers in a peanut soy sauce over rice",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥜",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 220
+      },
+      {
+        "item": "rice",
+        "g": 90
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "soy sauce",
+        "g": 20
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "4 tbsp hot water",
+      "1 tsp grated ginger",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Cut the tofu into cubes and fry in the oil over medium-high heat for 6 minutes until golden",
+      "Add the broccoli florets, sliced peppers and ginger with a splash of water and stir-fry for 4 minutes",
+      "Whisk the peanut butter with the soy sauce, hot water and lime juice, pour it in, toss for 1 minute and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-lentil-chickpea-curry",
+    "name": "Lentil and Chickpea Curry",
+    "description": "Thick coconut curry of lentils, chickpeas and spinach with rice",
+    "mealType": "dinner",
+    "prepTime": 40,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "lentils",
+    "tags": [
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 80
+      },
+      {
+        "item": "chickpeas",
+        "g": 120
+      },
+      {
+        "item": "coconut milk",
+        "g": 80
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "{350} ml water",
+      "salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil for 4 minutes, then stir in the curry powder and chili flakes",
+      "Add the rinsed lentils and the water and simmer for 20 minutes until the lentils are soft",
+      "Meanwhile boil the rice in salted water for 10 to 12 minutes and drain",
+      "Stir the drained chickpeas, coconut milk and spinach into the lentils, cook 5 more minutes, season with salt and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-loaded-bean-rice-burritos",
+    "name": "Loaded Bean and Rice Burritos",
+    "description": "Two burritos packed with spiced kidney beans, rice and corn",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "kidney beans",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 200
+      },
+      {
+        "item": "tortilla",
+        "pieces": 2
+      },
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Warm the drained kidney beans in the oil with the cumin, paprika and salt for 3 minutes, crushing about half of them",
+      "Stir in the rice, corn and lime juice",
+      "Warm the tortillas, divide the filling between them, fold in the sides and roll up"
+    ]
+  },
+  {
+    "id": "d-spaghetti-carbonara",
+    "name": "Spaghetti Carbonara",
+    "description": "Spaghetti with crisp bacon in a silky egg and parmesan sauce",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥓",
+    "main": "eggs",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bacon",
+        "g": 60
+      },
+      {
+        "item": "pasta",
+        "g": 110
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "parmesan",
+        "g": 25
+      }
+    ],
+    "seasonings": [
+      "plenty of black pepper"
+    ],
+    "instructions": [
+      "Cook the pasta in salted boiling water according to the packet and drain, keeping a cup of the water",
+      "Fry the chopped bacon in a dry pan for 5 minutes until crisp, then take the pan off the heat",
+      "Beat the eggs with the grated parmesan and pepper",
+      "Toss the hot pasta in the pan with the bacon, then stir in the egg mixture and a splash of pasta water off the heat until creamy"
+    ]
+  },
+  {
+    "id": "d-butter-chicken",
+    "name": "Butter Chicken with Rice",
+    "description": "Chicken in a mildly spicy, creamy tomato sauce with rice",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "chicken",
+    "tags": [
+      "spicy",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 180
+      },
+      {
+        "item": "tomato sauce",
+        "g": 150
+      },
+      {
+        "item": "cream sauce",
+        "g": 80
+      },
+      {
+        "item": "butter",
+        "g": 10
+      },
+      {
+        "item": "onion",
+        "g": 50
+      },
+      {
+        "item": "rice",
+        "g": 100
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "1/2 tsp chili flakes",
+      "1 tsp grated ginger",
+      "salt"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Soften the diced onion in the butter for 4 minutes, then add the chopped garlic, ginger, curry powder and chili flakes for 1 minute",
+      "Add the chicken in chunks and cook for 4 minutes, then the tomato sauce, and simmer for 12 minutes",
+      "Stir in the cream sauce, simmer 2 more minutes, season with salt and serve with the rice"
+    ]
+  },
+  {
+    "id": "d-loaded-beef-burrito-bowl",
+    "name": "Loaded Beef Burrito Bowl",
+    "description": "Rice bowl with spiced beef mince, beans, corn and cheese",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "beef mince",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "beef mince",
+        "g": 160
+      },
+      {
+        "item": "rice",
+        "g": 90
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "corn",
+        "g": 50
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "salt",
+      "squeeze of lime juice"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes and drain",
+      "Brown the beef mince in a dry pan over high heat for 6 minutes, then add the cumin, paprika and salt",
+      "Stir in the drained kidney beans and corn and heat through",
+      "Serve over the rice with the grated cheese, diced tomato and lime juice"
+    ]
+  },
+  {
+    "id": "d-shrimp-egg-fried-rice",
+    "name": "Shrimp and Egg Fried Rice",
+    "description": "Big bowl of fried rice with shrimp, egg and peas",
+    "mealType": "dinner",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍤",
+    "main": "shrimp",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "shrimp",
+        "g": 180
+      },
+      {
+        "item": "rice",
+        "g": 100
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "peas",
+        "g": 70
+      },
+      {
+        "item": "soy sauce",
+        "g": 20
+      },
+      {
+        "item": "oil",
+        "g": 12
+      }
+    ],
+    "seasonings": [
+      "1 tsp grated ginger",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, drain and let it steam dry",
+      "Stir-fry the shrimp in the oil over high heat for 2 minutes with the ginger, then add the peas",
+      "Push everything aside, crack in the eggs and scramble until just set",
+      "Add the rice and soy sauce, stir-fry for 2 minutes and season with pepper"
+    ]
+  },
+  {
+    "id": "d-chicken-shawarma-plate",
+    "name": "Chicken Shawarma Plate",
+    "description": "Spiced chicken with rice, chickpeas, garlic yogurt, cucumber and tomato",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍗",
+    "main": "chicken",
+    "tags": [
+      "mediterranean",
+      "spicy"
+    ],
+    "ingredients": [
+      {
+        "item": "chicken",
+        "g": 180
+      },
+      {
+        "item": "rice",
+        "g": 90
+      },
+      {
+        "item": "chickpeas",
+        "g": 80
+      },
+      {
+        "item": "greek yogurt",
+        "g": 60
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp ground cumin",
+      "1 tsp paprika",
+      "1/2 tsp chili flakes",
+      "1/2 tsp ground coriander",
+      "salt"
+    ],
+    "instructions": [
+      "Boil the rice in salted water for 10 to 12 minutes, adding the drained chickpeas for the last minute, then drain",
+      "Slice the chicken thinly and coat it with the cumin, paprika, chili flakes, coriander and salt",
+      "Fry in the olive oil over high heat for 6 to 7 minutes until browned at the edges",
+      "Serve over the rice and chickpeas with the diced cucumber and tomato and the yogurt"
+    ]
+  }
+]

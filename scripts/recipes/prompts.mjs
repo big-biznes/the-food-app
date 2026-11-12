@@ -9,7 +9,7 @@
 // The LLM only writes ingredients and steps; build.mjs computes the nutrition.
 
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { APPLIANCES, TAGS } from './lib.mjs';
+import { APPLIANCES, AUTHORED_TAGS, HEARTY_MIN, LIGHT_MAX_KCAL, QUICK_MAX_MINUTES } from './lib.mjs';
 
 const root = new URL('../../', import.meta.url);
 const read = path => JSON.parse(readFileSync(new URL(path, root), 'utf8'));
@@ -92,10 +92,36 @@ Answer with one JSON array and nothing else: no introduction, no comments inside
 - \`appliances\`: what is needed, from ${APPLIANCES.map(a => `\`"${a}"\``).join(', ')}; an empty list for no-cook dishes.
 - \`emoji\`: one emoji that fits the dish.
 - \`main\`: the \`item\` the dish is built around. It must be one of the recipe's ingredients.
-- \`tags\`: one to three of ${TAGS.map(t => `\`"${t}"\``).join(', ')}, only where they truly fit.
+- \`tags\`: the categories below that the dish belongs to, from ${AUTHORED_TAGS.map(t => `\`"${t}"\``).join(', ')}. Often one or two, sometimes none.
 - \`ingredients\`: 3 to 9 entries like \`{"item": "rice", "g": 75}\`, each item at most once.
 - \`seasonings\`: list of short texts, may be empty.
 - \`instructions\`: 3 to 7 steps a beginner can follow. Each step is one imperative sentence or two, with heat levels and times ("simmer for 8 to 10 minutes"), no step numbers. The steps use every listed ingredient and mention nothing that is not in \`ingredients\` or \`seasonings\`.
+
+The app scales every recipe to the person, so a number that depends on how much is cooked is written in braces and the app fills it in: \`"roll into {8} small balls"\`, \`"shape into {4} patties"\`, \`"{350} ml water"\` in \`seasonings\`. Use \`{n:item}\` for the count of an ingredient given in pieces: \`"make {n:eggs} wells and crack in the eggs"\`. Do not put ingredient amounts in the steps (the app shows them next to each step), and leave times, temperatures and spoon measures of spices as plain numbers.
+
+## Categories
+
+Users can ask for a week that focuses on a category or a combination ("Mexican", "Asian and spicy", "light and quick"), and the app then only picks recipes that carry it. A tag is therefore a promise: give one only when someone who asked for that category would agree the dish belongs, and never to make a quota.
+
+You assign these in \`tags\`:
+
+- \`asian\`: East and Southeast Asian cooking. Stir-fries, fried rice, noodle dishes, teriyaki, coconut curries; soy sauce, ginger, garlic, chili, sesame-style flavours.
+- \`italian\`: pasta dishes, risotto-style rice, pesto, tomato and basil, mozzarella and parmesan, frittata.
+- \`mediterranean\`: Greek, Spanish, Turkish, Levantine and North African cooking. Olive oil, lemon, feta, yogurt, chickpeas, cucumber and tomato, couscous, oregano, cumin, paprika. Italian dishes get \`italian\` instead, not both.
+- \`mexican\`: Mexican and Tex-Mex. Tortillas, kidney beans, corn, avocado, tomato salsa, cumin, chili, lime: burritos, tacos, quesadillas, fajitas, chili con carne, burrito bowls.
+- \`spicy\`: clearly hot when cooked as written, from chili flakes, fresh chili, cayenne, sambal or similar in \`seasonings\`. Not for dishes that are merely well seasoned.
+- \`fresh\`: raw or barely cooked vegetables or fruit are a large part of the plate. Salads, grain bowls with raw toppings, cold wraps, yogurt and fruit bowls. Not for stews, bakes or anything where the produce is cooked down.
+- \`comfort\`: warm, rich and familiar. Creamy pasta, stews, chili, mash, bakes, porridge, pancakes.
+
+A dish from one cuisine gets that cuisine only; give two cuisines only to a real fusion dish. Everyday dishes with no clear origin (an omelette, chicken with potatoes and green beans) get no cuisine tag.
+
+These three are **not** written by you. The build script works them out from the recipe, so do not put them in \`tags\`, but know the rules because users ask for them just as often and each needs enough recipes:
+
+- quick: \`prepTime\` of ${QUICK_MAX_MINUTES} minutes or less.
+- light: at most ${LIGHT_MAX_KCAL.breakfast} kcal for a breakfast, ${LIGHT_MAX_KCAL.lunch} for a lunch, ${LIGHT_MAX_KCAL.dinner} for a dinner. In practice: lean protein or legumes, plenty of vegetables, a smaller portion of starch, little oil, cheese or cream.
+- hearty: at least ${HEARTY_MIN.breakfast.kcal} kcal and ${HEARTY_MIN.breakfast.protein} g protein for a breakfast, ${HEARTY_MIN.lunch.kcal} kcal and ${HEARTY_MIN.lunch.protein} g for a lunch, ${HEARTY_MIN.dinner.kcal} kcal and ${HEARTY_MIN.dinner.protein} g for a dinner.
+
+You cannot compute calories exactly and are not asked to; as a rough guide per 100 g: oil 884 kcal, butter 717, cheese 300 to 390, dry rice, pasta, oats and couscous 365 to 380, bread 250, raw chicken breast 120, raw salmon 208, mince 140 to 260, eggs 143 (one egg 80), drained canned beans and chickpeas 125 to 140, potatoes 77, most vegetables 15 to 40.
 
 Here is one finished recipe so you can see the level of detail:
 
@@ -127,6 +153,7 @@ ${shared}
 - Aim for roughly 300 to 600 kcal per serving, which in practice means: one portion of oats is 40 to 70 g, of yogurt 150 to 250 g, 2 or 3 eggs, 1 or 2 slices of bread.
 - Most mornings are rushed: at least 25 of the 40 should take 15 minutes or less, and at least 8 should need no cooking at all. The rest can be slower weekend breakfasts.
 - Mix sweet and savoury about evenly.
+- A focused week needs six different breakfasts, so make sure there are at least 10 light and at least 8 hearty breakfasts by the rules above, at least 8 tagged \`fresh\` and at least 8 tagged \`comfort\`. Cuisine tags are rare at breakfast; use them only where they are true (a breakfast burrito, shakshuka), and include at least 4 such \`mexican\` and 4 \`mediterranean\` breakfasts.
 - People with dietary restrictions need a full week of different breakfasts, so include at least 8 vegan recipes, at least 10 gluten-free, at least 10 dairy-free and at least 30 without meat or fish. Check these against the \`contains\` column, not from memory.
 - ${avoid(namesOf(['breakfast']))}
 `;
@@ -145,7 +172,8 @@ ${shared}
 - Lunches are lighter and faster: roughly 400 to 650 kcal, 30 minutes or less, and many should travel well or be good cold (wraps, grain bowls, hearty salads, soups, sandwiches, fried rice, pasta salads, omelettes). Dinners are the main cooked meal of the day: roughly 500 to 850 kcal, a protein with a starch and vegetables in some form (stir-fries, curries, pasta dishes, traybakes, stews, chili, pan-fried fish with sides). Every recipe contains at least 100 g of vegetables or legumes.
 - \`main\` is the protein of the dish and must be one of: ${PROTEINS.join(', ')}. The app plans half a week around two proteins at a time, so it needs several lunches and several dinners for each one: within this batch use no more than 12 different mains, and give every main you use at least 2 lunches and 2 dinners. Do not let chicken take over; no main gets more than 6 recipes.
 - People with dietary restrictions need full weeks too. Among the lunches and again among the dinners, include at least 5 vegan recipes, at least 8 vegetarian (the vegan ones count), at least 8 gluten-free and at least 10 dairy-free. Check these against the \`contains\` column, not from memory.
-- Spread the cuisines: no more than a third of the recipes from any one tradition, and use the bottled sauces in fewer than half of them. Most flavour should come from the ingredients and seasonings.
+- A focused week needs seven different lunches and six different dinners from one category, and this batch is one of several. So among the lunches, and again among the dinners, include at least 5 recipes each for \`asian\`, \`italian\`, \`mediterranean\` and \`mexican\`, at least 5 tagged \`spicy\`, at least 6 light and at least 6 hearty by the rules above. Include at least 6 \`fresh\` lunches and at least 6 \`comfort\` dinners. Combinations matter too: within each cuisine, make one recipe light, one spicy where the cuisine allows it, and one quick. The remaining recipes are everyday dishes without a cuisine tag.
+- Use the bottled sauces in fewer than half of the recipes. Most flavour should come from the ingredients and seasonings.
 - About half of each group should be \`"quick"\`, most of the rest \`"balanced"\`, and at most 4 dinners \`"weekend"\`.
 - ${avoid(namesOf(['lunch', 'dinner']))}
 `;

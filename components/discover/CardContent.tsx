@@ -1,3 +1,4 @@
+import { usePersonalMeal } from '@/hooks/usePortions';
 import { View, Text, StyleSheet } from 'react-native';
 import { Meal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
@@ -10,6 +11,8 @@ const TYPE_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' } 
 
 export default function CardContent({ meal }: Props) {
   const styles = useThemedStyles(makeStyles);
+  // Calories for the portion this user will cook.
+  const personal = usePersonalMeal(meal);
   return (
     <View style={styles.cardInner}>
       <Text style={styles.kicker}>{TYPE_LABEL[meal.mealType]}</Text>
@@ -24,7 +27,7 @@ export default function CardContent({ meal }: Props) {
           {meal.description}
         </Text>
         <Text style={styles.meta}>
-          {meal.prepTime} min, {meal.calories} kcal
+          {meal.prepTime} min, {personal.calories} kcal
         </Text>
       </View>
     </View>

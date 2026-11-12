@@ -6,11 +6,36 @@
 export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner'];
 export const DIFFICULTIES = ['quick', 'balanced', 'weekend'];
 export const APPLIANCES = ['stovetop', 'oven', 'microwave', 'air fryer', 'slow cooker'];
-/** The craving chips on the home screen; a recipe's `tags` come from this list. */
-export const TAGS = ['spicy', 'light', 'hearty', 'fresh', 'asian', 'italian', 'mediterranean', 'mexican', 'comfort', 'quick'];
+// The categories a plan can focus on (the craving chips on the home screen).
+// Three of them are facts about a recipe and are worked out here, so they mean
+// the same thing for every recipe. The rest are a judgement and are written in
+// the recipe's `tags`; scripts/recipes/prompts.mjs says what each one means.
+export const CUISINES = ['asian', 'italian', 'mediterranean', 'mexican'];
+export const AUTHORED_TAGS = [...CUISINES, 'spicy', 'fresh', 'comfort'];
+export const COMPUTED_TAGS = ['quick', 'light', 'hearty'];
+
+/** quick: on the table within this many minutes. */
+export const QUICK_MAX_MINUTES = 20;
+/** light: at most this many kcal per serving. */
+export const LIGHT_MAX_KCAL = { breakfast: 400, lunch: 550, dinner: 650 };
+/** hearty: at least this many kcal and this much protein per serving. */
+export const HEARTY_MIN = { breakfast: { kcal: 500, protein: 20 }, lunch: { kcal: 650, protein: 30 }, dinner: { kcal: 750, protein: 30 } };
+// A seasoning that brings chili heat makes a dish spicy even when the tag was forgotten.
+const HEAT = /chil|cayenne|sambal|harissa|sriracha|jalape|tabasco|hot sauce|gochu/i;
+
+/** The recipe's categories: its own tags plus the computed ones. */
+function categories(recipe, total) {
+  const tags = new Set(recipe.tags ?? []);
+  if ((recipe.seasonings ?? []).some(s => HEAT.test(s))) tags.add('spicy');
+  if (recipe.prepTime <= QUICK_MAX_MINUTES) tags.add('quick');
+  if (total.kcal <= LIGHT_MAX_KCAL[recipe.mealType]) tags.add('light');
+  const hearty = HEARTY_MIN[recipe.mealType];
+  if (total.kcal >= hearty.kcal && total.protein >= hearty.protein) tags.add('hearty');
+  return [...AUTHORED_TAGS, ...COMPUTED_TAGS].filter(t => tags.has(t));
+}
 
 /** Calories per serving outside these ranges are reported, not rejected. */
-const KCAL_RANGE = { breakfast: [200, 700], lunch: [350, 900], dinner: [400, 1000] };
+const KCAL_RANGE = { breakfast: [200, 800], lunch: [350, 900], dinner: [400, 1000] };
 
 const NUTRIENTS = ['kcal', 'protein', 'carbs', 'fat', 'fiber', 'sugar', 'sodiumMg'];
 
@@ -62,6 +87,24 @@ function dietaryTags(contains) {
 
 const isText = v => typeof v === 'string' && v.trim().length > 0;
 
+// Numbers in steps and seasonings that depend on the portion (data/portions.ts fills them in):
+//   {8}        a count or an amount of water that scales with the portion
+//   {n:eggs}   the number of pieces of a counted ingredient of this recipe
+function markerErrors(texts, lines, defs) {
+  const errors = [];
+  for (const text of texts) {
+    for (const [all, inner] of String(text).matchAll(/\{([^}]*)\}/g)) {
+      if (/^\d+$/.test(inner)) continue;
+      const key = inner.startsWith('n:') ? inner.slice(2) : null;
+      const line = key && lines.find(l => l?.item === key);
+      if (!line) errors.push(`${all} must be {number} or {n:ingredient of this recipe}`);
+      else if (!defs.get(key)?.piece) errors.push(`${all}: "${key}" is not counted in pieces`);
+    }
+    if (/[{}]/.test(String(text).replace(/\{[^{}]*\}/g, ''))) errors.push(`unbalanced braces in "${text}"`);
+  }
+  return errors;
+}
+
 /**
  * @returns {{ row: object | null, errors: string[], warnings: string[] }}
  * `row` is null when there are errors.
@@ -78,13 +121,17 @@ export function buildRecipe(recipe, defs) {
   const appliances = recipe.appliances ?? [];
   for (const a of appliances) if (!APPLIANCES.includes(a)) errors.push(`unknown appliance "${a}"`);
   const tags = recipe.tags ?? [];
-  for (const t of tags) if (!TAGS.includes(t)) errors.push(`unknown tag "${t}"`);
+  for (const t of tags) {
+    if (COMPUTED_TAGS.includes(t)) errors.push(`tag "${t}" is worked out from the recipe; remove it`);
+    else if (!AUTHORED_TAGS.includes(t)) errors.push(`unknown tag "${t}"`);
+  }
   const seasonings = recipe.seasonings ?? [];
   if (!Array.isArray(seasonings) || !seasonings.every(isText)) errors.push('seasonings must be a list of texts');
   const steps = recipe.instructions;
   if (!Array.isArray(steps) || steps.length < 2 || !steps.every(isText)) errors.push('instructions must be a list of at least 2 steps');
 
   const lines = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+  if (Array.isArray(steps) && Array.isArray(seasonings)) errors.push(...markerErrors([...steps, ...seasonings], lines, defs));
   if (lines.length < 2) errors.push('at least 2 ingredients are needed');
   const total = Object.fromEntries(NUTRIENTS.map(n => [n, 0]));
   const contains = new Set();
@@ -119,7 +166,8 @@ export function buildRecipe(recipe, defs) {
   }
   if (errors.length) return { row: null, errors, warnings };
 
-  const keywords = [...new Set([...tags, ...seen, ...appliances, recipe.difficulty, recipe.mealType])];
+  // Categories first, then the words a free-text craving can match.
+  const keywords = [...new Set([...categories(recipe, total), ...seen, ...appliances, recipe.mealType])];
   return {
     errors,
     warnings,
