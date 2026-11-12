@@ -2,17 +2,13 @@ import { DietaryRestriction } from '@/contexts/AuthContext';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner';
 
-export type MealComponents = {
-  protein: string;
-  carb: string;
-  sauce: string;
-  vegetable: string;
-};
-
 export type Ingredient = {
+  /** Ingredient key from data/ingredients.json, so the shopping list and prices can find it. */
   name: string;
   amount: number;
   unit: string; // 'g' | 'ml' | 'can' | 'tbsp' | 'tsp' | 'clove' | 'slice' | '' (piece/countable)
+  /** How the amount reads in a recipe when that differs from amount + unit: "2 eggs", "2 cloves". */
+  label?: string;
 };
 
 export type Meal = {
@@ -33,10 +29,41 @@ export type Meal = {
   dietaryTags: DietaryRestriction[];
   keywords: string[];
   emoji: string;
-  components: MealComponents;
+  /** Key of the ingredient the dish is built around: "chicken", "eggs", "oats". */
+  main: string;
   ingredients: Ingredient[];
+  /** Salt, spices, water: listed with the recipe, never counted or put on the shopping list. */
+  seasonings?: string[];
   instructions: string[];
 };
+
+/** The main ingredient. Meals saved before recipes had `main` carry it as the protein of `components`. */
+export function mainOf(meal: Meal): string {
+  return meal.main ?? (meal as { components?: { protein?: string } }).components?.protein ?? '';
+}
+
+// In nearly every kitchen and nearly every recipe, so sharing them says nothing about two meals.
+const STAPLES = new Set(['oil', 'olive oil', 'butter', 'garlic']);
+
+/** Everything a meal needs besides its main ingredient and kitchen staples. */
+function sideIngredients(meal: Meal): string[] {
+  const main = mainOf(meal);
+  return meal.ingredients.map(i => i.name).filter(n => n !== main && !STAPLES.has(n));
+}
+
+const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+
+/**
+ * Meals that fit the user's dietary restrictions. A meal type with nothing that
+ * fits keeps all of its meals, so a plan can always be filled.
+ */
+function compatiblePool(restrictions: DietaryRestriction[]): Meal[] {
+  const pool = ALL_MEALS.filter(m => restrictions.every(r => m.dietaryTags.includes(r)));
+  for (const type of MEAL_TYPES) {
+    if (!pool.some(m => m.mealType === type)) pool.push(...ALL_MEALS.filter(m => m.mealType === type));
+  }
+  return pool;
+}
 
 /** Format a single ingredient for display on the meal card */
 export function formatIngredient(ing: Ingredient): string {
@@ -143,17 +170,16 @@ function scoredPool(
   keywords: string[],
   likedIds: string[] = [],
 ): (Meal & { score: number })[] {
-  // Build a set of components that appear in liked meals so we can
-  // boost meals that share ingredients with things the user enjoyed.
+  // Collect what liked meals are made of so we can boost meals that share
+  // ingredients with things the user enjoyed.
   const likedSet = new Set(likedIds);
-  const likedComponents = new Set<string>();
+  const likedMains = new Set<string>();
+  const likedSides = new Set<string>();
   if (likedIds.length > 0) {
     for (const m of meals) {
       if (likedSet.has(m.id)) {
-        likedComponents.add(m.components.protein);
-        likedComponents.add(m.components.carb);
-        likedComponents.add(m.components.vegetable);
-        likedComponents.add(m.components.sauce);
+        likedMains.add(mainOf(m));
+        for (const name of sideIngredients(m)) likedSides.add(name);
       }
     }
   }
@@ -173,12 +199,10 @@ function scoredPool(
       score += 6;
     }
 
-    // Similar-to-liked boost: shares components with liked meals
-    if (likedComponents.size > 0 && !likedSet.has(m.id)) {
-      if (likedComponents.has(m.components.protein)) score += 3;
-      if (likedComponents.has(m.components.carb)) score += 1;
-      if (likedComponents.has(m.components.vegetable)) score += 1;
-      if (likedComponents.has(m.components.sauce)) score += 1;
+    // Similar-to-liked boost: shares ingredients with liked meals
+    if (likedMains.size > 0 && !likedSet.has(m.id)) {
+      if (likedMains.has(mainOf(m))) score += 3;
+      score += Math.min(3, sideIngredients(m).filter(name => likedSides.has(name)).length);
     }
 
     return { ...m, score };
@@ -206,13 +230,7 @@ export function generateMealPlan(
   restrictions: DietaryRestriction[],
   cravingKeywords: string[],
 ): WeekPlan {
-  const compatible = ALL_MEALS.filter(m =>
-    restrictions.every(r => m.dietaryTags.includes(r)),
-  );
-  const hasAllTypes = (['breakfast', 'lunch', 'dinner'] as MealType[]).every(t =>
-    compatible.some(m => m.mealType === t),
-  );
-  const pool = (compatible.length >= 15 && hasAllTypes) ? compatible : ALL_MEALS;
+  const pool = compatiblePool(restrictions);
   const scored = scoredPool(pool, cravingKeywords);
   const usedIds = new Set<string>();
   const plan: WeekPlan = {};
@@ -262,6 +280,8 @@ export function getWeekStructure(eatingOutDay: string): WeekStructure {
 
 /**
  * Pick 2 target proteins for a part, biased by the scored pool.
+ * Only lunches and dinners count: a breakfast is built around oats or eggs,
+ * not around the protein the part's shopping is planned for.
  * Sums per-protein scores from the already-scored meals (which factor in
  * keywords + liked preferences), then picks the top 2 with some randomness.
  * `excludeProteins` ensures Part B doesn't repeat Part A's proteins.
@@ -270,9 +290,10 @@ function pickTargetProteins(
   pool: (Meal & { score: number })[],
   excludeProteins: Set<string>,
 ): [string, string] {
+  const cooked = pool.filter(m => m.mealType !== 'breakfast');
   const proteinScore = new Map<string, number>();
-  for (const m of pool) {
-    const p = m.components.protein;
+  for (const m of cooked) {
+    const p = mainOf(m);
     if (excludeProteins.has(p)) continue;
     proteinScore.set(p, (proteinScore.get(p) ?? 0) + m.score);
   }
@@ -281,8 +302,8 @@ function pickTargetProteins(
   if (ranked.length === 0) {
     // Fallback: ignore exclusions
     const all = new Map<string, number>();
-    for (const m of pool) {
-      const p = m.components.protein;
+    for (const m of cooked) {
+      const p = mainOf(m);
       all.set(p, (all.get(p) ?? 0) + m.score);
     }
     const fallback = [...all.entries()].sort((a, b) => b[1] - a[1]);
@@ -316,15 +337,9 @@ function nonProteinSharingScore(meal: Meal, picked: Meal[]): number {
   if (picked.length === 0) return 0;
   const seen = new Set<string>();
   for (const m of picked) {
-    seen.add(m.components.carb);
-    seen.add(m.components.vegetable);
-    seen.add(m.components.sauce);
+    for (const name of sideIngredients(m)) seen.add(name);
   }
-  let score = 0;
-  if (seen.has(meal.components.carb)) score += 2;
-  if (seen.has(meal.components.vegetable)) score += 2;
-  if (seen.has(meal.components.sauce)) score += 1;
-  return score;
+  return Math.min(5, 2 * sideIngredients(meal).filter(name => seen.has(name)).length);
 }
 
 function pickMealWithSharing(
@@ -340,10 +355,12 @@ function pickMealWithSharing(
 
   const boosted = source.map(m => {
     let bonus = nonProteinSharingScore(m, pickedInPart);
-    // Strong boost for matching one of the 2 target proteins
-    if (targetProteins.has(m.components.protein)) bonus += 4;
-    // Penalise proteins outside the target pair
-    else bonus -= 3;
+    if (mealType !== 'breakfast') {
+      // Strong boost for matching one of the 2 target proteins
+      if (targetProteins.has(mainOf(m))) bonus += 4;
+      // Penalise proteins outside the target pair
+      else bonus -= 3;
+    }
     return { ...m, score: m.score + bonus };
   });
 
@@ -389,13 +406,7 @@ export function generateStructuredMealPlan(
 ): StructuredWeekPlan {
   const { partDays } = getWeekStructure(eatingOutDay);
 
-  const compatible = ALL_MEALS.filter(m =>
-    restrictions.every(r => m.dietaryTags.includes(r)),
-  );
-  const hasAllTypes = (['breakfast', 'lunch', 'dinner'] as MealType[]).every(t =>
-    compatible.some(m => m.mealType === t),
-  );
-  const pool = (compatible.length >= 15 && hasAllTypes) ? compatible : ALL_MEALS;
+  const pool = compatiblePool(restrictions);
   const usedIds = new Set<string>();
 
   // Part A picks 2 proteins; Part B excludes those so the week has 4 distinct proteins
@@ -501,41 +512,6 @@ export function extractPartIngredients(plan: StructuredWeekPlan, part: WeekPart)
       const total = instances.reduce((s, i) => s + i.amount, 0);
       push(`${total} ${unit} ${name}`, instances.length);
     }
-  }
-
-  return result;
-}
-
-export function extractPlanIngredients(plan: StructuredWeekPlan): string[] {
-  const seen = new Set<string>();
-  const result: string[] = [];
-
-  function push(raw: string) {
-    for (const part of raw.split(/\s*&\s*/).map(s => s.trim())) {
-      const key = part.toLowerCase();
-      if (part && !seen.has(key)) {
-        seen.add(key);
-        result.push(part);
-      }
-    }
-  }
-
-  for (const partKey of ['A', 'B'] as const) {
-    for (const dayPlan of Object.values(plan[partKey])) {
-      for (const meal of [dayPlan.breakfast, dayPlan.lunch, dayPlan.dinner]) {
-        push(meal.components.protein);
-        push(meal.components.carb);
-        push(meal.components.sauce);
-        push(meal.components.vegetable);
-      }
-    }
-  }
-  for (const dayPlan of Object.values(plan.C)) {
-    const { lunch } = dayPlan;
-    push(lunch.components.protein);
-    push(lunch.components.carb);
-    push(lunch.components.sauce);
-    push(lunch.components.vegetable);
   }
 
   return result;

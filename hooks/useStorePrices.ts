@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
+import { fetchAllRows } from '@/lib/fetchAll';
 import type { BaseUnit, Offer } from '@/lib/pricing';
 
 const CACHE_PREFIX = 'prices:v1:';
@@ -47,14 +48,17 @@ function toOffer(r: Row, now: number): Offer {
 
 async function fetchOffers(chainIds: string[]): Promise<Cached> {
   const now = Date.now();
-  const { data, error } = await supabase
-    .from('products')
-    .select('chain_id, external_id, ingredient_key, name, pack_amount, pack_unit, by_weight, price_cents, promo_price_cents, updated_at')
-    .in('chain_id', chainIds)
-    .gte('updated_at', new Date(now - STALE_MS).toISOString())
-    .range(0, 4999);
-  if (error) throw error;
-  const rows = (data ?? []) as Row[];
+  const since = new Date(now - STALE_MS).toISOString();
+  const rows = await fetchAllRows<Row>((from, to) =>
+    supabase
+      .from('products')
+      .select('chain_id, external_id, ingredient_key, name, pack_amount, pack_unit, by_weight, price_cents, promo_price_cents, updated_at')
+      .in('chain_id', chainIds)
+      .gte('updated_at', since)
+      .order('chain_id')
+      .order('external_id')
+      .range(from, to),
+  );
   const updatedAt = rows.reduce<string | null>((max, r) => (!max || r.updated_at > max ? r.updated_at : max), null);
   return { savedAt: now, offers: rows.map(r => toOffer(r, now)), updatedAt };
 }

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { parseNlSize, toProducts as toNlProducts } from './checkjebon.mjs';
 import { parseCsv } from './csv.mjs';
-import { toProducts } from './kolkostruva.mjs';
+import { parseEggCount, toProducts } from './kolkostruva.mjs';
 import { matchIngredient } from './match.mjs';
 import { parseKauflandOffers, parseLidlSearch } from './offers.mjs';
 import { parsePackSize } from './packSize.mjs';
@@ -145,4 +145,38 @@ test('data/ingredients.json keeps mince apart from whole meat', () => {
   assert.equal(offer('Говеждо месо от врат от свежата витрина'), 'beef');
   assert.equal(offer('Делиа Пуешко мляно месо от бут'), 'turkey mince');
   assert.equal(matchIngredient({ name: 'КАЙМА СМЕС 60/40', category: '25' }, ingredients, 'bg'), 'mixed mince');
+});
+
+test('egg boxes are counted in pieces', () => {
+  assert.deepEqual(parseEggCount('ЯЙЦА М10 ПОДОВО ОТГЛЕЖДАНЕ CLEVER'), { amount: 10, unit: 'pc' });
+  assert.deepEqual(parseEggCount('ЯЙЦА L6 ПОДОВО ОТГЛЕЖДАНЕ  ДОНЧЕВО'), { amount: 6, unit: 'pc' });
+  assert.deepEqual(parseEggCount('Зора Кокоши яйца М 10бр подови'), { amount: 10, unit: 'pc' });
+  assert.deepEqual(parseEggCount('Мизия Кокоши яйца със селен М6 броя'), { amount: 6, unit: 'pc' });
+  assert.equal(parseEggCount('Пресни яйца разм.L,подово отглежд'), null);
+  const [eggs] = toProducts([['София', 'Билла 1', 'Яйца 10 бр. L от под отгл селен', '77', '32', '3.19', '']]);
+  assert.equal(eggs.packAmount, 10);
+  assert.equal(eggs.packUnit, 'pc');
+});
+
+test('new ingredients do not take products from each other', () => {
+  const ingredients = JSON.parse(readFileSync(new URL('../../data/ingredients.json', import.meta.url), 'utf8'));
+  const nl = name => matchIngredient({ name, packAmount: 500 }, ingredients, 'nl');
+  assert.equal(nl('AH Kokosmelk'), 'coconut milk');
+  assert.equal(nl('AH Halfvolle melk'), 'milk');
+  assert.equal(nl('Griekse yoghurt 10%'), 'greek yogurt');
+  assert.equal(nl('AH Volle yoghurt'), 'yogurt');
+  assert.equal(nl('Calvé pindakaas'), 'peanut butter');
+  assert.equal(nl('Roomboter ongezouten'), 'butter');
+  assert.equal(nl('AH Zoete aardappel'), 'sweet potato');
+  assert.equal(nl('AH Tomatenblokjes'), 'chopped tomatoes');
+  assert.equal(nl('AH Trostomaten'), 'tomato');
+  assert.equal(nl('AH Scharreleieren M'), 'eggs');
+  assert.equal(nl('Dubai paaseieren'), null);
+  assert.equal(nl('Roombotercroissant'), null);
+  const bg = (name, category) => matchIngredient({ name, category, packAmount: 500 }, ingredients, 'bg');
+  assert.equal(bg('Верея Прясно мляко 3% 1л', '6'), 'milk');
+  assert.equal(bg('Кисело мляко 3,6% 400 г', '7'), 'yogurt');
+  assert.equal(bg('Картофи сладки кг', '61'), 'sweet potato');
+  assert.equal(bg('Картофи мити кг', '61'), 'potatoes');
+  assert.equal(bg('400ГР ЧЕРВЕН БОБ HEINZ', '46'), 'kidney beans');
 });

@@ -33,6 +33,7 @@ const RESTRICTION_LABEL: Record<DietaryRestriction, string> = {
 };
 
 function formatAmount(ing: Ingredient): string {
+  if (ing.label) return ing.label;
   if (!ing.unit) {
     return ing.amount > 1 ? `x${ing.amount}` : '';
   }
@@ -95,7 +96,7 @@ export default function DetailsScreen() {
           <View style={styles.statCard}>
             <Ionicons name="flame-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.calories}</Text>
-            <Text style={styles.statLabel}>Calories</Text>
+            <Text style={styles.statLabel}>Calories (approx.)</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
@@ -171,6 +172,12 @@ export default function DetailsScreen() {
               );
             })}
           </View>
+          {meal.seasonings && meal.seasonings.length > 0 && (
+            <Text style={styles.footnote}>From the cupboard: {meal.seasonings.join(', ')}</Text>
+          )}
+          <Text style={styles.footnote}>
+            Nutrition is per serving, estimated from the raw ingredient amounts above. Seasonings are not counted.
+          </Text>
         </View>
       </ScrollView>
 
@@ -337,6 +344,14 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     color: c.text,
     letterSpacing: -0.2,
     marginBottom: 12,
+  },
+  footnote: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: font.regular,
+    color: c.textMuted,
+    marginTop: 12,
+    paddingHorizontal: 4,
   },
   ingredientList: {
     backgroundColor: c.surface,

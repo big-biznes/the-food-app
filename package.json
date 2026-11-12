@@ -8,8 +8,10 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "jest && node --test scripts/ingest/*.test.mjs",
+    "test": "jest && node --test scripts/ingest/*.test.mjs scripts/recipes/*.test.mjs",
     "ingest": "node scripts/ingest/index.mjs",
+    "recipes": "node scripts/recipes/build.mjs",
+    "recipes:prompts": "node scripts/recipes/prompts.mjs",
     "reset-project": "node ./scripts/reset-project.js"
   },
   "dependencies": {

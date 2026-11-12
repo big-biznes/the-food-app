@@ -1,35 +1,5 @@
 -- Run once in the Supabase dashboard → SQL Editor.
--- Then import data/recipe_dataset_1000_FINAL.csv into `recipes` (Table Editor → recipes → Insert → Import data from CSV).
-
--- ── Recipes (shared, read-only; not sensitive, so readable before sign-in too) ────────────────────────────────
-create table if not exists public.recipes (
-  id text primary key,
-  name text not null,
-  protein text not null,
-  carb text not null,
-  vegetable text not null,
-  sauce text not null,
-  calories int not null,
-  protein_g int not null,
-  carbs_g int not null,
-  fat_g int not null,
-  fiber_g int not null,
-  sugar_g int not null,
-  sodium_mg int not null,
-  prep_time_min int not null,
-  difficulty text not null,
-  ingredient_quantities text not null,
-  appliances text not null,
-  tags text not null,
-  instructions text not null,
-  updated_at timestamptz not null default now()
-);
-
-alter table public.recipes enable row level security;
-
-drop policy if exists "recipes readable by everyone" on public.recipes;
-create policy "recipes readable by everyone"
-  on public.recipes for select to anon, authenticated using (true);
+-- Recipes live in their own scripts: run recipes.sql and then recipes_data.sql.
 
 -- ── Per-user data (one row per user, JSON documents) ─────────────────────────
 create table if not exists public.user_data (

@@ -18,9 +18,19 @@ export const BG_CHAINS = {
   billa_bg: '130007884',
 };
 
-// Fresh meat, fish and vegetables are priced per kilogram whatever the name says
+// Fresh meat, fish, fruit and vegetables are priced per kilogram whatever the name says
 // ("Пилешко филе около 2кг" is still a per-kg price).
-const PER_KG = new Set(['16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '30', '55', '56', '57', '58', '59', '60', '61']);
+const PER_KG = new Set(['16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '30', '50', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61']);
+// Eggs are sold by the box.
+const EGGS = new Set(['31', '32']);
+
+/** Number of eggs in a box: "Яйца M10", "L 10 бр", "М6 броя", "10бр". */
+export function parseEggCount(name) {
+  const s = name.toLowerCase();
+  const m = s.match(/(\d+)\s*(?:бр|броя)/) ?? s.match(/(?:^|[^a-zа-я0-9])(?:xl|[smlмл])\s?(\d{1,2})(?![\d,.])/);
+  const count = m ? Number(m[1]) : 0;
+  return count > 0 && count <= 60 ? { amount: count, unit: 'pc' } : null;
+}
 
 const url = date => `https://kolkostruva.bg/opendata_files/${date}.zip`;
 
@@ -62,7 +72,7 @@ export function toProducts(rows) {
 
   const products = [];
   for (const [externalId, p] of byCode) {
-    const size = PER_KG.has(p.category) ? { amount: 1000, unit: 'g' } : parsePackSize(p.name);
+    const size = PER_KG.has(p.category) ? { amount: 1000, unit: 'g' } : EGGS.has(p.category) ? parseEggCount(p.name) : parsePackSize(p.name);
     products.push({
       externalId,
       name: p.name,

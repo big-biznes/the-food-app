@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
+import { fetchAllRows } from '@/lib/fetchAll';
 import { rowsToMeals, RawRecipe } from '@/data/recipes';
 import { ALL_MEALS, Meal, setAllMeals } from '@/data/meals';
 import FullScreenLoading from '@/components/FullScreenLoading';
@@ -9,12 +10,15 @@ import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { font } from '@/constants/type';
 
-const CACHE_KEY = 'recipes:v1';
+// v2: rows follow supabase/recipes.sql (ingredient lists, computed nutrition).
+const CACHE_KEY = 'recipes:v2';
 /** Tiny flag saying a full copy exists, so startup can decide without reading the big cache. */
-const CACHE_FLAG_KEY = 'recipes:v1:saved';
+const CACHE_FLAG_KEY = 'recipes:v2:saved';
+const OLD_CACHE_KEYS = ['recipes:v1', 'recipes:v1:saved'];
 const RECIPE_COLUMNS =
-  'id,name,protein,carb,vegetable,sauce,calories,protein_g,carbs_g,fat_g,fiber_g,sugar_g,sodium_mg,' +
-  'prep_time_min,difficulty,ingredient_quantities,appliances,tags,instructions';
+  'id,name,description,meal_type,main,emoji,prep_time_min,difficulty,' +
+  'calories,protein_g,carbs_g,fat_g,fiber_g,sugar_g,sodium_mg,' +
+  'ingredients,seasonings,instructions,appliances,keywords,dietary_tags,sort';
 
 type RecipesContextValue = {
   meals: Meal[];
@@ -37,13 +41,9 @@ export function waitForRecipes(): Promise<void> {
 }
 
 async function fetchRecipes(): Promise<RawRecipe[]> {
-  const { data, error } = await supabase
-    .from('recipes')
-    .select(RECIPE_COLUMNS)
-    .range(0, 4999);
-  if (error) throw new Error(error.message);
-  // ids are text, so sort numerically to keep the CSV order.
-  return ((data ?? []) as unknown as RawRecipe[]).sort((a, b) => Number(a.id) - Number(b.id));
+  return fetchAllRows<RawRecipe>((from, to) =>
+    supabase.from('recipes').select(RECIPE_COLUMNS).order('sort').order('id').range(from, to),
+  );
 }
 
 /**
@@ -84,6 +84,7 @@ export function RecipesProvider({ children }: { children: React.ReactNode }) {
   }, [apply]);
 
   useEffect(() => {
+    AsyncStorage.multiRemove(OLD_CACHE_KEYS).catch(() => {});
     (async () => {
       const hasCache = (await AsyncStorage.getItem(CACHE_FLAG_KEY).catch(() => null)) === '1';
       setPhase(hasCache ? 'open' : 'blocking');
