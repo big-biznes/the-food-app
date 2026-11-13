@@ -22,6 +22,12 @@ type ShoppingContextType = {
   addShoppingItems: (names: string[]) => void;
   replaceShoppingItems: (names: string[]) => void;
   replacePlanIngredients: (ingredients: PlanIngredient[]) => void;
+  /**
+   * Bring a list made from the plan up to date after the plan's recipes were edited:
+   * `before` is what the list was made from, `after` what the plan needs now.
+   * Ticks, chosen stores and items the user added themselves are kept.
+   */
+  updatePlanIngredients: (before: PlanIngredient[], after: PlanIngredient[]) => void;
   addShoppingItem: (name: string) => void;
   toggleShoppingItem: (id: string) => void;
   /** Check or uncheck every item on the list. */
@@ -135,6 +141,30 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
     });
   }, [setShoppingItems]);
 
+  const updatePlanIngredients = useCallback((before: PlanIngredient[], after: PlanIngredient[]) => {
+    const was = new Set(before.map(i => extractBaseName(i.name)));
+    const now = new Map(after.map(i => [extractBaseName(i.name), i.name.trim()]));
+    const pantryNames = new Set(pantryRef.current.map(p => p.name.toLowerCase().trim()));
+    setShoppingItems(prev => {
+      const kept: ShoppingItem[] = [];
+      const listed = new Set<string>();
+      for (const item of prev) {
+        const base = extractBaseName(item.name);
+        listed.add(base);
+        const name = now.get(base);
+        // Still needed: the new amount. No longer needed by the plan: gone. Not from the plan: untouched.
+        if (name) kept.push(name === item.name ? item : { ...item, name });
+        else if (!was.has(base)) kept.push(item);
+      }
+      // Needed now but not before (an ingredient put back into a recipe).
+      const added: ShoppingItem[] = [];
+      for (const [base, name] of now) {
+        if (!was.has(base) && !listed.has(base) && !pantryNames.has(base)) added.push({ id: uid(), name, checked: false });
+      }
+      return [...kept, ...added];
+    });
+  }, [setShoppingItems]);
+
   const replaceShoppingItems = useCallback((names: string[]) => {
     setShoppingItems(
       names
@@ -237,6 +267,7 @@ export function ShoppingProvider({ children }: { children: React.ReactNode }) {
         addShoppingItems,
         replaceShoppingItems,
         replacePlanIngredients,
+        updatePlanIngredients,
         addShoppingItem,
         toggleShoppingItem,
         setAllChecked,

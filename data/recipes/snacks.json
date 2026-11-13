@@ -1,0 +1,763 @@
+[
+  {
+    "id": "s-peanut-butter-banana-toast",
+    "name": "Peanut Butter Banana Toast",
+    "description": "Toast spread with peanut butter and topped with sliced banana",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍌",
+    "main": "bread",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 1
+      },
+      {
+        "item": "peanut butter",
+        "g": 20
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Toast the bread until golden",
+      "Spread the peanut butter over the toast",
+      "Slice the banana, lay it on top and finish with a little cinnamon"
+    ]
+  },
+  {
+    "id": "s-apple-peanut-butter",
+    "name": "Apple Slices with Peanut Butter",
+    "description": "Crisp apple wedges with peanut butter for dipping",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍎",
+    "main": "apple",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "apple",
+        "pieces": 1
+      },
+      {
+        "item": "peanut butter",
+        "g": 25
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Core the apple and cut it into wedges",
+      "Put the peanut butter in a small bowl and dip the wedges as you eat"
+    ]
+  },
+  {
+    "id": "s-hummus-carrot-sticks",
+    "name": "Quick Hummus with Carrot Sticks",
+    "description": "Chickpeas mashed with olive oil, garlic and lemon, with carrot sticks to dip",
+    "mealType": "snack",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥕",
+    "main": "chickpeas",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      },
+      {
+        "item": "carrots",
+        "g": 150
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice",
+      "pinch of salt",
+      "pinch of paprika"
+    ],
+    "instructions": [
+      "Drain and rinse the chickpeas, then mash them with a fork or blend them with the olive oil, the crushed garlic, a squeeze of lemon juice, a pinch of salt and a spoon of water until smooth",
+      "Peel the carrots and cut them into sticks",
+      "Serve the hummus with a pinch of paprika on top and the carrot sticks on the side"
+    ]
+  },
+  {
+    "id": "s-greek-yogurt-berries-honey",
+    "name": "Greek Yogurt with Blueberries and Honey",
+    "description": "Thick yogurt with blueberries and a drizzle of honey",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🫐",
+    "main": "greek yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "greek yogurt",
+        "g": 200
+      },
+      {
+        "item": "blueberries",
+        "g": 80
+      },
+      {
+        "item": "honey",
+        "g": 10
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Spoon the yogurt into a bowl",
+      "Scatter the blueberries over it and drizzle with the honey"
+    ]
+  },
+  {
+    "id": "s-cottage-cheese-tomato-toast",
+    "name": "Cottage Cheese and Tomato Toast",
+    "description": "Toast with cottage cheese, sliced tomato and a thread of olive oil",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍅",
+    "main": "cottage cheese",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 1
+      },
+      {
+        "item": "cottage cheese",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Toast the bread",
+      "Pile the cottage cheese on the toast and lay the sliced tomato on top",
+      "Drizzle with the olive oil and season with salt and black pepper"
+    ]
+  },
+  {
+    "id": "s-avocado-toast",
+    "name": "Avocado Toast",
+    "description": "Two slices of toast with mashed avocado and tomato",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥑",
+    "main": "avocado",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "g": 70
+      },
+      {
+        "item": "tomato",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Toast the bread",
+      "Mash the avocado with a squeeze of lemon juice and a pinch of salt, and spread it over the toast",
+      "Top with the diced tomato and a little black pepper"
+    ]
+  },
+  {
+    "id": "s-boiled-eggs-cucumber-toast",
+    "name": "Boiled Eggs with Cucumber and Toast",
+    "description": "Soft-boiled eggs with cucumber slices and a slice of toast",
+    "mealType": "snack",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥚",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the eggs for 7 minutes, cool them under cold water and peel them",
+      "Toast the bread and slice the cucumber",
+      "Halve the eggs, season with salt and black pepper, and serve with the cucumber and the toast"
+    ]
+  },
+  {
+    "id": "s-banana-oat-bites",
+    "name": "No-Bake Banana Oat Bites",
+    "description": "Oats, mashed banana and peanut butter rolled into small bites",
+    "mealType": "snack",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍪",
+    "main": "oats",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 30
+      },
+      {
+        "item": "peanut butter",
+        "g": 15
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of cinnamon"
+    ],
+    "instructions": [
+      "Mash the banana in a bowl with a fork",
+      "Stir in the oats, the peanut butter and a pinch of cinnamon until the mixture holds together",
+      "Roll into {6} small balls; eat them straight away or chill them for 15 minutes to firm up"
+    ]
+  },
+  {
+    "id": "s-roasted-chickpeas",
+    "name": "Crispy Roasted Chickpeas",
+    "description": "Chickpeas roasted with olive oil and smoked paprika until crunchy",
+    "mealType": "snack",
+    "prepTime": 30,
+    "difficulty": "quick",
+    "appliances": [
+      "oven"
+    ],
+    "emoji": "🫘",
+    "main": "chickpeas",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Heat the oven to 200°C. Drain and rinse the chickpeas and pat them completely dry",
+      "Toss them with the olive oil, the smoked paprika and a pinch of salt and spread them on a baking tray",
+      "Roast for 20 to 25 minutes, shaking the tray once, until crisp"
+    ]
+  },
+  {
+    "id": "s-yogurt-banana-oats",
+    "name": "Yogurt with Banana and Oats",
+    "description": "Plain yogurt with sliced banana and a handful of oats",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥣",
+    "main": "yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "yogurt",
+        "g": 200
+      },
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "oats",
+        "g": 20
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Spoon the yogurt into a bowl",
+      "Slice the banana over it and sprinkle with the oats"
+    ]
+  },
+  {
+    "id": "s-tuna-cucumber-toast",
+    "name": "Tuna and Cucumber Toast",
+    "description": "Tuna mixed with yogurt on toast, topped with cucumber",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🐟",
+    "main": "tuna",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tuna",
+        "g": 80
+      },
+      {
+        "item": "greek yogurt",
+        "g": 40
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Drain the tuna and mix it with the yogurt, a squeeze of lemon juice, salt and black pepper",
+      "Toast the bread and slice the cucumber",
+      "Spread the tuna over the toast and top with the cucumber"
+    ]
+  },
+  {
+    "id": "s-cheese-tomato-toastie",
+    "name": "Cheese and Tomato Toastie",
+    "description": "A small pan-toasted sandwich with melted cheese and tomato",
+    "mealType": "snack",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🧀",
+    "main": "cheese",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "tomato",
+        "g": 50
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Lay the cheese and the sliced tomato between the two slices of bread",
+      "Toast the sandwich in a dry pan over medium heat for 2 to 3 minutes on each side, pressing it down, until golden and the cheese has melted",
+      "Cut in half and eat warm"
+    ]
+  },
+  {
+    "id": "s-strawberry-banana-smoothie",
+    "name": "Strawberry Banana Smoothie",
+    "description": "Banana and strawberries blended with milk",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍓",
+    "main": "banana",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "strawberries",
+        "g": 150
+      },
+      {
+        "item": "milk",
+        "ml": 200
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Peel the banana and hull the strawberries",
+      "Blend them with the milk until smooth and pour into a glass"
+    ]
+  },
+  {
+    "id": "s-coconut-blueberry-smoothie",
+    "name": "Coconut Blueberry Smoothie",
+    "description": "Banana and blueberries blended with coconut milk",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥥",
+    "main": "banana",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "banana",
+        "pieces": 1
+      },
+      {
+        "item": "blueberries",
+        "g": 100
+      },
+      {
+        "item": "coconut milk",
+        "g": 60
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Peel the banana and put it in a blender with the blueberries and the coconut milk",
+      "Add {100} ml of cold water, blend until smooth and pour into a glass"
+    ]
+  },
+  {
+    "id": "s-ham-cheese-roll-ups",
+    "name": "Ham and Cheese Roll-Ups",
+    "description": "Slices of ham rolled around cheese and cucumber sticks",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥒",
+    "main": "ham",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "ham",
+        "g": 60
+      },
+      {
+        "item": "cheese",
+        "g": 30
+      },
+      {
+        "item": "cucumber",
+        "g": 80
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Cut the cheese and the cucumber into sticks",
+      "Lay a stick of each on a slice of ham, roll it up, and repeat with the rest"
+    ]
+  },
+  {
+    "id": "s-soy-glazed-tofu-bites",
+    "name": "Soy-Glazed Tofu Bites",
+    "description": "Cubes of tofu fried until golden and glazed with soy sauce",
+    "mealType": "snack",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍢",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 120
+      },
+      {
+        "item": "soy sauce",
+        "ml": 10
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Pat the tofu dry and cut it into bite-sized cubes",
+      "Heat the oil in a pan over medium-high heat and fry the tofu for 6 to 8 minutes, turning, until golden on all sides",
+      "Add the soy sauce, toss for 30 seconds until it coats the tofu, and serve"
+    ]
+  },
+  {
+    "id": "s-yogurt-peanut-dip-apple",
+    "name": "Peanut Butter Yogurt Dip with Apple",
+    "description": "Greek yogurt stirred with peanut butter, with apple wedges to dip",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍏",
+    "main": "greek yogurt",
+    "tags": [
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "greek yogurt",
+        "g": 150
+      },
+      {
+        "item": "peanut butter",
+        "g": 15
+      },
+      {
+        "item": "apple",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Stir the peanut butter into the yogurt until smooth",
+      "Core the apple, cut it into wedges and serve them with the dip"
+    ]
+  },
+  {
+    "id": "s-egg-avocado-toast",
+    "name": "Egg and Avocado Toast",
+    "description": "Toast with mashed avocado and sliced boiled eggs",
+    "mealType": "snack",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "avocado",
+        "g": 50
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the eggs for 8 minutes, cool them under cold water, peel and slice them",
+      "Toast the bread and spread it with the avocado, mashed with a pinch of salt",
+      "Lay the egg slices on top and season with black pepper"
+    ]
+  },
+  {
+    "id": "s-bean-cheese-quesadilla",
+    "name": "Bean and Cheese Quesadilla",
+    "description": "A folded tortilla filled with kidney beans and melted cheese",
+    "mealType": "snack",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌮",
+    "main": "kidney beans",
+    "tags": [
+      "mexican",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "kidney beans",
+        "g": 80
+      },
+      {
+        "item": "cheese",
+        "g": 25
+      }
+    ],
+    "seasonings": [
+      "pinch of cumin",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Drain and rinse the beans and roughly mash them with a fork, a pinch of cumin and a pinch of salt",
+      "Spread the beans over one half of the tortilla, scatter the grated cheese on top and fold the tortilla over",
+      "Toast in a dry pan over medium heat for 2 minutes on each side until crisp and the cheese has melted, then cut into wedges"
+    ]
+  },
+  {
+    "id": "s-tofu-scramble-wrap",
+    "name": "Tofu Scramble Wrap",
+    "description": "A tortilla filled with tofu scrambled with peppers",
+    "mealType": "snack",
+    "prepTime": 10,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌯",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tortilla",
+        "pieces": 1
+      },
+      {
+        "item": "tofu",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 50
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of turmeric",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the peppers and crumble the tofu with your fingers",
+      "Heat the oil in a pan over medium heat, cook the peppers for 2 minutes, then add the tofu, the turmeric, salt and black pepper and fry for 4 minutes",
+      "Spoon the scramble onto the tortilla, roll it up and cut it in half"
+    ]
+  },
+  {
+    "id": "s-chickpea-avocado-bowl",
+    "name": "Chickpea and Avocado Bowl",
+    "description": "Chickpeas tossed with avocado and tomato",
+    "mealType": "snack",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥗",
+    "main": "chickpeas",
+    "tags": [
+      "fresh",
+      "mediterranean"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "avocado",
+        "g": 70
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "squeeze of lemon juice",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Drain and rinse the chickpeas and put them in a bowl",
+      "Dice the avocado and the tomato and add them to the bowl",
+      "Toss with a squeeze of lemon juice, a pinch of salt and black pepper"
+    ]
+  }
+]

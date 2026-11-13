@@ -34,7 +34,7 @@ problems.push(...built.problems);
 const { rows, warnings } = built;
 
 const count = type => rows.filter(r => r.meal_type === type).length;
-console.log(`${rows.length} recipes: ${count('breakfast')} breakfast, ${count('lunch')} lunch, ${count('dinner')} dinner`);
+console.log(`${rows.length} recipes: ${MEAL_TYPES.map(type => `${count(type)} ${type}`).join(', ')}`);
 
 // A plan focused on a category needs a week of different meals from it.
 const WEEK = 7;
@@ -45,8 +45,8 @@ for (const tag of [...AUTHORED_TAGS, ...COMPUTED_TAGS]) {
   const counts = MEAL_TYPES.map(type => rows.filter(r => r.meal_type === type && r.keywords.includes(tag)).length);
   console.log('  ' + tag.padEnd(14) + counts.map(n => String(n).padStart(10)).join(''));
   MEAL_TYPES.forEach((type, i) => {
-    // Breakfasts rarely belong to a cuisine; that is not a gap.
-    if (counts[i] < WEEK && !(type === 'breakfast' && AUTHORED_TAGS.indexOf(tag) < 4)) thin.push(`${tag} ${type} (${counts[i]})`);
+    // Breakfasts rarely belong to a cuisine, and snacks are not chosen by focus; that is not a gap.
+    if (counts[i] < WEEK && type !== 'snack' && !(type === 'breakfast' && AUTHORED_TAGS.indexOf(tag) < 4)) thin.push(`${tag} ${type} (${counts[i]})`);
   });
 }
 if (thin.length) console.log(`\nToo few for a full focused week, the plan fills up with the closest other meals:\n  ${thin.join(', ')}`);

@@ -1,8 +1,17 @@
 import { DietaryRestriction } from '@/contexts/AuthContext';
 import { goalScore, personalize } from './portions';
+import { formatQuantity } from './quantity';
 import type { Targets } from './portions';
 
-export type MealType = 'breakfast' | 'lunch' | 'dinner';
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+
+/**
+ * Meals that can trade places in a plan: breakfasts with breakfasts, snacks with
+ * snacks, lunches and dinners with each other.
+ */
+export function swapGroup(type: MealType): 'breakfast' | 'snack' | 'main' {
+  return type === 'breakfast' || type === 'snack' ? type : 'main';
+}
 
 export type Ingredient = {
   /** Ingredient key from data/ingredients.json, so the shopping list and prices can find it. */
@@ -61,7 +70,7 @@ function sideIngredients(meal: Meal): string[] {
   return meal.ingredients.map(i => i.name).filter(n => n !== main && !STAPLES.has(n));
 }
 
-const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 
 // ── Categories a plan can focus on ───────────────────────────────────────────
 // Recipes get these from scripts/recipes/lib.mjs: quick, light and hearty are
@@ -139,28 +148,26 @@ function plain({ score: _score, focus: _focus, ...meal }: ScoredMeal): Meal {
 
 /**
  * Meals that fit the user's dietary restrictions. A meal type with nothing that
- * fits keeps all of its meals, so a plan can always be filled.
+ * fits keeps all of its meals, so a plan can always be filled (snacks excepted).
  */
 function compatiblePool(restrictions: DietaryRestriction[]): Meal[] {
   const pool = ALL_MEALS.filter(m => restrictions.every(r => m.dietaryTags.includes(r)));
   for (const type of MEAL_TYPES) {
+    // A snack is an extra: none at all is better than one the person cannot eat.
+    if (type === 'snack') continue;
     if (!pool.some(m => m.mealType === type)) pool.push(...ALL_MEALS.filter(m => m.mealType === type));
   }
   return pool;
 }
 
 /** Format a single ingredient for display on the meal card */
-export function formatIngredient(ing: Ingredient): string {
+export function formatIngredient(ing: Ingredient, imperial = false): string {
   // "2 eggs" already names the ingredient; "2 cloves" needs it: "2 cloves garlic".
   if (ing.label) return ing.label.includes(ing.name.replace(/s$/, '')) ? ing.label : `${ing.label} ${ing.name}`;
   if (!ing.unit) {
     return ing.amount > 1 ? `${ing.amount} ${ing.name}` : ing.name;
   }
-  if (ing.unit === 'g' || ing.unit === 'ml' || ing.unit === 'kg' || ing.unit === 'l') {
-    return `${ing.amount}${ing.unit} ${ing.name}`;
-  }
-  // can, tbsp, tsp, clove, slice, etc.
-  return `${ing.amount} ${ing.unit} ${ing.name}`;
+  return `${formatQuantity(ing.amount, ing.unit, imperial)} ${ing.name}`;
 }
 
 export type WeekPart = 'A' | 'B' | 'C';
@@ -199,12 +206,57 @@ export type DayPlan = {
   breakfast: Meal;
   lunch: Meal;
   dinner: Meal;
+  /** Only for people whose day is too big for three meals; see data/portions.ts. */
+  snack?: Meal;
 };
 
 export type PartCDayPlan = {
   lunch: Meal;
   dinner: EatingOutEntry;
+  snack?: Meal;
 };
+
+/** One meal's place in a plan. */
+export type PlanSlot = { part: WeekPart; day: string; mealType: MealType };
+
+/** Every cooked meal of a plan with its place (eating-out entries excluded). */
+export function planSlots(plan: StructuredWeekPlan): (PlanSlot & { meal: Meal })[] {
+  const out: (PlanSlot & { meal: Meal })[] = [];
+  for (const part of ['A', 'B', 'C'] as const) {
+    for (const [day, dayPlan] of Object.entries(plan[part])) {
+      for (const mealType of MEAL_TYPES) {
+        const meal = (dayPlan as Partial<Record<MealType, Meal | EatingOutEntry>>)[mealType];
+        if (meal && !('isEatingOut' in meal)) out.push({ part, day, mealType, meal });
+      }
+    }
+  }
+  return out;
+}
+
+/** The cooked meal at a place in the plan, if there is one. */
+export function mealAt(plan: StructuredWeekPlan, slot: PlanSlot): Meal | undefined {
+  const meal = (plan[slot.part][slot.day] as Partial<Record<MealType, Meal | EatingOutEntry>> | undefined)?.[slot.mealType];
+  return meal && !('isEatingOut' in meal) ? meal : undefined;
+}
+
+/** The plan without the snack of one day. */
+export function withoutSnack(plan: StructuredWeekPlan, part: WeekPart, day: string): StructuredWeekPlan {
+  const { snack: _snack, ...rest } = plan[part][day];
+  return { ...plan, [part]: { ...plan[part], [day]: rest } };
+}
+
+/** The plan with one of its meals replaced. */
+export function withMeal(plan: StructuredWeekPlan, slot: PlanSlot, meal: Meal): StructuredWeekPlan {
+  return {
+    ...plan,
+    [slot.part]: { ...plan[slot.part], [slot.day]: { ...plan[slot.part][slot.day], [slot.mealType]: meal } },
+  };
+}
+
+/** Whether a meal fits every one of the dietary restrictions. */
+export function fitsRestrictions(meal: Meal, restrictions: DietaryRestriction[]): boolean {
+  return restrictions.every(r => meal.dietaryTags.includes(r));
+}
 
 export type StructuredWeekPlan = {
   A: Record<string, DayPlan>;
@@ -241,12 +293,7 @@ export function findMeal(id: string | undefined): Meal | undefined {
 
 /** Every meal in a plan (eating-out entries excluded). */
 export function planMeals(plan: StructuredWeekPlan): Meal[] {
-  const out: Meal[] = [];
-  for (const part of ['A', 'B'] as const) {
-    for (const day of Object.values(plan[part])) out.push(day.breakfast, day.lunch, day.dinner);
-  }
-  for (const day of Object.values(plan.C)) out.push(day.lunch);
-  return out;
+  return planSlots(plan).map(slot => slot.meal);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -310,7 +357,8 @@ function pickMeal(
   const source = bestFitting(unused.length > 0 ? unused : typePool);
 
   const sorted = [...source].sort((a, b) => b.score - a.score);
-  const topN = sorted.slice(0, Math.min(3, sorted.length));
+  // Snacks are few; drawing from more of them keeps a week from repeating the same three.
+  const topN = sorted.slice(0, Math.min(mealType === 'snack' ? 6 : 3, sorted.length));
   const pick = plain(topN[Math.floor(Math.random() * topN.length)]);
 
   usedIds.add(pick.id);
@@ -468,6 +516,11 @@ function pickMealWithSharing(
   return pick;
 }
 
+/** A day gets a snack when the person's day is big enough and the cookbook has snacks. */
+function wantsSnack(pool: Meal[], targets: Targets | null): boolean {
+  return Boolean(targets?.snack) && pool.some(m => m.mealType === 'snack');
+}
+
 function generatePartPlan(
   days: Day[],
   pool: Meal[],
@@ -492,6 +545,7 @@ function generatePartPlan(
     const dinner = pickMealWithSharing(scored, 'dinner', usedIds, pickedInPart, targetProteins);
     pickedInPart.push(dinner);
     plan[day] = { breakfast, lunch, dinner };
+    if (wantsSnack(scored, targets)) plan[day].snack = pickMeal(scored, 'snack', usedIds);
   }
   return { plan, proteins: targetProteins };
 }
@@ -520,7 +574,11 @@ export function generateStructuredMealPlan(
   const cScored = scoredPool(pool, keywords, likedIds, focus, targets);
   const cLunch = pickMeal(cScored, 'lunch', usedIds);
   const partC: Record<string, PartCDayPlan> = {
-    [partDays.C[0]]: { lunch: cLunch, dinner: EATING_OUT },
+    [partDays.C[0]]: {
+      lunch: cLunch,
+      dinner: EATING_OUT,
+      ...(wantsSnack(cScored, targets) ? { snack: pickMeal(cScored, 'snack', usedIds) } : {}),
+    },
   };
 
   const partA = resultA.plan;
@@ -543,7 +601,8 @@ export function generateStructuredMealPlan(
         const chosen = candidates[Math.floor(Math.random() * candidates.length)];
         const targetDay = partDays.A[0];
         const dayPlan = partA[targetDay];
-        if (dayPlan) {
+        // A liked snack only goes into a plan that has snacks.
+        if (dayPlan && (chosen.mealType !== 'snack' || dayPlan.snack)) {
           dayPlan[chosen.mealType] = chosen;
         }
       }
@@ -556,18 +615,7 @@ export function generateStructuredMealPlan(
 // ── Alternate meal (refresh) ──────────────────────────────────────────────────
 
 export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
-  const ids = new Set<string>();
-  for (const part of ['A', 'B'] as const) {
-    for (const dayPlan of Object.values(plan[part])) {
-      ids.add(dayPlan.breakfast.id);
-      ids.add(dayPlan.lunch.id);
-      ids.add(dayPlan.dinner.id);
-    }
-  }
-  for (const dayPlan of Object.values(plan.C)) {
-    ids.add(dayPlan.lunch.id);
-  }
-  return ids;
+  return new Set(planMeals(plan).map(m => m.id));
 }
 
 /** One shopping-list line for a plan, and how many meals need that ingredient. */
@@ -578,9 +626,11 @@ export function extractPartIngredients(
   part: WeekPart,
   /** The person's energy targets, so the list is for the portions they will cook. */
   targets: Targets | null = null,
+  /** Ingredients the person left out of a meal, by meal id; those are not bought. */
+  without: Record<string, string[]> = {},
 ): PlanIngredient[] {
   const groups = new Map<string, Ingredient[]>();
-  const ingredientsOf = (meal: Meal) => personalize(meal, targets).ingredients;
+  const ingredientsOf = (meal: Meal) => personalize(meal, targets, without[meal.id]).ingredients;
 
   function collect(ing: Ingredient) {
     const key = ing.name.toLowerCase().trim();
@@ -588,16 +638,9 @@ export function extractPartIngredients(
     groups.get(key)!.push(ing);
   }
 
-  if (part === 'C') {
-    for (const dayPlan of Object.values(plan.C)) {
-      for (const ing of ingredientsOf(dayPlan.lunch)) collect(ing);
-    }
-  } else {
-    for (const dayPlan of Object.values(plan[part])) {
-      for (const meal of [dayPlan.breakfast, dayPlan.lunch, dayPlan.dinner]) {
-        for (const ing of ingredientsOf(meal)) collect(ing);
-      }
-    }
+  for (const slot of planSlots(plan)) {
+    if (slot.part !== part) continue;
+    for (const ing of ingredientsOf(slot.meal)) collect(ing);
   }
 
   const result: PlanIngredient[] = [];

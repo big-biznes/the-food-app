@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import type { MacroBalance } from '@/data/portions';
 import { flushCloudWrites } from '@/lib/cloudWrites';
 import {
   USER_DATA_COLUMNS,
@@ -27,6 +28,8 @@ export type DietaryRestriction =
 export type Goal = 'lose' | 'gain' | 'maintain';
 export type Activity = 'low' | 'light' | 'active' | 'very';
 export type Gender = 'male' | 'female' | 'other';
+export type { MacroBalance };
+export type UnitSystem = 'metric' | 'imperial';
 
 export type UserProfile = {
   name: string;
@@ -49,6 +52,14 @@ export type UserProfile = {
   country?: 'NL' | 'BG';
   /** Ids of the store chains the user shops at (see data/stores.ts). */
   stores?: string[];
+  /** Whether plans get a daily snack; undefined until the user has been asked or has set it. */
+  snacks?: boolean;
+  /** Which meals plans lean towards (data/portions.ts); 'balanced' when absent. */
+  macroBalance?: MacroBalance;
+  /** How recipe amounts and body measurements are shown; metric when absent. */
+  units?: UnitSystem;
+  /** Whether the user asked for a reminder on shopping days (lib/reminders.ts). */
+  notifications?: boolean;
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;

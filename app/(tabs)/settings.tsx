@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
   Switch,
-  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth, Activity, DietaryRestriction, Goal } from '@/contexts/AuthContext';
+import { useAuth, Activity, DietaryRestriction, Goal, MacroBalance } from '@/contexts/AuthContext';
+import { BODY_LIMITS } from '@/data/portions';
+import { cmToFeet, feetToCm, kgToLb, lbToKg } from '@/data/quantity';
+import { allowReminders } from '@/lib/reminders';
 import { useTargets } from '@/hooks/usePortions';
 import { Colors } from '@/constants/theme';
 import StorePicker from '@/components/shopping/StorePicker';
@@ -20,9 +23,6 @@ import ConfirmSheet from '@/components/ConfirmSheet';
 
 import { font, type } from '@/constants/type';
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-type MacroBalance = 'balanced' | 'low-carb' | 'high-protein' | 'custom';
-type MeasurementSystem = 'metric' | 'imperial';
 
 const GOAL_OPTIONS: { value: Goal; label: string }[] = [
   { value: 'lose', label: 'Lose weight' },
@@ -41,7 +41,6 @@ const MACRO_OPTIONS: { value: MacroBalance; label: string }[] = [
   { value: 'balanced', label: 'Balanced' },
   { value: 'low-carb', label: 'Low carb' },
   { value: 'high-protein', label: 'High protein' },
-  { value: 'custom', label: 'Custom' },
 ];
 
 const RESTRICTION_OPTIONS: { value: DietaryRestriction; label: string }[] = [
@@ -64,7 +63,6 @@ export default function SettingsScreen() {
   // Plan settings
   const [goal, setGoal] = useState<Goal>(user?.goal ?? 'maintain');
   const targets = useTargets();
-  const [macroBalance, setMacroBalance] = useState<MacroBalance>('balanced');
 
   const [eatingOutDay, setEatingOutDay] = useState<string>(user?.eatingOutDay ?? 'Fri');
 
@@ -74,8 +72,19 @@ export default function SettingsScreen() {
   );
 
   // Application settings
-  const [measurement, setMeasurement] = useState<MeasurementSystem>('metric');
-  const [notifications, setNotifications] = useState(true);
+  const imperial = user?.units === 'imperial';
+  // Set when the phone refused permission for notifications.
+  const [remindersBlocked, setRemindersBlocked] = useState(false);
+
+  async function toggleReminders(on: boolean) {
+    setRemindersBlocked(false);
+    // Shown as on straight away; taken back if the phone says no.
+    updateProfile({ notifications: on });
+    if (on && !(await allowReminders())) {
+      updateProfile({ notifications: false });
+      setRemindersBlocked(true);
+    }
+  }
 
   function toggleRestriction(r: DietaryRestriction) {
     const next = restrictions.includes(r) ? restrictions.filter(x => x !== r) : [...restrictions, r];
@@ -104,10 +113,6 @@ export default function SettingsScreen() {
     return null;
   }
 
-  function handleLink(label: string) {
-    Alert.alert(label, 'This will be available in a future update.');
-  }
-
   const firstName = user?.name?.split(' ')[0] ?? '';
   const initials = user?.name
     ? user.name
@@ -123,6 +128,7 @@ export default function SettingsScreen() {
       <ScrollView
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Header */}
         <View style={styles.header}>
@@ -138,6 +144,51 @@ export default function SettingsScreen() {
             <Text style={styles.userName}>{user?.name ?? 'Guest'}</Text>
             <Text style={styles.userEmail}>{user?.email ?? ''}</Text>
           </View>
+        </View>
+
+        {/* ── About you ─────────────────────────────────────────────── */}
+        <SectionHeader label="About you" />
+        <View style={styles.section}>
+          <NumberRow
+            label="Age"
+            value={user?.age}
+            unit="years"
+            limits={BODY_LIMITS.age}
+            onChange={age => updateProfile({ age })}
+          />
+          <Divider />
+          {imperial ? (
+            <HeightRowImperial heightCm={user?.heightCm} onChange={heightCm => updateProfile({ heightCm })} />
+          ) : (
+            <NumberRow
+              label="Height"
+              value={user?.heightCm}
+              unit="cm"
+              limits={BODY_LIMITS.heightCm}
+              onChange={heightCm => updateProfile({ heightCm })}
+            />
+          )}
+          <Divider />
+          {imperial ? (
+            <NumberRow
+              label="Weight"
+              value={user?.weightKg ? kgToLb(user.weightKg) : undefined}
+              unit="lb"
+              limits={{ min: kgToLb(BODY_LIMITS.weightKg.min), max: kgToLb(BODY_LIMITS.weightKg.max) }}
+              onChange={lb => updateProfile({ weightKg: lbToKg(lb) })}
+            />
+          ) : (
+            <NumberRow
+              label="Weight"
+              value={user?.weightKg}
+              unit="kg"
+              limits={BODY_LIMITS.weightKg}
+              onChange={weightKg => updateProfile({ weightKg })}
+            />
+          )}
+          <Text style={styles.sectionNote}>
+            Your portions are worked out from these. Update your weight when it changes.
+          </Text>
         </View>
 
         {/* ── Plan Settings ─────────────────────────────────────────── */}
@@ -194,14 +245,32 @@ export default function SettingsScreen() {
 
           <Divider />
 
-          <RowLabel label="Macro balance" />
+          <View style={styles.switchRow}>
+            <View style={styles.switchText}>
+              <Text style={styles.rowLabel}>Daily snack</Text>
+              <Text style={styles.rowHint}>
+                A small fourth meal each day in your next plan; the other meals get a little smaller
+              </Text>
+            </View>
+            <Switch
+              value={Boolean(user?.snacks)}
+              onValueChange={snacks => updateProfile({ snacks })}
+              trackColor={{ false: c.border, true: c.primary }}
+              thumbColor={c.bg}
+              accessibilityLabel="Daily snack"
+            />
+          </View>
+
+          <Divider />
+
+          <RowLabel label="Macro balance" hint="Which meals your next plan leans towards" />
           <View style={styles.chipRow}>
             {MACRO_OPTIONS.map(opt => (
               <Chip
                 key={opt.value}
                 label={opt.label}
-                selected={macroBalance === opt.value}
-                onPress={() => setMacroBalance(opt.value)}
+                selected={(user?.macroBalance ?? 'balanced') === opt.value}
+                onPress={() => updateProfile({ macroBalance: opt.value })}
               />
             ))}
           </View>
@@ -210,7 +279,10 @@ export default function SettingsScreen() {
         {/* ── Account Settings ──────────────────────────────────────── */}
         <SectionHeader label="Account" />
         <View style={styles.section}>
-          <RowLabel label="Eating preferences" hint="Select all that apply" />
+          <RowLabel
+            label="Eating preferences"
+            hint="Select all that apply. Your week will offer to replace the meals that no longer fit."
+          />
           <View style={styles.chipRow}>
             {RESTRICTION_OPTIONS.map(opt => (
               <Chip
@@ -232,34 +304,35 @@ export default function SettingsScreen() {
         {/* ── Application Settings ──────────────────────────────────── */}
         <SectionHeader label="Application" />
         <View style={styles.section}>
-          <RowLabel label="Measurement system" />
+          <RowLabel
+            label="Measurement system"
+            hint="For recipe amounts and your height and weight. Shopping lists stay in grams, as the shops sell them."
+          />
           <View style={styles.chipRow}>
-            <Chip
-              label="Metric"
-              selected={measurement === 'metric'}
-              onPress={() => setMeasurement('metric')}
-            />
-            <Chip
-              label="Imperial"
-              selected={measurement === 'imperial'}
-              onPress={() => setMeasurement('imperial')}
-            />
+            <Chip label="Metric" selected={!imperial} onPress={() => updateProfile({ units: 'metric' })} />
+            <Chip label="Imperial" selected={imperial} onPress={() => updateProfile({ units: 'imperial' })} />
           </View>
 
           <Divider />
 
           <View style={styles.switchRow}>
-            <View>
-              <Text style={styles.rowLabel}>Notifications</Text>
-              <Text style={styles.rowHint}>Meal reminders and updates</Text>
+            <View style={styles.switchText}>
+              <Text style={styles.rowLabel}>Shopping reminders</Text>
+              <Text style={styles.rowHint}>A notification on the morning of each shopping day</Text>
             </View>
             <Switch
-              value={notifications}
-              onValueChange={setNotifications}
+              value={Boolean(user?.notifications)}
+              onValueChange={toggleReminders}
               trackColor={{ false: c.border, true: c.primary }}
               thumbColor={c.bg}
+              accessibilityLabel="Shopping reminders"
             />
           </View>
+          {remindersBlocked && (
+            <Text style={styles.fieldError} accessibilityRole="alert">
+              Notifications are switched off for this app. Allow them in your phone’s settings, then try again.
+            </Text>
+          )}
         </View>
 
         {/* ── App Information ───────────────────────────────────────── */}
@@ -267,12 +340,12 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <LinkRow
             label="Terms of Service"
-            onPress={() => handleLink('Terms of Service')}
+            onPress={() => router.push('/legal/terms' as Href)}
           />
           <Divider />
           <LinkRow
             label="Privacy Policy"
-            onPress={() => handleLink('Privacy Policy')}
+            onPress={() => router.push('/legal/privacy' as Href)}
           />
           <Divider />
           <TouchableOpacity
@@ -328,6 +401,121 @@ function RowLabel({ label, hint }: { label: string; hint?: string }) {
     <View style={sectionStyles.rowLabelWrapper}>
       <Text style={sectionStyles.rowLabel}>{label}</Text>
       {hint && <Text style={sectionStyles.rowHint}>{hint}</Text>}
+    </View>
+  );
+}
+
+type Limits = { min: number; max: number };
+
+/** A whole number typed in place. Saved when the field is left; a value outside the limits is put back. */
+function NumberInput({
+  value,
+  limits,
+  label,
+  onChange,
+  onError,
+}: {
+  value: number | undefined;
+  limits: Limits;
+  label: string;
+  onChange: (n: number) => void;
+  onError: (message: string | null) => void;
+}) {
+  const { colors: c } = useTheme();
+  const fieldStyles = useThemedStyles(makeFieldStyles);
+  const shown = value != null ? String(value) : '';
+  const [text, setText] = useState(shown);
+  // Follow the profile when it changes elsewhere (another unit system, another device).
+  useEffect(() => setText(shown), [shown]);
+
+  function commit() {
+    const n = Number(text.trim());
+    if (text.trim() === '' || !Number.isInteger(n) || n < limits.min || n > limits.max) {
+      setText(shown);
+      onError(`Enter a whole number from ${limits.min} to ${limits.max}.`);
+      return;
+    }
+    onError(null);
+    if (n !== value) onChange(n);
+  }
+
+  return (
+    <TextInput
+      style={fieldStyles.input}
+      value={text}
+      onChangeText={t => setText(t.replace(/[^0-9]/g, ''))}
+      onEndEditing={commit}
+      keyboardType="number-pad"
+      returnKeyType="done"
+      maxLength={3}
+      selectTextOnFocus
+      placeholder="–"
+      placeholderTextColor={c.textFaint}
+      accessibilityLabel={label}
+    />
+  );
+}
+
+function NumberRow({
+  label,
+  value,
+  unit,
+  limits,
+  onChange,
+}: {
+  label: string;
+  value: number | undefined;
+  unit: string;
+  limits: Limits;
+  onChange: (n: number) => void;
+}) {
+  const fieldStyles = useThemedStyles(makeFieldStyles);
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <View>
+      <View style={fieldStyles.row}>
+        <Text style={fieldStyles.label}>{label}</Text>
+        <NumberInput value={value} limits={limits} label={`${label} in ${unit}`} onChange={onChange} onError={setError} />
+        <Text style={fieldStyles.unit}>{unit}</Text>
+      </View>
+      {error && (
+        <Text style={fieldStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      )}
+    </View>
+  );
+}
+
+/** Height as feet and inches; saved in centimetres like everything else. */
+function HeightRowImperial({ heightCm, onChange }: { heightCm: number | undefined; onChange: (cm: number) => void }) {
+  const fieldStyles = useThemedStyles(makeFieldStyles);
+  const [error, setError] = useState<string | null>(null);
+  const { ft, inch } = heightCm ? cmToFeet(heightCm) : { ft: undefined, inch: undefined };
+
+  function save(nextFt: number, nextInch: number) {
+    const cm = feetToCm(nextFt, nextInch);
+    if (cm < BODY_LIMITS.heightCm.min || cm > BODY_LIMITS.heightCm.max) {
+      setError('That height is outside what the app can work with.');
+      return;
+    }
+    onChange(cm);
+  }
+
+  return (
+    <View>
+      <View style={fieldStyles.row}>
+        <Text style={fieldStyles.label}>Height</Text>
+        <NumberInput value={ft} limits={{ min: 3, max: 7 }} label="Height, feet" onChange={n => save(n, inch ?? 0)} onError={setError} />
+        <Text style={fieldStyles.unit}>ft</Text>
+        <NumberInput value={inch} limits={{ min: 0, max: 11 }} label="Height, inches" onChange={n => save(ft ?? 5, n)} onError={setError} />
+        <Text style={fieldStyles.unit}>in</Text>
+      </View>
+      {error && (
+        <Text style={fieldStyles.error} accessibilityRole="alert">
+          {error}
+        </Text>
+      )}
     </View>
   );
 }
@@ -465,6 +653,20 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 4,
+    gap: 12,
+  },
+  switchText: { flex: 1 },
+  sectionNote: {
+    fontFamily: font.regular, fontSize: 13,
+    lineHeight: 18,
+    color: c.textMuted,
+    marginTop: 14,
+  },
+  fieldError: {
+    fontFamily: font.regular, fontSize: 13,
+    lineHeight: 18,
+    color: c.danger,
+    marginTop: 8,
   },
 
   destructiveRow: {
@@ -527,6 +729,44 @@ const makeSectionStyles = (c: Colors) => StyleSheet.create({
     fontSize: 15,
     fontFamily: font.medium, fontWeight: '500',
     color: c.text,
+  },
+});
+
+const makeFieldStyles = (c: Colors) => StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  label: {
+    flex: 1,
+    fontSize: 15,
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
+  },
+  input: {
+    minWidth: 64,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: c.surfaceAlt,
+    paddingHorizontal: 12,
+    paddingVertical: 0,
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: font.semibold, fontWeight: '600',
+    color: c.text,
+    fontVariant: ['tabular-nums'],
+  },
+  unit: {
+    minWidth: 24,
+    fontFamily: font.regular, fontSize: 14,
+    color: c.textMuted,
+  },
+  error: {
+    fontFamily: font.regular, fontSize: 13,
+    lineHeight: 18,
+    color: c.danger,
+    marginTop: 8,
   },
 });
 

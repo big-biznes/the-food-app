@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { findMeal, formatIngredient } from '@/data/meals';
+import { useAuth } from '@/contexts/AuthContext';
 import { stepIngredients } from '@/data/portions';
 import { usePersonalMeal } from '@/hooks/usePortions';
 import { Colors } from '@/constants/theme';
@@ -21,6 +22,7 @@ export default function CookScreen() {
   const meal = usePersonalMeal(findMeal(id));
 
   const [step, setStep] = useState(0);
+  const imperial = useAuth().user?.units === 'imperial';
 
   if (!meal || meal.instructions.length === 0) {
     return (
@@ -42,7 +44,9 @@ export default function CookScreen() {
   const progress = (step + 1) / total;
   const isLast = step === total - 1;
   // How much of each ingredient this step uses, in the user's portion.
-  const used = stepIngredients(steps[step], meal.ingredients).map(formatIngredient);
+  const used = stepIngredients(steps[step], meal.ingredients).map(ing => formatIngredient(ing, imperial));
+  // Ingredients the user left out of this meal that the step still talks about.
+  const skipped = stepIngredients(steps[step], meal.removed ?? []).map(ing => ing.name);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -73,6 +77,9 @@ export default function CookScreen() {
           <Text style={styles.stepAmounts} accessibilityLabel={`For this step: ${used.join(', ')}`}>
             {used.join('  ·  ')}
           </Text>
+        )}
+        {skipped.length > 0 && (
+          <Text style={styles.stepSkipped}>You left out the {skipped.join(' and the ')}: skip that part.</Text>
         )}
       </View>
 
@@ -191,6 +198,13 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     lineHeight: 22,
     color: c.textMuted,
     marginTop: 18,
+  },
+
+  stepSkipped: {
+    fontFamily: font.semibold,
+    fontSize: 15,
+    lineHeight: 21,
+    color: c.warning,
   },
 
   // Bottom bar

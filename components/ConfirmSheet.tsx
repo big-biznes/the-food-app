@@ -15,6 +15,8 @@ type Props = {
   destructive?: boolean;
   /** Leave out the Cancel button, for a sheet that only explains something ("Got it"). */
   hideCancel?: boolean;
+  /** What the second button says, when "Cancel" is not what it does. */
+  cancelLabel?: string;
   /** May be async: the button shows a spinner until it settles. Return an error message to show it in the sheet. */
   onConfirm: () => void | string | null | Promise<void | string | null>;
   onClose: () => void;
@@ -30,6 +32,7 @@ export default function ConfirmSheet({
   confirmLabel,
   destructive = false,
   hideCancel = false,
+  cancelLabel = 'Cancel',
   onConfirm,
   onClose,
   motion = 'ios',
@@ -147,7 +150,7 @@ export default function ConfirmSheet({
                 disabled={busy}
                 accessibilityRole="button"
               >
-                <Text style={styles.cancelText}>Cancel</Text>
+                <Text style={styles.cancelText}>{cancelLabel}</Text>
               </TouchableOpacity>
             )}
 

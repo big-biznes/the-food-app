@@ -2293,5 +2293,56 @@
       "Cook small thick pancakes for about 2 minutes per side until golden, adding butter as needed",
       "Stack them with the sliced banana, drizzle with the honey and dust with cinnamon"
     ]
+  },
+  {
+    "id": "b-tofu-bean-breakfast-plate",
+    "name": "Tofu and Bean Breakfast Plate",
+    "description": "Scrambled tofu with kidney beans, tomato and spinach, and a slice of toast",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 200
+      },
+      {
+        "item": "kidney beans",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of turmeric",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Heat the oil in a pan over medium heat, crumble in the tofu and fry it with the turmeric, salt and black pepper for 4 minutes",
+      "Add the drained beans and the diced tomato and cook for 3 minutes",
+      "Stir in the spinach until wilted, and toast the bread meanwhile",
+      "Serve the scramble with the toast"
+    ]
   }
 ]

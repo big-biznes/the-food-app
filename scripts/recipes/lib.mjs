@@ -3,7 +3,7 @@
 // per-100g values in data/ingredients.json, so a recipe can only use
 // ingredients that are listed there.
 
-export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner'];
+export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
 export const DIFFICULTIES = ['quick', 'balanced', 'weekend'];
 export const APPLIANCES = ['stovetop', 'oven', 'microwave', 'air fryer', 'slow cooker'];
 // The categories a plan can focus on (the craving chips on the home screen).
@@ -17,9 +17,9 @@ export const COMPUTED_TAGS = ['quick', 'light', 'hearty'];
 /** quick: on the table within this many minutes. */
 export const QUICK_MAX_MINUTES = 20;
 /** light: at most this many kcal per serving. */
-export const LIGHT_MAX_KCAL = { breakfast: 400, lunch: 550, dinner: 650 };
+export const LIGHT_MAX_KCAL = { breakfast: 400, lunch: 550, dinner: 650, snack: 220 };
 /** hearty: at least this many kcal and this much protein per serving. */
-export const HEARTY_MIN = { breakfast: { kcal: 500, protein: 20 }, lunch: { kcal: 650, protein: 30 }, dinner: { kcal: 750, protein: 30 } };
+export const HEARTY_MIN = { breakfast: { kcal: 500, protein: 20 }, lunch: { kcal: 650, protein: 30 }, dinner: { kcal: 750, protein: 30 }, snack: { kcal: 300, protein: 12 } };
 // A seasoning that brings chili heat makes a dish spicy even when the tag was forgotten.
 const HEAT = /chil|cayenne|sambal|harissa|sriracha|jalape|tabasco|hot sauce|gochu/i;
 
@@ -35,7 +35,7 @@ function categories(recipe, total) {
 }
 
 /** Calories per serving outside these ranges are reported, not rejected. */
-const KCAL_RANGE = { breakfast: [200, 800], lunch: [350, 900], dinner: [400, 1000] };
+const KCAL_RANGE = { breakfast: [200, 800], lunch: [350, 900], dinner: [400, 1000], snack: [150, 450] };
 
 const NUTRIENTS = ['kcal', 'protein', 'carbs', 'fat', 'fiber', 'sugar', 'sodiumMg'];
 

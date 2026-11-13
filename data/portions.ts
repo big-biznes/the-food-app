@@ -11,6 +11,8 @@ import type { Ingredient, Meal, MealType } from './meals';
 export type Goal = 'lose' | 'gain' | 'maintain';
 /** How much someone moves on a normal day, work and exercise together. */
 export type Activity = 'low' | 'light' | 'active' | 'very';
+/** Which meals the plan leans towards, on top of the goal. */
+export type MacroBalance = 'balanced' | 'low-carb' | 'high-protein';
 
 /** What is needed from the user's profile. */
 export type Body = {
@@ -21,14 +23,27 @@ export type Body = {
   weightKg: number;
   /** Profiles made before the app asked are treated as 'light'. */
   activity?: Activity;
+  macroBalance?: MacroBalance;
+  /** Whether the person wants a snack next to the three meals. Off unless they said yes. */
+  snacks?: boolean;
+};
+
+/** The measurements a daily target can be worked out from; outside these the profile is ignored. */
+export const BODY_LIMITS = {
+  age: { min: 14, max: 100 },
+  heightCm: { min: 120, max: 230 },
+  weightKg: { min: 35, max: 250 },
 };
 
 export type Targets = {
   goal: Goal;
   /** Energy for the whole day. */
   kcal: number;
-  /** Energy for each meal. */
+  /** Energy for each meal; `snack` is 0 when the day has no snack. */
   perMeal: Record<MealType, number>;
+  /** Whether the day gets a snack next to the three meals. */
+  snack: boolean;
+  macro: MacroBalance;
 };
 
 // Energy used in a day as a multiple of energy used at rest: the usual factors
@@ -42,13 +57,22 @@ const MIN_KCAL = { male: 1500, female: 1200, other: 1350 };
 /** Under this BMI a person is underweight, and is not given a deficit even if they ask to lose weight. */
 const UNDERWEIGHT_BMI = 18.5;
 /** How the day is divided over the three meals. */
-const MEAL_SHARE: Record<MealType, number> = { breakfast: 0.25, lunch: 0.35, dinner: 0.4 };
+const MEAL_SHARE = { breakfast: 0.25, lunch: 0.35, dinner: 0.4 };
+// Three meals stop being enough for a big day: even stretched to MAX_PORTION they
+// fall short, or turn into plates nobody finishes. From SNACK_FROM_KCAL the app
+// asks whether the person wants a snack. Whoever wants one (at any target) gets a snack that
+// takes a share of the day and the meals share the rest.
+export const SNACK_FROM_KCAL = 2800;
+const BIG_SNACK_FROM_KCAL = 3400;
+const SNACK_SHARE = 0.1;
+const BIG_SNACK_SHARE = 0.15;
 /** A recipe is never shrunk or stretched beyond this; outside it the dish stops working. */
 export const MIN_PORTION = 0.6;
 export const MAX_PORTION = 1.8;
 
+const within = (n: number, { min, max }: { min: number; max: number }) => n >= min && n <= max;
 const plausible = (b: Body) =>
-  b.age >= 14 && b.age <= 100 && b.heightCm >= 120 && b.heightCm <= 230 && b.weightKg >= 35 && b.weightKg <= 250;
+  within(b.age, BODY_LIMITS.age) && within(b.heightCm, BODY_LIMITS.heightCm) && within(b.weightKg, BODY_LIMITS.weightKg);
 
 export function bmi(body: Pick<Body, 'heightCm' | 'weightKg'>): number {
   const m = body.heightCm / 100;
@@ -69,21 +93,28 @@ export function dailyTargets(body: Body | null | undefined): Targets | null {
   const maintenance = resting * ACTIVITY_FACTOR[body.activity ?? 'light'];
   const goal: Goal = body.goal === 'lose' && bmi(body) < UNDERWEIGHT_BMI ? 'maintain' : body.goal;
   const kcal = Math.round(Math.max(maintenance * GOAL_FACTOR[goal], MIN_KCAL[body.gender]) / 10) * 10;
+  const snackShare = !body.snacks ? 0 : kcal >= BIG_SNACK_FROM_KCAL ? BIG_SNACK_SHARE : SNACK_SHARE;
+  const meals = kcal * (1 - snackShare);
   return {
     goal,
     kcal,
     perMeal: {
-      breakfast: Math.round(kcal * MEAL_SHARE.breakfast),
-      lunch: Math.round(kcal * MEAL_SHARE.lunch),
-      dinner: Math.round(kcal * MEAL_SHARE.dinner),
+      breakfast: Math.round(meals * MEAL_SHARE.breakfast),
+      lunch: Math.round(meals * MEAL_SHARE.lunch),
+      dinner: Math.round(meals * MEAL_SHARE.dinner),
+      snack: Math.round(kcal * snackShare),
     },
+    snack: snackShare > 0,
+    macro: body.macroBalance ?? 'balanced',
   };
 }
 
 /** How much of the standard recipe this person gets: 1 is the recipe as written. */
 export function portionOf(meal: Meal, targets: Targets): number {
-  const wanted = targets.perMeal[meal.mealType] / meal.calories;
-  return Math.min(MAX_PORTION, Math.max(MIN_PORTION, wanted));
+  const share = targets.perMeal[meal.mealType];
+  // A snack looked at by someone whose day has no snack: the recipe as written.
+  if (!(share > 0)) return 1;
+  return Math.min(MAX_PORTION, Math.max(MIN_PORTION, share / meal.calories));
 }
 
 // ── Scaling a recipe ─────────────────────────────────────────────────────────
@@ -211,20 +242,37 @@ export function stepIngredients(step: string, ingredients: Ingredient[]): Ingred
   return ingredients.filter(ing => new RegExp(`\\b(${namesIn(ing.name, ingredients).join('|')})\\b`).test(text));
 }
 
-/** A meal as this person should cook it; `portion` says how it relates to the standard recipe. */
-export type PersonalMeal = Meal & { portion?: number };
+/**
+ * A meal as this person should cook it. `portion` says how it relates to the
+ * standard recipe; `removed` are the ingredients the person chose to leave out,
+ * in the amounts the recipe would have used.
+ */
+export type PersonalMeal = Meal & { portion?: number; removed?: Ingredient[] };
+
+/** The main ingredient cannot be left out: without it the dish is a different dish. */
+export function canLeaveOut(meal: Meal, name: string): boolean {
+  return name !== meal.main && meal.ingredients.some(i => i.name === name);
+}
 
 /**
- * The recipe scaled to the person's share of the day. Without targets (no
- * measurements in the profile) the standard recipe is returned unchanged.
+ * The recipe scaled to the person's share of the day, without the ingredients
+ * they left out (`without`, by name). With no targets (no measurements in the
+ * profile) the amounts stay those of the standard recipe.
+ *
+ * The portion is sized on the recipe as written, so leaving something out does
+ * not make the rest of the plate bigger; the nutrition is for what is left.
  */
-export function personalize(meal: Meal, targets: Targets | null): PersonalMeal {
-  if (!targets || !(meal.calories > 0)) return meal;
-  const factor = portionOf(meal, targets);
-  const ingredients = meal.ingredients.map(ing => scaleIngredient(ing, factor));
-  const text = meal.templates && {
-    instructions: meal.templates.instructions.map(t => renderText(t, factor, ingredients)),
-    seasonings: meal.templates.seasonings.map(t => renderText(t, factor, ingredients)),
+export function personalize(meal: Meal, targets: Targets | null, without: string[] = []): PersonalMeal {
+  const skip = new Set(without.filter(name => canLeaveOut(meal, name)));
+  const sized = Boolean(targets) && meal.calories > 0;
+  if (!sized && skip.size === 0) return meal;
+  const factor = sized ? portionOf(meal, targets!) : 1;
+  const all = sized ? meal.ingredients.map(ing => scaleIngredient(ing, factor)) : meal.ingredients;
+  const ingredients = all.filter(ing => !skip.has(ing.name));
+  // Counts in the text ("make {n:eggs} wells") come from the full recipe.
+  const text = sized && meal.templates && {
+    instructions: meal.templates.instructions.map(t => renderText(t, factor, all)),
+    seasonings: meal.templates.seasonings.map(t => renderText(t, factor, all)),
   };
   const scaled = (n: number) => Math.round(n * factor);
   const nutrition = nutritionOf(ingredients) ?? {
@@ -237,13 +285,25 @@ export function personalize(meal: Meal, targets: Targets | null): PersonalMeal {
     sugarG: scaled(meal.sugarG),
     sodiumMg: scaled(meal.sodiumMg),
   };
-  return { ...meal, ...nutrition, ...text, ingredients, portion: Math.round(factor * 20) / 20 };
+  return {
+    ...meal,
+    ...nutrition,
+    ...text,
+    ingredients,
+    ...(sized ? { portion: Math.round(factor * 20) / 20 } : {}),
+    ...(skip.size > 0 ? { removed: all.filter(ing => skip.has(ing.name)) } : {}),
+  };
 }
 
 // ── Choosing meals that suit the goal ────────────────────────────────────────
 
 /** Grams of protein per 100 kcal from which a meal counts as protein-rich (chicken with rice is about 7). */
 const PROTEIN_RICH = 7;
+/** Grams of protein per 100 kcal under which a meal has little protein (oats with banana are about 3). */
+const PROTEIN_POOR = 4;
+/** Share of a meal's energy that comes from carbohydrates: low up to a quarter, high from half. */
+const LOW_CARB = 0.25;
+const HIGH_CARB = 0.5;
 /** kcal per gram of food up to which a meal counts as high-volume: a big plate for its calories. */
 const HIGH_VOLUME = 1.1;
 
@@ -263,18 +323,30 @@ export function goalScore(meal: Meal, targets: Targets | null): number {
   let score = 0;
   if (wanted < MIN_PORTION || wanted > MAX_PORTION) score -= 3;
   else if (wanted >= 0.8 && wanted <= 1.3) score += 1;
-  const proteinRich = (meal.proteinG / meal.calories) * 100 >= PROTEIN_RICH;
+  // 0 for a meal with little protein, 1 for a protein-rich one, in between for the rest:
+  // a vegan cookbook has few meals over the line, and the better ones should still win.
+  const per100 = (meal.proteinG / meal.calories) * 100;
+  const protein = Math.min(1, Math.max(0, (per100 - PROTEIN_POOR) / (PROTEIN_RICH - PROTEIN_POOR)));
   // Strong enough to win over the plan's protein grouping (a swing of 7 points),
   // so most of a week suits the goal, without shutting other meals out.
   if (targets.goal === 'lose') {
     if (tags.includes('light')) score += 4;
     const grams = plateGrams(meal);
     if (grams > 0 && meal.calories / grams <= HIGH_VOLUME) score += 2;
-    if (proteinRich) score += 2;
+    score += 2 * protein;
   }
   if (targets.goal === 'gain') {
     if (tags.includes('hearty')) score += 4;
-    if (proteinRich) score += 2;
+    score += 3 * protein;
+  }
+  // The macro balance chosen in Settings, as strong as the goal's own preferences.
+  if (targets.macro === 'high-protein') {
+    score += per100 < PROTEIN_POOR ? -3 : 4 * protein;
+  }
+  if (targets.macro === 'low-carb') {
+    const carbShare = (meal.carbsG * 4) / meal.calories;
+    if (carbShare <= LOW_CARB) score += 4;
+    else if (carbShare >= HIGH_CARB) score -= 3;
   }
   return score;
 }

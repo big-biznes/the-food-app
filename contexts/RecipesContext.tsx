@@ -24,6 +24,8 @@ type RecipesContextValue = {
   meals: Meal[];
   /** True once the full recipe list is available (from the device cache or Supabase). */
   ready: boolean;
+  /** True once the list came from Supabase in this session, not from the device's saved copy. */
+  fresh: boolean;
   refresh: () => Promise<void>;
 };
 
@@ -56,6 +58,7 @@ async function fetchRecipes(): Promise<RawRecipe[]> {
 export function RecipesProvider({ children }: { children: React.ReactNode }) {
   const [meals, setMeals] = useState<Meal[]>(ALL_MEALS);
   const [error, setError] = useState<string | null>(null);
+  const [fresh, setFresh] = useState(false);
   // 'checking' → reading the small flag; 'blocking' → first launch, wait for the network.
   const [phase, setPhase] = useState<'checking' | 'blocking' | 'open'>('checking');
 
@@ -71,6 +74,7 @@ export function RecipesProvider({ children }: { children: React.ReactNode }) {
       const rows = await fetchRecipes();
       if (rows.length === 0) throw new Error('The recipes table is empty.');
       apply(rows);
+      setFresh(true);
       setError(null);
       setPhase('open');
       AsyncStorage.multiSet([
@@ -106,7 +110,7 @@ export function RecipesProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <RecipesContext.Provider value={{ meals, ready: meals.length > 0, refresh }}>
+    <RecipesContext.Provider value={{ meals, ready: meals.length > 0, fresh, refresh }}>
       {children}
     </RecipesContext.Provider>
   );

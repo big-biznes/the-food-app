@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
@@ -127,6 +127,17 @@ export default function RegisterScreen() {
               </TouchableOpacity>
             </View>
             <GoogleButton />
+            <Text style={styles.legalText}>
+              By creating an account you agree to the{' '}
+              <Text style={styles.switchLink} accessibilityRole="link" onPress={() => router.push('/legal/terms' as Href)}>
+                Terms of Service
+              </Text>{' '}
+              and the{' '}
+              <Text style={styles.switchLink} accessibilityRole="link" onPress={() => router.push('/legal/privacy' as Href)}>
+                Privacy Policy
+              </Text>
+              .
+            </Text>
             <TouchableOpacity
               onPress={() => router.replace('/(auth)/login')}
               activeOpacity={0.7}
@@ -222,6 +233,12 @@ const makeStyles = (c: Colors) => StyleSheet.create({
   switchText: {
     fontFamily: font.regular, fontSize: 15,
     color: c.textMuted,
+  },
+  legalText: {
+    fontFamily: font.regular, fontSize: 13,
+    lineHeight: 19,
+    color: c.textMuted,
+    textAlign: 'center',
   },
   switchLink: {
     color: c.text,

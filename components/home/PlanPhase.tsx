@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   WeekPart,
   Day,
-  DayPlan,
   MealType,
+  PlanSlot,
   StructuredWeekPlan,
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
@@ -41,7 +41,7 @@ function nextMealType(isToday: boolean, available: MealType[]): MealType {
   return wanted === 'breakfast' ? available[0] : available[available.length - 1];
 }
 
-type SwapSource = { part: WeekPart; day: string; mealType: MealType } | null;
+type SwapSource = PlanSlot | null;
 type ViewMode = 'day' | 'pool';
 
 type Props = {
@@ -54,6 +54,9 @@ type Props = {
   partDays: Record<WeekPart, Day[]>;
   shoppingBanner: string | null;
   swapSource: SwapSource;
+  /** How many meals no longer fit the eating preferences set in Settings. */
+  misfitCount: number;
+  onReplaceMisfits: () => void;
   onPartChange: (part: WeekPart) => void;
   onDayChange: (day: string) => void;
   onAddToShoppingList: () => void;
@@ -75,6 +78,8 @@ export default function PlanPhase({
   partDays,
   shoppingBanner,
   swapSource,
+  misfitCount,
+  onReplaceMisfits,
   onPartChange,
   onDayChange,
   onAddToShoppingList,
@@ -132,16 +137,18 @@ export default function PlanPhase({
               node: <MealCard key="dinner" meal={plan.C[day].dinner} />,
             },
           ]
-        : (['breakfast', 'lunch', 'dinner'] as MealType[]).map(mealType => ({
+        : (['breakfast', 'lunch', 'dinner'] as const).map(mealType => ({
             mealType,
             node: (
               <MealCard
                 key={mealType}
-                meal={(plan[part] as Record<string, DayPlan>)[day][mealType]}
+                meal={plan[part][day][mealType]}
                 onRefresh={() => onRefreshMeal(part, day, mealType)}
               />
             ),
           }));
+    // Only in the plans of people whose day is too big for three meals.
+    const snack = plan[part][day].snack;
 
     const heroType = nextMealType(day === today, dayMeals.map(m => m.mealType));
     const heroMeal = dayMeals.find(m => m.mealType === heroType)!;
@@ -159,6 +166,7 @@ export default function PlanPhase({
             ))}
           </View>
         )}
+        {snack && <MealCard meal={snack} onRefresh={() => onRefreshMeal(part, day, 'snack')} />}
       </View>
     );
   }
@@ -265,6 +273,24 @@ export default function PlanPhase({
           {viewMode === 'pool' ? partLabel[selectedPart] : isToday ? 'Today' : DAY_NAME[validDay]}
         </Text>
       </View>
+
+      {/* Meals that stopped fitting after the eating preferences changed */}
+      {misfitCount > 0 && (
+        <View style={styles.misfit} accessibilityLiveRegion="polite">
+          <Text style={styles.misfitText}>
+            {misfitCount === 1 ? '1 meal no longer fits' : `${misfitCount} meals no longer fit`} your eating preferences
+          </Text>
+          <TouchableOpacity
+            style={styles.misfitBtn}
+            onPress={onReplaceMisfits}
+            activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={misfitCount === 1 ? 'Replace that meal' : 'Replace those meals'}
+          >
+            <Text style={styles.misfitBtnText}>Replace</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Part tabs */}
       <View style={styles.tabRow} accessibilityRole="tablist">
@@ -375,6 +401,27 @@ const makeStyles = (c: Colors) =>
       transform: [{ rotate: '-1deg' }],
     },
     noteText: { fontFamily: font.semibold, fontSize: 14, lineHeight: 18, color: c.onTile },
+
+    misfit: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      backgroundColor: c.warningBg,
+      borderRadius: 16,
+      paddingLeft: 16,
+      paddingRight: 8,
+      paddingVertical: 8,
+      marginBottom: 12,
+    },
+    misfitText: { flex: 1, fontFamily: font.semibold, fontSize: 14, lineHeight: 18, color: c.text },
+    misfitBtn: {
+      backgroundColor: c.primary,
+      borderRadius: 100,
+      paddingHorizontal: 18,
+      minHeight: 40,
+      justifyContent: 'center',
+    },
+    misfitBtnText: { fontFamily: font.semibold, fontSize: 14, color: c.onPrimary },
 
     slider: { overflow: 'visible' },
     panelOpen: { position: 'relative' },

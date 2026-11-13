@@ -29,6 +29,7 @@ export const light = {
   butter: '#FFD23F',
   pea: '#A9DD8B',
   beet: '#F7A1B5',
+  sky: '#A9D8EE',
   onTile: '#123B2F',
   onTileMuted: 'rgba(18,59,47,0.62)',
   /** Soft ink wash behind a button that sits on a tile. */
@@ -47,5 +48,6 @@ import type { MealType } from '@/data/meals';
 export function tileColor(c: Colors, mealType: MealType): string {
   if (mealType === 'breakfast') return c.butter;
   if (mealType === 'lunch') return c.pea;
+  if (mealType === 'snack') return c.sky;
   return c.beet;
 }

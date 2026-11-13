@@ -5043,5 +5043,338 @@
       "Fry in the olive oil over high heat for 6 to 7 minutes until browned at the edges",
       "Serve over the rice and chickpeas with the diced cucumber and tomato and the yogurt"
     ]
+  },
+  {
+    "id": "d-tofu-lentil-bolognese",
+    "name": "Tofu and Lentil Bolognese",
+    "description": "Pasta with a rich tomato sauce of lentils and crumbled tofu",
+    "mealType": "dinner",
+    "prepTime": 35,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍝",
+    "main": "lentils",
+    "tags": [
+      "italian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 70
+      },
+      {
+        "item": "tofu",
+        "g": 200
+      },
+      {
+        "item": "pasta",
+        "g": 50
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tsp dried oregano",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the onion, crush the garlic and soften both in the olive oil in a deep pan over medium heat for 4 minutes",
+      "Crumble in the tofu and fry for 5 minutes until it starts to colour",
+      "Add the rinsed lentils, the chopped tomatoes, the oregano and {350} ml of water, and simmer for 20 minutes until the lentils are tender and the sauce is thick",
+      "Meanwhile cook the pasta in salted boiling water until al dente and drain it",
+      "Season the sauce with salt and black pepper and serve it over the pasta"
+    ]
+  },
+  {
+    "id": "d-chickpea-tofu-spinach-curry",
+    "name": "Chickpea, Tofu and Spinach Curry",
+    "description": "Chickpeas and tofu simmered in a tomato and coconut curry with spinach",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍛",
+    "main": "chickpeas",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 200
+      },
+      {
+        "item": "tofu",
+        "g": 220
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 200
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "coconut milk",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil in a deep pan over medium heat for 4 minutes, then stir in the curry powder",
+      "Cut the tofu into cubes and add it with the drained chickpeas, the chopped tomatoes and the coconut milk",
+      "Simmer for 12 minutes until the sauce has thickened",
+      "Stir in the spinach until wilted, season with salt and serve"
+    ]
+  },
+  {
+    "id": "d-bean-tofu-chili",
+    "name": "Bean and Tofu Chili",
+    "description": "A thick chili of kidney beans and crumbled tofu with peppers and corn, over a little rice",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "kidney beans",
+    "tags": [
+      "mexican",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 200
+      },
+      {
+        "item": "tofu",
+        "g": 220
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 250
+      },
+      {
+        "item": "peppers",
+        "g": 100
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "rice",
+        "g": 25
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp cumin",
+      "1 tsp smoked paprika",
+      "pinch of chili flakes",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Cook the rice in {60} ml of salted water, covered, for 12 minutes",
+      "Dice the onion and the peppers and soften them in the oil in a pot over medium heat for 4 minutes",
+      "Crumble in the tofu, add the cumin, smoked paprika and chili flakes and fry for 4 minutes",
+      "Add the drained beans, the corn and the chopped tomatoes and simmer for 15 minutes until thick",
+      "Season with salt and serve over the rice"
+    ]
+  },
+  {
+    "id": "d-crispy-tofu-quinoa-greens",
+    "name": "Crispy Tofu with Quinoa and Greens",
+    "description": "A big bowl of crisp tofu, quinoa, broccoli and peas with soy sauce",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥦",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 280
+      },
+      {
+        "item": "quinoa",
+        "g": 50
+      },
+      {
+        "item": "peas",
+        "g": 120
+      },
+      {
+        "item": "broccoli",
+        "g": 150
+      },
+      {
+        "item": "soy sauce",
+        "ml": 15
+      },
+      {
+        "item": "oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Rinse the quinoa and simmer it in {130} ml of water, covered, for 12 minutes, then fluff it with a fork",
+      "Pat the tofu very dry and cut it into cubes; cut the broccoli into small florets",
+      "Heat the oil in a wide pan over medium-high heat and fry the tofu for 8 minutes, turning, until crisp on all sides",
+      "Add the broccoli, the peas and a splash of water, cover and steam for 4 minutes",
+      "Pour over the soy sauce, toss and serve on the quinoa"
+    ]
+  },
+  {
+    "id": "d-lentil-tofu-dal",
+    "name": "Lentil and Tofu Dal",
+    "description": "Lentils cooked soft with tomato, coconut and spices, with tofu and spinach stirred in",
+    "mealType": "dinner",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "lentils",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 80
+      },
+      {
+        "item": "tofu",
+        "g": 200
+      },
+      {
+        "item": "spinach",
+        "g": 100
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "coconut milk",
+        "g": 40
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tbsp curry powder",
+      "pinch of turmeric",
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Dice the onion and soften it in the oil in a pot over medium heat for 4 minutes, then stir in the curry powder and turmeric",
+      "Add the rinsed lentils, the chopped tomatoes, the coconut milk and {400} ml of water and simmer for 20 minutes, stirring now and then, until the lentils fall apart",
+      "Cut the tofu into cubes and add it with the spinach; cook for 3 more minutes",
+      "Season with salt and serve"
+    ]
+  },
+  {
+    "id": "d-garlic-tofu-steaks-potatoes",
+    "name": "Garlic Tofu Steaks with Potatoes and Green Beans",
+    "description": "Thick slices of tofu seared with garlic, with boiled potatoes and green beans",
+    "mealType": "dinner",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥔",
+    "main": "tofu",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 300
+      },
+      {
+        "item": "potatoes",
+        "g": 250
+      },
+      {
+        "item": "green beans",
+        "g": 200
+      },
+      {
+        "item": "garlic",
+        "pieces": 2
+      },
+      {
+        "item": "olive oil",
+        "g": 10
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Cut the potatoes into chunks and boil them in salted water for 15 minutes, adding the trimmed green beans for the last 5 minutes, then drain",
+      "Pat the tofu dry and cut it into thick slices; season with salt, black pepper and the smoked paprika",
+      "Heat the olive oil in a pan over medium-high heat and sear the tofu for 4 minutes on each side until deep golden",
+      "Add the sliced garlic for the last minute, then serve the tofu with the potatoes and the green beans, spooning the garlic oil over"
+    ]
   }
 ]

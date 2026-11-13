@@ -1,9 +1,15 @@
+import { useEffect, useRef } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { findMeal, MealType, Ingredient, formatIngredient } from '@/data/meals';
-import { DietaryRestriction } from '@/contexts/AuthContext';
+import { findMeal, MealType, Ingredient } from '@/data/meals';
+import { canLeaveOut } from '@/data/portions';
+import { usePlan } from '@/contexts/PlanContext';
+import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
+import { useShoppingListSync } from '@/hooks/useShoppingListSync';
+import { DietaryRestriction, useAuth } from '@/contexts/AuthContext';
+import { formatQuantity } from '@/data/quantity';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePersonalMeal, useTargets } from '@/hooks/usePortions';
@@ -15,12 +21,14 @@ const TYPE_ICON: Record<MealType, IoniconName> = {
   breakfast: 'sunny-outline',
   lunch: 'partly-sunny-outline',
   dinner: 'moon-outline',
+  snack: 'cafe-outline',
 };
 
 const TYPE_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfast',
   lunch: 'Lunch',
   dinner: 'Dinner',
+  snack: 'Snack',
 };
 
 const RESTRICTION_LABEL: Record<DietaryRestriction, string> = {
@@ -33,15 +41,12 @@ const RESTRICTION_LABEL: Record<DietaryRestriction, string> = {
   kosher: 'Kosher',
 };
 
-function formatAmount(ing: Ingredient): string {
+function formatAmount(ing: Ingredient, imperial: boolean): string {
   if (ing.label) return ing.label;
   if (!ing.unit) {
     return ing.amount > 1 ? `x${ing.amount}` : '';
   }
-  if (ing.unit === 'g' || ing.unit === 'ml' || ing.unit === 'kg' || ing.unit === 'l') {
-    return `${ing.amount}${ing.unit}`;
-  }
-  return `${ing.amount} ${ing.unit}`;
+  return formatQuantity(ing.amount, ing.unit, imperial);
 }
 
 export default function DetailsScreen() {
@@ -51,8 +56,44 @@ export default function DetailsScreen() {
   const { id, from } = useLocalSearchParams<{ id: string; from?: string }>();
   const router = useRouter();
   // The recipe with amounts and nutrition sized for this user.
-  const meal = usePersonalMeal(findMeal(id));
+  const recipe = findMeal(id);
+  const meal = usePersonalMeal(recipe);
   const targets = useTargets();
+  const { user } = useAuth();
+  const imperial = user?.units === 'imperial';
+  // A meal of the week plan can be edited: ingredients ticked off are left out of it.
+  const { inPlan, toggleIngredient, without } = usePlan();
+  // After an edit here that the shopping list does not have yet, offer to update the list.
+  const { stale, update } = useShoppingListSync();
+  const toastRef = useRef<ConfirmToastHandle>(null);
+  const updateRef = useRef(update);
+  updateRef.current = update;
+  const edits = recipe ? without[recipe.id] : undefined;
+  const shownFor = useRef(edits);
+  useEffect(() => {
+    if (shownFor.current === edits) return;
+    shownFor.current = edits;
+    if (!stale) {
+      // The edit was undone: there is nothing to update any more.
+      toastRef.current?.dismiss();
+      return;
+    }
+    toastRef.current?.show({
+      message: 'Shopping list is out of date',
+      actionLabel: 'Update',
+      icon: 'cart',
+      doneMessage: 'Shopping list updated',
+      onAction: () => updateRef.current(),
+    });
+  }, [edits, stale]);
+  const editable = Boolean(recipe && inPlan(recipe.id));
+  // The recipe's own order, so a row stays where it is when it is ticked off.
+  const rows = meal && recipe
+    ? recipe.ingredients.map(base => {
+        const kept = meal.ingredients.find(i => i.name === base.name);
+        return { ing: kept ?? meal.removed?.find(i => i.name === base.name) ?? base, kept: Boolean(kept) };
+      })
+    : [];
 
   if (!meal) {
     return (
@@ -164,17 +205,56 @@ export default function DetailsScreen() {
         {/* Ingredients */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ingredients</Text>
+          {editable && (
+            <Text style={styles.editHint}>Untick anything you want to leave out of this meal.</Text>
+          )}
           <View style={styles.ingredientList}>
-            {meal.ingredients.map((ing, i) => {
-              const amount = formatAmount(ing);
+            {rows.map(({ ing, kept }, i) => {
+              const amount = formatAmount(ing, imperial);
+              const rowStyle = [styles.ingredientRow, i > 0 && styles.ingredientRowBorder];
+              const content = (
+                <>
+                  <Text style={[styles.ingredientName, !kept && styles.ingredientOff]}>{ing.name}</Text>
+                  {kept && amount ? <Text style={styles.ingredientAmount}>{amount}</Text> : null}
+                  {!kept && <Text style={styles.ingredientAmount}>Left out</Text>}
+                </>
+              );
+              if (!editable) {
+                return (
+                  <View key={ing.name} style={rowStyle}>
+                    {content}
+                  </View>
+                );
+              }
+              // The dish is built around its main ingredient, so that one stays.
+              // Asked of the recipe as written: the edited meal no longer lists what was left out.
+              const locked = !recipe || !canLeaveOut(recipe, ing.name);
               return (
-                <View key={ing.name} style={[styles.ingredientRow, i > 0 && styles.ingredientRowBorder]}>
-                  <Text style={styles.ingredientName}>{ing.name}</Text>
-                  {amount ? <Text style={styles.ingredientAmount}>{amount}</Text> : null}
-                </View>
+                <TouchableOpacity
+                  key={ing.name}
+                  style={rowStyle}
+                  onPress={() => toggleIngredient(meal.id, ing.name)}
+                  disabled={locked}
+                  activeOpacity={0.7}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={amount ? `${ing.name}, ${amount}` : ing.name}
+                  accessibilityHint={locked ? 'The main ingredient cannot be left out' : undefined}
+                  accessibilityState={{ checked: kept, disabled: locked }}
+                >
+                  <View style={[styles.checkbox, kept && styles.checkboxOn, locked && styles.checkboxLocked]}>
+                    {kept && <Ionicons name={locked ? 'lock-closed' : 'checkmark'} size={locked ? 12 : 16} color={c.onPrimary} />}
+                  </View>
+                  {content}
+                </TouchableOpacity>
               );
             })}
           </View>
+          {meal.removed && (
+            <Text style={styles.footnote}>
+              Left out: {meal.removed.map(i => i.name).join(', ')}. The nutrition and your shopping list follow; the
+              steps are as written, so skip what mentions {meal.removed.length === 1 ? 'it' : 'them'}.
+            </Text>
+          )}
           {meal.seasonings && meal.seasonings.length > 0 && (
             <Text style={styles.footnote}>From the cupboard: {meal.seasonings.join(', ')}</Text>
           )}
@@ -189,6 +269,8 @@ export default function DetailsScreen() {
           </Text>
         </View>
       </ScrollView>
+
+      <ConfirmToast ref={toastRef} message="Shopping list updated" />
 
       {/* Floating cook button */}
       {meal.instructions.length > 0 && (
@@ -382,6 +464,37 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     fontFamily: font.medium, fontWeight: '500',
     color: c.text,
     flex: 1,
+  },
+  ingredientOff: {
+    color: c.textMuted,
+    textDecorationLine: 'line-through',
+  },
+  editHint: {
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: font.regular,
+    color: c.textMuted,
+    marginTop: -6,
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: c.surfaceStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  checkboxOn: {
+    backgroundColor: c.primary,
+    borderColor: c.primary,
+  },
+  checkboxLocked: {
+    backgroundColor: c.textFaint,
+    borderColor: c.textFaint,
   },
   ingredientAmount: {
     fontSize: 14,

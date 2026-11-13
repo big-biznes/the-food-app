@@ -20,7 +20,7 @@ create table if not exists public.recipes (
   id            text primary key,
   name          text not null,
   description   text not null,
-  meal_type     text not null check (meal_type in ('breakfast', 'lunch', 'dinner')),
+  meal_type     text not null check (meal_type in ('breakfast', 'lunch', 'dinner', 'snack')),
   -- Key of the ingredient the dish is built around (data/ingredients.json).
   main          text not null,
   emoji         text not null,
@@ -44,6 +44,11 @@ create table if not exists public.recipes (
   sort          int  not null default 0,
   updated_at    timestamptz not null default now()
 );
+
+-- Tables made before snacks existed only allow three meal types.
+alter table public.recipes drop constraint if exists recipes_meal_type_check;
+alter table public.recipes add constraint recipes_meal_type_check
+  check (meal_type in ('breakfast', 'lunch', 'dinner', 'snack'));
 
 alter table public.recipes enable row level security;
 

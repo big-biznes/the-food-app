@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, SetStateAction } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, SetStateAction } from 'react';
 import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,20 +7,26 @@ import { useLikes } from '@/contexts/LikesContext';
 import {
   WeekPart,
   Day,
-  DayPlan,
   MealType,
+  PlanSlot,
   StructuredWeekPlan,
   generateStructuredMealPlan,
   getWeekStructure,
   getAlternateMeal,
   extractUsedIds,
   extractPartIngredients,
-  planMeals,
-  rememberMeals,
+  fitsRestrictions,
+  mealAt,
+  planSlots,
+  swapGroup,
+  withMeal,
+  withoutSnack,
   CATEGORIES,
 } from '@/data/meals';
+import { usePlan } from '@/contexts/PlanContext';
 import { waitForRecipes } from '@/contexts/RecipesContext';
 import { useTargets } from '@/hooks/usePortions';
+import { SNACK_FROM_KCAL, dailyTargets } from '@/data/portions';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
@@ -31,7 +37,6 @@ import CravingSheet from '@/components/home/CravingSheet';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
-import { useCloudState } from '@/hooks/useCloudState';
 
 import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -47,10 +52,6 @@ const FAB_HIDDEN_Y = 110;
 const SWAP_HELP_AFTER_TAPS = 3;
 const SWAP_HELP_WINDOW_MS = 5000;
 
-/** What gets saved to the cloud: the plan plus the eating-out day it was built for. */
-/** `focus`: the categories the plan was generated for, so replaced meals stay in theme. */
-type SavedPlan = { plan: StructuredWeekPlan; eatingOutDay: string; focus?: string[] };
-
 function getTodayKey(): string {
   return DAY_NAMES[new Date().getDay()];
 }
@@ -65,18 +66,15 @@ export default function HomeScreen() {
 
   // Snapshot the eating-out day used when the plan was generated.
   // Changing it in settings only takes effect when a new plan is generated.
-  const [savedPlan, setSavedPlan] = useCloudState<SavedPlan | null>('plan', null);
+  const { savedPlan, setSavedPlan, without } = usePlan();
   const plan = savedPlan?.plan ?? null;
-  // The plan stores full meals, so details / cook can open them before the recipe list loads.
-  useEffect(() => {
-    if (plan) rememberMeals(planMeals(plan));
-  }, [plan]);
   const planEatingOutDay = savedPlan?.eatingOutDay ?? user?.eatingOutDay ?? 'Sun';
   const setPlan = useCallback(
     (update: SetStateAction<StructuredWeekPlan | null>) =>
       setSavedPlan(prev => {
         const next = typeof update === 'function' ? update(prev?.plan ?? null) : update;
-        return next ? { plan: next, eatingOutDay: prev?.eatingOutDay ?? 'Sun', focus: prev?.focus } : null;
+        // Everything else saved with the plan (its focus, edited recipes) stays.
+        return next ? { eatingOutDay: 'Sun', ...prev, plan: next } : null;
       }),
     [setSavedPlan],
   );
@@ -95,7 +93,7 @@ export default function HomeScreen() {
     [partShoppingDay.B]: `Shop today — ${partLabel.B} starts tomorrow`,
   };
 
-  const [swapSource, setSwapSource] = useState<{ part: WeekPart; day: string; mealType: MealType } | null>(null);
+  const [swapSource, setSwapSource] = useState<PlanSlot | null>(null);
   const swapBannerAnim = useRef(new Animated.Value(0)).current;
   // Times of the latest wrong swap taps in a row; three within SWAP_HELP_WINDOW_MS open the explanation.
   const wrongSwapTaps = useRef<number[]>([]);
@@ -183,8 +181,10 @@ export default function HomeScreen() {
     planToastRef.current?.dismiss();
     setTimeout(() => confirmToastRef.current?.show(), 50);
     requestAnimationFrame(() => {
-      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart, targets));
+      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart, targets, without));
     });
+    // Remembered so the list can be brought up to date when a recipe is edited later.
+    setSavedPlan(prev => (prev ? { ...prev, list: { part: selectedPart, without: prev.without ?? {} } } : prev));
   }
 
   function toggleCraving(chip: string) {
@@ -223,7 +223,7 @@ export default function HomeScreen() {
   }
 
   /** Generate a plan for the current craving and show it. */
-  function createPlan() {
+  function createPlan(planTargets = targets) {
     const { focus, keywords } = buildCraving();
     const newPlan = generateStructuredMealPlan(
       user?.restrictions ?? [],
@@ -231,25 +231,49 @@ export default function HomeScreen() {
       user?.eatingOutDay ?? 'Sun',
       likedIds,
       focus,
-      targets,
+      planTargets,
     );
     applyNewPlan(newPlan, focus);
   }
 
   // Generating needs the full recipe list; on a fresh app start it may still be loading
   // in the background (the "Building your plan" screen covers the short wait).
-  async function generateWhenReady() {
+  async function generateWhenReady(planTargets = targets) {
     await waitForRecipes();
-    createPlan();
+    createPlan(planTargets);
+  }
+
+  // A big day is easier with a snack, but that is the person's call: they are asked once,
+  // before the first plan made after their target got that big. Settings can change it later.
+  const [askSnack, setAskSnack] = useState(false);
+  const snackAnswered = useRef(false);
+
+  function startGenerating() {
+    if (user && user.snacks === undefined && targets && targets.kcal >= SNACK_FROM_KCAL) {
+      snackAnswered.current = false;
+      setAskSnack(true);
+      return;
+    }
+    runWithLoading(() => generateWhenReady());
+  }
+
+  function answerSnack(snacks: boolean) {
+    if (snackAnswered.current || !user) return;
+    snackAnswered.current = true;
+    setAskSnack(false);
+    updateProfile({ snacks });
+    // The profile update lands after this render, so this plan gets the answer directly.
+    const planTargets = dailyTargets({ ...user, snacks });
+    runWithLoading(() => generateWhenReady(planTargets));
   }
 
   function handleGenerate() {
-    runWithLoading(generateWhenReady);
+    startGenerating();
   }
 
   function handleGenerateFromSheet() {
     setShowSheet(false);
-    runWithLoading(generateWhenReady);
+    startGenerating();
   }
 
   function handlePartChange(part: WeekPart) {
@@ -260,8 +284,7 @@ export default function HomeScreen() {
   }
 
   function handleSwapSelect(part: WeekPart, day: string, mealType: MealType) {
-    const eligible =
-      !swapSource || (swapSource.mealType === 'breakfast' ? mealType === 'breakfast' : mealType !== 'breakfast');
+    const eligible = !swapSource || swapGroup(swapSource.mealType) === swapGroup(mealType);
     if (!eligible) {
       // The card itself shakes and flashes (MealCard). swapSource stays, so the user can pick again.
       const now = Date.now();
@@ -292,65 +315,53 @@ export default function HomeScreen() {
     const src = swapSource;
     setSwapSource(null);
 
+    const dst = { part, day, mealType };
     setPlan(prev => {
       if (!prev) return prev;
-      const srcDayPlan = (prev[src.part] as Record<string, DayPlan>)[src.day];
-      const dstDayPlan = (prev[part] as Record<string, DayPlan>)[day];
-      const srcMeal = srcDayPlan[src.mealType];
-      const dstMeal = dstDayPlan[mealType];
-
-      if (src.part === part) {
-        // Same part — merge both day updates into one spread to avoid key collision
-        return {
-          ...prev,
-          [part]: {
-            ...prev[part],
-            [src.day]: { ...srcDayPlan, [src.mealType]: dstMeal },
-            [day]: { ...dstDayPlan, [mealType]: srcMeal },
-          },
-        };
-      }
-
-      return {
-        ...prev,
-        [src.part]: {
-          ...prev[src.part],
-          [src.day]: { ...srcDayPlan, [src.mealType]: dstMeal },
-        },
-        [part]: {
-          ...prev[part],
-          [day]: { ...dstDayPlan, [mealType]: srcMeal },
-        },
-      };
+      const srcMeal = mealAt(prev, src);
+      const dstMeal = mealAt(prev, dst);
+      if (!srcMeal || !dstMeal) return prev;
+      return withMeal(withMeal(prev, src, dstMeal), dst, srcMeal);
     });
   }
 
   function handleRefreshMeal(part: WeekPart, day: string, mealType: MealType) {
     if (!plan) return;
-    const usedIds = extractUsedIds(plan);
+    const slot = { part, day, mealType };
+    const current = mealAt(plan, slot);
+    if (!current) return;
+    const alternate = getAlternateMeal(current, extractUsedIds(plan), restrictions, savedPlan?.focus);
+    setPlan(prev => (prev ? withMeal(prev, slot, alternate) : prev));
+  }
 
-    if (part === 'C') {
-      if (mealType !== 'lunch') return;
-      const alternate = getAlternateMeal(plan.C[day].lunch, usedIds, user?.restrictions ?? [], savedPlan?.focus);
-      setPlan(prev =>
-        prev ? { ...prev, C: { ...prev.C, [day]: { ...prev.C[day], lunch: alternate } } } : prev,
-      );
-      return;
-    }
+  // Meals that stopped fitting after the eating preferences were changed in Settings.
+  const restrictions = useMemo(() => user?.restrictions ?? [], [user?.restrictions]);
+  const misfitCount = useMemo(
+    () => (plan ? planSlots(plan).filter(slot => !fitsRestrictions(slot.meal, restrictions)).length : 0),
+    [plan, restrictions],
+  );
 
-    const partPlan = plan[part] as Record<string, DayPlan>;
-    const alternate = getAlternateMeal(partPlan[day][mealType], usedIds, user?.restrictions ?? [], savedPlan?.focus);
-    setPlan(prev =>
-      prev
-        ? {
-            ...prev,
-            [part]: {
-              ...prev[part],
-              [day]: { ...(prev[part] as Record<string, DayPlan>)[day], [mealType]: alternate },
-            },
-          }
-        : prev,
-    );
+  /** Swap every meal that no longer fits the eating preferences for one that does. */
+  async function handleReplaceMisfits() {
+    await waitForRecipes();
+    setPlan(prev => {
+      if (!prev) return prev;
+      let next = prev;
+      const usedIds = extractUsedIds(prev);
+      for (const slot of planSlots(prev)) {
+        if (fitsRestrictions(slot.meal, restrictions)) continue;
+        const alternate = getAlternateMeal(slot.meal, usedIds, restrictions, savedPlan?.focus);
+        if (fitsRestrictions(alternate, restrictions)) {
+          usedIds.add(alternate.id);
+          next = withMeal(next, slot, alternate);
+        } else if (slot.mealType === 'snack') {
+          // No snack fits: the day goes without one.
+          next = withoutSnack(next, slot.part, slot.day);
+        }
+      }
+      return next;
+    });
+    setSwapSource(null);
   }
 
   return (
@@ -379,6 +390,8 @@ export default function HomeScreen() {
           partDays={partDays}
           shoppingBanner={shoppingBanner}
           swapSource={swapSource}
+          misfitCount={misfitCount}
+          onReplaceMisfits={handleReplaceMisfits}
           onPartChange={handlePartChange}
           onDayChange={setSelectedDay}
           onAddToShoppingList={handleAddToShoppingList}
@@ -456,12 +469,25 @@ export default function HomeScreen() {
         message={
           swapSource?.mealType === 'breakfast'
             ? 'A breakfast can only be swapped with another breakfast. Pick a breakfast from another day, or tap the selected meal again to cancel.'
-            : 'Lunches and dinners can be swapped with each other, but not with a breakfast. Pick a lunch or dinner, or tap the selected meal again to cancel.'
+            : swapSource?.mealType === 'snack'
+              ? 'A snack can only be swapped with another snack. Pick a snack from another day, or tap the selected one again to cancel.'
+              : 'Lunches and dinners can be swapped with each other, but not with a breakfast or a snack. Pick a lunch or dinner, or tap the selected meal again to cancel.'
         }
         confirmLabel="Got it"
         hideCancel
         onConfirm={() => setSwapHelpVisible(false)}
         onClose={() => setSwapHelpVisible(false)}
+      />
+
+      <ConfirmSheet
+        visible={askSnack}
+        title="Add a daily snack?"
+        message={`Your days are about ${(targets?.kcal ?? 0).toLocaleString('en')} kcal, which makes for three big meals. A snack each day takes some of that, so the meals get smaller. You can change this in Settings.`}
+        confirmLabel="Yes, add a snack"
+        cancelLabel="No, three meals"
+        onConfirm={() => answerSnack(true)}
+        // Also runs after "Yes"; answerSnack ignores the second call.
+        onClose={() => answerSnack(false)}
       />
 
       <CravingSheet

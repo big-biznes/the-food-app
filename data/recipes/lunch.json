@@ -4574,5 +4574,313 @@
       "Add the tomato sauce, cover and simmer for 6 minutes until cooked through",
       "Pile the meatballs and sauce onto the bread, top with the sliced mozzarella and let it melt for a minute before closing the sandwich"
     ]
+  },
+  {
+    "id": "l-tofu-lentil-salad",
+    "name": "Warm Tofu and Lentil Salad",
+    "description": "Golden tofu over lentils with tomato, cucumber and a lemon dressing",
+    "mealType": "lunch",
+    "prepTime": 25,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥗",
+    "main": "tofu",
+    "tags": [
+      "mediterranean",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "lentils",
+        "g": 50
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "cucumber",
+        "g": 100
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      }
+    ],
+    "seasonings": [
+      "1 tbsp lemon juice",
+      "pinch of dried oregano",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Rinse the lentils and simmer them in {300} ml of salted water for 18 to 20 minutes until tender, then drain",
+      "Pat the tofu dry, cut it into cubes and fry it in half of the olive oil over medium-high heat for 6 to 8 minutes until golden",
+      "Dice the tomato and the cucumber and toss them with the lentils, the rest of the olive oil, the lemon juice, oregano, salt and black pepper",
+      "Top the salad with the warm tofu"
+    ]
+  },
+  {
+    "id": "l-chickpea-tofu-spinach-bowl",
+    "name": "Chickpea and Tofu Spinach Bowl",
+    "description": "Chickpeas and crumbled tofu fried with spinach, tomato and smoked paprika",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥘",
+    "main": "chickpeas",
+    "tags": [],
+    "ingredients": [
+      {
+        "item": "chickpeas",
+        "g": 150
+      },
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "spinach",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp smoked paprika",
+      "pinch of cumin",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Drain and rinse the chickpeas, crumble the tofu and dice the tomato",
+      "Heat the oil in a pan over medium-high heat and fry the tofu and the chickpeas with the smoked paprika, cumin and salt for 6 minutes until they start to colour",
+      "Add the tomato and the spinach and cook for 2 minutes until the spinach has wilted",
+      "Season with black pepper and serve in a bowl"
+    ]
+  },
+  {
+    "id": "l-teriyaki-tofu-pea-rice-bowl",
+    "name": "Teriyaki Tofu Rice Bowl",
+    "description": "Seared tofu glazed with teriyaki over rice with peas and carrot",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 220
+      },
+      {
+        "item": "rice",
+        "g": 40
+      },
+      {
+        "item": "peas",
+        "g": 100
+      },
+      {
+        "item": "carrots",
+        "g": 80
+      },
+      {
+        "item": "teriyaki",
+        "ml": 25
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Cook the rice in {100} ml of salted water, covered, for 12 minutes, then leave it to steam off the heat",
+      "Pat the tofu dry and cut it into cubes; slice the carrots thinly",
+      "Heat the oil in a pan over medium-high heat and fry the tofu for 6 minutes until golden, then add the carrots and the peas and cook for 3 minutes",
+      "Pour in the teriyaki, toss for 1 minute until glossy, and serve over the rice"
+    ]
+  },
+  {
+    "id": "l-bean-tofu-burrito-bowl",
+    "name": "Bean and Tofu Burrito Bowl",
+    "description": "Kidney beans and spiced tofu with corn, peppers and fresh tomato, no rice",
+    "mealType": "lunch",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌶️",
+    "main": "kidney beans",
+    "tags": [
+      "mexican"
+    ],
+    "ingredients": [
+      {
+        "item": "kidney beans",
+        "g": 150
+      },
+      {
+        "item": "tofu",
+        "g": 180
+      },
+      {
+        "item": "corn",
+        "g": 60
+      },
+      {
+        "item": "peppers",
+        "g": 80
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp cumin",
+      "1 tsp smoked paprika",
+      "pinch of salt",
+      "squeeze of lime or lemon juice"
+    ],
+    "instructions": [
+      "Drain and rinse the beans and the corn; dice the peppers and the tomato and crumble the tofu into chunks",
+      "Heat the oil in a pan over medium-high heat and fry the tofu with the cumin, smoked paprika and salt for 5 minutes",
+      "Add the peppers, the beans and the corn and cook for 4 minutes until hot",
+      "Serve in a bowl with the tomato on top and a squeeze of lime or lemon juice"
+    ]
+  },
+  {
+    "id": "l-lentil-tofu-vegetable-soup",
+    "name": "Lentil and Tofu Vegetable Soup",
+    "description": "A thick tomato and lentil soup with carrot, spinach and cubes of tofu",
+    "mealType": "lunch",
+    "prepTime": 30,
+    "difficulty": "balanced",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍲",
+    "main": "lentils",
+    "tags": [
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "lentils",
+        "g": 60
+      },
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "carrots",
+        "g": 80
+      },
+      {
+        "item": "onion",
+        "g": 60
+      },
+      {
+        "item": "spinach",
+        "g": 60
+      },
+      {
+        "item": "chopped tomatoes",
+        "g": 150
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "1 tsp cumin",
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Dice the onion and the carrots and soften them in the olive oil in a pot over medium heat for 4 minutes",
+      "Add the rinsed lentils, the chopped tomatoes, the cumin and {450} ml of water, bring to the boil and simmer for 18 minutes",
+      "Cut the tofu into small cubes and add it with the spinach; simmer for 3 more minutes",
+      "Season with salt and black pepper and serve"
+    ]
+  },
+  {
+    "id": "l-tofu-pea-quinoa-stir-fry",
+    "name": "Tofu and Pea Quinoa Stir-Fry",
+    "description": "Quinoa stir-fried with golden tofu, peas, peppers and soy sauce",
+    "mealType": "lunch",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥢",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 200
+      },
+      {
+        "item": "quinoa",
+        "g": 40
+      },
+      {
+        "item": "peas",
+        "g": 100
+      },
+      {
+        "item": "peppers",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "ml": 15
+      },
+      {
+        "item": "oil",
+        "g": 6
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Rinse the quinoa and simmer it in {100} ml of water, covered, for 12 minutes, then fluff it with a fork",
+      "Pat the tofu dry and cut it into cubes; dice the peppers",
+      "Heat the oil in a pan over high heat and fry the tofu for 6 minutes until golden, then add the peppers and the peas and cook for 2 minutes",
+      "Add the quinoa and the soy sauce, toss for 1 minute and serve"
+    ]
   }
 ]

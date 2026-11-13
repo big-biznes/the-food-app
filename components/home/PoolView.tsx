@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { WeekPart, Day, DayPlan, MealType, StructuredWeekPlan } from '@/data/meals';
+import { WeekPart, Day, MealType, PlanSlot, StructuredWeekPlan, swapGroup } from '@/data/meals';
 import MealCard from '@/components/MealCard';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 
 import { font } from '@/constants/type';
-type SwapSource = { part: WeekPart; day: string; mealType: MealType } | null;
+type SwapSource = PlanSlot | null;
 
 type Props = {
   plan: StructuredWeekPlan;
@@ -16,11 +16,17 @@ type Props = {
   onSwapSelect: (part: WeekPart, day: string, mealType: MealType) => void;
 };
 
-const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner'];
+const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
 const SECTION_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfasts',
   lunch: 'Lunches',
   dinner: 'Dinners',
+  snack: 'Snacks',
+};
+const BLOCKED_REASON = {
+  breakfast: 'Breakfasts can only be swapped with other breakfasts',
+  snack: 'Snacks can only be swapped with other snacks',
+  main: 'Lunches and dinners can only be swapped with each other',
 };
 
 export default function PoolView({
@@ -44,27 +50,34 @@ export default function PoolView({
           onRefresh={() => onRefreshMeal('C', day, 'lunch')}
         />
         <MealCard meal={plan.C[day].dinner} dayLabel="Day 1" />
+        {plan.C[day].snack && (
+          <MealCard
+            meal={plan.C[day].snack}
+            dayLabel="Day 1"
+            onRefresh={() => onRefreshMeal('C', day, 'snack')}
+          />
+        )}
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {MEAL_TYPES.map(mealType => (
+      {MEAL_TYPES.filter(type => days.some(day => plan[selectedPart][day][type])).map(mealType => (
         <View key={mealType} style={styles.section}>
           <Text style={styles.sectionLabel} accessibilityRole="header">
             {SECTION_LABEL[mealType]}
           </Text>
           {days.map((day, idx) => {
-            const dayPlan = (plan[selectedPart] as Record<string, DayPlan>)[day];
-            const meal = dayPlan[mealType];
+            const meal = plan[selectedPart][day][mealType];
+            if (!meal) return null;
             const isSelected =
               swapSource?.part === selectedPart &&
               swapSource.day === day &&
               swapSource.mealType === mealType;
             const swapFn = () => onSwapSelect(selectedPart, day, mealType);
-            // Breakfasts only swap with breakfasts; lunches and dinners swap with each other.
-            const blocked = swapSource != null && (swapSource.mealType === 'breakfast') !== (mealType === 'breakfast');
+            // Breakfasts only swap with breakfasts, snacks with snacks, lunches and dinners with each other.
+            const blocked = swapSource != null && swapGroup(swapSource.mealType) !== swapGroup(mealType);
 
             return (
               <MealCard
@@ -75,13 +88,7 @@ export default function PoolView({
                 onRefresh={!swapSource ? () => onRefreshMeal(selectedPart, day, mealType) : undefined}
                 onSwapSelect={!swapSource || isSelected ? swapFn : undefined}
                 onCardTap={swapSource ? swapFn : undefined}
-                swapBlockedReason={
-                  blocked
-                    ? swapSource.mealType === 'breakfast'
-                      ? 'Breakfasts can only be swapped with other breakfasts'
-                      : 'Lunches and dinners cannot be swapped with a breakfast'
-                    : undefined
-                }
+                swapBlockedReason={blocked ? BLOCKED_REASON[swapGroup(swapSource.mealType)] : undefined}
               />
             );
           })}

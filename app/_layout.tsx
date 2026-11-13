@@ -15,6 +15,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { RecipesProvider } from '@/contexts/RecipesContext';
 import { ShoppingProvider } from '@/contexts/ShoppingContext';
 import { LikesProvider } from '@/contexts/LikesContext';
+import { PlanProvider } from '@/contexts/PlanContext';
+import ShoppingReminders from '@/components/ShoppingReminders';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -42,8 +44,11 @@ export default function RootLayout() {
         <RecipesProvider>
           <ShoppingProvider>
             <LikesProvider>
-              <StatusBar style="dark" />
-              <Stack screenOptions={{ headerShown: false }} />
+              <PlanProvider>
+                <ShoppingReminders />
+                <StatusBar style="dark" />
+                <Stack screenOptions={{ headerShown: false }} />
+              </PlanProvider>
             </LikesProvider>
           </ShoppingProvider>
         </RecipesProvider>

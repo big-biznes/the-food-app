@@ -7,7 +7,7 @@ import { useThemedStyles } from '@/hooks/useTheme';
 
 type Props = { meal: Meal };
 
-const TYPE_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' } as const;
+const TYPE_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' } as const;
 
 export default function CardContent({ meal }: Props) {
   const styles = useThemedStyles(makeStyles);

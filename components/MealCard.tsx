@@ -1,5 +1,5 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,9 +14,19 @@ const TYPE_LABEL: Record<MealType, string> = {
   breakfast: 'Breakfast',
   lunch: 'Lunch',
   dinner: 'Dinner',
+  snack: 'Snack',
 };
 
 type Size = 'tile' | 'hero';
+
+/**
+ * What a tap does on a card that cannot be swapped with the selected meal. Off: nothing,
+ * the greyed-out card says enough. On: the card shakes and flashes red, and the home
+ * screen explains the rule after a few wrong taps in a row.
+ */
+const SWAP_REJECT_FEEDBACK = false;
+/** How faded a card is while it cannot be swapped with the selected meal. */
+const BLOCKED_OPACITY = 0.4;
 
 type Props =
   | {
@@ -65,6 +75,19 @@ export default function MealCard({
   const hero = size === 'hero';
   // 0 → 1 over one "not allowed" shake; drives both the sideways shake and the red flash.
   const rejectAnim = useRef(new Animated.Value(0)).current;
+
+  // Greyed out while a swap is being picked and this card cannot take part in it.
+  const blocked = Boolean(swapBlockedReason);
+  const dimAnim = useRef(new Animated.Value(blocked ? BLOCKED_OPACITY : 1)).current;
+  useEffect(() => {
+    const toValue = blocked ? BLOCKED_OPACITY : 1;
+    if (reducedMotion) {
+      dimAnim.setValue(toValue);
+      return;
+    }
+    // JS driver, like the shake: both are on the view that holds the card's buttons.
+    Animated.timing(dimAnim, { toValue, duration: 180, useNativeDriver: false }).start();
+  }, [blocked, dimAnim, reducedMotion]);
 
   function reject(reason: string) {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
@@ -137,7 +160,7 @@ export default function MealCard({
   const typeLabel = TYPE_LABEL[meal.mealType];
 
   return (
-    <Animated.View style={{ transform: [{ translateX: shakeX }] }}>
+    <Animated.View style={{ opacity: dimAnim, transform: [{ translateX: shakeX }] }}>
       <TouchableOpacity
         style={[
           styles.card,
@@ -148,6 +171,7 @@ export default function MealCard({
         activeOpacity={0.85}
         onPress={() => {
           if (swapBlockedReason) {
+            if (!SWAP_REJECT_FEEDBACK) return;
             reject(swapBlockedReason);
             // Still reported, so the screen can count repeated wrong taps.
             onCardTap?.();
@@ -160,9 +184,12 @@ export default function MealCard({
           router.push({ pathname: '/details', params: { id: meal.id } });
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${(personal ?? meal).calories} kilocalories`}
+        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${(personal ?? meal).calories} kilocalories${
+          personal?.removed ? `, without ${personal.removed.map(i => i.name).join(', ')}` : ''
+        }`}
         accessibilityHint={swapBlockedReason ?? (onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe')}
-        accessibilityState={{ selected: Boolean(selected) }}
+        // Disabled also switches the touch off, so only when a tap is meant to do nothing.
+        accessibilityState={{ selected: Boolean(selected), disabled: blocked && !SWAP_REJECT_FEEDBACK }}
       >
         <View style={styles.topRow}>
           <Text style={styles.kicker} numberOfLines={1}>
@@ -204,7 +231,7 @@ export default function MealCard({
           {meal.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {meal.prepTime} min, {(personal ?? meal).calories} kcal
+          {meal.prepTime} min, {(personal ?? meal).calories} kcal{personal?.removed ? ', edited' : ''}
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
       </TouchableOpacity>

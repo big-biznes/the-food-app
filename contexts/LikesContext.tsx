@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useMemo, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, ReactNode } from 'react';
 import { useCloudState } from '@/hooks/useCloudState';
+import { useRecipes } from '@/contexts/RecipesContext';
 
 type LikesContextValue = {
   likedIds: string[];
@@ -17,9 +18,23 @@ const LikesContext = createContext<LikesContextValue | null>(null);
 const EMPTY_LIKES = { liked: [] as string[], disliked: [] as string[] };
 
 export function LikesProvider({ children }: { children: ReactNode }) {
-  const [likes, setLikes] = useCloudState<{ liked: string[]; disliked: string[] }>('likes', EMPTY_LIKES);
+  const [likes, setLikes, loaded] = useCloudState<{ liked: string[]; disliked: string[] }>('likes', EMPTY_LIKES);
   const likedIds = likes.liked;
   const dislikedIds = likes.disliked;
+
+  // Reactions to recipes that have left the cookbook are dropped, once the current
+  // cookbook has been fetched (a saved copy on the device may be out of date).
+  const { meals, fresh } = useRecipes();
+  useEffect(() => {
+    if (!fresh || !loaded) return;
+    const known = new Set(meals.map(m => m.id));
+    if ([...likedIds, ...dislikedIds].every(id => known.has(id))) return;
+    setLikes(prev => {
+      const liked = prev.liked.filter(id => known.has(id));
+      const disliked = prev.disliked.filter(id => known.has(id));
+      return liked.length === prev.liked.length && disliked.length === prev.disliked.length ? prev : { liked, disliked };
+    });
+  }, [fresh, loaded, meals, likedIds, dislikedIds, setLikes]);
 
   // Both lists live in one cloud document; these keep the original two-setter logic.
   const setLikedIds = useCallback(
