@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, StyleSheet} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -98,9 +99,9 @@ export default function DetailsScreen() {
   if (!meal) {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
+        <PressableScale style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={22} color={c.text} />
-        </TouchableOpacity>
+        </PressableScale>
       </SafeAreaView>
     );
   }
@@ -108,9 +109,9 @@ export default function DetailsScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Back button */}
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
+      <PressableScale style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
         <Ionicons name="chevron-back" size={22} color={c.text} />
-      </TouchableOpacity>
+      </PressableScale>
 
       <ScrollView
         contentContainerStyle={styles.scroll}
@@ -230,12 +231,13 @@ export default function DetailsScreen() {
               // Asked of the recipe as written: the edited meal no longer lists what was left out.
               const locked = !recipe || !canLeaveOut(recipe, ing.name);
               return (
-                <TouchableOpacity
+                <PressableScale
                   key={ing.name}
                   style={rowStyle}
                   onPress={() => toggleIngredient(meal.id, ing.name)}
                   disabled={locked}
                   activeOpacity={0.7}
+                  scaleTo={1}
                   accessibilityRole="checkbox"
                   accessibilityLabel={amount ? `${ing.name}, ${amount}` : ing.name}
                   accessibilityHint={locked ? 'The main ingredient cannot be left out' : undefined}
@@ -245,7 +247,7 @@ export default function DetailsScreen() {
                     {kept && <Ionicons name={locked ? 'lock-closed' : 'checkmark'} size={locked ? 12 : 16} color={c.onPrimary} />}
                   </View>
                   {content}
-                </TouchableOpacity>
+                </PressableScale>
               );
             })}
           </View>
@@ -274,7 +276,7 @@ export default function DetailsScreen() {
 
       {/* Floating cook button */}
       {meal.instructions.length > 0 && (
-        <TouchableOpacity
+        <PressableScale
           style={styles.fab}
           activeOpacity={0.85}
           onPress={() =>
@@ -283,7 +285,7 @@ export default function DetailsScreen() {
         >
           <Ionicons name="restaurant-outline" size={18} color={c.onPrimary} />
           <Text style={styles.fabText}>Cook</Text>
-        </TouchableOpacity>
+        </PressableScale>
       )}
     </SafeAreaView>
   );

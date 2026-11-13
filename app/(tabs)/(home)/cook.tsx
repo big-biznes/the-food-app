@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,9 +28,9 @@ export default function CookScreen() {
   if (!meal || meal.instructions.length === 0) {
     return (
       <SafeAreaView style={styles.safe} edges={['top']}>
-        <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
+        <PressableScale style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
           <Ionicons name="close" size={22} color={c.text} />
-        </TouchableOpacity>
+        </PressableScale>
         <View style={styles.emptyState}>
           <Text style={styles.emptyEmoji}>🍳</Text>
           <Text style={styles.emptyTitle}>No instructions</Text>
@@ -52,9 +53,9 @@ export default function CookScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
+        <PressableScale style={styles.closeBtn} onPress={() => router.back()} activeOpacity={0.7}>
           <Ionicons name="close" size={22} color={c.text} />
-        </TouchableOpacity>
+        </PressableScale>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle} numberOfLines={1}>{meal.name}</Text>
           <Text style={styles.headerSub}>Step {step + 1} of {total}</Text>
@@ -86,19 +87,19 @@ export default function CookScreen() {
       {/* Bottom nav */}
       <View style={styles.bottomBar}>
         {step > 0 ? (
-          <TouchableOpacity
+          <PressableScale
             style={styles.backStepBtn}
             onPress={() => setStep(s => s - 1)}
             activeOpacity={0.7}
           >
             <Ionicons name="chevron-back" size={20} color={c.text} />
             <Text style={styles.backStepText}>Back</Text>
-          </TouchableOpacity>
+          </PressableScale>
         ) : (
           <View style={styles.backStepPlaceholder} />
         )}
 
-        <TouchableOpacity
+        <PressableScale
           style={[styles.nextBtn, isLast && styles.doneBtn]}
           onPress={() => {
             if (isLast) router.back();
@@ -109,7 +110,7 @@ export default function CookScreen() {
           <Text style={styles.nextBtnText}>{isLast ? 'Done' : 'Next step'}</Text>
           {!isLast && <Ionicons name="chevron-forward" size={18} color={c.onPrimary} />}
           {isLast && <Ionicons name="checkmark" size={18} color={c.onPrimary} />}
-        </TouchableOpacity>
+        </PressableScale>
       </View>
     </SafeAreaView>
   );

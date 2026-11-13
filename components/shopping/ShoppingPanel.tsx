@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   FlatList,
   Animated,
   StyleSheet,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { ShoppingItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
@@ -74,7 +74,7 @@ export default function ShoppingPanel({
           returnKeyType="done"
           accessibilityLabel="Add an item to the shopping list"
         />
-        <TouchableOpacity
+        <PressableScale
           style={styles.addBtn}
           onPress={onAdd}
           activeOpacity={0.8}
@@ -82,11 +82,11 @@ export default function ShoppingPanel({
           accessibilityLabel="Add item"
         >
           <Ionicons name="add" size={22} color={c.onPrimary} />
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       {items.length > 0 && (
-        <TouchableOpacity
+        <PressableScale
           style={styles.compare}
           onPress={onComparePrices}
           activeOpacity={0.85}
@@ -102,7 +102,7 @@ export default function ShoppingPanel({
             <Text style={styles.compareSub}>See where your list is cheapest</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={c.onPrimaryMuted} />
-        </TouchableOpacity>
+        </PressableScale>
       )}
 
       <View style={styles.flex}>
@@ -110,7 +110,7 @@ export default function ShoppingPanel({
           <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
           <View style={styles.sectionActions}>
             {items.length > 0 && (
-              <TouchableOpacity
+              <PressableScale
                 onPress={() => onSetAllChecked(!allChecked)}
                 activeOpacity={0.7}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -118,9 +118,9 @@ export default function ShoppingPanel({
                 accessibilityLabel={allChecked ? 'Deselect all items' : 'Select all items'}
               >
                 <Text style={styles.clearText}>{allChecked ? 'Deselect all' : 'Select all'}</Text>
-              </TouchableOpacity>
+              </PressableScale>
             )}
-            <TouchableOpacity
+            <PressableScale
               onPress={onClearChecked}
               activeOpacity={hasChecked ? 0.7 : 1}
               disabled={!hasChecked}
@@ -132,7 +132,7 @@ export default function ShoppingPanel({
               <Text style={[styles.clearText, !hasChecked && styles.clearTextDim]}>
                 Clear
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         </View>
 
@@ -160,7 +160,7 @@ export default function ShoppingPanel({
           importantForAccessibility={hasChecked ? 'auto' : 'no-hide-descendants'}
           accessibilityElementsHidden={!hasChecked}
         >
-          <TouchableOpacity
+          <PressableScale
             style={styles.fab}
             onPress={onFinishShopping}
             activeOpacity={0.85}
@@ -170,7 +170,7 @@ export default function ShoppingPanel({
           >
             <Text style={styles.fabText}>Finish shopping</Text>
             <Ionicons name="checkmark-circle" size={20} color={c.onPrimary} />
-          </TouchableOpacity>
+          </PressableScale>
         </Animated.View>
       </View>
     </View>

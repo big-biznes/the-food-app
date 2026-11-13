@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Animated, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, Animated, StyleSheet} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -98,7 +99,7 @@ export default function CompareScreen() {
       <ConfirmToast ref={toastRef} message="Stores added to your list" icon="pricetag-outline" />
 
       <View style={styles.header}>
-        <TouchableOpacity
+        <PressableScale
           style={styles.closeBtn}
           onPress={() => router.back()}
           activeOpacity={0.7}
@@ -106,19 +107,19 @@ export default function CompareScreen() {
           accessibilityLabel="Close price comparison"
         >
           <Ionicons name="close" size={22} color={c.text} />
-        </TouchableOpacity>
+        </PressableScale>
         <Text style={styles.title} accessibilityRole="header">
           Compare prices
         </Text>
         {chainIds.length > 0 && (
-          <TouchableOpacity
+          <PressableScale
             onPress={() => setEditingStores(v => !v)}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
             accessibilityLabel={editingStores ? 'Done choosing stores' : 'Choose stores'}
           >
             <Text style={styles.headerAction}>{editingStores ? 'Done' : 'Stores'}</Text>
-          </TouchableOpacity>
+          </PressableScale>
         )}
       </View>
 
@@ -177,7 +178,7 @@ export default function CompareScreen() {
                     {result.split.stores.map(s => (
                       <StoreCard key={s.chainId} store={s} labels={labels} initiallyOpen />
                     ))}
-                    <TouchableOpacity
+                    <PressableScale
                       style={styles.button}
                       onPress={() => shopAt(result.split!.stores)}
                       activeOpacity={0.85}
@@ -185,7 +186,7 @@ export default function CompareScreen() {
                       accessibilityHint="Marks each item on your list with the store to buy it at"
                     >
                       <Text style={styles.buttonText}>Shop this way</Text>
-                    </TouchableOpacity>
+                    </PressableScale>
                   </>
                 ) : (
                   <Text style={styles.message}>
@@ -210,9 +211,9 @@ export default function CompareScreen() {
           {chainIds.length > 0 && prices.status === 'error' && (
             <View style={styles.center}>
               <Text style={styles.message}>Could not load prices. Check your connection.</Text>
-              <TouchableOpacity style={styles.button} onPress={prices.retry} activeOpacity={0.85} accessibilityRole="button">
+              <PressableScale style={styles.button} onPress={prices.retry} activeOpacity={0.85} accessibilityRole="button">
                 <Text style={styles.buttonText}>Try again</Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
           )}
 

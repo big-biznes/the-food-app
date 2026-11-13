@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, Easing, LayoutChangeEvent, Text, TouchableOpacity, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { AccessibilityInfo, Animated, Easing, LayoutChangeEvent, Text, StyleSheet, View, useWindowDimensions} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/theme';
@@ -252,7 +253,7 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
                   {textOf(options)}
                 </Text>
                 {options.actionLabel && options.onAction && (
-                  <TouchableOpacity
+                  <PressableScale
                     onPress={() => press(options)}
                     disabled={!isCurrent}
                     accessibilityRole="button"
@@ -261,7 +262,7 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
                     activeOpacity={0.7}
                   >
                     <Text style={styles.action}>{options.actionLabel}</Text>
-                  </TouchableOpacity>
+                  </PressableScale>
                 )}
               </View>
             </Animated.View>

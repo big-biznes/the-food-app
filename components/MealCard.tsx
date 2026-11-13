@@ -1,6 +1,7 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
 import { useEffect, useRef } from 'react';
-import { AccessibilityInfo, View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { AccessibilityInfo, View, Text, StyleSheet, Animated} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -161,14 +162,15 @@ export default function MealCard({
 
   return (
     <Animated.View style={{ opacity: dimAnim, transform: [{ translateX: shakeX }] }}>
-      <TouchableOpacity
+      <PressableScale
         style={[
           styles.card,
           { backgroundColor: tileColor(c, meal.mealType) },
           hero && styles.cardHero,
           selected && styles.cardSelected,
         ]}
-        activeOpacity={0.85}
+        activeOpacity={0.9}
+        scaleTo={0.98}
         onPress={() => {
           if (swapBlockedReason) {
             if (!SWAP_REJECT_FEEDBACK) return;
@@ -197,23 +199,25 @@ export default function MealCard({
           </Text>
           <View style={styles.actionRow}>
             {onSwapSelect !== undefined && (
-              <TouchableOpacity
+              <PressableScale
                 style={[styles.actionBtn, selected && styles.actionBtnSelected]}
                 onPress={onSwapSelect}
                 activeOpacity={0.7}
+                scaleTo={0.88}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 accessibilityRole="button"
                 accessibilityLabel={selected ? 'Cancel swap' : 'Swap this meal'}
                 accessibilityState={{ selected: Boolean(selected) }}
               >
                 <Ionicons name="swap-horizontal" size={19} color={selected ? tileColor(c, meal.mealType) : c.onTile} />
-              </TouchableOpacity>
+              </PressableScale>
             )}
             {onRefresh && (
-              <TouchableOpacity
+              <PressableScale
                 style={styles.actionBtn}
                 onPress={handleRefresh}
                 activeOpacity={0.7}
+                scaleTo={0.88}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 accessibilityRole="button"
                 accessibilityLabel="Replace with another meal"
@@ -221,7 +225,7 @@ export default function MealCard({
                 <Animated.View style={{ transform: [{ rotate: rotation }] }}>
                   <Ionicons name="refresh" size={19} color={c.onTile} />
                 </Animated.View>
-              </TouchableOpacity>
+              </PressableScale>
             )}
           </View>
         </View>
@@ -234,7 +238,7 @@ export default function MealCard({
           {meal.prepTime} min, {(personal ?? meal).calories} kcal{personal?.removed ? ', edited' : ''}
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
-      </TouchableOpacity>
+      </PressableScale>
     </Animated.View>
   );
 }

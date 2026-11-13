@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useAuth } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
@@ -53,7 +54,7 @@ export default function StorePicker() {
 function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
   const styles = useThemedStyles(makeStyles);
   return (
-    <TouchableOpacity
+    <PressableScale
       style={[styles.chip, selected && styles.chipOn]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -62,7 +63,7 @@ function Chip({ label, selected, onPress }: { label: string; selected: boolean; 
       accessibilityState={{ selected }}
     >
       <Text style={[styles.chipLabel, selected && styles.chipLabelOn]}>{label}</Text>
-    </TouchableOpacity>
+    </PressableScale>
   );
 }
 

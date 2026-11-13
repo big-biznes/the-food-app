@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -189,14 +189,14 @@ export default function QuizScreen() {
 
           <View style={styles.footer}>
             <View style={styles.footerRow}>
-              <TouchableOpacity
+              <PressableScale
                 style={styles.backButton}
                 onPress={handleBack}
                 activeOpacity={0.7}
               >
                 <Ionicons name="chevron-back" size={22} color={c.text} />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </PressableScale>
+              <PressableScale
                 style={[styles.nextButton, !canContinue() && styles.nextButtonDisabled]}
                 onPress={handleNext}
                 activeOpacity={0.8}
@@ -205,7 +205,7 @@ export default function QuizScreen() {
                 <Text style={styles.nextButtonText}>
                   {step === TOTAL_STEPS ? "Let's go" : 'Continue'}
                 </Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
           </View>
         </View>
@@ -252,7 +252,7 @@ function StepGoal({
         {GOALS.map(item => {
           const selected = goal === item.value;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={item.value}
               style={[step.card, selected && step.cardSelected]}
               onPress={() => setGoal(item.value)}
@@ -264,7 +264,7 @@ function StepGoal({
               <Text style={[step.cardDesc, selected && step.cardDescSelected]}>
                 {item.desc}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>
@@ -288,7 +288,7 @@ function StepActivity({
         {ACTIVITIES.map(item => {
           const selected = activity === item.value;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={item.value}
               style={[step.card, selected && step.cardSelected]}
               onPress={() => setActivity(item.value)}
@@ -302,7 +302,7 @@ function StepActivity({
               <Text style={[step.cardDesc, selected && step.cardDescSelected]}>
                 {item.desc}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>
@@ -326,7 +326,7 @@ function StepGender({
         {GENDERS.map(item => {
           const selected = gender === item.value;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={item.value}
               style={[step.chip, selected && step.chipSelected]}
               onPress={() => setGender(item.value)}
@@ -335,7 +335,7 @@ function StepGender({
               <Text style={[step.chipText, selected && step.chipTextSelected]}>
                 {item.label}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>
@@ -402,7 +402,7 @@ function StepRestrictions({
         {RESTRICTIONS.map(item => {
           const selected = restrictions.includes(item.value);
           return (
-            <TouchableOpacity
+            <PressableScale
               key={item.value}
               style={[step.chip, selected && step.chipSelected]}
               onPress={() => toggle(item.value)}
@@ -411,7 +411,7 @@ function StepRestrictions({
               <Text style={[step.chipText, selected && step.chipTextSelected]}>
                 {item.label}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>
@@ -435,14 +435,14 @@ function StepEatingOutDay({
         {DAYS_OF_WEEK.map(d => {
           const selected = day === d;
           return (
-            <TouchableOpacity
+            <PressableScale
               key={d}
               style={[step.chip, selected && step.chipSelected]}
               onPress={() => setDay(d)}
               activeOpacity={0.7}
             >
               <Text style={[step.chipText, selected && step.chipTextSelected]}>{d}</Text>
-            </TouchableOpacity>
+            </PressableScale>
           );
         })}
       </View>

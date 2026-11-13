@@ -5,9 +5,9 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Switch,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Href, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -348,23 +348,23 @@ export default function SettingsScreen() {
             onPress={() => router.push('/legal/privacy' as Href)}
           />
           <Divider />
-          <TouchableOpacity
+          <PressableScale
             style={styles.destructiveRow}
             onPress={handleDeleteAccount}
             activeOpacity={0.7}
           >
             <Text style={styles.destructiveText}>Delete account</Text>
-          </TouchableOpacity>
+          </PressableScale>
         </View>
 
         {/* ── Log out ───────────────────────────────────────────────── */}
-        <TouchableOpacity
+        <PressableScale
           style={styles.logoutBtn}
           onPress={handleLogout}
           activeOpacity={0.8}
         >
           <Text style={styles.logoutText}>Log out</Text>
-        </TouchableOpacity>
+        </PressableScale>
       </ScrollView>
 
       <ConfirmSheet
@@ -536,7 +536,7 @@ function Chip({
 }) {
   const chipStyles = useThemedStyles(makeChipStyles);
   return (
-    <TouchableOpacity
+    <PressableScale
       style={[chipStyles.chip, selected && chipStyles.chipOn]}
       onPress={onPress}
       activeOpacity={0.7}
@@ -547,7 +547,7 @@ function Chip({
       <Text style={[chipStyles.label, selected && chipStyles.labelOn]}>
         {label}
       </Text>
-    </TouchableOpacity>
+    </PressableScale>
   );
 }
 
@@ -555,7 +555,7 @@ function LinkRow({ label, onPress }: { label: string; onPress: () => void }) {
   const { colors: c } = useTheme();
   const sectionStyles = useThemedStyles(makeSectionStyles);
   return (
-    <TouchableOpacity
+    <PressableScale
       style={sectionStyles.linkRow}
       onPress={onPress}
       activeOpacity={0.7}
@@ -564,7 +564,7 @@ function LinkRow({ label, onPress }: { label: string; onPress: () => void }) {
     >
       <Text style={sectionStyles.linkLabel}>{label}</Text>
       <Ionicons name="chevron-forward" size={16} color={c.textFaint} />
-    </TouchableOpacity>
+    </PressableScale>
   );
 }
 

@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, Image} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
@@ -65,32 +66,32 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.actions}>
-          <TouchableOpacity
+          <PressableScale
             style={styles.primaryButton}
             onPress={() => router.push('/(auth)/register')}
             activeOpacity={0.8}
             accessibilityRole="button"
           >
             <Text style={styles.primaryButtonText}>Start planning</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </PressableScale>
+          <PressableScale
             style={styles.secondaryButton}
             onPress={() => router.push('/(auth)/login')}
             activeOpacity={0.8}
             accessibilityRole="button"
           >
             <Text style={styles.secondaryButtonText}>Sign in</Text>
-          </TouchableOpacity>
+          </PressableScale>
 
           {__DEV__ && (
-            <TouchableOpacity
+            <PressableScale
               style={styles.devButton}
               onPress={handleDevSkip}
               activeOpacity={0.7}
               accessibilityRole="button"
             >
               <Text style={styles.devButtonText}>Dev: skip login</Text>
-            </TouchableOpacity>
+            </PressableScale>
           )}
         </View>
       </View>

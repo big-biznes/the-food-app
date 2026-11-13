@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo, SetStateAction } from 'react';
-import { TouchableOpacity, Text, Animated, Easing, StyleSheet, View } from 'react-native';
+import { Text, Animated, Easing, StyleSheet, View} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
@@ -440,7 +441,7 @@ export default function HomeScreen() {
           importantForAccessibility={toastUp ? 'no-hide-descendants' : 'auto'}
           accessibilityElementsHidden={toastUp}
         >
-          <TouchableOpacity
+          <PressableScale
             style={styles.fab}
             onPress={() => setShowSheet(true)}
             activeOpacity={0.85}
@@ -448,7 +449,7 @@ export default function HomeScreen() {
             accessibilityLabel="Replan the week"
           >
             <Text style={styles.fabText}>Replan</Text>
-          </TouchableOpacity>
+          </PressableScale>
         </Animated.View>
       )}
 

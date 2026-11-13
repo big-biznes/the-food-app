@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Animated,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -192,7 +192,7 @@ export default function DiscoverScreen() {
           </Text>
           <Text style={styles.subText}>Swipe right to save, left to skip</Text>
         </View>
-        <TouchableOpacity
+        <PressableScale
           style={styles.headerBtn}
           onPress={() => setSheetVisible(true)}
           activeOpacity={0.75}
@@ -205,7 +205,7 @@ export default function DiscoverScreen() {
               <Text style={styles.badgeText}>{likedIds.length}</Text>
             </View>
           )}
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       <View style={styles.deckArea}>
@@ -220,7 +220,7 @@ export default function DiscoverScreen() {
                 ? 'We’ll work your favourites into your next plan.'
                 : 'Like a few to shape your next plan.'}
             </Text>
-            <TouchableOpacity
+            <PressableScale
               style={styles.resetBtn}
               onPress={() => {
                 setEnterScale(1);
@@ -230,7 +230,7 @@ export default function DiscoverScreen() {
               accessibilityRole="button"
             >
               <Text style={styles.resetBtnText}>Start over</Text>
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         )}
 
@@ -270,7 +270,7 @@ export default function DiscoverScreen() {
       >
         {current && (
           <View style={styles.actions}>
-            <TouchableOpacity
+            <PressableScale
               style={[styles.actionBtn, styles.actionPass]}
               onPress={() => handleButtonSwipe('left', current)}
               activeOpacity={0.8}
@@ -278,8 +278,8 @@ export default function DiscoverScreen() {
               accessibilityLabel={`Pass on ${current.name}`}
             >
               <Ionicons name="close" size={28} color={c.text} />
-            </TouchableOpacity>
-            <TouchableOpacity
+            </PressableScale>
+            <PressableScale
               style={[styles.actionBtn, styles.actionLike]}
               onPress={() => handleButtonSwipe('right', current)}
               activeOpacity={0.85}
@@ -287,7 +287,7 @@ export default function DiscoverScreen() {
               accessibilityLabel={`Like ${current.name}`}
             >
               <Ionicons name="heart" size={26} color={c.onPrimary} />
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         )}
       </Animated.View>

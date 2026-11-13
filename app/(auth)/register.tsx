@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Href, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -110,21 +110,21 @@ export default function RegisterScreen() {
 
           <View style={styles.footer}>
             <View style={styles.buttonRow}>
-              <TouchableOpacity
+              <PressableScale
                 style={styles.backButton}
                 onPress={() => router.back()}
                 activeOpacity={0.7}
               >
                 <Ionicons name="chevron-back" size={22} color={c.text} />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </PressableScale>
+              <PressableScale
                 style={[styles.primaryButton, !canSubmit && styles.primaryButtonDisabled]}
                 onPress={handleRegister}
                 activeOpacity={0.8}
                 disabled={!canSubmit}
               >
                 <Text style={styles.primaryButtonText}>Continue</Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
             <GoogleButton />
             <Text style={styles.legalText}>
@@ -138,7 +138,7 @@ export default function RegisterScreen() {
               </Text>
               .
             </Text>
-            <TouchableOpacity
+            <PressableScale
               onPress={() => router.replace('/(auth)/login')}
               activeOpacity={0.7}
             >
@@ -146,7 +146,7 @@ export default function RegisterScreen() {
                 Have an account?{' '}
                 <Text style={styles.switchLink}>Sign in</Text>
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

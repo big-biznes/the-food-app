@@ -5,10 +5,10 @@ import {
   Easing,
   PanResponder,
   Text,
-  TouchableOpacity,
   View,
   StyleSheet,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -203,7 +203,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
         <Ionicons name="checkmark-circle-outline" size={17} color={c.onPrimary} />
         <Text style={styles.message}>{message}</Text>
       </View>
-      <TouchableOpacity
+      <PressableScale
         style={styles.actionBtn}
         onPress={onAction}
         activeOpacity={0.75}
@@ -227,7 +227,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
             {' '}{actionLabel}
           </Animated.Text>
         </Animated.View>
-      </TouchableOpacity>
+      </PressableScale>
     </Animated.View>
   );
 });

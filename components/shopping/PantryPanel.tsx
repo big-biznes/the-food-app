@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { PantryItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
@@ -41,7 +42,7 @@ export default function PantryPanel({ input, onInputChange, onAdd, items, onDele
           returnKeyType="done"
           accessibilityLabel="Add to pantry"
         />
-        <TouchableOpacity
+        <PressableScale
           style={styles.addBtn}
           onPress={onAdd}
           activeOpacity={0.8}
@@ -49,7 +50,7 @@ export default function PantryPanel({ input, onInputChange, onAdd, items, onDele
           accessibilityLabel="Add to pantry"
         >
           <Ionicons name="add" size={22} color={c.onPrimary} />
-        </TouchableOpacity>
+        </PressableScale>
       </View>
 
       <FlatList

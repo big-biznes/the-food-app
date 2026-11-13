@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
@@ -22,7 +23,7 @@ export default function CravingChips({ selected, onToggle }: Props) {
       {CRAVING_CHIPS.map(chip => {
         const on = selected.includes(chip);
         return (
-          <TouchableOpacity
+          <PressableScale
             key={chip}
             style={[styles.chip, on && styles.chipOn]}
             onPress={() => onToggle(chip)}
@@ -33,7 +34,7 @@ export default function CravingChips({ selected, onToggle }: Props) {
             accessibilityState={{ selected: on }}
           >
             <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
-          </TouchableOpacity>
+          </PressableScale>
         );
       })}
     </View>

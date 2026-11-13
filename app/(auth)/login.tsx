@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -92,24 +92,24 @@ export default function LoginScreen() {
 
           <View style={styles.footer}>
             <View style={styles.buttonRow}>
-              <TouchableOpacity
+              <PressableScale
                 style={styles.backButton}
                 onPress={() => router.back()}
                 activeOpacity={0.7}
               >
                 <Ionicons name="chevron-back" size={22} color={c.text} />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </PressableScale>
+              <PressableScale
                 style={[styles.primaryButton, !canSubmit && styles.primaryButtonDisabled]}
                 onPress={handleLogin}
                 activeOpacity={0.8}
                 disabled={!canSubmit}
               >
                 <Text style={styles.primaryButtonText}>{submitting ? 'Signing in…' : 'Sign in'}</Text>
-              </TouchableOpacity>
+              </PressableScale>
             </View>
             <GoogleButton />
-            <TouchableOpacity
+            <PressableScale
               onPress={() => router.replace('/(auth)/register')}
               activeOpacity={0.7}
             >
@@ -117,7 +117,7 @@ export default function LoginScreen() {
                 No account?{' '}
                 <Text style={styles.switchLink}>Register</Text>
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

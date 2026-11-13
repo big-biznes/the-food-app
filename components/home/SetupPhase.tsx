@@ -2,12 +2,12 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -72,14 +72,14 @@ export default function SetupPhase({
           />
         </View>
 
-        <TouchableOpacity
+        <PressableScale
           style={styles.btn}
           onPress={onGenerate}
           activeOpacity={0.8}
           accessibilityRole="button"
         >
           <Text style={styles.btnText}>Plan my week</Text>
-        </TouchableOpacity>
+        </PressableScale>
       </ScrollView>
     </KeyboardAvoidingView>
   );

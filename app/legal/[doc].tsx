@@ -1,4 +1,5 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,7 +18,7 @@ export default function LegalScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <TouchableOpacity
+      <PressableScale
         style={styles.backBtn}
         onPress={() => router.back()}
         activeOpacity={0.7}
@@ -25,7 +26,7 @@ export default function LegalScreen() {
         accessibilityLabel="Back"
       >
         <Ionicons name="chevron-back" size={22} color={c.text} />
-      </TouchableOpacity>
+      </PressableScale>
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Text style={styles.title} accessibilityRole="header">

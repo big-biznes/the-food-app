@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSignInTransition } from '@/hooks/useSignInTransition';
@@ -46,7 +47,7 @@ export default function GoogleButton() {
         <View style={styles.dividerLine} />
       </View>
 
-      <TouchableOpacity
+      <PressableScale
         style={styles.button}
         onPress={handlePress}
         activeOpacity={0.8}
@@ -63,7 +64,7 @@ export default function GoogleButton() {
             <Text style={styles.buttonText}>Continue with Google</Text>
           </>
         )}
-      </TouchableOpacity>
+      </PressableScale>
 
       {error && (
         <Text style={styles.errorText} accessibilityRole="alert">

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Animated, Modal, StyleSheet, Text, View} from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet, SheetMotion } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
@@ -90,7 +91,7 @@ export default function ConfirmSheet({
       onRequestClose={dismiss}
     >
       <Animated.View style={[styles.backdrop, { opacity: backdropAnim }]}>
-        <TouchableOpacity
+        <PressableScale
           style={StyleSheet.absoluteFill}
           activeOpacity={1}
           onPress={dismiss}
@@ -125,7 +126,7 @@ export default function ConfirmSheet({
               </Text>
             )}
 
-            <TouchableOpacity
+            <PressableScale
               style={[styles.confirmBtn, destructive && styles.confirmBtnDestructive]}
               onPress={handleConfirm}
               activeOpacity={0.8}
@@ -140,10 +141,10 @@ export default function ConfirmSheet({
                   {confirmLabel}
                 </Text>
               )}
-            </TouchableOpacity>
+            </PressableScale>
 
             {!hideCancel && (
-              <TouchableOpacity
+              <PressableScale
                 style={styles.cancelBtn}
                 onPress={dismiss}
                 activeOpacity={0.7}
@@ -151,7 +152,7 @@ export default function ConfirmSheet({
                 accessibilityRole="button"
               >
                 <Text style={styles.cancelText}>{cancelLabel}</Text>
-              </TouchableOpacity>
+              </PressableScale>
             )}
 
             <View style={{ height: insets.bottom + 8 }} />

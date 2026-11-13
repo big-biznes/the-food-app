@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   ScrollView,
   Modal,
   KeyboardAvoidingView,
@@ -11,6 +10,7 @@ import {
   Animated,
   StyleSheet,
 } from 'react-native';
+import PressableScale from '@/components/PressableScale';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
@@ -68,7 +68,7 @@ export default function CravingSheet({
       onRequestClose={close}
     >
       <Animated.View style={[styles.backdrop, { opacity: backdropAnim }]}>
-        <TouchableOpacity
+        <PressableScale
           style={StyleSheet.absoluteFill}
           activeOpacity={1}
           onPress={close}
@@ -120,14 +120,14 @@ export default function CravingSheet({
                 accessibilityLabel="Anything specific you are craving"
               />
 
-              <TouchableOpacity
+              <PressableScale
                 style={styles.btn}
                 onPress={onGenerate}
                 activeOpacity={0.8}
                 accessibilityRole="button"
               >
                 <Text style={styles.btnText}>Generate</Text>
-              </TouchableOpacity>
+              </PressableScale>
             </ScrollView>
 
             <View style={{ height: insets.bottom + 8 }} />

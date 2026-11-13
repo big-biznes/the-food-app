@@ -14,6 +14,8 @@ import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { useSwipeTabs } from '@/hooks/useSwipeTabs';
+import { useWiggle } from '@/hooks/useWiggle';
+import PressableScale from '@/components/PressableScale';
 
 const DAY_NAME: Record<Day, string> = {
   Mon: 'Monday',
@@ -88,6 +90,8 @@ export default function PlanPhase({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  // The cart rocks when it is pressed.
+  const cart = useWiggle();
 
   // View mode is scoped to the part it was chosen for, so switching parts
   // falls back to the day view without an effect.
@@ -207,26 +211,33 @@ export default function PlanPhase({
           ) : (
             <Text style={[styles.flex, styles.poolHint]}>All meals in this part</Text>
           )}
-          <TouchableOpacity
+          <PressableScale
             style={styles.iconBtn}
             onPress={toggleViewMode}
+            scaleTo={0.9}
             activeOpacity={0.7}
             hitSlop={ICON_HIT_SLOP}
             accessibilityRole="button"
             accessibilityLabel={mode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
           >
             <Ionicons name={mode === 'day' ? 'grid' : 'calendar'} size={20} color={c.text} />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </PressableScale>
+          <PressableScale
             style={styles.iconBtn}
-            onPress={onAddToShoppingList}
+            onPress={() => {
+              cart.wiggle();
+              onAddToShoppingList();
+            }}
+            scaleTo={0.9}
             activeOpacity={0.7}
             hitSlop={ICON_HIT_SLOP}
             accessibilityRole="button"
             accessibilityLabel="Add this part to the shopping list"
           >
-            <Ionicons name="cart" size={21} color={c.text} />
-          </TouchableOpacity>
+            <Animated.View style={cart.style}>
+              <Ionicons name="cart" size={21} color={c.text} />
+            </Animated.View>
+          </PressableScale>
         </View>
 
         {/* Shop-today note */}
@@ -280,7 +291,7 @@ export default function PlanPhase({
           <Text style={styles.misfitText}>
             {misfitCount === 1 ? '1 meal no longer fits' : `${misfitCount} meals no longer fit`} your eating preferences
           </Text>
-          <TouchableOpacity
+          <PressableScale
             style={styles.misfitBtn}
             onPress={onReplaceMisfits}
             activeOpacity={0.8}
@@ -288,7 +299,7 @@ export default function PlanPhase({
             accessibilityLabel={misfitCount === 1 ? 'Replace that meal' : 'Replace those meals'}
           >
             <Text style={styles.misfitBtnText}>Replace</Text>
-          </TouchableOpacity>
+          </PressableScale>
         </View>
       )}
 
