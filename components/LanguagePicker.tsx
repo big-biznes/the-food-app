@@ -9,10 +9,11 @@ import { LANGUAGES, Language, resources } from '@/lib/i18n';
 import { useThemedStyles } from '@/hooks/useTheme';
 
 /**
- * Chips for the app's languages, each named in its own language. Nothing is shown while
+ * Chips for the app's languages, each named in its own language (Settings; the welcome screen
+ * has LanguageMenu). Nothing is shown while
  * the app has only one language.
  */
-export default function LanguagePicker({ compact = false }: { compact?: boolean }) {
+export default function LanguagePicker() {
   const styles = useThemedStyles(makeStyles);
   const { i18n } = useTranslation();
   const { setLanguage } = useAuth();
@@ -34,13 +35,13 @@ export default function LanguagePicker({ compact = false }: { compact?: boolean 
   }
 
   return (
-    <View style={[styles.row, compact && styles.rowCompact]} accessibilityRole="radiogroup">
+    <View style={styles.row} accessibilityRole="radiogroup">
       {LANGUAGES.map((code: Language) => {
         const selected = current === code;
         return (
           <PressableScale
             key={code}
-            style={[styles.chip, compact && styles.chipCompact, selected && styles.chipOn]}
+            style={[styles.chip, selected && styles.chipOn]}
             onPress={() => pick(code)}
             activeOpacity={0.7}
             accessibilityRole="radio"
@@ -60,10 +61,8 @@ export default function LanguagePicker({ compact = false }: { compact?: boolean 
 const makeStyles = (c: Colors) =>
   StyleSheet.create({
     row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-    rowCompact: { justifyContent: 'center' },
     // Like the other chips in Settings, so it shows on a section card as well as on the page.
     chip: { backgroundColor: c.surfaceAlt, borderRadius: 100, paddingHorizontal: 16, paddingVertical: 8 },
-    chipCompact: { paddingHorizontal: 12, paddingVertical: 6 },
     chipOn: { backgroundColor: c.primary },
     label: { fontFamily: font.medium, fontWeight: '500', fontSize: 13, color: c.text },
     labelOn: { color: c.onPrimary },

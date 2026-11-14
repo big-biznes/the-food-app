@@ -49,7 +49,16 @@ export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarPr
 
         // Switch on touch-down (like native tab bars) instead of waiting for the finger to lift.
         function onPressIn() {
-          if (route.key === activeKey || route.key === pendingKey) return;
+          if (route.key === pendingKey) return;
+          if (route.key === activeKey) {
+            // Again on the open tab: its stack listens for this and goes back to its first
+            // screen, as if back was pressed (e.g. from a recipe to the week).
+            if ((route as { state?: { index?: number } }).state?.index) {
+              emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+              if (HAPTICS) Haptics.selectionAsync().catch(() => {});
+            }
+            return;
+          }
           const event = emitter.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
           if (event.defaultPrevented) return;
           if (HAPTICS) Haptics.selectionAsync().catch(() => {});

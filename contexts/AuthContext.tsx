@@ -101,6 +101,10 @@ type AuthContextType = {
   isDevAccount: boolean;
   /** Switch the app's language: saved in the profile, or on this device before there is one. */
   setLanguage: (language: Language) => void;
+  /** Email a code for choosing a new password. Succeeds whether or not the address has an account. */
+  requestPasswordReset: (email: string) => AuthResult;
+  /** Set a new password with the emailed code, and sign in. */
+  resetPassword: (email: string, code: string, password: string) => AuthResult;
   logout: () => Promise<void>;
   deleteAccount: () => AuthResult;
 };
@@ -337,6 +341,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   }, []);
 
+  const requestPasswordReset = useCallback(async (resetEmail: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail.trim());
+    return error ? error.message : null;
+  }, []);
+
+  const resetPassword = useCallback(
+    async (resetEmail: string, code: string, password: string) => {
+      const address = resetEmail.trim().toLowerCase();
+      // A code works once. When it was accepted but the new password was not (too short, the
+      // same as the old one), the next try goes on with the session the code already gave.
+      const { data: current } = await supabase.auth.getSession();
+      if (current.session?.user.email?.toLowerCase() !== address) {
+        const { error } = await supabase.auth.verifyOtp({ email: address, token: code.trim(), type: 'recovery' });
+        if (error) return error.message;
+      }
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) return error.message;
+      await syncSession();
+      return null;
+    },
+    [syncSession],
+  );
+
   const signInWithGoogle = useCallback(async (onAccountChosen?: () => void): Promise<GoogleSignInResult> => {
     if (useNativeGoogle) {
       const result = await signInWithNativeGoogle(onAccountChosen);
@@ -474,6 +501,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localEpoch,
       isDevAccount: devActive,
       setLanguage,
+      requestPasswordReset,
+      resetPassword,
       logout,
       deleteAccount,
     }),
@@ -491,6 +520,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       devLogin,
       localEpoch,
       setLanguage,
+      requestPasswordReset,
+      resetPassword,
       logout,
       deleteAccount,
     ],

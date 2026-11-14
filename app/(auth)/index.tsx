@@ -3,7 +3,7 @@ import PressableScale from '@/components/PressableScale';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
-import LanguagePicker from '@/components/LanguagePicker';
+import LanguageMenu from '@/components/LanguageMenu';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
@@ -34,6 +34,10 @@ export default function WelcomeScreen() {
             accessibilityLabel="fudapp"
           />
           <Text style={styles.wordmark}>fudapp</Text>
+          {/* Chosen here, before the quiz, so the quiz is already in the right language. */}
+          <View style={styles.language}>
+            <LanguageMenu />
+          </View>
         </View>
 
         <View style={styles.hero}>
@@ -74,9 +78,6 @@ export default function WelcomeScreen() {
             <Text style={styles.secondaryButtonText}>{t('auth.signIn')}</Text>
           </PressableScale>
 
-          {/* Before the quiz, so it is already in the right language. */}
-          <LanguagePicker compact />
-
           {__DEV__ && (
             <PressableScale
               style={styles.devButton}
@@ -105,6 +106,7 @@ const makeStyles = (c: Colors) =>
     brand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     logo: { width: 36, height: 36, borderRadius: 8 },
     wordmark: { fontFamily: font.extrabold, fontSize: 20, letterSpacing: -0.4, color: c.text },
+    language: { flex: 1, alignItems: 'flex-end' },
 
     hero: { flex: 1, justifyContent: 'center', gap: 18 },
     tiles: { flexDirection: 'row', gap: 10, marginBottom: 6 },
