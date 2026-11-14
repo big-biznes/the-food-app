@@ -11,17 +11,18 @@ import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePrepList } from '@/hooks/usePrep';
+import { useTranslation } from 'react-i18next';
 
-const SECTIONS: { kind: PrepLine['kind']; title: string; note: string }[] = [
+const SECTIONS: { kind: PrepLine['kind']; title: 'prep.cookAhead' | 'prep.cutStore'; note: 'prep.cookNote' | 'prep.cutNote' }[] = [
   {
     kind: 'cook',
-    title: 'Cook ahead',
-    note: 'Cook in salted water as the packet says, cool, and keep covered in the fridge for up to 3 days. Reheat until steaming hot when the recipe gets to it.',
+    title: 'prep.cookAhead',
+    note: 'prep.cookNote',
   },
   {
     kind: 'cut',
-    title: 'Cut and store',
-    note: 'Keep each in a closed box in the fridge, for up to 3 days.',
+    title: 'prep.cutStore',
+    note: 'prep.cutNote',
   },
 ];
 
@@ -29,6 +30,7 @@ const SECTIONS: { kind: PrepLine['kind']; title: string; note: string }[] = [
 export default function PrepScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ part: string }>();
   const part: WeekPart = params.part === 'B' || params.part === 'C' ? params.part : 'A';
@@ -44,7 +46,7 @@ export default function PrepScreen() {
         activeOpacity={0.7}
         scaleTo={0.9}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('common.back')}
       >
         <Ionicons name="chevron-back" size={22} color={c.text} />
       </PressableScale>
@@ -52,25 +54,24 @@ export default function PrepScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Text style={styles.kicker}>{days}</Text>
         <Text style={styles.title} accessibilityRole="header">
-          Prep ahead
+          {t('prep.title')}
         </Text>
         <Text style={styles.intro}>
-          The meals of these days share ingredients. Get them ready once, after shopping, and each meal comes together
-          faster. It is up to you: skip it and the recipes work as written.
+          {t('prep.intro')}
         </Text>
 
         {lines.length === 0 ? (
-          <Text style={styles.empty}>Nothing in these meals is worth preparing ahead.</Text>
+          <Text style={styles.empty}>{t('prep.nothing')}</Text>
         ) : (
           <View style={styles.summary}>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{roughMinutes(minutes)} min</Text>
-              <Text style={styles.summaryLabel}>of prep now</Text>
+              <Text style={styles.summaryValue}>{t('common.minutes', { count: roughMinutes(minutes) })}</Text>
+              <Text style={styles.summaryLabel}>{t('prep.now')}</Text>
             </View>
             <View style={styles.summaryDivider} />
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{roughMinutes(saves)} min</Text>
-              <Text style={styles.summaryLabel}>less cooking later</Text>
+              <Text style={styles.summaryValue}>{t('common.minutes', { count: roughMinutes(saves) })}</Text>
+              <Text style={styles.summaryLabel}>{t('prep.later')}</Text>
             </View>
           </View>
         )}
@@ -81,7 +82,7 @@ export default function PrepScreen() {
           return (
             <View key={section.kind} style={styles.section}>
               <Text style={styles.sectionTitle} accessibilityRole="header">
-                {section.title}
+                {t(section.title)}
               </Text>
               <View style={styles.list}>
                 {jobs.map((job, i) => {
@@ -94,7 +95,7 @@ export default function PrepScreen() {
                       activeOpacity={0.7}
                       scaleTo={1}
                       accessibilityRole="checkbox"
-                      accessibilityLabel={`${job.label}, for ${job.meals.join(', ')}`}
+                      accessibilityLabel={t('prep.for', { job: job.label, meals: job.meals.join(', ') })}
                       accessibilityState={{ checked }}
                     >
                       <View style={[styles.checkbox, checked && styles.checkboxOn]}>
@@ -108,15 +109,14 @@ export default function PrepScreen() {
                   );
                 })}
               </View>
-              <Text style={styles.note}>{section.note}</Text>
+              <Text style={styles.note}>{t(section.note)}</Text>
             </View>
           );
         })}
 
         {lines.length > 0 && (
           <Text style={styles.note}>
-            Tick off what you did. Those meals then show their shorter time, and cook mode tells you what is already
-            done. Times are estimates.
+            {t('prep.tickNote')}
           </Text>
         )}
       </ScrollView>

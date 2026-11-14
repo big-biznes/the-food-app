@@ -6,18 +6,14 @@ import PressableScale from '@/components/PressableScale';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Meal, EatingOutEntry, MealType } from '@/data/meals';
+import { Meal, EatingOutEntry } from '@/data/meals';
 import { Colors, tileColor } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-
-const TYPE_LABEL: Record<MealType, string> = {
-  breakfast: 'Breakfast',
-  lunch: 'Lunch',
-  dinner: 'Dinner',
-  snack: 'Snack',
-};
+import { useTranslation } from 'react-i18next';
+import i18n from '@/lib/i18n';
+import { ingredientName } from '@/lib/localize';
 
 type Size = 'tile' | 'hero';
 
@@ -54,7 +50,7 @@ type Props =
     };
 
 function kicker(dayLabel: string | undefined, typeLabel: string) {
-  return dayLabel ? `${dayLabel}, ${typeLabel.toLowerCase()}` : typeLabel;
+  return dayLabel ? i18n.t('card.kicker', { day: dayLabel, type: typeLabel.toLocaleLowerCase(i18n.language) }) : typeLabel;
 }
 
 export default function MealCard({
@@ -67,6 +63,7 @@ export default function MealCard({
   onCardTap,
   swapBlockedReason,
 }: Props) {
+  const { t } = useTranslation();
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   // Calories for the portion this user will cook.
@@ -142,26 +139,26 @@ export default function MealCard({
       <View
         style={[styles.card, styles.cardInk, hero && styles.cardHero]}
         accessible
-        accessibilityLabel={`${kicker(dayLabel, 'Dinner')}, eating out: ${meal.name}. ${meal.description}`}
+        accessibilityLabel={t('card.eatingOutA11y', { kicker: kicker(dayLabel, t('meals.dinner')), name: t('card.eatingOutName'), description: t('card.eatingOutDesc') })}
       >
         <View style={styles.topRow}>
-          <Text style={[styles.kicker, styles.onInkMuted]}>{kicker(dayLabel, 'Dinner')}</Text>
+          <Text style={[styles.kicker, styles.onInkMuted]}>{kicker(dayLabel, t('meals.dinner'))}</Text>
           <View style={styles.inkBadge}>
-            <Text style={styles.inkBadgeText}>Eating out</Text>
+            <Text style={styles.inkBadgeText}>{t('card.eatingOut')}</Text>
           </View>
         </View>
         <Text style={[styles.emoji, hero && styles.emojiHero]}>{meal.emoji}</Text>
         <Text style={[styles.name, hero && styles.nameHero, styles.onInk]} numberOfLines={2}>
-          {meal.name}
+          {t('card.eatingOutName')}
         </Text>
         <Text style={[styles.meta, styles.onInkMuted]} numberOfLines={2}>
-          {meal.description}
+          {t('card.eatingOutDesc')}
         </Text>
       </View>
     );
   }
 
-  const typeLabel = TYPE_LABEL[meal.mealType];
+  const typeLabel = t(`meals.${meal.mealType}`);
 
   return (
     <Animated.View style={{ opacity: dimAnim, transform: [{ translateX: shakeX }] }}>
@@ -189,12 +186,18 @@ export default function MealCard({
           router.push({ pathname: '/details', params: { id: meal.id } });
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${prep?.time ?? meal.prepTime} minutes${
-          prep && prep.done.length > 0 ? ' with your prep' : ''
-        }, ${(personal ?? meal).calories} kilocalories${
-          personal?.removed ? `, without ${personal.removed.map(i => i.name).join(', ')}` : ''
-        }`}
-        accessibilityHint={swapBlockedReason ?? (onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe')}
+        accessibilityLabel={
+          t(prep && prep.done.length > 0 ? 'card.a11yPrepped' : 'card.a11y', {
+            kicker: kicker(dayLabel, typeLabel),
+            name: meal.name,
+            min: prep?.time ?? meal.prepTime,
+            kcal: (personal ?? meal).calories,
+          }) +
+          (personal?.removed
+            ? t('card.a11yWithout', { items: personal.removed.map(i => ingredientName(i.name)).join(', ') })
+            : '')
+        }
+        accessibilityHint={swapBlockedReason ?? (onCardTap ? t('card.swapsWith') : t('card.opensRecipe'))}
         // Disabled also switches the touch off, so only when a tap is meant to do nothing.
         accessibilityState={{ selected: Boolean(selected), disabled: blocked && !SWAP_REJECT_FEEDBACK }}
       >
@@ -211,7 +214,7 @@ export default function MealCard({
                 scaleTo={0.88}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 accessibilityRole="button"
-                accessibilityLabel={selected ? 'Cancel swap' : 'Swap this meal'}
+                accessibilityLabel={selected ? t('card.cancelSwap') : t('card.swap')}
                 accessibilityState={{ selected: Boolean(selected) }}
               >
                 <Ionicons name="swap-horizontal" size={19} color={selected ? tileColor(c, meal.mealType) : c.onTile} />
@@ -225,7 +228,7 @@ export default function MealCard({
                 scaleTo={0.88}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 accessibilityRole="button"
-                accessibilityLabel="Replace with another meal"
+                accessibilityLabel={t('card.replace')}
               >
                 <Animated.View style={{ transform: [{ rotate: rotation }] }}>
                   <Ionicons name="refresh" size={19} color={c.onTile} />
@@ -240,7 +243,7 @@ export default function MealCard({
           {meal.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {prep?.time ?? meal.prepTime} min{prep && prep.done.length > 0 ? ' prepped' : ''}, {(personal ?? meal).calories} kcal
+          {t(prep && prep.done.length > 0 ? 'card.statsPrepped' : 'card.stats', { min: prep?.time ?? meal.prepTime, kcal: (personal ?? meal).calories })}
           {personal?.removed ? ', edited' : ''}
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />

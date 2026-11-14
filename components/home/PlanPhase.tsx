@@ -24,21 +24,14 @@ import { usePlan } from '@/contexts/PlanContext';
 import { TipId, useTips } from '@/hooks/useTips';
 import { Trans, useTranslation } from 'react-i18next';
 
-const DAY_NAME: Record<Day, string> = {
-  Mon: 'Monday',
-  Tue: 'Tuesday',
-  Wed: 'Wednesday',
-  Thu: 'Thursday',
-  Fri: 'Friday',
-  Sat: 'Saturday',
-  Sun: 'Sunday',
-};
+const capitalize = (text: string) => text.charAt(0).toLocaleUpperCase() + text.slice(1);
 
-function getGreeting(): string {
+/** "Good morning" and so on, as a translation key. */
+function greetingKey(): 'plan.goodMorning' | 'plan.goodAfternoon' | 'plan.goodEvening' {
   const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 12) return 'plan.goodMorning';
+  if (h < 17) return 'plan.goodAfternoon';
+  return 'plan.goodEvening';
 }
 
 /** Which meal is "up next" for a day: by the clock if it's today, else breakfast. */
@@ -279,11 +272,11 @@ export default function PlanPhase({
                     activeOpacity={0.7}
                     hitSlop={{ top: 6, bottom: 6 }}
                     accessibilityRole="tab"
-                    accessibilityLabel={dayIsToday ? `Day ${idx + 1}, today` : `Day ${idx + 1}`}
+                    accessibilityLabel={dayIsToday ? t('plan.dayToday', { n: idx + 1 }) : t('plan.day', { n: idx + 1 })}
                     accessibilityState={{ selected: on }}
                   >
                     <Text style={[styles.dayTabText, on && styles.dayTabTextOn]}>
-                      Day {idx + 1}
+                      {t('plan.day', { n: idx + 1 })}
                     </Text>
                     {dayIsToday && <View style={styles.todayDot} />}
                   </TouchableOpacity>
@@ -291,7 +284,7 @@ export default function PlanPhase({
               })}
             </View>
           ) : (
-            <Text style={[styles.flex, styles.poolHint]}>All meals in this part</Text>
+            <Text style={[styles.flex, styles.poolHint]}>{t('plan.allMeals')}</Text>
           )}
           <PressableScale
             style={styles.iconBtn}
@@ -300,7 +293,7 @@ export default function PlanPhase({
             activeOpacity={0.7}
             hitSlop={ICON_HIT_SLOP}
             accessibilityRole="button"
-            accessibilityLabel={mode === 'day' ? 'Show all meals in this part' : 'Show meals by day'}
+            accessibilityLabel={mode === 'day' ? t('plan.showAll') : t('plan.showByDay')}
           >
             <Ionicons name={mode === 'day' ? 'grid' : 'calendar'} size={20} color={c.text} />
           </PressableScale>
@@ -315,7 +308,7 @@ export default function PlanPhase({
             activeOpacity={0.7}
             hitSlop={ICON_HIT_SLOP}
             accessibilityRole="button"
-            accessibilityLabel="Add this part to the shopping list"
+            accessibilityLabel={t('plan.addToList')}
           >
             <Animated.View style={cart.style}>
               <Ionicons name="cart" size={21} color={c.text} />
@@ -365,10 +358,10 @@ export default function PlanPhase({
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.greeting}>
-          {getGreeting()}, {firstName}
+          {t('plan.greeting', { greeting: t(greetingKey()), name: firstName })}
         </Text>
         <Text style={styles.headline} accessibilityRole="header">
-          {viewMode === 'pool' ? partLabel[selectedPart] : isToday ? 'Today' : DAY_NAME[validDay]}
+          {viewMode === 'pool' ? partLabel[selectedPart] : isToday ? t('common.today') : capitalize(t(`days.${validDay}`))}
         </Text>
       </View>
 
