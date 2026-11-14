@@ -1,50 +1,41 @@
-# Welcome to your Expo app 👋
+# fudapp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A week of meals, sized for you, with the shopping list to match. Expo (React Native) app with a Supabase backend; English, Bulgarian and Dutch.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Run it
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env        # Supabase URL and anon key, Google web client ID
+npx expo run:android        # development build on a phone or emulator
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`npm test` runs the unit tests, `npx tsc --noEmit` the type check, `npm run lint` the linter.
 
-## Learn more
+## Backend
 
-To learn more about developing your project with Expo, look at the following resources:
+Run the scripts in `supabase/` in the Supabase SQL Editor. All of them are safe to re-run.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+| Script | What it sets up |
+| --- | --- |
+| `schema.sql` | per-user data, account deletion, crash reports, feedback |
+| `recipes.sql`, then `recipes_data.sql` | the recipes table and its rows (`recipes_data/` holds the same rows in smaller parts) |
+| `prices.sql`, then `prices_data.sql` | shop prices |
 
-## Join the community
+## Content
 
-Join our community of developers creating universal apps.
+- **Recipes** are written in `data/recipes/*.json`; their translations are in `data/recipes/i18n/<language>/`. `npm run recipes` checks them, computes the nutrition from `data/ingredients.json` and writes `supabase/recipes_data.sql`.
+- **App texts** are in `locales/`.
+- **Privacy Policy and Terms** are in `constants/legal/`. `npm run legal` writes them as web pages to `docs/legal/`, for the link the app stores ask for. The publisher's name and contact address go in `constants/legal/config.json`.
+- **Prices** are refreshed daily by `.github/workflows/ingest-prices.yml` (`npm run ingest`).
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Release (Android)
+
+```bash
+eas build --platform android --profile production   # signed app bundle for Google Play
+eas submit --platform android --profile production  # uploads it to the internal testing track
+```
+
+`eas build --profile preview` gives an APK to install directly. The build takes the `EXPO_PUBLIC_…` values from the project's EAS environment variables, not from `.env`.
+
+A release build made on your own machine (`npx expo run:android --variant release`) is signed with the debug key unless the upload key is set in `~/.gradle/gradle.properties` (see `android/app/build.gradle`).
