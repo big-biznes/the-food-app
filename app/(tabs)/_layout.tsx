@@ -24,7 +24,6 @@ export default function TabLayout() {
       <Tabs.Screen name="(shopping)" options={{ title: 'Shopping' }} />
       <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
       {/* Hide auto-discovered group from the tab bar */}
-      <Tabs.Screen name="(settings)" options={{ href: null }} />
     </Tabs>
   );
 }

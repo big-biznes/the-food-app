@@ -129,3 +129,5 @@ webpack.*.hot-update.json
 
 expo-env.d.ts
 # @end expo-cli
+# Expo's local state and caches (per machine)
+.expo/

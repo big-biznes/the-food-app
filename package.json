@@ -69,7 +69,6 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/app-example/",
       "/android/"
     ]
   }

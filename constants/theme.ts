@@ -1,3 +1,5 @@
+import type { MealType } from '@/data/meals';
+
 /**
  * fudapp palette — "the fridge door".
  * Bottle-green ink on enamel white; meals are tiles colored by meal type.
@@ -40,9 +42,6 @@ export type Colors = typeof light;
 
 /** The app has a single light palette. */
 export const colors: Colors = light;
-
-
-import type { MealType } from '@/data/meals';
 
 /** Tile color for a meal type. */
 export function tileColor(c: Colors, mealType: MealType): string {
