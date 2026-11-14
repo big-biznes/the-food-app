@@ -1,6 +1,7 @@
 import { DietaryRestriction } from '@/contexts/AuthContext';
 import { goalScore, personalize } from './portions';
 import { formatQuantity } from './quantity';
+import i18n from '../lib/i18n';
 import type { Targets } from './portions';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
@@ -430,6 +431,8 @@ export type WeekStructure = {
   partLabel: Record<WeekPart, string>;
 };
 
+const short = (day: Day) => i18n.t(`daysShort.${day}`);
+
 export function getWeekStructure(eatingOutDay: string): WeekStructure {
   const idx = DAYS.indexOf(eatingOutDay as Day);
   const safeIdx = idx === -1 ? 6 : idx; // default to Sunday
@@ -446,10 +449,11 @@ export function getWeekStructure(eatingOutDay: string): WeekStructure {
   return {
     partDays: { A: [a1, a2, a3], B: [b1, b2, b3], C: [c] },
     partShoppingDay: { A: c, B: a3 },
+    // In the app's language: "Mon – Wed", "Пн – Ср".
     partLabel: {
-      A: `${a1} – ${a3}`,
-      B: `${b1} – ${b3}`,
-      C: c,
+      A: `${short(a1)} – ${short(a3)}`,
+      B: `${short(b1)} – ${short(b3)}`,
+      C: short(c),
     },
   };
 }

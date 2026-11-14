@@ -17,43 +17,20 @@ import { BODY_LIMITS } from '@/data/portions';
 import { NO_EATING_OUT } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 import { font, type } from '@/constants/type';
 const TOTAL_STEPS = 9;
 
-const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
 /** The same limits Settings uses, so a profile made here always gets its portions sized. */
 const within = (n: number, { min, max }: { min: number; max: number }) => !isNaN(n) && n >= min && n <= max;
 
-const GOALS: { value: Goal; label: string; desc: string }[] = [
-  { value: 'lose', label: 'Lose weight', desc: 'Reduce body fat' },
-  { value: 'gain', label: 'Gain weight', desc: 'Build muscle & mass' },
-  { value: 'maintain', label: 'Maintain', desc: 'Stay where I am' },
-];
-
-const ACTIVITIES: { value: Activity; label: string; desc: string }[] = [
-  { value: 'low', label: 'Mostly sitting', desc: 'Desk job, little exercise' },
-  { value: 'light', label: 'Lightly active', desc: 'Some walking, exercise once or twice a week' },
-  { value: 'active', label: 'Active', desc: 'On my feet a lot, or exercise most days' },
-  { value: 'very', label: 'Very active', desc: 'Physical job or hard training every day' },
-];
-
-const GENDERS: { value: Gender; label: string }[] = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'other', label: 'Prefer not to say' },
-];
-
-const RESTRICTIONS: { value: DietaryRestriction; label: string }[] = [
-  { value: 'vegetarian', label: 'Vegetarian' },
-  { value: 'vegan', label: 'Vegan' },
-  { value: 'gluten-free', label: 'Gluten-free' },
-  { value: 'dairy-free', label: 'Dairy-free' },
-  { value: 'nut-allergy', label: 'Nut allergy' },
-  { value: 'halal', label: 'Halal' },
-  { value: 'kosher', label: 'Kosher' },
-];
+const GOALS: Goal[] = ['lose', 'gain', 'maintain'];
+const ACTIVITIES: Activity[] = ['low', 'light', 'active', 'very'];
+const GENDERS: Gender[] = ['male', 'female', 'other'];
+const RESTRICTIONS: DietaryRestriction[] = ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-allergy', 'halal', 'kosher'];
 
 /** Answers the quiz starts with for a dev account, so testing only takes tapping Next. */
 const DEV_ANSWERS = {
@@ -73,6 +50,7 @@ export default function QuizScreen() {
   const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { completeProfile, logout, isDevAccount } = useAuth();
+  const { t } = useTranslation();
   const prefill = __DEV__ && isDevAccount ? DEV_ANSWERS : null;
 
   const [step, setStep] = useState(1);
@@ -169,8 +147,8 @@ export default function QuizScreen() {
             {step === 3 && <StepGender gender={gender} setGender={setGender} />}
             {step === 4 && (
               <StepNumber
-                question="How old are you?"
-                unit="years"
+                question={t('quiz.ageQ')}
+                unit={t('settings.years')}
                 value={age}
                 setValue={setAge}
                 min={BODY_LIMITS.age.min}
@@ -179,7 +157,7 @@ export default function QuizScreen() {
             )}
             {step === 5 && (
               <StepNumber
-                question="How tall are you?"
+                question={t('quiz.heightQ')}
                 unit="cm"
                 value={height}
                 setValue={setHeight}
@@ -189,7 +167,7 @@ export default function QuizScreen() {
             )}
             {step === 6 && (
               <StepNumber
-                question="How much do you weigh?"
+                question={t('quiz.weightQ')}
                 unit="kg"
                 value={weight}
                 setValue={setWeight}
@@ -222,7 +200,7 @@ export default function QuizScreen() {
                 disabled={!canContinue()}
               >
                 <Text style={styles.nextButtonText}>
-                  {step === TOTAL_STEPS ? "Let's go" : 'Continue'}
+                  {step === TOTAL_STEPS ? t('quiz.letsGo') : t('common.continue')}
                 </Text>
               </PressableScale>
             </View>
@@ -238,13 +216,14 @@ export default function QuizScreen() {
 function StepName({ name, setName }: { name: string; setName: (v: string) => void }) {
   const { colors: c } = useTheme();
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What’s your name?</Text>
-      <Text style={step.hint}>We’ll use this to personalize your experience</Text>
+      <Text style={step.question}>{t('quiz.nameQ')}</Text>
+      <Text style={step.hint}>{t('quiz.nameHint')}</Text>
       <TextInput
         style={step.textInput}
-        placeholder="Your name"
+        placeholder={t('quiz.namePlaceholder')}
         placeholderTextColor={c.textFaint}
         value={name}
         onChangeText={setName}
@@ -263,25 +242,26 @@ function StepGoal({
   setGoal: (v: Goal) => void;
 }) {
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What’s your goal?</Text>
-      <Text style={step.hint}>This helps us calculate your ideal meals</Text>
+      <Text style={step.question}>{t('quiz.goalQ')}</Text>
+      <Text style={step.hint}>{t('quiz.goalHint')}</Text>
       <View style={step.cardList}>
-        {GOALS.map(item => {
-          const selected = goal === item.value;
+        {GOALS.map(value => {
+          const selected = goal === value;
           return (
             <PressableScale
-              key={item.value}
+              key={value}
               style={[step.card, selected && step.cardSelected]}
-              onPress={() => setGoal(item.value)}
+              onPress={() => setGoal(value)}
               activeOpacity={0.7}
             >
               <Text style={[step.cardTitle, selected && step.cardTitleSelected]}>
-                {item.label}
+                {t(`goal.${value}`)}
               </Text>
               <Text style={[step.cardDesc, selected && step.cardDescSelected]}>
-                {item.desc}
+                {t(`goal.${value}Desc`)}
               </Text>
             </PressableScale>
           );
@@ -299,27 +279,28 @@ function StepActivity({
   setActivity: (v: Activity) => void;
 }) {
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>How active are you?</Text>
-      <Text style={step.hint}>Work and exercise together, on a normal week</Text>
+      <Text style={step.question}>{t('quiz.activityQ')}</Text>
+      <Text style={step.hint}>{t('settings.activityHint')}</Text>
       <View style={step.cardList}>
-        {ACTIVITIES.map(item => {
-          const selected = activity === item.value;
+        {ACTIVITIES.map(value => {
+          const selected = activity === value;
           return (
             <PressableScale
-              key={item.value}
+              key={value}
               style={[step.card, selected && step.cardSelected]}
-              onPress={() => setActivity(item.value)}
+              onPress={() => setActivity(value)}
               activeOpacity={0.7}
               accessibilityRole="button"
               accessibilityState={{ selected }}
             >
               <Text style={[step.cardTitle, selected && step.cardTitleSelected]}>
-                {item.label}
+                {t(`activity.${value}`)}
               </Text>
               <Text style={[step.cardDesc, selected && step.cardDescSelected]}>
-                {item.desc}
+                {t(`activity.${value}Desc`)}
               </Text>
             </PressableScale>
           );
@@ -337,22 +318,23 @@ function StepGender({
   setGender: (v: Gender) => void;
 }) {
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>What’s your gender?</Text>
-      <Text style={step.hint}>Used for more accurate meal suggestions</Text>
+      <Text style={step.question}>{t('quiz.genderQ')}</Text>
+      <Text style={step.hint}>{t('quiz.genderHint')}</Text>
       <View style={step.chipRow}>
-        {GENDERS.map(item => {
-          const selected = gender === item.value;
+        {GENDERS.map(value => {
+          const selected = gender === value;
           return (
             <PressableScale
-              key={item.value}
+              key={value}
               style={[step.chip, selected && step.chipSelected]}
-              onPress={() => setGender(item.value)}
+              onPress={() => setGender(value)}
               activeOpacity={0.7}
             >
               <Text style={[step.chipText, selected && step.chipTextSelected]}>
-                {item.label}
+                {t(`gender.${value}`)}
               </Text>
             </PressableScale>
           );
@@ -379,6 +361,7 @@ function StepNumber({
 }) {
   const { colors: c } = useTheme();
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   const num = parseInt(value, 10);
   const showError = value.length > 0 && (isNaN(num) || num < min || num > max);
 
@@ -399,7 +382,7 @@ function StepNumber({
         <Text style={step.unit}>{unit}</Text>
       </View>
       {showError && (
-        <Text style={step.errorText}>Enter a value between {min} and {max}</Text>
+        <Text style={step.errorText}>{t('quiz.between', { min, max })}</Text>
       )}
     </View>
   );
@@ -413,22 +396,23 @@ function StepRestrictions({
   toggle: (r: DietaryRestriction) => void;
 }) {
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>Any dietary restrictions?</Text>
-      <Text style={step.hint}>Select all that apply — you can change these later</Text>
+      <Text style={step.question}>{t('quiz.restrictionsQ')}</Text>
+      <Text style={step.hint}>{t('quiz.restrictionsHint')}</Text>
       <View style={step.chipRow}>
-        {RESTRICTIONS.map(item => {
-          const selected = restrictions.includes(item.value);
+        {RESTRICTIONS.map(value => {
+          const selected = restrictions.includes(value);
           return (
             <PressableScale
-              key={item.value}
+              key={value}
               style={[step.chip, selected && step.chipSelected]}
-              onPress={() => toggle(item.value)}
+              onPress={() => toggle(value)}
               activeOpacity={0.7}
             >
               <Text style={[step.chipText, selected && step.chipTextSelected]}>
-                {item.label}
+                {t(`diet.${value}`)}
               </Text>
             </PressableScale>
           );
@@ -446,10 +430,11 @@ function StepEatingOutDay({
   setDay: (v: string) => void;
 }) {
   const step = useThemedStyles(makeStep);
+  const { t } = useTranslation();
   return (
     <View style={step.wrap}>
-      <Text style={step.question}>Which day do you eat out?</Text>
-      <Text style={step.hint}>Dinner is left open that day. If you don’t eat out, every day gets cooked.</Text>
+      <Text style={step.question}>{t('quiz.eatOutQ')}</Text>
+      <Text style={step.hint}>{t('quiz.eatOutHint')}</Text>
       <View style={step.chipRow}>
         {DAYS_OF_WEEK.map(d => {
           const selected = day === d;
@@ -460,7 +445,7 @@ function StepEatingOutDay({
               onPress={() => setDay(d)}
               activeOpacity={0.7}
             >
-              <Text style={[step.chipText, selected && step.chipTextSelected]}>{d}</Text>
+              <Text style={[step.chipText, selected && step.chipTextSelected]}>{t(`daysShort.${d}`)}</Text>
             </PressableScale>
           );
         })}
@@ -471,7 +456,7 @@ function StepEatingOutDay({
           accessibilityRole="button"
           accessibilityState={{ selected: day === NO_EATING_OUT }}
         >
-          <Text style={[step.chipText, day === NO_EATING_OUT && step.chipTextSelected]}>I don’t eat out</Text>
+          <Text style={[step.chipText, day === NO_EATING_OUT && step.chipTextSelected]}>{t('settings.noEatingOut')}</Text>
         </PressableScale>
       </View>
     </View>

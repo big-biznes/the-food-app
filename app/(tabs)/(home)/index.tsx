@@ -42,6 +42,7 @@ import PlanIntroSheet from '@/components/home/PlanIntroSheet';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
+import { useTranslation } from 'react-i18next';
 
 import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -64,6 +65,7 @@ function getTodayKey(): string {
 export default function HomeScreen() {
   const styles = useThemedStyles(makeStyles);
   const reducedMotion = useReducedMotionRef();
+  const { t, i18n } = useTranslation();
   const { user, updateProfile } = useAuth();
   const { replacePlanIngredients } = useShoppingContext();
   const { likedIds } = useLikes();
@@ -94,8 +96,8 @@ export default function HomeScreen() {
   }
 
   const shoppingBannerMap: Partial<Record<string, string>> = {
-    [partShoppingDay.A]: `Shop and prep today — ${partLabel.A} starts tomorrow`,
-    [partShoppingDay.B]: `Shop and prep today — ${partLabel.B} starts tomorrow`,
+    [partShoppingDay.A]: t('home.shopToday', { part: partLabel.A }),
+    [partShoppingDay.B]: t('home.shopToday', { part: partLabel.B }),
   };
 
   const [swapSource, setSwapSource] = useState<PlanSlot | null>(null);
@@ -190,13 +192,13 @@ export default function HomeScreen() {
     offeredFor.current = plan;
     if (!listStale) return;
     confirmToastRef.current?.show({
-      message: 'Shopping list is out of date',
-      actionLabel: 'Update',
+      message: t('list.outOfDate'),
+      actionLabel: t('common.update'),
       icon: 'cart',
-      doneMessage: 'Shopping list updated',
+      doneMessage: t('list.updated'),
       onAction: () => updateListRef.current(),
     });
-  }, [plan, listStale]);
+  }, [plan, listStale, t]);
 
   const today = getTodayKey();
   const shoppingBanner = shoppingBannerMap[today] ?? null;
@@ -425,24 +427,24 @@ export default function HomeScreen() {
   if (misfitCount > 0) {
     notices.push({
       key: 'misfits',
-      text: `${misfitCount === 1 ? '1 meal no longer fits' : `${misfitCount} meals no longer fit`} your eating preferences`,
-      action: 'Replace',
+      text: t('home.misfit', { count: misfitCount }),
+      action: t('home.replace'),
       onPress: handleReplaceMisfits,
     });
   }
   if (snacksToAdd) {
     notices.push({
       key: 'snacks-add',
-      text: 'You switched on a daily snack. This plan has none yet.',
-      action: 'Add',
+      text: t('home.snackOn'),
+      action: t('common.add'),
       onPress: () => setPlan(prev => (prev ? addSnacks(prev, restrictions) : prev)),
     });
   }
   if (plan && planHasSnacks && targets && !targets.snack) {
     notices.push({
       key: 'snacks-remove',
-      text: 'You switched off the daily snack. This plan still has them.',
-      action: 'Remove',
+      text: t('home.snackOff'),
+      action: t('common.remove'),
       onPress: () => setPlan(prev => (prev ? removeSnacks(prev) : prev)),
     });
   }
@@ -505,7 +507,7 @@ export default function HomeScreen() {
         ]}
       >
         <View style={styles.swapBannerFloatInner}>
-          <Text style={styles.swapBannerFloatText}>Tap another meal to swap, or the same one to cancel</Text>
+          <Text style={styles.swapBannerFloatText}>{t('home.swapHint')}</Text>
         </View>
       </Animated.View>
 
@@ -528,9 +530,9 @@ export default function HomeScreen() {
             onPress={() => setShowSheet(true)}
             activeOpacity={0.85}
             accessibilityRole="button"
-            accessibilityLabel="Replan the week"
+            accessibilityLabel={t('home.replanA11y')}
           >
-            <Text style={styles.fabText}>Replan</Text>
+            <Text style={styles.fabText}>{t('home.replan')}</Text>
           </PressableScale>
         </Animated.View>
       )}
@@ -538,25 +540,25 @@ export default function HomeScreen() {
       {/* Toasts — always mounted so refs are valid when show() is called */}
       <PlanToast
         ref={planToastRef}
-        message="Your week is planned"
-        actionLabel="Make shopping list"
+        message={t('home.planned')}
+        actionLabel={t('home.makeList')}
         actionIcon="cart-outline"
         onAction={handleAddToShoppingList}
         onVisibleChange={setToastUp}
       />
-      <ConfirmToast ref={confirmToastRef} message="Added to shopping list" />
+      <ConfirmToast ref={confirmToastRef} message={t('list.added')} />
 
       <ConfirmSheet
         visible={swapHelpVisible}
-        title="These two can't be swapped"
+        title={t('home.cantSwapTitle')}
         message={
           swapSource?.mealType === 'breakfast'
-            ? 'A breakfast can only be swapped with another breakfast. Pick a breakfast from another day, or tap the selected meal again to cancel.'
+            ? t('home.cantSwapBreakfast')
             : swapSource?.mealType === 'snack'
-              ? 'A snack can only be swapped with another snack. Pick a snack from another day, or tap the selected one again to cancel.'
-              : 'Lunches and dinners can be swapped with each other, but not with a breakfast or a snack. Pick a lunch or dinner, or tap the selected meal again to cancel.'
+              ? t('home.cantSwapSnack')
+              : t('home.cantSwapMain')
         }
-        confirmLabel="Got it"
+        confirmLabel={t('common.gotIt')}
         hideCancel
         onConfirm={() => setSwapHelpVisible(false)}
         onClose={() => setSwapHelpVisible(false)}
@@ -564,10 +566,10 @@ export default function HomeScreen() {
 
       <ConfirmSheet
         visible={askSnack}
-        title="Add a daily snack?"
-        message={`Your days are about ${(targets?.kcal ?? 0).toLocaleString('en')} kcal, which makes for three big meals. A snack each day takes some of that, so the meals get smaller. You can change this in Settings.`}
-        confirmLabel="Yes, add a snack"
-        cancelLabel="No, three meals"
+        title={t('home.snackTitle')}
+        message={t('home.snackMessage', { kcal: (targets?.kcal ?? 0).toLocaleString(i18n.language) })}
+        confirmLabel={t('home.snackYes')}
+        cancelLabel={t('home.snackNo')}
         onConfirm={() => answerSnack(true)}
         // Also runs after "Yes"; answerSnack ignores the second call.
         onClose={() => answerSnack(false)}

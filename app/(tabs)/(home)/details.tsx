@@ -4,14 +4,14 @@ import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { findMeal, MealType, Ingredient } from '@/data/meals';
+import { findMeal, MealType } from '@/data/meals';
 import { canLeaveOut } from '@/data/portions';
 import { usePlan } from '@/contexts/PlanContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import { useShoppingListSync } from '@/hooks/useShoppingListSync';
 import { useMealPrep } from '@/hooks/usePrep';
-import { DietaryRestriction } from '@/contexts/AuthContext';
-import { formatQuantity } from '@/data/quantity';
+import { ingredientAmount, ingredientName } from '@/lib/localize';
+import { useTranslation } from 'react-i18next';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePersonalMeal, useTargets } from '@/hooks/usePortions';
@@ -26,34 +26,11 @@ const TYPE_ICON: Record<MealType, IoniconName> = {
   snack: 'cafe-outline',
 };
 
-const TYPE_LABEL: Record<MealType, string> = {
-  breakfast: 'Breakfast',
-  lunch: 'Lunch',
-  dinner: 'Dinner',
-  snack: 'Snack',
-};
-
-const RESTRICTION_LABEL: Record<DietaryRestriction, string> = {
-  vegetarian: 'Vegetarian',
-  vegan: 'Vegan',
-  'gluten-free': 'Gluten-free',
-  'dairy-free': 'Dairy-free',
-  'nut-allergy': 'Nut-free',
-  halal: 'Halal',
-  kosher: 'Kosher',
-};
-
-function formatAmount(ing: Ingredient): string {
-  if (ing.label) return ing.label;
-  if (!ing.unit) {
-    return ing.amount > 1 ? `x${ing.amount}` : '';
-  }
-  return formatQuantity(ing.amount, ing.unit);
-}
-
 export default function DetailsScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t, i18n } = useTranslation();
+  const names = (list: { name: string }[]) => list.map(i => ingredientName(i.name)).join(', ');
   // `from: 'discover'` when opened from a Discover card: Cook then stays in the Discover tab.
   const { id, from } = useLocalSearchParams<{ id: string; from?: string }>();
   const router = useRouter();
@@ -81,13 +58,13 @@ export default function DetailsScreen() {
       return;
     }
     toastRef.current?.show({
-      message: 'Shopping list is out of date',
-      actionLabel: 'Update',
+      message: t('list.outOfDate'),
+      actionLabel: t('common.update'),
       icon: 'cart',
-      doneMessage: 'Shopping list updated',
+      doneMessage: t('list.updated'),
       onAction: () => updateRef.current(),
     });
-  }, [edits, stale]);
+  }, [edits, stale, t]);
   const editable = Boolean(recipe && inPlan(recipe.id));
   // The recipe's own order, so a row stays where it is when it is ticked off.
   const rows = meal && recipe
@@ -122,7 +99,7 @@ export default function DetailsScreen() {
         <View style={[styles.hero, { backgroundColor: tileColor(c, meal.mealType) }]}>
           <View style={styles.typeRow}>
             <Ionicons name={TYPE_ICON[meal.mealType]} size={14} color={c.onTile} />
-            <Text style={styles.typeLabel}>{TYPE_LABEL[meal.mealType]}</Text>
+            <Text style={styles.typeLabel}>{t(`meals.${meal.mealType}`)}</Text>
           </View>
           <Text style={styles.heroEmoji}>{meal.emoji}</Text>
           <Text style={styles.title} accessibilityRole="header">
@@ -135,61 +112,61 @@ export default function DetailsScreen() {
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Ionicons name="time-outline" size={20} color={c.text} />
-            <Text style={styles.statValue}>{prep?.time ?? meal.prepTime} min</Text>
-            <Text style={styles.statLabel}>{prep && prep.done.length > 0 ? 'With your prep' : 'Time'}</Text>
+            <Text style={styles.statValue}>{t('common.minutes', { count: prep?.time ?? meal.prepTime })}</Text>
+            <Text style={styles.statLabel}>{prep && prep.done.length > 0 ? t('details.withPrep') : t('details.time')}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
             <Ionicons name="flame-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.calories}</Text>
-            <Text style={styles.statLabel}>Calories (approx.)</Text>
+            <Text style={styles.statLabel}>{t('details.calories')}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
             <Ionicons name="layers-outline" size={20} color={c.text} />
             <Text style={styles.statValue}>{meal.ingredients.length}</Text>
-            <Text style={styles.statLabel}>Ingredients</Text>
+            <Text style={styles.statLabel}>{t('details.ingredients')}</Text>
           </View>
         </View>
 
         {/* Macros */}
         <View style={styles.macrosRow}>
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.proteinG}g</Text>
-            <Text style={styles.macroLabel}>Protein</Text>
+            <Text style={styles.macroValue}>{t('details.grams', { count: meal.proteinG })}</Text>
+            <Text style={styles.macroLabel}>{t('details.protein')}</Text>
           </View>
           <View style={styles.macroDivider} />
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.carbsG}g</Text>
-            <Text style={styles.macroLabel}>Carbs</Text>
+            <Text style={styles.macroValue}>{t('details.grams', { count: meal.carbsG })}</Text>
+            <Text style={styles.macroLabel}>{t('details.carbs')}</Text>
           </View>
           <View style={styles.macroDivider} />
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.fatG}g</Text>
-            <Text style={styles.macroLabel}>Fat</Text>
+            <Text style={styles.macroValue}>{t('details.grams', { count: meal.fatG })}</Text>
+            <Text style={styles.macroLabel}>{t('details.fat')}</Text>
           </View>
           <View style={styles.macroDivider} />
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.fiberG}g</Text>
-            <Text style={styles.macroLabel}>Fiber</Text>
+            <Text style={styles.macroValue}>{t('details.grams', { count: meal.fiberG })}</Text>
+            <Text style={styles.macroLabel}>{t('details.fiber')}</Text>
           </View>
         </View>
 
         {/* Extra nutrition */}
         <View style={styles.macrosRow}>
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.sugarG}g</Text>
-            <Text style={styles.macroLabel}>Sugar</Text>
+            <Text style={styles.macroValue}>{t('details.grams', { count: meal.sugarG })}</Text>
+            <Text style={styles.macroLabel}>{t('details.sugar')}</Text>
           </View>
           <View style={styles.macroDivider} />
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.sodiumMg}mg</Text>
-            <Text style={styles.macroLabel}>Sodium</Text>
+            <Text style={styles.macroValue}>{t('details.milligrams', { count: meal.sodiumMg })}</Text>
+            <Text style={styles.macroLabel}>{t('details.sodium')}</Text>
           </View>
           <View style={styles.macroDivider} />
           <View style={styles.macroItem}>
-            <Text style={styles.macroValue}>{meal.difficulty}</Text>
-            <Text style={styles.macroLabel}>Difficulty</Text>
+            <Text style={styles.macroValue}>{i18n.exists(`difficulty.${meal.difficulty}`) ? t(`difficulty.${meal.difficulty}` as 'difficulty.quick') : meal.difficulty}</Text>
+            <Text style={styles.macroLabel}>{t('details.difficulty')}</Text>
           </View>
         </View>
 
@@ -198,7 +175,7 @@ export default function DetailsScreen() {
           <View style={styles.tagRow}>
             {meal.dietaryTags.map(tag => (
               <View key={tag} style={styles.tag}>
-                <Text style={styles.tagText}>{RESTRICTION_LABEL[tag]}</Text>
+                <Text style={styles.tagText}>{tag === 'nut-allergy' ? t('dietTag.nut-allergy') : t(`diet.${tag}`)}</Text>
               </View>
             ))}
           </View>
@@ -206,19 +183,20 @@ export default function DetailsScreen() {
 
         {/* Ingredients */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Ingredients</Text>
+          <Text style={styles.sectionTitle}>{t('details.ingredients')}</Text>
           {editable && (
-            <Text style={styles.editHint}>Untick anything you want to leave out of this meal.</Text>
+            <Text style={styles.editHint}>{t('details.editHint')}</Text>
           )}
           <View style={styles.ingredientList}>
             {rows.map(({ ing, kept }, i) => {
-              const amount = formatAmount(ing);
+              const amount = ingredientAmount(ing);
+              const name = ingredientName(ing.name);
               const rowStyle = [styles.ingredientRow, i > 0 && styles.ingredientRowBorder];
               const content = (
                 <>
-                  <Text style={[styles.ingredientName, !kept && styles.ingredientOff]}>{ing.name}</Text>
+                  <Text style={[styles.ingredientName, !kept && styles.ingredientOff]}>{name}</Text>
                   {kept && amount ? <Text style={styles.ingredientAmount}>{amount}</Text> : null}
-                  {!kept && <Text style={styles.ingredientAmount}>Left out</Text>}
+                  {!kept && <Text style={styles.ingredientAmount}>{t('details.leftOut')}</Text>}
                 </>
               );
               if (!editable) {
@@ -240,8 +218,8 @@ export default function DetailsScreen() {
                   activeOpacity={0.7}
                   scaleTo={1}
                   accessibilityRole="checkbox"
-                  accessibilityLabel={amount ? `${ing.name}, ${amount}` : ing.name}
-                  accessibilityHint={locked ? 'The main ingredient cannot be left out' : undefined}
+                  accessibilityLabel={amount ? `${name}, ${amount}` : name}
+                  accessibilityHint={locked ? t('details.mainLocked') : undefined}
                   accessibilityState={{ checked: kept, disabled: locked }}
                 >
                   <View style={[styles.checkbox, kept && styles.checkboxOn, locked && styles.checkboxLocked]}>
@@ -254,38 +232,42 @@ export default function DetailsScreen() {
           </View>
           {meal.removed && (
             <Text style={styles.footnote}>
-              Left out: {meal.removed.map(i => i.name).join(', ')}. The nutrition and your shopping list follow; the
-              steps are as written, so skip what mentions {meal.removed.length === 1 ? 'it' : 'them'}.
+              {t('details.leftOutNote', { count: meal.removed.length, items: names(meal.removed) })}
             </Text>
           )}
           {prep && prep.done.length > 0 && (
             <Text style={styles.footnote}>
-              Already prepped: {prep.done.map(t => t.ingredient).join(', ')}. That takes {meal.prepTime - prep.time} min
-              off the {meal.prepTime} min the recipe takes from scratch.
+              {t('details.prepped', {
+                items: names(prep.done.map(task => ({ name: task.ingredient }))),
+                saved: meal.prepTime - prep.time,
+                total: meal.prepTime,
+              })}
             </Text>
           )}
           {prep && prep.done.length === 0 && prep.bestTime < meal.prepTime && (
             <Text style={styles.footnote}>
-              Prep ahead ({prep.tasks.map(t => t.ingredient).join(', ')}) and this takes about {prep.bestTime} min
-              instead of {meal.prepTime}. The prep list is on the Week tab.
+              {t('details.prepAhead', {
+                items: names(prep.tasks.map(task => ({ name: task.ingredient }))),
+                best: prep.bestTime,
+                total: meal.prepTime,
+              })}
             </Text>
           )}
           {meal.seasonings && meal.seasonings.length > 0 && (
-            <Text style={styles.footnote}>From the cupboard: {meal.seasonings.join(', ')}</Text>
+            <Text style={styles.footnote}>{t('details.cupboard', { items: meal.seasonings.join(', ') })}</Text>
           )}
           {targets && meal.portion != null && (
             <Text style={styles.footnote}>
-              {meal.portion === 1 ? 'The standard recipe fits your day' : `Sized for you: ${meal.portion}× the standard recipe`}, towards{' '}
-              {targets.kcal.toLocaleString('en')} kcal a day for your goal.
+              {meal.portion === 1
+                ? t('details.fitsDay', { kcal: targets.kcal.toLocaleString(i18n.language) })
+                : t('details.sized', { portion: meal.portion, kcal: targets.kcal.toLocaleString(i18n.language) })}
             </Text>
           )}
-          <Text style={styles.footnote}>
-            Nutrition is for the amounts above, estimated from the raw ingredients. Seasonings are not counted.
-          </Text>
+          <Text style={styles.footnote}>{t('details.nutritionNote')}</Text>
         </View>
       </ScrollView>
 
-      <ConfirmToast ref={toastRef} message="Shopping list updated" />
+      <ConfirmToast ref={toastRef} message={t('list.updated')} />
 
       {/* Floating cook button */}
       {meal.instructions.length > 0 && (
@@ -297,7 +279,7 @@ export default function DetailsScreen() {
           }
         >
           <Ionicons name="restaurant-outline" size={18} color={c.onPrimary} />
-          <Text style={styles.fabText}>Cook</Text>
+          <Text style={styles.fabText}>{t('details.cook')}</Text>
         </PressableScale>
       )}
     </SafeAreaView>

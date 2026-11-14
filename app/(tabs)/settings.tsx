@@ -27,36 +27,12 @@ import { useTranslation } from 'react-i18next';
 import { usePlan } from '@/contexts/PlanContext';
 
 import { font, type } from '@/constants/type';
-const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
-const GOAL_OPTIONS: { value: Goal; label: string }[] = [
-  { value: 'lose', label: 'Lose weight' },
-  { value: 'maintain', label: 'Maintain' },
-  { value: 'gain', label: 'Gain muscle' },
-];
-
-const ACTIVITY_OPTIONS: { value: Activity; label: string }[] = [
-  { value: 'low', label: 'Mostly sitting' },
-  { value: 'light', label: 'Lightly active' },
-  { value: 'active', label: 'Active' },
-  { value: 'very', label: 'Very active' },
-];
-
-const MACRO_OPTIONS: { value: MacroBalance; label: string }[] = [
-  { value: 'balanced', label: 'Balanced' },
-  { value: 'low-carb', label: 'Low carb' },
-  { value: 'high-protein', label: 'High protein' },
-];
-
-const RESTRICTION_OPTIONS: { value: DietaryRestriction; label: string }[] = [
-  { value: 'vegetarian', label: 'Vegetarian' },
-  { value: 'vegan', label: 'Vegan' },
-  { value: 'gluten-free', label: 'Gluten-free' },
-  { value: 'dairy-free', label: 'Dairy-free' },
-  { value: 'nut-allergy', label: 'Nut allergy' },
-  { value: 'halal', label: 'Halal' },
-  { value: 'kosher', label: 'Kosher' },
-];
+const GOALS: Goal[] = ['lose', 'maintain', 'gain'];
+const ACTIVITIES: Activity[] = ['low', 'light', 'active', 'very'];
+const MACROS: MacroBalance[] = ['balanced', 'low-carb', 'high-protein'];
+const RESTRICTIONS: DietaryRestriction[] = ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'nut-allergy', 'halal', 'kosher'];
 
 export default function SettingsScreen() {
   const { colors: c } = useTheme();
@@ -65,7 +41,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const [confirm, setConfirm] = useState<'logout' | 'delete' | null>(null);
   const { savedPlan } = usePlan();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showIntro, setShowIntro] = useState(false);
 
   // Plan settings
@@ -138,7 +114,7 @@ export default function SettingsScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Settings</Text>
+          <Text style={styles.title}>{t('settings.title')}</Text>
         </View>
 
         {/* User card */}
@@ -147,24 +123,24 @@ export default function SettingsScreen() {
             <Text style={styles.avatarText}>{initials}</Text>
           </View>
           <View style={styles.userInfo}>
-            <Text style={styles.userName}>{user?.name ?? 'Guest'}</Text>
+            <Text style={styles.userName}>{user?.name ?? t('settings.guest')}</Text>
             <Text style={styles.userEmail}>{user?.email ?? ''}</Text>
           </View>
         </View>
 
         {/* ── About you ─────────────────────────────────────────────── */}
-        <SectionHeader label="About you" />
+        <SectionHeader label={t('settings.aboutYou')} />
         <View style={styles.section}>
           <NumberRow
-            label="Age"
+            label={t('settings.age')}
             value={user?.age}
-            unit="years"
+            unit={t('settings.years')}
             limits={BODY_LIMITS.age}
             onChange={age => updateProfile({ age })}
           />
           <Divider />
           <NumberRow
-            label="Height"
+            label={t('settings.height')}
             value={user?.heightCm}
             unit="cm"
             limits={BODY_LIMITS.heightCm}
@@ -172,33 +148,33 @@ export default function SettingsScreen() {
           />
           <Divider />
           <NumberRow
-            label="Weight"
+            label={t('settings.weight')}
             value={user?.weightKg}
             unit="kg"
             limits={BODY_LIMITS.weightKg}
             onChange={weightKg => updateProfile({ weightKg })}
           />
           <Text style={styles.sectionNote}>
-            Your portions are worked out from these. Update your weight when it changes.
+            {t('settings.bodyNote')}
           </Text>
         </View>
 
         {/* ── Plan Settings ─────────────────────────────────────────── */}
-        <SectionHeader label="Plan" />
+        <SectionHeader label={t('settings.plan')} />
         <View style={styles.section}>
           <RowLabel
-            label="Weight goal"
-            hint={targets ? `About ${targets.kcal.toLocaleString('en')} kcal a day; portions are sized to match` : undefined}
+            label={t('settings.weightGoal')}
+            hint={targets ? t('settings.weightGoalHint', { kcal: targets.kcal.toLocaleString(i18n.language) }) : undefined}
           />
           <View style={styles.chipRow}>
-            {GOAL_OPTIONS.map(opt => (
+            {GOALS.map(value => (
               <Chip
-                key={opt.value}
-                label={opt.label}
-                selected={goal === opt.value}
+                key={value}
+                label={t(`goal.${value}`)}
+                selected={goal === value}
                 onPress={() => {
-                  setGoal(opt.value);
-                  updateProfile({ goal: opt.value });
+                  setGoal(value);
+                  updateProfile({ goal: value });
                 }}
               />
             ))}
@@ -206,26 +182,26 @@ export default function SettingsScreen() {
 
           <Divider />
 
-          <RowLabel label="Activity level" hint="Work and exercise together, on a normal week" />
+          <RowLabel label={t('settings.activityLevel')} hint={t('settings.activityHint')} />
           <View style={styles.chipRow}>
-            {ACTIVITY_OPTIONS.map(opt => (
+            {ACTIVITIES.map(value => (
               <Chip
-                key={opt.value}
-                label={opt.label}
-                selected={(user?.activity ?? 'light') === opt.value}
-                onPress={() => updateProfile({ activity: opt.value })}
+                key={value}
+                label={t(`activity.${value}`)}
+                selected={(user?.activity ?? 'light') === value}
+                onPress={() => updateProfile({ activity: value })}
               />
             ))}
           </View>
 
           <Divider />
 
-          <RowLabel label="Eating out day" hint="Takes effect when your next plan is generated" />
+          <RowLabel label={t('settings.eatingOutDay')} hint={t('settings.eatingOutHint')} />
           <View style={styles.chipRow}>
             {DAYS_OF_WEEK.map(d => (
               <Chip
                 key={d}
-                label={d}
+                label={t(`daysShort.${d}`)}
                 selected={eatingOutDay === d}
                 onPress={() => {
                   setEatingOutDay(d);
@@ -234,7 +210,7 @@ export default function SettingsScreen() {
               />
             ))}
             <Chip
-              label="I don’t eat out"
+              label={t('settings.noEatingOut')}
               selected={eatingOutDay === NO_EATING_OUT}
               onPress={() => {
                 setEatingOutDay(NO_EATING_OUT);
@@ -247,62 +223,60 @@ export default function SettingsScreen() {
 
           <View style={styles.switchRow}>
             <View style={styles.switchText}>
-              <Text style={styles.rowLabel}>Daily snack</Text>
-              <Text style={styles.rowHint}>
-                A small fourth meal each day in your next plan; the other meals get a little smaller
-              </Text>
+              <Text style={styles.rowLabel}>{t('settings.snack')}</Text>
+              <Text style={styles.rowHint}>{t('settings.snackHint')}</Text>
             </View>
             <Switch
               value={Boolean(user?.snacks)}
               onValueChange={snacks => updateProfile({ snacks })}
               trackColor={{ false: c.border, true: c.primary }}
               thumbColor={c.bg}
-              accessibilityLabel="Daily snack"
+              accessibilityLabel={t('settings.snack')}
             />
           </View>
 
           <Divider />
 
-          <RowLabel label="Macro balance" hint="Which meals your next plan leans towards" />
+          <RowLabel label={t('settings.macroBalance')} hint={t('settings.macroHint')} />
           <View style={styles.chipRow}>
-            {MACRO_OPTIONS.map(opt => (
+            {MACROS.map(value => (
               <Chip
-                key={opt.value}
-                label={opt.label}
-                selected={(user?.macroBalance ?? 'balanced') === opt.value}
-                onPress={() => updateProfile({ macroBalance: opt.value })}
+                key={value}
+                label={t(`macro.${value}`)}
+                selected={(user?.macroBalance ?? 'balanced') === value}
+                onPress={() => updateProfile({ macroBalance: value })}
               />
             ))}
           </View>
         </View>
 
         {/* ── Account Settings ──────────────────────────────────────── */}
-        <SectionHeader label="Account" />
+        <SectionHeader label={t('settings.account')} />
         <View style={styles.section}>
           <RowLabel
-            label="Eating preferences"
-            hint="Select all that apply. Your week will offer to replace the meals that no longer fit."
+            label={t('settings.preferences')}
+            hint={t('settings.preferencesHint')}
           />
           <View style={styles.chipRow}>
-            {RESTRICTION_OPTIONS.map(opt => (
+            {RESTRICTIONS.map(value => (
               <Chip
-                key={opt.value}
-                label={opt.label}
-                selected={restrictions.includes(opt.value)}
-                onPress={() => toggleRestriction(opt.value)}
+                key={value}
+                label={t(`diet.${value}`)}
+                selected={restrictions.includes(value)}
+                onPress={() => toggleRestriction(value)}
               />
             ))}
           </View>
         </View>
 
         {/* ── Stores ────────────────────────────────────────────────── */}
-        <SectionHeader label="Stores" />
+        <SectionHeader label={t('settings.stores')} />
         <View style={styles.section}>
           <StorePicker />
         </View>
 
         {/* ── Application Settings ──────────────────────────────────── */}
-        <SectionHeader label="Application" />
+        <SectionHeader label={t('settings.application')} />
         <View style={styles.section}>
           {LANGUAGES.length > 1 && (
             <>
@@ -313,26 +287,26 @@ export default function SettingsScreen() {
           )}
           <View style={styles.switchRow}>
             <View style={styles.switchText}>
-              <Text style={styles.rowLabel}>Shopping reminders</Text>
-              <Text style={styles.rowHint}>A notification on the morning of each shopping day</Text>
+              <Text style={styles.rowLabel}>{t('settings.reminders')}</Text>
+              <Text style={styles.rowHint}>{t('settings.remindersHint')}</Text>
             </View>
             <Switch
               value={Boolean(user?.notifications)}
               onValueChange={toggleReminders}
               trackColor={{ false: c.border, true: c.primary }}
               thumbColor={c.bg}
-              accessibilityLabel="Shopping reminders"
+              accessibilityLabel={t('settings.reminders')}
             />
           </View>
           {remindersBlocked && (
             <Text style={styles.fieldError} accessibilityRole="alert">
-              Notifications are switched off for this app. Allow them in your phone’s settings, then try again.
+              {t('settings.remindersBlocked')}
             </Text>
           )}
         </View>
 
         {/* ── App Information ───────────────────────────────────────── */}
-        <SectionHeader label="App information" />
+        <SectionHeader label={t('settings.appInfo')} />
         <View style={styles.section}>
           {/* Told with the person's own plan, so only once there is one. */}
           {savedPlan?.plan && (
@@ -342,12 +316,12 @@ export default function SettingsScreen() {
             </>
           )}
           <LinkRow
-            label="Terms of Service"
+            label={t('settings.terms')}
             onPress={() => router.push('/legal/terms' as Href)}
           />
           <Divider />
           <LinkRow
-            label="Privacy Policy"
+            label={t('settings.privacy')}
             onPress={() => router.push('/legal/privacy' as Href)}
           />
           <Divider />
@@ -356,7 +330,7 @@ export default function SettingsScreen() {
             onPress={handleDeleteAccount}
             activeOpacity={0.7}
           >
-            <Text style={styles.destructiveText}>Delete account</Text>
+            <Text style={styles.destructiveText}>{t('settings.deleteAccount')}</Text>
           </PressableScale>
         </View>
 
@@ -366,24 +340,24 @@ export default function SettingsScreen() {
           onPress={handleLogout}
           activeOpacity={0.8}
         >
-          <Text style={styles.logoutText}>Log out</Text>
+          <Text style={styles.logoutText}>{t('settings.logout')}</Text>
         </PressableScale>
       </ScrollView>
 
       <PlanIntroSheet visible={showIntro} onClose={() => setShowIntro(false)} />
       <ConfirmSheet
         visible={confirm === 'logout'}
-        title="Log out?"
-        message="Your plan, likes and shopping list stay saved to your account."
-        confirmLabel="Log out"
+        title={t('settings.logoutTitle')}
+        message={t('settings.logoutMessage')}
+        confirmLabel={t('settings.logout')}
         onConfirm={confirmLogout}
         onClose={() => setConfirm(null)}
       />
       <ConfirmSheet
         visible={confirm === 'delete'}
-        title="Delete account?"
-        message="This permanently deletes your account, plan, likes and shopping list. This can't be undone."
-        confirmLabel="Delete account"
+        title={t('settings.deleteTitle')}
+        message={t('settings.deleteMessage')}
+        confirmLabel={t('settings.deleteAccount')}
         destructive
         onConfirm={confirmDelete}
         onClose={() => setConfirm(null)}
@@ -426,6 +400,7 @@ function NumberInput({
   onError: (message: string | null) => void;
 }) {
   const { colors: c } = useTheme();
+  const { t } = useTranslation();
   const fieldStyles = useThemedStyles(makeFieldStyles);
   const shown = value != null ? String(value) : '';
   const [text, setText] = useState(shown);
@@ -436,7 +411,7 @@ function NumberInput({
     const n = Number(text.trim());
     if (text.trim() === '' || !Number.isInteger(n) || n < limits.min || n > limits.max) {
       setText(shown);
-      onError(`Enter a whole number from ${limits.min} to ${limits.max}.`);
+      onError(t('settings.wholeNumber', { min: limits.min, max: limits.max }));
       return;
     }
     onError(null);

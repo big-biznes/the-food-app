@@ -1,6 +1,8 @@
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import en from '@/locales/en';
+import en from '../locales/en';
+import bg from '../locales/bg';
+import nl from '../locales/nl';
 
 /**
  * The languages the app is translated into. A language is offered (in Settings and on
@@ -8,6 +10,8 @@ import en from '@/locales/en';
  */
 export const resources = {
   en: { translation: en },
+  bg: { translation: bg },
+  nl: { translation: nl },
 } as const;
 
 export type Language = keyof typeof resources;
