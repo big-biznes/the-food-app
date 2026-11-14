@@ -227,3 +227,202 @@ export function prepList(
   lines.sort((a, b) => (a.kind === b.kind ? a.label.localeCompare(b.label) : a.kind === 'cook' ? -1 : 1));
   return { lines, minutes: lines.reduce((sum, l) => sum + l.minutes, 0), saves };
 }
+
+// ── Steps after prepping ──────────────────────────────────────────────────────
+// A recipe says "Dice the onion and soften it in the oil". When the onion was diced
+// ahead, cook mode should say "Soften the diced onion in the oil" instead. A sentence
+// is read as a list of actions ("Beat the eggs, cut the ham into strips and grate the
+// cheese"); only cutting a prepped ingredient is left out, and the action that comes
+// next names it as cut. A sentence of any other shape is left as written, and cook
+// mode then notes what is already prepped.
+
+/** The cutting verbs of recipe steps, and what the cut ingredient is called. */
+const CUT_PARTICIPLE: Record<string, string> = {
+  dice: 'diced',
+  chop: 'chopped',
+  slice: 'sliced',
+  grate: 'grated',
+  shred: 'shredded',
+  cube: 'cubed',
+  trim: 'trimmed',
+  halve: 'halved',
+  mince: 'minced',
+  cut: 'prepped',
+};
+const MANNER = '(?:finely|roughly|thinly|coarsely|very thinly)';
+const CUT_WORDS = Object.keys(CUT_PARTICIPLE).join('|');
+/** Verbs a recipe's actions start with; where one starts, a new action starts. */
+const ACTION_WORDS = [
+  CUT_WORDS,
+  'peel|beat|whisk|drain|rinse|crumble|crush|remove|add|toss|heat|fry|cook|soften|stir-fry|stir|brown|roast|bake',
+  'boil|simmer|serve|mix|season|spread|fill|push|pat|place|put|pour|top|layer|arrange|scatter|sprinkle|warm|melt',
+  'combine|fold|grill|sauté|saute|sear|transfer|squeeze|zest|wash|tear|mash|spoon|divide|sweat|steam|blend|scoop',
+].join('|');
+/** What may follow the objects of a cut: "thinly", "lengthways", "into 1 cm cubes". */
+const CUT_HOW = `(?:\\s+(?:${MANNER}|lengthways|lengthwise|in half))?(?:\\s+into\\s+(?:[a-z0-9-]+\\s+){0,3}?(?:strips|rings|cubes|chunks|florets|half-moons|wedges|rounds|sticks|matchsticks|pieces|slices|batons|dice|halves|bites))?`;
+const CUT_CLAUSE = new RegExp(`^(?:${MANNER}\\s+)?(${CUT_WORDS})\\s+(.+?)(${CUT_HOW})$`, 'i');
+const PEEL_AND_CUT = new RegExp(`^peel\\s+(.+?)\\s+and\\s+(?:${MANNER}\\s+)?(${CUT_WORDS})\\s+(?:it|them)(${CUT_HOW})$`, 'i');
+/** Where one action ends and the next begins: ", ", "; ", " and ", " then ", ", then ", ", and ". */
+const BETWEEN_ACTIONS = new RegExp(
+  `(\\s*(?:[,;]\\s*(?:and\\s+|then\\s+)?|\\s+and\\s+(?:then\\s+)?|\\s+then\\s+))(?=(?:${MANNER}\\s+)?(?:${ACTION_WORDS})\\b)`,
+  'i',
+);
+
+const capitalize = (text: string) => (text ? text[0].toUpperCase() + text.slice(1) : text);
+const listed = (items: string[]) =>
+  items.length <= 1 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+
+/**
+ * A step as it reads when the ingredients in `prepped` (keys) were cut ahead. `complete`
+ * is false when a sentence still asks to cut a prepped ingredient in a way this cannot
+ * rewrite; that sentence stays as written.
+ */
+export function stepAfterPrep(
+  step: string,
+  prepped: string[],
+  all: Ingredient[],
+): { text: string; complete: boolean } {
+  if (prepped.length === 0) return { text: step, complete: true };
+  // Every way the recipe may name each of its ingredients.
+  const names = new Map<string, string>();
+  for (const ing of all) for (const n of namesIn(ing.name, all)) if (!names.has(n)) names.set(n, ing.name);
+  const isPrepped = (name: string) => prepped.includes(name);
+
+  /** "the onion and carrots" → [["onion", "onion"], ["carrots", "carrots"]] (as written, key), or null. */
+  const objectsOf = (text: string): [string, string][] | null => {
+    const parts = text
+      .toLowerCase()
+      .split(/\s*,\s*(?:and\s+)?|\s+and\s+/)
+      .map(p => p.replace(/^(?:the|both)\s+/, '').trim());
+    const found: [string, string][] = [];
+    for (const part of parts) {
+      const name = names.get(part);
+      if (!name) return null;
+      found.push([part, name]);
+    }
+    return found.length > 0 ? found : null;
+  };
+
+  /** A cut: its verb as written ("Finely dice"), its objects, and how ("into thin strips"). */
+  type Cut = { verb: string; said: string; objects: [string, string][]; how: string };
+  const parseCut = (action: string): Cut | null => {
+    const peeled = action.match(PEEL_AND_CUT);
+    if (peeled) {
+      const objects = objectsOf(peeled[1]);
+      if (!objects) return null;
+      return { verb: peeled[2].toLowerCase(), said: `peel the ${listed(objects.map(([w]) => w))} and cut them`, objects, how: peeled[3] };
+    }
+    const m = action.match(CUT_CLAUSE);
+    const objects = m && objectsOf(m[2]);
+    if (!m || !objects) return null;
+    return { verb: m[1].toLowerCase(), said: action.slice(0, action.toLowerCase().indexOf(m[1].toLowerCase()) + m[1].length), objects, how: m[3] };
+  };
+
+  /** "the diced onion and carrots and the sliced peppers": what was cut ahead, named as cut. */
+  const asCut = (cuts: { verb: string; done: [string, string][] }[]) =>
+    listed(cuts.map(({ verb, done }) => `the ${CUT_PARTICIPLE[verb]} ${listed(done.map(([said]) => said))}`));
+
+  const rewrite = (sentence: string): string | null => {
+    const end = sentence.match(/[.;]?\s*$/)![0];
+    const body = sentence.slice(0, sentence.length - end.length);
+    // Actions and what stands between them, alternating: [action, between, action, …].
+    const pieces = body.split(BETWEEN_ACTIONS);
+    const actions = pieces.filter((_, i) => i % 2 === 0);
+    const between = pieces.filter((_, i) => i % 2 === 1);
+
+    const out: { text: string; before: string }[] = [];
+    let touched = false;
+    // Cuts right before this action of which something was prepped: the action may refer to them.
+    let recent: { verb: string; done: [string, string][]; rest: [string, string][] }[] = [];
+    // Something was taken out and nothing has named it since: a later "it" or "both" is unclear.
+    let dangling = false;
+
+    for (let i = 0; i < actions.length; i++) {
+      const action = actions[i];
+      const before = i === 0 ? '' : between[i - 1];
+      const cut = parseCut(action.trim());
+      if (cut) {
+        const done = cut.objects.filter(([, name]) => isPrepped(name));
+        const rest = cut.objects.filter(([, name]) => !isPrepped(name));
+        if (done.length > 0) {
+          touched = true;
+          dangling = true;
+          recent.push({ verb: cut.verb, done, rest });
+          if (rest.length > 0) {
+            out.push({ text: `${cut.said} the ${listed(rest.map(([said]) => said))}${cut.how}`, before });
+          } else if (i === actions.length - 1 && /\band\b/.test(before)) {
+            // "A, B and C" without C reads "A and B".
+            const last = out[out.length - 1];
+            if (last && /^\s*,\s*$/.test(last.before)) last.before = before;
+          }
+          continue;
+        }
+        out.push({ text: action, before });
+        continue;
+      }
+
+      if (recent.length > 0) {
+        const rest = recent.flatMap(r => r.rest);
+        const cuts = recent;
+        recent = [];
+        // "… and soften it/them/both in the oil"
+        const pronoun = action.match(/^([a-z-]+)\s+(it|them|both)\b(.*)$/i);
+        if (pronoun) {
+          const [, act, , tail] = pronoun;
+          const text =
+            rest.length === 0
+              ? `${act} ${asCut(cuts)}${tail}`
+              : `${act} ${rest.length === 1 ? 'it' : 'them'} with ${asCut(cuts)}${tail}`;
+          out.push({ text, before });
+          dangling = false;
+          continue;
+        }
+        // "… toss with the oil and roast": the action takes the cut ingredient without naming it.
+        const implied = action.match(/^([a-z-]+)(\s+(?:with|on|in|into|onto)\b.*)$/i);
+        if (implied && rest.length === 0) {
+          out.push({ text: `${implied[1]} ${asCut(cuts)}${implied[2]}`, before });
+          dangling = false;
+          continue;
+        }
+      }
+      // Anything that still points back at what was taken out cannot be read any more.
+      if (dangling && /\b(it|them|both)\b/i.test(action)) return null;
+      out.push({ text: action, before });
+    }
+    // "A, B, and C" without B reads "A and C".
+    if (out.length === 2) out[1].before = out[1].before.replace(/^\s*,\s*and\s+/, ' and ');
+    if (!touched) return null;
+    if (out.length === 0) return '';
+    const joined = out.map((o, i) => (i === 0 ? o.text : o.before + o.text)).join('');
+    const first = /^[A-Z]/.test(sentence.trimStart()) ? capitalize(joined.trimStart()) : joined.trimStart();
+    return first + end;
+  };
+
+  // Whether a sentence tells to cut one of the prepped ingredients ("…, dice the onion").
+  const preppedWords = [...names].filter(([, name]) => isPrepped(name)).map(([word]) => escape(word));
+  if (preppedWords.length === 0) return { text: step, complete: true };
+  const asksToCut = new RegExp(
+    `(?:^|[,;]\\s*|\\band\\s+|\\bthen\\s+)(?:${MANNER}\\s+)?(?:${CUT_WORDS})\\s+(?:(?:the|both)\\s+)?(?:[a-z-]+(?:,|\\s+and)?\\s+){0,3}?(?:${preppedWords.join('|')})\\b`,
+    'i',
+  );
+
+  let complete = true;
+  const out: string[] = [];
+  for (const sentence of step.split(/(?<=[.;])\s+/)) {
+    if (!asksToCut.test(sentence)) {
+      out.push(sentence);
+      continue;
+    }
+    const next = rewrite(sentence);
+    if (next === null) {
+      complete = false;
+      out.push(sentence);
+    } else if (next) {
+      out.push(next);
+    }
+  }
+  // A sentence that went may leave the one before it ending in ";".
+  let text = out.join(' ').replace(/;\s*$/, '');
+  if (text && out.length > 0 && /^[a-z]/.test(text)) text = capitalize(text);
+  return { text, complete };
+}

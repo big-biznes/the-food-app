@@ -8,7 +8,7 @@ import { findMeal, formatIngredient } from '@/data/meals';
 import { stepIngredients } from '@/data/portions';
 import { usePersonalMeal } from '@/hooks/usePortions';
 import { useMealPrep } from '@/hooks/usePrep';
-import { cooksAlone } from '@/data/prep';
+import { cooksAlone, stepAfterPrep } from '@/data/prep';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -55,6 +55,9 @@ export default function CookScreen() {
     .map(ing => ing.name);
   // The whole step is cooking a staple that was cooked ahead: nothing to do but warm it up.
   const cookedAhead = prep?.done.find(t => t.kind === 'cook' && cooksAlone(steps[step], t.ingredient, meal.ingredients));
+  // The step as it reads after the prep: "Soften the diced onion" instead of "Dice the onion and soften it".
+  const cutAhead = prep?.done.filter(t => t.kind === 'cut').map(t => t.ingredient) ?? [];
+  const afterPrep = stepAfterPrep(steps[step], cutAhead, meal.ingredients);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -80,7 +83,9 @@ export default function CookScreen() {
         <View style={styles.stepNumberWrap}>
           <Text style={styles.stepNumber}>{step + 1}</Text>
         </View>
-        <Text style={styles.stepText}>{steps[step]}</Text>
+        <Text style={styles.stepText}>
+          {afterPrep.text || `Nothing to do here: you prepped the ${ready.join(' and the ')} ahead.`}
+        </Text>
         {used.length > 0 && (
           <Text style={styles.stepAmounts} accessibilityLabel={`For this step: ${used.join(', ')}`}>
             {used.join('  ·  ')}
@@ -91,6 +96,8 @@ export default function CookScreen() {
             You cooked the {cookedAhead.ingredient} ahead. Skip this step and reheat it until steaming hot before serving.
           </Text>
         ) : (
+          // Only when the step could not be rewritten around the prep.
+          !afterPrep.complete &&
           ready.length > 0 && <Text style={styles.stepReady}>Already prepped: {ready.join(', ')}.</Text>
         )}
         {skipped.length > 0 && (
