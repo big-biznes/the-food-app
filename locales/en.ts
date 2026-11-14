@@ -157,6 +157,7 @@ const en = {
     swap: "Tap <icon/> on a meal, then on another one, and they trade places.",
   },
   auth: {
+    confirmEmail: "Check your email to confirm your account, then sign in.",
     headline: "Dinner,\ndecided.",
     tagline: "A week of cheap, quick meals and the shopping list to match. Planned in one tap.",
     start: "Start planning",
@@ -438,6 +439,24 @@ const en = {
     showAll: "Show all meals in this part",
     showByDay: "Show meals by day",
     addToList: "Add this part to the shopping list",
+  },
+  feedback: {
+    title: "Send feedback",
+    intro: "Something broken, confusing or missing? Tell us. Every message is read.",
+    placeholder: "What happened, or what would you change?",
+    note: "Sent with your account, so we can answer by email, and with your app version and phone model.",
+    send: "Send",
+    sending: "Sending…",
+    failed: "That did not send. Check your connection and try again.",
+    thanks: "Thank you. Your message has been sent.",
+  },
+  crash: {
+    title: "Something went wrong",
+    body: "The app ran into an error. A report without your name or account has been sent, so it can be fixed.",
+    retry: "Try again",
+  },
+  legal: {
+    updated: "Last updated {{date}}",
   },
   card: {
     edited: ", edited",

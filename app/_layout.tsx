@@ -28,6 +28,12 @@ import { LikesProvider } from '@/contexts/LikesContext';
 import { PlanProvider } from '@/contexts/PlanContext';
 import ShoppingReminders from '@/components/ShoppingReminders';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { installCrashReporting } from '@/lib/crashReport';
+
+// A screen that throws while rendering shows this instead of a blank app, and reports the error.
+export { default as ErrorBoundary } from '@/components/CrashScreen';
+
+installCrashReporting();
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 

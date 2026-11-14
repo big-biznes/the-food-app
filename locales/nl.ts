@@ -154,6 +154,7 @@ const nl: Translation = {
     swap: "Tik op <icon/> bij een maaltijd en daarna bij een andere, dan ruilen ze van plek.",
   },
   auth: {
+    confirmEmail: "Bekijk je e-mail om je account te bevestigen en log daarna in.",
     headline: "Avondeten,\ngeregeld.",
     tagline: "Een week goedkope, snelle maaltijden en de boodschappenlijst erbij. Gepland met één tik.",
     start: "Begin met plannen",
@@ -435,6 +436,24 @@ const nl: Translation = {
     showAll: "Toon alle maaltijden van dit deel",
     showByDay: "Toon maaltijden per dag",
     addToList: "Dit deel aan de boodschappenlijst toevoegen",
+  },
+  feedback: {
+    title: "Feedback sturen",
+    intro: "Werkt er iets niet, is iets onduidelijk of mis je iets? Laat het ons weten. Elk bericht wordt gelezen.",
+    placeholder: "Wat gebeurde er, of wat zou je veranderen?",
+    note: "Verstuurd met je account, zodat we per e-mail kunnen antwoorden, en met je appversie en telefoonmodel.",
+    send: "Versturen",
+    sending: "Versturen…",
+    failed: "Het versturen is niet gelukt. Controleer je verbinding en probeer het opnieuw.",
+    thanks: "Bedankt. Je bericht is verstuurd.",
+  },
+  crash: {
+    title: "Er ging iets mis",
+    body: "De app liep tegen een fout aan. Er is een melding zonder je naam of account verstuurd, zodat het opgelost kan worden.",
+    retry: "Opnieuw proberen",
+  },
+  legal: {
+    updated: "Laatst bijgewerkt op {{date}}",
   },
   card: {
     edited: ", aangepast",

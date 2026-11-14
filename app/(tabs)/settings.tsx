@@ -315,6 +315,8 @@ export default function SettingsScreen() {
               <Divider />
             </>
           )}
+          <LinkRow label={t('feedback.title')} onPress={() => router.push('/feedback' as Href)} />
+          <Divider />
           <LinkRow
             label={t('settings.terms')}
             onPress={() => router.push('/legal/terms' as Href)}
