@@ -3,6 +3,7 @@ import PressableScale from '@/components/PressableScale';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/contexts/AuthContext';
+import LanguagePicker from '@/components/LanguagePicker';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
@@ -70,6 +71,9 @@ export default function WelcomeScreen() {
           >
             <Text style={styles.secondaryButtonText}>Sign in</Text>
           </PressableScale>
+
+          {/* Before the quiz, so it is already in the right language. */}
+          <LanguagePicker compact />
 
           {__DEV__ && (
             <PressableScale

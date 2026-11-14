@@ -11,6 +11,8 @@ import {
   BricolageGrotesque_700Bold,
   BricolageGrotesque_800ExtraBold,
 } from '@expo-google-fonts/bricolage-grotesque';
+// Sets up translations before the first screen renders.
+import '@/lib/i18n';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { RecipesProvider } from '@/contexts/RecipesContext';
 import { ShoppingProvider } from '@/contexts/ShoppingContext';

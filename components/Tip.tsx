@@ -6,6 +6,7 @@ import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   /** Text, may hold inline icons (an Ionicons inside it renders in the line). */
@@ -45,6 +46,7 @@ const FADE_EASING = Easing.out(Easing.quad);
  */
 export default function Tip({ children, onDismiss, leaving = false, onGone, pointRight }: Props) {
   const { colors: c } = useTheme();
+  const { t } = useTranslation();
   const styles = useThemedStyles(makeStyles);
   const reducedMotion = useReducedMotionRef();
   // 0 folded away, 1 open. JS-driven: height cannot run on the native driver.
@@ -115,7 +117,7 @@ export default function Tip({ children, onDismiss, leaving = false, onGone, poin
             scaleTo={0.85}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             accessibilityRole="button"
-            accessibilityLabel="Close tip"
+            accessibilityLabel={t('tips.close')}
           >
             <Ionicons name="close" size={16} color={c.onPrimaryMuted} />
           </PressableScale>

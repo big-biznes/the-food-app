@@ -5,6 +5,8 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n, { Language, pickLanguage } from '@/lib/i18n';
 import type { MacroBalance } from '@/data/portions';
 import { flushCloudWrites } from '@/lib/cloudWrites';
 import {
@@ -59,6 +61,8 @@ export type UserProfile = {
   notifications?: boolean;
   /** One-time tips the user closed or no longer needs (hooks/useTips.ts). */
   tipsSeen?: string[];
+  /** The app language the user chose; without it the phone's language is used (lib/i18n.ts). */
+  language?: Language;
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;
@@ -94,11 +98,16 @@ type AuthContextType = {
   localEpoch: number;
   /** A dev account is signed in (dev builds only); the quiz comes prefilled for it. */
   isDevAccount: boolean;
+  /** Switch the app's language: saved in the profile, or on this device before there is one. */
+  setLanguage: (language: Language) => void;
   logout: () => Promise<void>;
   deleteAccount: () => AuthResult;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+/** Where a language picked before signing in is kept on the device. */
+const LANGUAGE_KEY = 'language:chosen';
 
 
 async function saveProfile(userId: string, profile: StoredProfile) {
@@ -259,6 +268,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // A dev account (no session) is signed in; see devLogin.
   const [devActive, setDevActive] = useState(false);
   const [localEpoch, setLocalEpoch] = useState(0);
+  // A language picked on the welcome screen, before there is a profile to keep it in.
+  const [deviceChoice, setDeviceChoice] = useState<Language | null>(null);
+  useEffect(() => {
+    AsyncStorage.getItem(LANGUAGE_KEY)
+      .then(value => value && setDeviceChoice(pickLanguage(value)))
+      .catch(() => {});
+  }, []);
   const [sessionRestored, setSessionRestored] = useState(false);
   // Which user id the current `user` profile was loaded for.
   const [profileLoadedFor, setProfileLoadedFor] = useState<string | null>(null);
@@ -407,6 +423,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   }, [userId]);
 
+  // The profile's choice wins; then a choice made on this device; then the phone's language.
+  const language = pickLanguage(user?.language ?? deviceChoice);
+  useEffect(() => {
+    if (i18n.language !== language) i18n.changeLanguage(language);
+  }, [language]);
+
+  const setLanguage = useCallback(
+    (next: Language) => {
+      setDeviceChoice(next);
+      AsyncStorage.setItem(LANGUAGE_KEY, next).catch(() => {});
+      if (user) updateProfile({ language: next });
+    },
+    [user, updateProfile],
+  );
+
   const value: AuthContextType = {
     isLoading,
     isLoggedIn: !!user,
@@ -421,6 +452,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     devLogin,
     localEpoch,
     isDevAccount: devActive,
+    setLanguage,
     logout,
     deleteAccount,
   };

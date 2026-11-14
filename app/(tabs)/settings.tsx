@@ -21,6 +21,9 @@ import StorePicker from '@/components/shopping/StorePicker';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanIntroSheet from '@/components/home/PlanIntroSheet';
+import LanguagePicker from '@/components/LanguagePicker';
+import { LANGUAGES } from '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
 import { usePlan } from '@/contexts/PlanContext';
 
 import { font, type } from '@/constants/type';
@@ -62,6 +65,7 @@ export default function SettingsScreen() {
   const router = useRouter();
   const [confirm, setConfirm] = useState<'logout' | 'delete' | null>(null);
   const { savedPlan } = usePlan();
+  const { t } = useTranslation();
   const [showIntro, setShowIntro] = useState(false);
 
   // Plan settings
@@ -300,6 +304,13 @@ export default function SettingsScreen() {
         {/* ── Application Settings ──────────────────────────────────── */}
         <SectionHeader label="Application" />
         <View style={styles.section}>
+          {LANGUAGES.length > 1 && (
+            <>
+              <RowLabel label={t('language.label')} />
+              <LanguagePicker />
+              <Divider />
+            </>
+          )}
           <View style={styles.switchRow}>
             <View style={styles.switchText}>
               <Text style={styles.rowLabel}>Shopping reminders</Text>
@@ -326,7 +337,7 @@ export default function SettingsScreen() {
           {/* Told with the person's own plan, so only once there is one. */}
           {savedPlan?.plan && (
             <>
-              <LinkRow label="How planning works" onPress={() => setShowIntro(true)} />
+              <LinkRow label={t('intro.settingsRow')} onPress={() => setShowIntro(true)} />
               <Divider />
             </>
           )}

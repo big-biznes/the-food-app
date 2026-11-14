@@ -22,6 +22,7 @@ import PressableScale from '@/components/PressableScale';
 import Tip from '@/components/Tip';
 import { usePlan } from '@/contexts/PlanContext';
 import { TipId, useTips } from '@/hooks/useTips';
+import { Trans, useTranslation } from 'react-i18next';
 
 const DAY_NAME: Record<Day, string> = {
   Mon: 'Monday',
@@ -115,6 +116,7 @@ export default function PlanPhase({
   // One-time tips. At most one general tip per visit, so they never line up into a tour;
   // the swap tip belongs to the grid view and shows there regardless.
   const { isSeen, markSeen } = useTips();
+  const { t } = useTranslation();
   const { savedPlan } = usePlan();
   const [tipsQuiet, setTipsQuiet] = useState(false);
   // A tip that is done but still folding away; it stays on screen until its animation ends.
@@ -153,25 +155,25 @@ export default function PlanPhase({
       case 'cart':
         return (
           <Tip key={id} {...common} pointRight={CART_FROM_RIGHT}>
-            Tap the cart to turn these days into one shopping list.
+            {t('tips.cart')}
           </Tip>
         );
       case 'grid':
         return (
           <Tip key={id} {...common} pointRight={GRID_FROM_RIGHT}>
-            See all the meals of these days at once. That is also where you swap meals between days.
+            {t('tips.grid')}
           </Tip>
         );
       case 'refresh':
         return (
           <Tip key={id} {...common}>
-            Not in the mood for a meal? Tap {icon('refresh')} on it for a different one.
+            <Trans i18nKey="tips.refresh" components={{ icon: icon('refresh') }} />
           </Tip>
         );
       case 'swap':
         return (
           <Tip key={id} {...common}>
-            Tap {icon('swap-horizontal')} on a meal, then on another one, and they trade places.
+            <Trans i18nKey="tips.swap" components={{ icon: icon('swap-horizontal') }} />
           </Tip>
         );
     }

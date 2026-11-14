@@ -30,16 +30,7 @@ import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { useTargets } from '@/hooks/usePortions';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-
-const DAY_NAME: Record<Day, string> = {
-  Mon: 'Monday',
-  Tue: 'Tuesday',
-  Wed: 'Wednesday',
-  Thu: 'Thursday',
-  Fri: 'Friday',
-  Sat: 'Saturday',
-  Sun: 'Sunday',
-};
+import { useTranslation } from 'react-i18next';
 
 /** In almost every recipe, so sharing them says nothing about the plan. */
 const PANTRY = new Set(['oil', 'olive oil', 'butter', 'flour', 'honey', 'soy sauce', 'garlic', 'lemon', 'tomato paste']);
@@ -49,10 +40,10 @@ const PROTEINS = new Set([
   'mixed mince', 'salmon', 'shrimp', 'tofu', 'tuna', 'white fish', 'lentils', 'chickpeas', 'kidney beans',
 ]);
 
-/** "chicken, peppers and rice" */
-function listOf(words: string[]): string {
+/** "chicken, peppers and rice", with the word for "and" of the language. */
+function listOf(words: string[], and: string): string {
   if (words.length <= 1) return words.join('');
-  return `${words.slice(0, -1).join(', ')} and ${words[words.length - 1]}`;
+  return `${words.slice(0, -1).join(', ')} ${and} ${words[words.length - 1]}`;
 }
 const TILE_GAP = 8;
 /** Page dots: a resting dot, and the pill the current page's dot stretches into. */
@@ -91,6 +82,8 @@ type Props = {
  */
 export default function PlanIntroSheet({ visible, onClose }: Props) {
   const { colors: c } = useTheme();
+  const { t } = useTranslation();
+  const dayName = (day: Day) => t(`days.${day}`);
   const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -179,7 +172,7 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
           activeOpacity={1}
           onPress={close}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('common.close')}
         />
       </Animated.View>
 
@@ -191,8 +184,8 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
               {...panResponder.panHandlers}
               hitSlop={{ top: 24 }}
               accessibilityRole="button"
-              accessibilityLabel="Close"
-              accessibilityHint="Drag down or double tap to close"
+              accessibilityLabel={t('common.close')}
+              accessibilityHint={t('common.closeHint')}
               onAccessibilityTap={close}
             >
               <View style={styles.handle} />
@@ -211,9 +204,9 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
             >
               {/* 1 — the week in two shops */}
               <View style={[styles.page, { width }]}>
-                <Text style={styles.kicker}>How your plan works</Text>
+                <Text style={styles.kicker}>{t('intro.kicker')}</Text>
                 <Text style={styles.title} accessibilityRole="header">
-                  Your week, in two shops
+                  {t('intro.weekTitle')}
                 </Text>
                 <View style={styles.strip} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
                   {strip.map(({ day, part }) => (
@@ -233,9 +226,13 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                   ))}
                 </View>
                 <Text style={styles.body}>
-                  {`Shop on ${DAY_NAME[partShoppingDay.A]} for ${partLabel.A}, and on ${DAY_NAME[partShoppingDay.B]} for ${partLabel.B}. `}
-                  {`Fresh food never waits more than three days`}
-                  {eatsOut ? `, and ${DAY_NAME[dayC]} you eat out.` : '.'}
+                  {t(eatsOut ? 'intro.weekBodyEatOut' : 'intro.weekBody', {
+                    shopA: dayName(partShoppingDay.A),
+                    partA: partLabel.A,
+                    shopB: dayName(partShoppingDay.B),
+                    partB: partLabel.B,
+                    outDay: dayName(dayC),
+                  })}
                 </Text>
               </View>
 
@@ -243,7 +240,7 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
               <View style={[styles.page, { width }]}>
                 <Text style={styles.kicker}>{partLabel.A}</Text>
                 <Text style={styles.title} accessibilityRole="header">
-                  One basket, {basket.meals.length} meals
+                  {t('intro.basketTitle', { count: basket.meals.length })}
                 </Text>
                 {basket.shared.length > 0 && (
                   <View style={styles.chips}>
@@ -269,40 +266,38 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                 </View>
                 <Text style={styles.body}>
                   {basket.shared.length > 0
-                    ? `${capital(listOf(basket.shared))} come back across your lunches and dinners for these days. You buy one set of ingredients, use it up, and still eat something different every meal.`
-                    : 'The lunches and dinners of these days share their ingredients. You buy one set, use it up, and still eat something different every meal.'}
+                    ? t('intro.basketBody', { items: capital(listOf(basket.shared, t('common.and'))) })
+                    : t('intro.basketBodyNoShared')}
                 </Text>
               </View>
 
               {/* 3 — prep once */}
               {hasPrep && (
                 <View style={[styles.page, { width }]}>
-                  <Text style={styles.kicker}>Optional</Text>
+                  <Text style={styles.kicker}>{t('intro.prepKicker')}</Text>
                   <Text style={styles.title} accessibilityRole="header">
-                    Prep once, cook faster
+                    {t('intro.prepTitle')}
                   </Text>
                   <View style={styles.trade}>
                     <View style={[styles.tradeBox, { backgroundColor: c.butter }]}>
-                      <Text style={styles.tradeNumber}>{roughMinutes(prep.minutes)} min</Text>
-                      <Text style={styles.tradeLabel}>on {DAY_NAME[partShoppingDay.A]}</Text>
+                      <Text style={styles.tradeNumber}>{t('common.minutes', { count: roughMinutes(prep.minutes) })}</Text>
+                      <Text style={styles.tradeLabel}>{t('intro.prepOn', { day: dayName(partShoppingDay.A) })}</Text>
                     </View>
                     <Ionicons name="arrow-forward" size={20} color={c.textMuted} />
                     <View style={[styles.tradeBox, { backgroundColor: c.pea }]}>
-                      <Text style={styles.tradeNumber}>−{roughMinutes(prep.saves)} min</Text>
+                      <Text style={styles.tradeNumber}>−{t('common.minutes', { count: roughMinutes(prep.saves) })}</Text>
                       <Text style={styles.tradeLabel}>{partLabel.A}</Text>
                     </View>
                   </View>
                   <Text style={styles.body}>
-                    Chop the vegetables and cook the rice right after shopping, and the next three days of
-                    cooking go quicker. Skip it and the meals just take a little longer. Find it on your plan
-                    under Prep ahead.
+                    {t('intro.prepBody')}
                   </Text>
                 </View>
               )}
             </Animated.ScrollView>
 
             <View style={styles.footer}>
-              <View style={styles.dots} accessibilityLabel={`Page ${page + 1} of ${pages}`}>
+              <View style={styles.dots} accessibilityLabel={t('common.pageOf', { page: page + 1, total: pages })}>
                 {Array.from({ length: pages }, (_, i) => {
                   // 0 when the pager is a page or more away from this dot, 1 when it is right on it:
                   // halfway between two pages, both dots are half grown.
@@ -334,7 +329,7 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                 activeOpacity={0.8}
                 accessibilityRole="button"
               >
-                <Text style={styles.nextText}>{last ? 'Got it' : 'Next'}</Text>
+                <Text style={styles.nextText}>{last ? t('common.gotIt') : t('common.next')}</Text>
               </PressableScale>
 
               {/* Kept in place on the last page, so the button does not jump. */}
@@ -347,7 +342,7 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                 accessibilityElementsHidden={last}
                 importantForAccessibility={last ? 'no-hide-descendants' : 'auto'}
               >
-                <Text style={styles.skipText}>Skip</Text>
+                <Text style={styles.skipText}>{t('common.skip')}</Text>
               </PressableScale>
             </View>
 
