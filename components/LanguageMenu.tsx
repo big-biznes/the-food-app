@@ -61,25 +61,57 @@ export default function LanguageMenu() {
             {LANGUAGES.map((code: Language) => {
               const selected = code === current;
               return (
-                <Pressable
+                <LanguageRow
                   key={code}
-                  style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+                  code={code}
+                  selected={selected}
                   onPress={() => pick(code)}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected }}
-                  accessibilityLanguage={code}
-                >
-                  <Text style={[styles.name, selected && styles.nameOn, code === 'bg' && (selected ? styles.cyrillicOn : styles.cyrillic)]}>
-                    {resources[code].translation.language.name}
-                  </Text>
-                  {selected && <Ionicons name="checkmark" size={18} color={c.text} />}
-                </Pressable>
+                  styles={styles}
+                  checkColor={c.text}
+                />
               );
             })}
           </View>
         </Pressable>
       </Modal>
     </>
+  );
+}
+
+/**
+ * One language in the list. Pressed state is kept here rather than in a style function, which
+ * NativeWind's Pressable wrapper does not apply (the rows lost their whole layout).
+ */
+function LanguageRow({
+  code,
+  selected,
+  onPress,
+  styles,
+  checkColor,
+}: {
+  code: Language;
+  selected: boolean;
+  onPress: () => void;
+  styles: ReturnType<typeof makeStyles>;
+  checkColor: string;
+}) {
+  const [pressed, setPressed] = useState(false);
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      accessibilityRole="radio"
+      accessibilityState={{ selected }}
+      accessibilityLanguage={code}
+    >
+      <View style={[styles.row, (pressed || selected) && styles.rowOn]}>
+        <Text style={[styles.name, selected && styles.nameOn, code === 'bg' && (selected ? styles.cyrillicOn : styles.cyrillic)]}>
+          {resources[code].translation.language.name}
+        </Text>
+        {selected && <Ionicons name="checkmark" size={18} color={checkColor} />}
+      </View>
+    </Pressable>
   );
 }
 
@@ -102,19 +134,26 @@ const makeStyles = (c: Colors) =>
       minWidth: 190,
       backgroundColor: c.bg,
       borderRadius: 18,
-      borderWidth: 1.5,
+      borderWidth: 1,
       borderColor: c.border,
-      paddingVertical: 6,
+      padding: 6,
+      shadowColor: '#000',
+      shadowOpacity: 0.12,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 8,
     },
     row: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 16,
-      paddingHorizontal: 16,
-      paddingVertical: 13,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: 12,
     },
-    rowPressed: { backgroundColor: c.surface },
+    // The chosen language sits on a soft tile, so it reads as chosen before the checkmark.
+    rowOn: { backgroundColor: c.surface },
     name: { fontFamily: font.medium, fontSize: 16, color: c.textSecondary },
     nameOn: { fontFamily: font.bold, color: c.text },
     // Its own name in Cyrillic, whatever the app's language (see hooks/useTheme.ts).
