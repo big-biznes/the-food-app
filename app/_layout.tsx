@@ -11,6 +11,14 @@ import {
   BricolageGrotesque_700Bold,
   BricolageGrotesque_800ExtraBold,
 } from '@expo-google-fonts/bricolage-grotesque';
+// Bricolage Grotesque has no Cyrillic; Bulgarian uses Onest in the same weights (hooks/useTheme.ts).
+import {
+  Onest_400Regular,
+  Onest_500Medium,
+  Onest_600SemiBold,
+  Onest_700Bold,
+  Onest_800ExtraBold,
+} from '@expo-google-fonts/onest';
 // Sets up translations before the first screen renders.
 import '@/lib/i18n';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -30,6 +38,11 @@ export default function RootLayout() {
     BricolageGrotesque_600SemiBold,
     BricolageGrotesque_700Bold,
     BricolageGrotesque_800ExtraBold,
+    Onest_400Regular,
+    Onest_500Medium,
+    Onest_600SemiBold,
+    Onest_700Bold,
+    Onest_800ExtraBold,
     // Icon font too, so icons are drawn from the first frame instead of popping in after load.
     ...Ionicons.font,
   });

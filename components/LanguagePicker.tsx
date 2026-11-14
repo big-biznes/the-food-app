@@ -31,7 +31,9 @@ export default function LanguagePicker({ compact = false }: { compact?: boolean 
             accessibilityState={{ selected }}
             accessibilityLanguage={code}
           >
-            <Text style={[styles.label, selected && styles.labelOn]}>{resources[code].translation.language.name}</Text>
+            <Text style={[styles.label, selected && styles.labelOn, code === 'bg' && styles.labelCyrillic]}>
+              {resources[code].translation.language.name}
+            </Text>
           </PressableScale>
         );
       })}
@@ -49,4 +51,6 @@ const makeStyles = (c: Colors) =>
     chipOn: { backgroundColor: c.primary },
     label: { fontFamily: font.medium, fontWeight: '500', fontSize: 13, color: c.text },
     labelOn: { color: c.onPrimary },
+    // Its own name in Cyrillic, whatever the app's language (see hooks/useTheme.ts).
+    labelCyrillic: { fontFamily: 'Onest_500Medium' },
   });
