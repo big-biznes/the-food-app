@@ -431,6 +431,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = useCallback(
     (next: Language) => {
+      // The language and the profile change in the same tick, so the app re-renders once
+      // (the effect above then has nothing left to do).
+      i18n.changeLanguage(next);
       setDeviceChoice(next);
       AsyncStorage.setItem(LANGUAGE_KEY, next).catch(() => {});
       if (user) updateProfile({ language: next });

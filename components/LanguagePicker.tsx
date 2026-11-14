@@ -1,3 +1,4 @@
+import { startTransition, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import PressableScale from '@/components/PressableScale';
@@ -15,17 +16,32 @@ export default function LanguagePicker({ compact = false }: { compact?: boolean 
   const styles = useThemedStyles(makeStyles);
   const { i18n } = useTranslation();
   const { setLanguage } = useAuth();
+  // The chip lights up at once; the switch itself re-renders every screen, so it runs
+  // after this frame and as a transition, without holding up the tap.
+  const [picked, setPicked] = useState<string | null>(null);
+  const current = picked ?? i18n.language;
   if (LANGUAGES.length < 2) return null;
+
+  function pick(code: Language) {
+    if (code === current) return;
+    setPicked(code);
+    requestAnimationFrame(() =>
+      startTransition(() => {
+        setLanguage(code);
+        setPicked(null);
+      }),
+    );
+  }
 
   return (
     <View style={[styles.row, compact && styles.rowCompact]} accessibilityRole="radiogroup">
       {LANGUAGES.map((code: Language) => {
-        const selected = i18n.language === code;
+        const selected = current === code;
         return (
           <PressableScale
             key={code}
             style={[styles.chip, compact && styles.chipCompact, selected && styles.chipOn]}
-            onPress={() => setLanguage(code)}
+            onPress={() => pick(code)}
             activeOpacity={0.7}
             accessibilityRole="radio"
             accessibilityState={{ selected }}
