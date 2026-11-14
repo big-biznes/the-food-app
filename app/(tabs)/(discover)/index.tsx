@@ -86,8 +86,11 @@ export default function DiscoverScreen() {
   const [index, setIndex] = useState(0);
   const deckRef = useRef(deck);
   deckRef.current = deck;
-  // Which restrictions the full deck was built for (null = not built yet).
+  const indexRef = useRef(index);
+  indexRef.current = index;
+  // Which restrictions and which recipe list the full deck was built for (null = not built yet).
   const builtFor = useRef<string | null>(null);
+  const builtFrom = useRef<Meal[] | null>(null);
 
   useEffect(() => {
     loadDiscoverNext().then(next => {
@@ -106,19 +109,32 @@ export default function DiscoverScreen() {
       if (deckRef.current.length === 0) setDeck(cachedNext.filter(fits));
       return;
     }
-    if (builtFor.current === restrictionsKey) return;
+    if (builtFor.current === restrictionsKey && builtFrom.current === allMeals) return;
 
-    if (builtFor.current === null) {
-      // First full build: keep the cards already on screen in front so nothing changes under the user.
-      const head = deckRef.current.length > 0 ? deckRef.current : cachedNext.filter(fits);
-      const headIds = new Set(head.map(m => m.id));
-      setDeck([...head, ...shuffled(allMeals.filter(m => fits(m) && !headIds.has(m.id)))]);
+    if (builtFor.current === null || builtFor.current === restrictionsKey) {
+      // First full build, or the recipe list was replaced (the saved copy, then Supabase).
+      // Cards saved on the device can be older than the list: keep the ones already in the deck
+      // in place so nothing changes under the user, but only those that are still recipes, and
+      // in their current version.
+      const byId = new Map(allMeals.map(m => [m.id, m]));
+      const current = (list: Meal[]) =>
+        list.flatMap(m => {
+          const now = byId.get(m.id);
+          return now && fits(now) ? [now] : [];
+        });
+      const shown = deckRef.current.length > 0 ? deckRef.current : cachedNext;
+      const kept = current(shown);
+      const keptIds = new Set(kept.map(m => m.id));
+      setDeck([...kept, ...shuffled(allMeals.filter(m => fits(m) && !keptIds.has(m.id)))]);
+      // Cards before the current one may have been dropped: stay on the same card.
+      setIndex(current(shown.slice(0, indexRef.current)).length);
     } else {
       // Dietary restrictions changed: start a fresh deck.
       setDeck(shuffled(allMeals.filter(fits)));
       setIndex(0);
     }
     builtFor.current = restrictionsKey;
+    builtFrom.current = allMeals;
   }, [cachedNext, recipesReady, allMeals, restrictionsKey]);
 
   // Remember the upcoming cards for the next app start.
