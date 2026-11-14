@@ -46,6 +46,8 @@ function listOf(words: string[], and: string): string {
   return `${words.slice(0, -1).join(', ')} ${and} ${words[words.length - 1]}`;
 }
 const TILE_GAP = 8;
+/** Where the eating-out day's stripes start, across its tile (wide enough to cover it once tilted). */
+const STRIPES = [-34, -22, -10, 2, 14, 26, 38];
 /** Page dots: a resting dot, and the pill the current page's dot stretches into. */
 const DOT = 6;
 const DOT_ACTIVE = 18;
@@ -216,7 +218,15 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                         {shopsFor[day] && <Ionicons name="bag-handle" size={13} color={c.onTile} />}
                       </View>
                       <View style={[styles.dayTile, { backgroundColor: partTint[part] }]}>
-                        {part === 'C' && eatsOut && <Ionicons name="restaurant" size={14} color={c.onTile} />}
+                        {part === 'C' && eatsOut && (
+                          <>
+                            {/* Diagonal stripes: the same shop as the days before it, but a day out. */}
+                            {STRIPES.map(x => (
+                              <View key={x} style={[styles.stripe, { left: x }]} />
+                            ))}
+                            <Ionicons name="restaurant" size={14} color={c.onTile} />
+                          </>
+                        )}
                       </View>
                       <Text style={styles.dayLabel}>{day}</Text>
                     </View>
@@ -381,8 +391,17 @@ const makeStyles = (c: Colors) =>
       width: 38,
       height: 52,
       borderRadius: 14,
+      overflow: 'hidden',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    stripe: {
+      position: 'absolute',
+      top: -20,
+      width: 5,
+      height: 100,
+      backgroundColor: c.onTileWash,
+      transform: [{ rotate: '35deg' }],
     },
     dayLabel: { ...type.label, fontSize: 12, color: c.textMuted },
 
