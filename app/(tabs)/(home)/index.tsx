@@ -42,7 +42,7 @@ import PlanIntroSheet from '@/components/home/PlanIntroSheet';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { font } from '@/constants/type';
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

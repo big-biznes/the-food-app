@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
@@ -7,6 +7,7 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n, { Language, pickLanguage } from '@/lib/i18n';
+import { LanguageContext } from '@/hooks/useTranslation';
 import type { MacroBalance } from '@/data/portions';
 import { flushCloudWrites } from '@/lib/cloudWrites';
 import {
@@ -429,6 +430,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (i18n.language !== language) i18n.changeLanguage(language);
   }, [language]);
 
+  // The latest updateProfile, for the delayed save below (it must not save an old profile).
+  const updateProfileRef = useRef(updateProfile);
+  updateProfileRef.current = updateProfile;
+
   const setLanguage = useCallback(
     (next: Language) => {
       // The language and the profile change in the same tick, so the app re-renders once
@@ -436,31 +441,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       i18n.changeLanguage(next);
       setDeviceChoice(next);
       AsyncStorage.setItem(LANGUAGE_KEY, next).catch(() => {});
-      if (user) updateProfile({ language: next });
+      // Saved a little later: a profile change re-renders every screen that reads the
+      // profile, and that should not land in the same frame as the switch.
+      if (user) setTimeout(() => updateProfileRef.current({ language: next }), 1500);
     },
-    [user, updateProfile],
+    [user],
   );
 
-  const value: AuthContextType = {
-    isLoading,
-    isLoggedIn: !!user,
-    needsProfile: (!!session || devActive) && !user && !isLoading,
-    userId,
-    user,
-    register,
-    login,
-    signInWithGoogle,
-    completeProfile,
-    updateProfile,
-    devLogin,
-    localEpoch,
-    isDevAccount: devActive,
-    setLanguage,
-    logout,
-    deleteAccount,
-  };
+  // Memoised: a new object would re-render every screen that reads the profile, even
+  // when nothing it uses changed (e.g. a language picked on this device).
+  const value = useMemo<AuthContextType>(
+    () => ({
+      isLoading,
+      isLoggedIn: !!user,
+      needsProfile: (!!session || devActive) && !user && !isLoading,
+      userId,
+      user,
+      register,
+      login,
+      signInWithGoogle,
+      completeProfile,
+      updateProfile,
+      devLogin,
+      localEpoch,
+      isDevAccount: devActive,
+      setLanguage,
+      logout,
+      deleteAccount,
+    }),
+    [
+      isLoading,
+      user,
+      session,
+      devActive,
+      userId,
+      register,
+      login,
+      signInWithGoogle,
+      completeProfile,
+      updateProfile,
+      devLogin,
+      localEpoch,
+      setLanguage,
+      logout,
+      deleteAccount,
+    ],
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      <LanguageContext.Provider value={language}>{children}</LanguageContext.Provider>
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

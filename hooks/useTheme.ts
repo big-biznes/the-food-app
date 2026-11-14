@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Colors, colors } from '@/constants/theme';
 
 /** Single light palette. No hooks, no subscriptions, no per-component cost. */

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { AccessibilityInfo, Animated, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { font } from '@/constants/type';
 type Props = {

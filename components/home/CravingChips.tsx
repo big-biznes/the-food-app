@@ -3,7 +3,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export const CRAVING_CHIPS = [
   'Spicy', 'Light', 'Hearty', 'Fresh',

@@ -1,7 +1,7 @@
 import { Redirect, Tabs } from 'expo-router';
 import TabBar from '@/components/TabBar';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TabLayout() {
   const { isLoading, isLoggedIn } = useAuth();

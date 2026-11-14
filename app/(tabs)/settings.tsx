@@ -23,7 +23,7 @@ import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanIntroSheet from '@/components/home/PlanIntroSheet';
 import LanguagePicker from '@/components/LanguagePicker';
 import { LANGUAGES } from '@/lib/i18n';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { usePlan } from '@/contexts/PlanContext';
 
 import { font, type } from '@/constants/type';

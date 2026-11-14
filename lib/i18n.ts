@@ -51,6 +51,8 @@ i18n.use(initReactI18next).init({
   initAsync: false,
   interpolation: { escapeValue: false }, // React escapes already
   returnNull: false,
+  // Components follow LanguageContext instead (hooks/useTranslation.ts), so hidden tabs can switch later.
+  react: { bindI18n: false, bindI18nStore: false },
 });
 
 export default i18n;

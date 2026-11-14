@@ -12,7 +12,7 @@ import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 
 import { font } from '@/constants/type';

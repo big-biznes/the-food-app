@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 

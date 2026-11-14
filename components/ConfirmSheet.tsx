@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet, SheetMotion } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { font, type } from '@/constants/type';
 
 type Props = {

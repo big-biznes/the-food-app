@@ -1,6 +1,6 @@
 import { startTransition, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';

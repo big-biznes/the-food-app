@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import CardContent from './CardContent';
 

@@ -30,7 +30,7 @@ import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { useTargets } from '@/hooks/usePortions';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 /** In almost every recipe, so sharing them says nothing about the plan. */
 const PANTRY = new Set(['oil', 'olive oil', 'butter', 'flour', 'honey', 'soy sauce', 'garlic', 'lemon', 'tomato paste']);

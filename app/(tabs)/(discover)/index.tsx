@@ -19,7 +19,7 @@ import SwipeCard, { Direction, FlyingCard, SwipeRelease } from '@/components/dis
 import ReactionsSheet from '@/components/discover/ReactionsSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useReducedMotion, useScreenReader } from '@/hooks/useReducedMotion';
 
 import { font, type } from '@/constants/type';

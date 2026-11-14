@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { COUNTRIES, Country, chainsIn } from '@/data/stores';
 
 /** Country and store-chain choice, saved on the profile. Used in Settings and on the compare screen. */

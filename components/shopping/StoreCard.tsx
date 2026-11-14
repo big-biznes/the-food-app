@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { chainName } from '@/data/stores';
 import type { ItemChoice, StoreTotal } from '@/lib/pricing';
 import { formatAmount, formatMoney } from '@/lib/format';

@@ -16,7 +16,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import GoogleButton from '@/components/auth/GoogleButton';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { authErrorText } from '@/lib/localize';
 
 import { font, type } from '@/constants/type';

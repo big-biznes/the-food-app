@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { PantryItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import PantryRow from './PantryRow';
 
 import { font } from '@/constants/type';

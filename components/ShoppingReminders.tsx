@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePlan } from '@/contexts/PlanContext';
 import { syncReminders } from '@/lib/reminders';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 /** Keeps the shopping-day reminders in step with the setting and the plan. Renders nothing. */
 export default function ShoppingReminders() {

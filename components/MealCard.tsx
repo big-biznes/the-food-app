@@ -11,7 +11,7 @@ import { Colors, tileColor } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import i18n from '@/lib/i18n';
 import { ingredientName } from '@/lib/localize';
 

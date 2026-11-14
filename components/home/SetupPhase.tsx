@@ -11,7 +11,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import CravingChips from './CravingChips';
 
 type Props = {

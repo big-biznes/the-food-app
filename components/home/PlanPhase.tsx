@@ -22,7 +22,8 @@ import PressableScale from '@/components/PressableScale';
 import Tip from '@/components/Tip';
 import { usePlan } from '@/contexts/PlanContext';
 import { TipId, useTips } from '@/hooks/useTips';
-import { Trans, useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const capitalize = (text: string) => text.charAt(0).toLocaleUpperCase() + text.slice(1);
 

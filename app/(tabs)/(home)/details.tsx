@@ -11,7 +11,7 @@ import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import { useShoppingListSync } from '@/hooks/useShoppingListSync';
 import { useMealPrep } from '@/hooks/usePrep';
 import { ingredientAmount, ingredientName } from '@/lib/localize';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePersonalMeal, useTargets } from '@/hooks/usePortions';

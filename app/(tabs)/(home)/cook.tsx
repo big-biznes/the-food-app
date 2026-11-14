@@ -12,7 +12,7 @@ import { useMealPrep } from '@/hooks/usePrep';
 import { cooksAlone, stepAfterPrep } from '@/data/prep';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { font, type } from '@/constants/type';
 

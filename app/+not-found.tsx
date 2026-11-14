@@ -2,7 +2,7 @@ import { Link, Stack } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NotFoundScreen() {
   const styles = useThemedStyles(makeStyles);

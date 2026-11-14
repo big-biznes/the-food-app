@@ -7,7 +7,7 @@ import { useSignInTransition } from '@/hooks/useSignInTransition';
 import SigningInOverlay from './SigningInOverlay';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { authErrorText } from '@/lib/localize';
 import { font } from '@/constants/type';
 

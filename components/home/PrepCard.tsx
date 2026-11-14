@@ -6,7 +6,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { usePrepList } from '@/hooks/usePrep';
 
 /** Rounded to 5 so an estimate does not read as a measurement. */

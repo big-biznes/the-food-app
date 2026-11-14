@@ -20,7 +20,7 @@ import ingredientDefs from '@/data/ingredients.json';
 import { compare, IngredientDef, StoreTotal } from '@/lib/pricing';
 import { toNeed } from '@/lib/parseItem';
 import { formatMoney } from '@/lib/format';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { shoppingLine } from '@/lib/localize';
 
 const DEFS = ingredientDefs as IngredientDef[];

@@ -7,7 +7,7 @@ import LanguagePicker from '@/components/LanguagePicker';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function WelcomeScreen() {
   const styles = useThemedStyles(makeStyles);

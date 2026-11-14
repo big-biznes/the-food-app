@@ -8,7 +8,7 @@ import { ALL_MEALS, Meal, setAllMeals } from '@/data/meals';
 import FullScreenLoading from '@/components/FullScreenLoading';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { font } from '@/constants/type';
 
 // v2: rows follow supabase/recipes.sql (ingredient lists, computed nutrition).

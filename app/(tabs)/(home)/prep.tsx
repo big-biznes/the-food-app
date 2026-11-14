@@ -11,7 +11,7 @@ import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePrepList } from '@/hooks/usePrep';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { prepLineText } from '@/lib/localize';
 
 const SECTIONS: { kind: PrepLine['kind']; title: 'prep.cookAhead' | 'prep.cutStore'; note: 'prep.cookNote' | 'prep.cutNote' }[] = [

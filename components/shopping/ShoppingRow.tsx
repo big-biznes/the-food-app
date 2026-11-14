@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShoppingItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { shoppingLine } from '@/lib/localize';
 
 import { font } from '@/constants/type';

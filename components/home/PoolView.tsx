@@ -3,7 +3,7 @@ import { WeekPart, Day, Meal, MealType, PlanSlot, StructuredWeekPlan, swapGroup 
 import MealCard from '@/components/MealCard';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { font } from '@/constants/type';
 type SwapSource = PlanSlot | null;

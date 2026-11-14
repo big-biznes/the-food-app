@@ -17,7 +17,7 @@ import { useLikes } from '@/contexts/LikesContext';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import ReactionRow from './ReactionRow';
 
 import { font, type } from '@/constants/type';

@@ -7,7 +7,7 @@ import { PRIVACY, TERMS } from '@/constants/legal';
 import { Colors } from '@/constants/theme';
 import { type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 /** The Privacy Policy (/legal/privacy) or the Terms of Service (/legal/terms), opened from Settings. */
 export default function LegalScreen() {

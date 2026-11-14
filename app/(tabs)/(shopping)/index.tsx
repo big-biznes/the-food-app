@@ -17,7 +17,7 @@ import PantryPanel from '@/components/shopping/PantryPanel';
 import SegmentTabs from '@/components/SegmentTabs';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 import { shoppingLine } from '@/lib/localize';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import { useSwipeTabs } from '@/hooks/useSwipeTabs';

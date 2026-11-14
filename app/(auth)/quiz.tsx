@@ -17,7 +17,7 @@ import { BODY_LIMITS } from '@/data/portions';
 import { NO_EATING_OUT } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { font, type } from '@/constants/type';
 const TOTAL_STEPS = 9;
