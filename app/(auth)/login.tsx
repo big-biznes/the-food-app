@@ -88,6 +88,14 @@ export default function LoginScreen() {
                 secureTextEntry
                 autoComplete="current-password"
               />
+              <PressableScale
+                style={styles.forgot}
+                onPress={() => router.push({ pathname: '/(auth)/reset', params: { email } })}
+                activeOpacity={0.7}
+                accessibilityRole="link"
+              >
+                <Text style={styles.forgotText}>{t('auth.forgot')}</Text>
+              </PressableScale>
             </View>
             {error && (
               <Text style={styles.errorText} accessibilityRole="alert">{error}</Text>
@@ -205,6 +213,8 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     fontFamily: font.regular, fontSize: 15,
     color: c.textMuted,
   },
+  forgot: { alignSelf: 'flex-end', paddingVertical: 4 },
+  forgotText: { fontFamily: font.medium, fontSize: 14, color: c.textSecondary },
   switchLink: {
     color: c.text,
     fontWeight: '600',

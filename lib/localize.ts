@@ -78,6 +78,9 @@ export function authErrorText(message: string): string {
     [/password should be at least|weak password/i, 'auth.weakPassword'],
     [/invalid.*email|email.*invalid|unable to validate email/i, 'auth.invalidEmail'],
     [/network request failed|failed to fetch|timed out/i, 'auth.network'],
+    [/token has expired|otp.*(expired|invalid)|invalid.*(token|otp)/i, 'auth.badCode'],
+    [/rate limit|only request this after|too many/i, 'auth.tooMany'],
+    [/different from the old password/i, 'auth.samePassword'],
   ];
   const hit = rules.find(([re]) => re.test(message));
   return hit ? tr(hit[1]) : message;

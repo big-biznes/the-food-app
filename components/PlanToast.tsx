@@ -7,6 +7,7 @@ import {
   Text,
   View,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
@@ -52,10 +53,16 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   const reducedMotion = useReducedMotionRef();
   const [visible, setVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(HIDDEN_Y)).current;
-  // The label's natural width, measured on first layout. Until it's known the label isn't
-  // width-constrained; after that the width animates from this value to 0 (icon-only).
+  // The label's natural width, measured by an unconstrained hidden copy (a one-line Text in the
+  // row reports the row's free width on Android, which left the button half empty). Capped, so a
+  // long translation can't squeeze the message. The width animates from this value to 0 (icon-only).
+  const maxLabelWidth = Math.round(useWindowDimensions().width * 0.4);
   const [labelWidth, setLabelWidth] = useState<number | null>(null);
   const labelWidthRef = useRef<number | null>(null);
+  useEffect(() => {
+    labelWidthRef.current = null;
+    setLabelWidth(null);
+  }, [actionLabel, maxLabelWidth]);
   const textWidth = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -203,8 +210,23 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
     >
       <View style={styles.left}>
         <Ionicons name="checkmark-circle-outline" size={17} color={c.onPrimary} />
-        <Text style={styles.message}>{message}</Text>
+        <Text style={styles.message} numberOfLines={2}>{message}</Text>
       </View>
+      {/* Measures the label at its own width; never seen. */}
+      <Text
+        style={[styles.actionBtnText, styles.measure]}
+        aria-hidden
+        importantForAccessibility="no-hide-descendants"
+        onLayout={e => {
+          const w = Math.min(Math.ceil(e.nativeEvent.layout.width), maxLabelWidth);
+          if (w === labelWidthRef.current) return;
+          labelWidthRef.current = w;
+          textWidth.setValue(w);
+          setLabelWidth(w);
+        }}
+      >
+        {' '}{actionLabel}
+      </Text>
       <PressableScale
         style={styles.actionBtn}
         onPress={onAction}
@@ -214,18 +236,8 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
         hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
       >
         <Ionicons name={actionIcon} size={15} color={c.text} />
-        <Animated.View style={labelWidth == null ? null : { width: textWidth, overflow: 'hidden' }}>
-          <Animated.Text
-            style={[styles.actionBtnText, { opacity: textOpacity }]}
-            numberOfLines={1}
-            onLayout={e => {
-              if (labelWidthRef.current != null) return;
-              const w = Math.ceil(e.nativeEvent.layout.width);
-              labelWidthRef.current = w;
-              textWidth.setValue(w);
-              setLabelWidth(w);
-            }}
-          >
+        <Animated.View style={{ width: labelWidth == null ? 0 : textWidth, overflow: 'hidden' }}>
+          <Animated.Text style={[styles.actionBtnText, { opacity: textOpacity }]} numberOfLines={1}>
             {' '}{actionLabel}
           </Animated.Text>
         </Animated.View>
@@ -278,6 +290,7 @@ const makeStyles = (c: Colors) =>
       paddingHorizontal: 12,
       paddingVertical: 8,
     },
+    measure: { position: 'absolute', opacity: 0, left: 0, top: 0 },
     actionBtnText: {
       fontSize: 13,
       fontFamily: font.semibold, fontWeight: '600',
