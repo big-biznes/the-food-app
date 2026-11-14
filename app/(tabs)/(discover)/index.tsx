@@ -20,6 +20,8 @@ import ReactionsSheet from '@/components/discover/ReactionsSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useRecipeLanguage } from '@/hooks/useMealText';
+import { mealText } from '@/lib/localize';
 import { useReducedMotion, useScreenReader } from '@/hooks/useReducedMotion';
 
 import { font, type } from '@/constants/type';
@@ -165,6 +167,7 @@ export default function DiscoverScreen() {
   }
 
   const current = deck[index];
+  useRecipeLanguage();
   const next = deck[index + 1];
   // Ran out of cached cards before the full list arrived (rare): show a loader, not "seen them all".
   const waitingForDeck = !current && !recipesReady;
@@ -293,7 +296,7 @@ export default function DiscoverScreen() {
               onPress={() => handleButtonSwipe('left', current)}
               activeOpacity={0.8}
               accessibilityRole="button"
-              accessibilityLabel={t('discover.passOn', { name: current.name })}
+              accessibilityLabel={t('discover.passOn', { name: mealText(current).name })}
             >
               <Ionicons name="close" size={28} color={c.text} />
             </PressableScale>
@@ -302,7 +305,7 @@ export default function DiscoverScreen() {
               onPress={() => handleButtonSwipe('right', current)}
               activeOpacity={0.85}
               accessibilityRole="button"
-              accessibilityLabel={t('discover.likeName', { name: current.name })}
+              accessibilityLabel={t('discover.likeName', { name: mealText(current).name })}
             >
               <Ionicons name="heart" size={26} color={c.onPrimary} />
             </PressableScale>

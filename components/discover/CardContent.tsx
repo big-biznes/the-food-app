@@ -1,4 +1,5 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
+import { useMealText } from '@/hooks/useMealText';
 import { View, Text, StyleSheet } from 'react-native';
 import { Meal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
@@ -14,6 +15,7 @@ export default function CardContent({ meal }: Props) {
   const { t } = useTranslation();
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal(meal);
+  const text = useMealText(personal);
   return (
     <View style={styles.cardInner}>
       <Text style={styles.kicker}>{t(`meals.${meal.mealType}`)}</Text>
@@ -22,10 +24,10 @@ export default function CardContent({ meal }: Props) {
       </View>
       <View style={styles.textBlock}>
         <Text style={styles.mealName} numberOfLines={3}>
-          {meal.name}
+          {text.name}
         </Text>
         <Text style={styles.mealDescription} numberOfLines={3}>
-          {meal.description}
+          {text.description}
         </Text>
         <Text style={styles.meta}>
           {t('card.stats', { min: meal.prepTime, kcal: personal.calories })}

@@ -219,16 +219,68 @@ export function buildAll(files, defs) {
       if (!built.row) return;
       if (ids.has(built.row.id)) problems.push(`${where}: id is already used in ${ids.get(built.row.id)}`);
       ids.set(built.row.id, where);
-      rows.push({ ...built.row, sort: rows.length });
+      rows.push({ ...built.row, i18n: {}, sort: rows.length });
     });
   }
   return { rows, problems, warnings };
 }
 
+const markersOf = text => (String(text).match(/\{[^{}]*\}/g) ?? []).map(m => m.replace(/\s+/g, '')).sort().join(' ');
+
+/**
+ * Put the translated texts on the rows, as `i18n`: { bg: { name, description, instructions, seasonings }, … }.
+ * `translations` is { bg: { recipes: { id: { name, description, instructions } }, seasonings: { English: translated } }, … }.
+ * A recipe without a translation is shown in English and reported as a warning; a translation
+ * that does not line up with its recipe (other steps, other numbers) is a problem.
+ * @returns {{ problems: string[], warnings: string[] }}
+ */
+export function addTranslations(rows, translations) {
+  const problems = [];
+  const warnings = [];
+  for (const row of rows) row.i18n = {};
+  for (const [lang, { recipes = {}, seasonings = {} }] of Object.entries(translations)) {
+    const ids = new Set(rows.map(r => r.id));
+    for (const id of Object.keys(recipes)) if (!ids.has(id)) warnings.push(`${lang}: translation for "${id}", which is not a recipe`);
+    const missing = [];
+    for (const row of rows) {
+      const tr = recipes[row.id];
+      if (!tr) {
+        missing.push(row.id);
+        continue;
+      }
+      const where = `${lang} ${row.id}`;
+      const before = problems.length;
+      for (const field of ['name', 'description']) if (!isText(tr[field])) problems.push(`${where}: ${field} is missing`);
+      const steps = tr.instructions;
+      if (!Array.isArray(steps) || !steps.every(isText) || steps.length !== row.instructions.length) {
+        problems.push(`${where}: needs ${row.instructions.length} steps, like the recipe`);
+      } else {
+        steps.forEach((step, i) => {
+          if (markersOf(step) !== markersOf(row.instructions[i])) problems.push(`${where}: step ${i + 1} must keep ${markersOf(row.instructions[i]) || 'no markers'}`);
+        });
+      }
+      const seasoned = row.seasonings.map(s => seasonings[s]);
+      row.seasonings.forEach((s, i) => {
+        if (!isText(seasoned[i])) problems.push(`${where}: no translation for the seasoning "${s}"`);
+        else if (markersOf(seasoned[i]) !== markersOf(s)) problems.push(`${lang}: seasoning "${s}" must keep ${markersOf(s)}`);
+      });
+      if (problems.length > before) continue;
+      row.i18n[lang] = {
+        name: tr.name.trim(),
+        description: tr.description.trim(),
+        instructions: steps.map(s => s.trim()),
+        seasonings: seasoned.map(s => s.trim()),
+      };
+    }
+    if (missing.length) warnings.push(`${lang}: ${missing.length} recipes have no translation and stay English (${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''})`);
+  }
+  return { problems: [...new Set(problems)], warnings };
+}
+
 const COLUMNS = [
   'id', 'name', 'description', 'meal_type', 'main', 'emoji', 'prep_time_min', 'difficulty',
   'calories', 'protein_g', 'carbs_g', 'fat_g', 'fiber_g', 'sugar_g', 'sodium_mg',
-  'ingredients', 'seasonings', 'instructions', 'appliances', 'keywords', 'dietary_tags', 'sort',
+  'ingredients', 'seasonings', 'instructions', 'appliances', 'keywords', 'dietary_tags', 'i18n', 'sort',
 ];
 
 const q = v =>
@@ -262,7 +314,7 @@ export function toSql(rows) {
  * The same as several small scripts, for when the SQL Editor will not take the
  * whole file at once. Run them in order; the last one removes old recipes.
  */
-export function toSqlParts(rows, size = 150) {
+export function toSqlParts(rows, size = 60) {
   const parts = [];
   for (let i = 0; i < rows.length; i += size) {
     parts.push(`-- Recipes ${i + 1} to ${Math.min(i + size, rows.length)} of ${rows.length}. Safe to re-run.\n${upsertSql(rows.slice(i, i + size))}\n`);

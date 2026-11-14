@@ -50,6 +50,10 @@ alter table public.recipes drop constraint if exists recipes_meal_type_check;
 alter table public.recipes add constraint recipes_meal_type_check
   check (meal_type in ('breakfast', 'lunch', 'dinner', 'snack'));
 
+-- Name, description, steps and seasonings in other languages:
+-- { "bg": { "name", "description", "instructions", "seasonings" }, "nl": { … } }.
+alter table public.recipes add column if not exists i18n jsonb not null default '{}';
+
 alter table public.recipes enable row level security;
 
 drop policy if exists "recipes readable by everyone" on public.recipes;

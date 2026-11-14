@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useMealText } from '@/hooks/useMealText';
 
 import { font } from '@/constants/type';
 type Props = {
@@ -17,17 +19,18 @@ function ReactionRow({ meal, liked, onToggle }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
 
-  const mealType = meal.mealType[0].toUpperCase() + meal.mealType.slice(1);
+  const { t } = useTranslation();
+  const { name } = useMealText(meal);
 
   return (
     <View style={styles.row}>
       <Text style={styles.emoji}>{meal.emoji}</Text>
       <View style={styles.text}>
         <Text style={styles.name} numberOfLines={1}>
-          {meal.name}
+          {name}
         </Text>
         <Text style={styles.meta}>
-          {mealType}, {meal.prepTime} min
+          {t(`meals.${meal.mealType}`)}, {t('common.minutes', { count: meal.prepTime })}
         </Text>
       </View>
       {/* No fade on toggle: the heart and the row's section change immediately. */}
@@ -37,7 +40,7 @@ function ReactionRow({ meal, liked, onToggle }: Props) {
         activeOpacity={0.75}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         accessibilityRole="button"
-        accessibilityLabel={liked ? `Unlike ${meal.name}` : `Like ${meal.name}`}
+        accessibilityLabel={t(liked ? 'discover.unlikeName' : 'discover.likeName', { name })}
         accessibilityState={{ selected: liked }}
       >
         <Ionicons

@@ -1,4 +1,5 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
+import { useMealText } from '@/hooks/useMealText';
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, PanResponder, StyleSheet, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -55,6 +56,7 @@ export default function SwipeCard({
   const { t } = useTranslation();
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal(meal);
+  const text = useMealText(personal);
   const { width: screenWidth } = useWindowDimensions();
   const widthRef = useRef(screenWidth);
   widthRef.current = screenWidth;
@@ -205,7 +207,7 @@ export default function SwipeCard({
           },
         ]}
         accessible
-        accessibilityLabel={t('discover.cardA11y', { name: meal.name, description: meal.description, min: meal.prepTime, kcal: personal.calories })}
+        accessibilityLabel={t('discover.cardA11y', { name: text.name, description: text.description, min: meal.prepTime, kcal: personal.calories })}
         accessibilityHint={t('discover.cardHint')}
         accessibilityActions={[
           { name: 'activate', label: t('discover.showDetails') },

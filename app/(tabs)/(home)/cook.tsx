@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { findMeal } from '@/data/meals';
 import { ingredientLine, ingredientName } from '@/lib/localize';
 import { stepIngredients } from '@/data/portions';
+import { useMealText } from '@/hooks/useMealText';
 import { usePersonalMeal } from '@/hooks/usePortions';
 import { useMealPrep } from '@/hooks/usePrep';
 import { cooksAlone, stepAfterPrep } from '@/data/prep';
@@ -24,6 +25,7 @@ export default function CookScreen() {
   const router = useRouter();
   // Steps and amounts for the portion this user cooks.
   const meal = usePersonalMeal(findMeal(id));
+  const text = useMealText(meal);
 
   const recipe = findMeal(id);
   const prep = useMealPrep(recipe);
@@ -60,7 +62,16 @@ export default function CookScreen() {
   const cookedAhead = prep?.done.find(t => t.kind === 'cook' && cooksAlone(steps[step], t.ingredient, meal.ingredients));
   // The step as it reads after the prep: "Soften the diced onion" instead of "Dice the onion and soften it".
   const cutAhead = prep?.done.filter(t => t.kind === 'cut').map(t => t.ingredient) ?? [];
-  const afterPrep = stepAfterPrep(steps[step], cutAhead, meal.ingredients);
+  const rewritten = stepAfterPrep(steps[step], cutAhead, meal.ingredients);
+  // The rewriting reads English. In another language the step stays as translated, with a
+  // note on what is already cut; a step that was only cutting still drops out.
+  const translated = text != null && text.instructions[step] !== steps[step];
+  const afterPrep =
+    translated && rewritten.text && rewritten.text !== steps[step]
+      ? { text: text.instructions[step], complete: false }
+      : translated && rewritten.text
+        ? { text: text.instructions[step], complete: rewritten.complete }
+        : rewritten;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -70,7 +81,7 @@ export default function CookScreen() {
           <Ionicons name="close" size={22} color={c.text} />
         </PressableScale>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle} numberOfLines={1}>{meal.name}</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}>{text?.name}</Text>
           <Text style={styles.headerSub}>{t('cook.step', { n: step + 1, total })}</Text>
         </View>
         <View style={styles.closeBtnPlaceholder} />

@@ -247,7 +247,12 @@ export function stepIngredients(step: string, ingredients: Ingredient[]): Ingred
  * standard recipe; `removed` are the ingredients the person chose to leave out,
  * in the amounts the recipe would have used.
  */
-export type PersonalMeal = Meal & { portion?: number; removed?: Ingredient[] };
+export type PersonalMeal = Meal & {
+  portion?: number;
+  /** The exact factor behind `portion` (which is rounded for showing), for filling in translated steps. */
+  scale?: number;
+  removed?: Ingredient[];
+};
 
 /** The main ingredient cannot be left out: without it the dish is a different dish. */
 export function canLeaveOut(meal: Meal, name: string): boolean {
@@ -290,7 +295,7 @@ export function personalize(meal: Meal, targets: Targets | null, without: string
     ...nutrition,
     ...text,
     ingredients,
-    ...(sized ? { portion: Math.round(factor * 20) / 20 } : {}),
+    ...(sized ? { portion: Math.round(factor * 20) / 20, scale: factor } : {}),
     ...(skip.size > 0 ? { removed: all.filter(ing => skip.has(ing.name)) } : {}),
   };
 }

@@ -1,0 +1,586 @@
+{
+ "b-banana-peanut-butter-oatmeal": {
+  "name": "Havermout met banaan en pindakaas",
+  "description": "Romige havermout uit de pan met plakjes banaan en een lepel pindakaas",
+  "instructions": [
+   "Doe de havermout, de melk en een snufje zout in een pannetje op middelhoog vuur",
+   "Laat 4 tot 5 minuten zachtjes koken en roer vaak, tot het dik en romig is",
+   "Snijd de banaan in plakjes en roer de helft door de havermout",
+   "Schenk in een kom en leg de rest van de banaan, de pindakaas en een beetje kaneel erop"
+  ]
+ },
+ "b-apple-cinnamon-oatmeal": {
+  "name": "Havermout met appel en kaneel",
+  "description": "Warme havermout met blokjes appel, kaneel en een beetje honing",
+  "instructions": [
+   "Verwijder het klokhuis van de appel en snijd hem in kleine blokjes",
+   "Doe de havermout, de melk, de kaneel, het zout en twee derde van de appel in een pannetje",
+   "Laat 5 tot 6 minuten zachtjes koken op middelhoog vuur en roer vaak, tot de havermout zacht is",
+   "Serveer met de rest van de appel en de honing erop"
+  ]
+ },
+ "b-coconut-berry-overnight-oats": {
+  "name": "Overnight oats met kokos en bessen",
+  "description": "Havermout die een nacht weekt in kokosmelk, zonder koken, met bessen erop",
+  "instructions": [
+   "Roer de havermout, de kokosmelk, het water en het zout door elkaar in een pot of kom",
+   "Dek af en zet een nacht in de koelkast, of minstens 4 uur",
+   "Roer 's ochtends goed door en maak het losser met een scheutje water als het te dik is",
+   "Snijd de aardbeien in plakjes en serveer de havermout met beide soorten fruit erop"
+  ]
+ },
+ "b-peanut-butter-banana-toast": {
+  "name": "Toast met pindakaas en banaan",
+  "description": "Geroosterd volkorenbrood met pindakaas en plakjes banaan",
+  "instructions": [
+   "Rooster het brood goudbruin",
+   "Besmeer beide sneetjes met de pindakaas",
+   "Snijd de banaan in plakjes, leg ze erop en bestrooi met kaneel"
+  ]
+ },
+ "b-avocado-tomato-toast": {
+  "name": "Toast met avocado en tomaat",
+  "description": "Geprakte avocado op toast met verse tomaat, citroen en olijfolie",
+  "instructions": [
+   "Rooster het brood",
+   "Halveer de avocado, schep het vruchtvlees in een kom en prak het met een vork, zout, peper en een kneepje citroen",
+   "Snijd de tomaat in plakjes",
+   "Smeer de avocado op de toast, leg de tomaat erop, besprenkel met de olijfolie en maak af met chilivlokken"
+  ]
+ },
+ "b-avocado-egg-toast": {
+  "name": "Avocadotoast met gebakken eieren",
+  "description": "Volkorentoast met geprakte avocado en twee gebakken eieren",
+  "instructions": [
+   "Rooster het brood",
+   "Prak de avocado met zout en peper en smeer hem op de toast",
+   "Verhit de olie in een pan op middelhoog vuur en bak de eieren 2 tot 3 minuten, tot het eiwit gestold is",
+   "Laat op elk sneetje een ei glijden en bestrooi met peper en chilivlokken"
+  ]
+ },
+ "b-greek-yogurt-berry-bowl": {
+  "name": "Griekse yoghurt met bessen",
+  "description": "Dikke Griekse yoghurt met blauwe bessen, aardbeien en honing",
+  "instructions": [
+   "Schep de yoghurt in een kom",
+   "Halveer de aardbeien of snijd ze in plakjes",
+   "Leg het fruit op de yoghurt en besprenkel met de honing"
+  ]
+ },
+ "b-apple-bircher-muesli": {
+  "name": "Birchermuesli met appel",
+  "description": "Havermout geweekt in yoghurt met geraspte appel en honing",
+  "instructions": [
+   "Rasp de appel grof en laat het klokhuis over",
+   "Roer de havermout, de yoghurt, de geraspte appel en de kaneel door elkaar in een kom",
+   "Laat minstens 10 minuten staan, of een nacht in de koelkast, zodat de havermout zacht wordt",
+   "Besprenkel voor het serveren met de honing"
+  ]
+ },
+ "b-spinach-feta-scrambled-eggs": {
+  "name": "Roerei met spinazie en feta",
+  "description": "Zacht roerei met geslonken spinazie, feta en verse tomaat",
+  "instructions": [
+   "Klop de eieren los met een beetje peper; de feta is zout, dus voeg geen zout toe",
+   "Smelt de boter in een pan op middelhoog vuur en laat de spinazie ongeveer 1 minuut slinken",
+   "Giet de eieren erbij en roer 2 tot 3 minuten voorzichtig, tot ze net gestold zijn",
+   "Verkruimel de feta erboven, schep één keer om en serveer met de plakjes tomaat"
+  ]
+ },
+ "b-veggie-omelette": {
+  "name": "Omelet met paprika en champignons",
+  "description": "Een dubbelgeklapte omelet van drie eieren, gevuld met paprika, champignons en ui",
+  "instructions": [
+   "Snijd de paprika en de ui in blokjes en de champignons in plakjes",
+   "Verhit de olie in een koekenpan met antiaanbaklaag en bak de groenten 4 tot 5 minuten tot ze zacht zijn; schep ze dan op een bord",
+   "Klop de eieren los met zout en peper, giet ze in de pan en bak op middelhoog vuur tot ze bijna gestold zijn",
+   "Schep de groenten op één helft, klap de omelet dicht en bak nog 1 minuut"
+  ]
+ },
+ "b-ham-cheese-omelette": {
+  "name": "Omelet met ham en kaas en toast",
+  "description": "Een snelle omelet met ham en gesmolten kaas, met beboterde toast",
+  "instructions": [
+   "Klop de eieren los met peper, snijd de ham in reepjes en rasp de kaas",
+   "Smelt de helft van de boter in een koekenpan met antiaanbaklaag op middelhoog vuur en giet de eieren erin",
+   "Strooi de ham en de kaas over één helft als de eieren bijna gestold zijn en klap de omelet dicht",
+   "Bak nog 1 minuut tot de kaas smelt en serveer met het geroosterde, beboterde brood"
+  ]
+ },
+ "b-bacon-eggs-toast": {
+  "name": "Spek en eieren met toast",
+  "description": "Knapperig spek, gebakken eieren en in de pan verwarmde tomaat met toast",
+  "instructions": [
+   "Leg het spek in een koude pan en bak het 5 tot 6 minuten op middelhoog vuur knapperig; keer één keer en leg het dan op een bord",
+   "Halveer de tomaat en bak hem 2 minuten met de snijkant naar beneden in het spekvet",
+   "Bak de eieren 2 tot 3 minuten in dezelfde pan, tot het eiwit gestold is",
+   "Rooster het brood en serveer alles samen met een beetje peper"
+  ]
+ },
+ "b-tofu-scramble-toast": {
+  "name": "Roertofu op toast",
+  "description": "Goudgele roertofu met spinazie en paprika op volkorentoast",
+  "instructions": [
+   "Snijd de ui en de paprika in kleine blokjes en bak ze 3 minuten in de olie op middelhoog vuur",
+   "Verkruimel de tofu met je handen boven de pan en voeg de kurkuma, zout en peper toe",
+   "Bak 4 tot 5 minuten al roerend, tot de tofu heet en lichtgoud is",
+   "Roer de spinazie erdoor tot hij slinkt en schep de roertofu op het geroosterde brood"
+  ]
+ },
+ "b-chickpea-potato-hash": {
+  "name": "Ontbijthash met kikkererwten en aardappel",
+  "description": "Knapperig gebakken aardappelen met kikkererwten, ui en spinazie",
+  "instructions": [
+   "Snijd de aardappelen in blokjes van 1 cm en de ui in blokjes",
+   "Verhit de olie in een brede pan en bak de aardappelen 12 tot 15 minuten op middelhoog vuur goudbruin en gaar; keer ze af en toe",
+   "Voeg de ui, de uitgelekte kikkererwten, het paprikapoeder, zout en peper toe en bak nog 4 minuten",
+   "Roer de spinazie erdoor tot hij slinkt en serveer warm"
+  ]
+ },
+ "b-shakshuka": {
+  "name": "Shakshuka",
+  "description": "Eieren gepocheerd in een gekruide saus van tomaat en paprika",
+  "instructions": [
+   "Snijd de ui en de paprika in reepjes en hak de knoflook fijn",
+   "Verhit de olijfolie in een kleine pan en bak de ui en de paprika 5 minuten zacht; voeg dan de knoflook en de kruiden 1 minuut toe",
+   "Giet de tomatenblokjes erbij, breng op smaak en laat 8 tot 10 minuten zachtjes koken tot de saus iets dikker is",
+   "Maak {n:eggs} kuiltjes in de saus, breek de eieren erin, dek af en laat 4 tot 5 minuten garen tot het eiwit gestold is"
+  ]
+ },
+ "b-cottage-cheese-apple-bowl": {
+  "name": "Hüttenkäse met appel en honing",
+  "description": "Eiwitrijke hüttenkäse met knapperige appel, honing en kaneel",
+  "instructions": [
+   "Schep de hüttenkäse in een kom",
+   "Verwijder het klokhuis van de appel en snijd hem in dunne plakjes of kleine blokjes",
+   "Leg de appel op de hüttenkäse, besprenkel met honing en bestrooi met kaneel"
+  ]
+ },
+ "b-pancakes-strawberries": {
+  "name": "Pannenkoeken met aardbeien",
+  "description": "Dunne zelfgemaakte pannenkoeken met verse aardbeien en honing",
+  "instructions": [
+   "Klop de bloem, het ei, de melk en het zout tot een glad beslag en laat het 5 minuten rusten",
+   "Smelt een beetje van de boter in een koekenpan met antiaanbaklaag op middelhoog vuur",
+   "Giet er een dun laagje beslag in, bak ongeveer 1 minuut per kant goudbruin en herhaal met de rest van het beslag",
+   "Snijd de aardbeien in plakjes en serveer de pannenkoeken met de aardbeien en de honing erop"
+  ]
+ },
+ "b-banana-egg-pancakes": {
+  "name": "Pannenkoekjes van banaan en ei",
+  "description": "Pannenkoekjes zonder bloem van twee ingrediënten, met blauwe bessen",
+  "instructions": [
+   "Prak de banaan heel fijn in een kom en klop de eieren en de kaneel erdoor",
+   "Verhit de olie in een koekenpan met antiaanbaklaag op middelmatig tot laag vuur",
+   "Schep kleine lepels beslag in de pan en bak ongeveer 2 minuten per kant; keer voorzichtig",
+   "Serveer met de blauwe bessen erop"
+  ]
+ },
+ "b-breakfast-burrito": {
+  "name": "Ontbijtburrito",
+  "description": "Een warme tortilla gevuld met roerei, bonen, kaas en tomaat",
+  "instructions": [
+   "Snijd de tomaat in blokjes, rasp de kaas en laat de bonen uitlekken",
+   "Verhit de olie in een pan, verwarm de bonen 1 minuut met de komijn, giet dan de losgeklopte eieren erbij en roer tot ze net gestold zijn",
+   "Verwarm de tortilla 20 seconden per kant in een droge pan",
+   "Vul hem met de eieren en bonen, de kaas en de tomaat, vouw de zijkanten naar binnen en rol op"
+  ]
+ },
+ "b-sweet-potato-bean-hash": {
+  "name": "Hash van zoete aardappel en bonen",
+  "description": "Gebakken zoete aardappel met kidneybonen, paprika en ui",
+  "instructions": [
+   "Schil de zoete aardappel en snijd hem in blokjes van 1 cm; snijd de ui en de paprika in blokjes",
+   "Verhit de olijfolie in een brede pan en bak de zoete aardappel 10 tot 12 minuten op middelhoog vuur gaar en bruin",
+   "Voeg de ui, de paprika en de kruiden toe en bak nog 4 minuten",
+   "Roer de uitgelekte bonen erdoor, verwarm 2 minuten mee en breng op smaak"
+  ]
+ },
+ "b-spicy-egg-avocado-taco": {
+  "name": "Pittige ontbijttaco met ei en avocado",
+  "description": "Tortilla met roerei met chili, avocado en tomaat",
+  "instructions": [
+   "Klop de eieren los met de chilivlokken en zout en roerbak ze 2 minuten in de olie op middelhoog vuur",
+   "Prak de avocado met limoensap en een snufje zout",
+   "Verwarm de tortilla in een droge pan, besmeer met de avocado en leg de eieren en de tomatenblokjes erop"
+  ]
+ },
+ "b-chili-scrambled-eggs-toast": {
+  "name": "Roerei met chili op toast",
+  "description": "Zacht roerei met chili en tomaat op beboterde toast",
+  "instructions": [
+   "Klop de eieren los met de chilivlokken en zout",
+   "Smelt de boter in een pan op middelmatig tot laag vuur, bak de tomatenblokjes 1 minuut en giet dan de eieren erbij",
+   "Roer 2 tot 3 minuten voorzichtig tot het ei zacht gestold is",
+   "Schep op het geroosterde brood"
+  ]
+ },
+ "b-spicy-tofu-bean-wrap": {
+  "name": "Pittige ontbijtwrap met tofu en bonen",
+  "description": "Tortilla met roertofu met chili, kidneybonen en paprika",
+  "instructions": [
+   "Snijd de paprika in blokjes en bak ze 2 minuten in de olie",
+   "Verkruimel de tofu erboven, voeg de chilivlokken, de komijn, de kurkuma en zout toe en bak 4 minuten",
+   "Voeg de uitgelekte kidneybonen toe en warm ze goed door",
+   "Verwarm de tortilla, leg de vulling erop en rol op"
+  ]
+ },
+ "b-harissa-chickpeas-toast": {
+  "name": "Kikkererwten met harissa op toast",
+  "description": "Warme gekruide kikkererwten met tomaat en spinazie op toast",
+  "instructions": [
+   "Verwarm de olijfolie in een pan en bak de tomatenblokjes 2 minuten met de harissa",
+   "Voeg de uitgelekte kikkererwten toe en bak 3 minuten; plet er een paar licht",
+   "Roer de spinazie erdoor tot hij geslonken is en breng op smaak met zout en citroensap",
+   "Schep over het geroosterde brood"
+  ]
+ },
+ "b-menemen": {
+  "name": "Menemen",
+  "description": "Turks roerei in zachte tomaat en paprika, met brood",
+  "instructions": [
+   "Snijd de ui en de paprika in blokjes en bak ze 4 minuten zacht in de olijfolie",
+   "Voeg de gehakte tomaat, de chilivlokken, het paprikapoeder en zout toe en bak 5 minuten tot het sauzig is",
+   "Giet de licht losgeklopte eieren erbij en roer 2 minuten voorzichtig tot ze net gestold zijn",
+   "Serveer uit de pan met het brood"
+  ]
+ },
+ "b-yogurt-banana-oat-bowl": {
+  "name": "Yoghurt met banaan en havermout",
+  "description": "Yoghurt met banaan, aardbeien en een handje havermout",
+  "instructions": [
+   "Schep de yoghurt in een kom en roer de havermout erdoor",
+   "Snijd de banaan en de aardbeien in plakjes",
+   "Leg het fruit op de yoghurt en bestrooi met een snufje kaneel"
+  ]
+ },
+ "b-cottage-cheese-tomato-toast": {
+  "name": "Toast met hüttenkäse en tomaat",
+  "description": "Toast met hüttenkäse, tomaat en komkommer",
+  "instructions": [
+   "Rooster het brood",
+   "Verdeel de hüttenkäse over beide sneetjes",
+   "Leg de plakjes tomaat en komkommer erop en bestrooi met zout, peper en oregano"
+  ]
+ },
+ "b-fruit-salad-yogurt": {
+  "name": "Fruitsalade met yoghurt",
+  "description": "Appel, banaan en bessen met yoghurt",
+  "instructions": [
+   "Verwijder het klokhuis van de appel en snijd hem in blokjes; snijd de banaan en de aardbeien in plakjes",
+   "Meng al het fruit, ook de blauwe bessen, met een kneepje citroensap",
+   "Serveer met de yoghurt erover geschept"
+  ]
+ },
+ "b-banana-berry-porridge": {
+  "name": "Zuivelvrije havermoutpap met banaan en bessen",
+  "description": "Havermout gekookt in water met geprakte banaan, blauwe bessen en pindakaas",
+  "instructions": [
+   "Prak de helft van de banaan en doe hem met de havermout, het water en het zout in een pan",
+   "Laat 5 minuten zachtjes koken en roer, tot het dik en romig is",
+   "Roer de helft van de blauwe bessen erdoor",
+   "Serveer met de rest van de banaan in plakjes, de overige blauwe bessen, de pindakaas en kaneel erop"
+  ]
+ },
+ "b-strawberry-banana-smoothie-bowl": {
+  "name": "Smoothiebowl met aardbei en banaan",
+  "description": "Dikke kom van gepureerde yoghurt en fruit met havermout en honing",
+  "instructions": [
+   "Pureer de yoghurt met de helft van de banaan en twee derde van de aardbeien tot een gladde, dikke massa",
+   "Schenk in een kom",
+   "Leg de rest van de banaan en de aardbeien in plakjes erop, met de havermout en de honing"
+  ]
+ },
+ "b-french-toast": {
+  "name": "Wentelteefjes met aardbeien",
+  "description": "Brood geweekt in ei en gebakken in boter, met aardbeien en honing",
+  "instructions": [
+   "Klop de eieren los met de melk, de kaneel en het zout in een diep bord",
+   "Week elk sneetje brood 20 seconden per kant in het mengsel",
+   "Bak in de boter op middelhoog vuur 2 tot 3 minuten per kant goudbruin",
+   "Serveer met de plakjes aardbei en de honing erop"
+  ]
+ },
+ "b-full-cooked-breakfast": {
+  "name": "Uitgebreid warm ontbijt",
+  "description": "Spek, gebakken eieren, champignons en tomaat met beboterde toast",
+  "instructions": [
+   "Bak het spek 5 tot 6 minuten in een droge pan op middelhoog vuur knapperig en leg het op een bord",
+   "Bak de gehalveerde champignons en de gehalveerde tomaat 4 minuten in het spekvet",
+   "Schuif ze opzij en bak de eieren 2 tot 3 minuten, tot het eiwit gestold is",
+   "Serveer alles met het geroosterde, beboterde brood en een beetje peper"
+  ]
+ },
+ "b-egg-ham-cheese-toastie": {
+  "name": "Tosti met ei, ham en kaas",
+  "description": "In de pan gebakken tosti met een gebakken ei, ham en gesmolten kaas",
+  "instructions": [
+   "Bak het ei 2 minuten in de helft van de boter, keer het en bak nog 30 seconden",
+   "Leg de ham, het ei en de plakjes kaas tussen het brood",
+   "Bak de tosti in de rest van de boter op middelhoog vuur 2 minuten per kant, tot hij goudbruin is en de kaas smelt"
+  ]
+ },
+ "b-salmon-scrambled-eggs-toast": {
+  "name": "Roerei met zalm op toast",
+  "description": "Zacht roerei met stukjes zalm op beboterde toast",
+  "instructions": [
+   "Bak de zalm 3 minuten per kant in een koekenpan met antiaanbaklaag op middelhoog vuur en trek hem dan in stukjes",
+   "Smelt de boter in de pan, giet de losgeklopte eieren erin en roer 2 minuten voorzichtig tot ze zacht gestold zijn",
+   "Schep de zalm erdoor",
+   "Serveer op het geroosterde brood met peper en citroensap"
+  ]
+ },
+ "b-banana-oat-pancakes": {
+  "name": "Pannenkoekjes van banaan en havermout",
+  "description": "Pannenkoekjes uit de blender van havermout, banaan en ei, met blauwe bessen",
+  "instructions": [
+   "Pureer de havermout, de banaan, het ei, de melk, de kaneel en het zout tot een glad beslag en laat het 2 minuten staan",
+   "Verhit de olie in een koekenpan met antiaanbaklaag op middelhoog vuur",
+   "Bak kleine pannenkoekjes ongeveer 2 minuten per kant goudbruin",
+   "Serveer met de blauwe bessen erop"
+  ]
+ },
+ "b-cheese-tomato-omelette": {
+  "name": "Omelet met kaas en tomaat",
+  "description": "Omelet van drie eieren met gesmolten kaas en verse tomaat",
+  "instructions": [
+   "Klop de eieren los met zout en peper en snijd de tomaat in blokjes",
+   "Smelt de boter in een koekenpan met antiaanbaklaag op middelhoog vuur en giet de eieren erin",
+   "Strooi de geraspte kaas en de tomaat over één helft als het ei bijna gestold is",
+   "Klap dicht en bak nog 1 minuut"
+  ]
+ },
+ "b-avocado-chickpea-smash-toast": {
+  "name": "Toast met geprakte avocado en kikkererwten",
+  "description": "Toast met avocado en kikkererwten, geprakt met citroen",
+  "instructions": [
+   "Rooster het brood",
+   "Prak de avocado en de uitgelekte kikkererwten grof met het sap van de citroen, zout en peper",
+   "Schep op de toast en bestrooi met paprikapoeder"
+  ]
+ },
+ "b-tofu-vegetable-scramble": {
+  "name": "Roertofu met groenten",
+  "description": "Roertofu met champignons, spinazie en tomaat",
+  "instructions": [
+   "Snijd de champignons in plakjes en bak ze 3 minuten in de olie",
+   "Verkruimel de tofu erboven, voeg de kurkuma, zout en peper toe en bak 4 minuten",
+   "Voeg de tomatenblokjes en de spinazie toe en bak tot de spinazie slinkt"
+  ]
+ },
+ "b-rice-porridge-cinnamon-apple": {
+  "name": "Romige rijstepap met kaneelappel",
+  "description": "Rijst zacht gekookt in melk tot hij romig is, met appel en honing",
+  "instructions": [
+   "Doe de rijst, de melk en het zout in een pan en breng zachtjes aan de kook",
+   "Kook 25 tot 30 minuten op laag vuur en roer vaak, tot de rijst zacht en de pap romig is",
+   "Snijd de appel in blokjes en roer de helft er de laatste 5 minuten door",
+   "Serveer met de rest van de appel, de honing en de kaneel erop"
+  ]
+ },
+ "b-feta-tomato-egg-toast": {
+  "name": "Toast met feta, tomaat en ei",
+  "description": "Toast met verkruimelde feta, tomaat, olijfolie en een gebakken ei",
+  "instructions": [
+   "Rooster het brood en beleg het met de plakjes tomaat en de verkruimelde feta",
+   "Bak het ei 2 tot 3 minuten in de olijfolie",
+   "Leg het ei erop en maak af met oregano en peper"
+  ]
+ },
+ "b-big-breakfast-burrito": {
+  "name": "Grote ontbijtburrito",
+  "description": "Twee tortilla's gevuld met roerei, bonen, kaas en tomaat",
+  "instructions": [
+   "Verwarm de uitgelekte kidneybonen 1 minuut met de komijn in de olie",
+   "Giet de losgeklopte eieren erbij, breng op smaak en roer tot ze net gestold zijn",
+   "Verwarm de tortilla's in een droge pan",
+   "Verdeel de eieren en bonen, de geraspte kaas en de tomatenblokjes erover, vouw de zijkanten naar binnen en rol op"
+  ]
+ },
+ "b-protein-oats": {
+  "name": "Eiwitrijke havermout met pindakaas",
+  "description": "Dikke havermout met Griekse yoghurt, pindakaas en banaan",
+  "instructions": [
+   "Laat de havermout 4 tot 5 minuten zachtjes koken met de melk en het zout en roer, tot hij dik is",
+   "Haal van het vuur en roer de helft van de yoghurt erdoor",
+   "Leg de rest van de yoghurt, de plakjes banaan, de pindakaas en kaneel erop"
+  ]
+ },
+ "b-egg-bacon-cheese-sandwich": {
+  "name": "Sandwich met ei, spek en kaas",
+  "description": "Geroosterde sandwich van drie lagen met gebakken eieren, spek en kaas",
+  "instructions": [
+   "Bak het spek 4 tot 5 minuten in een droge pan op middelhoog vuur knapperig en leg het apart",
+   "Bak de eieren 2 minuten in het spekvet, keer ze en bak nog 30 seconden",
+   "Rooster het brood en besmeer het met boter",
+   "Stapel de sandwich met de eieren, het spek en de plakjes kaas tussen de sneetjes en bestrooi met peper"
+  ]
+ },
+ "b-salmon-avocado-egg-toast": {
+  "name": "Toast met zalm, avocado en ei",
+  "description": "Toast met avocado, stukjes zalm en gebakken eieren",
+  "instructions": [
+   "Bak de zalm 3 minuten per kant in een koekenpan met antiaanbaklaag op middelhoog vuur en trek hem in stukjes",
+   "Bak de eieren 2 tot 3 minuten in dezelfde pan",
+   "Rooster het brood en besmeer het met de avocado, geprakt met citroensap en zout",
+   "Leg de zalm en de eieren erop en bestrooi met peper"
+  ]
+ },
+ "b-loaded-potato-omelette": {
+  "name": "Rijk gevulde omelet met aardappel, ham en kaas",
+  "description": "Omelet van drie eieren over gebakken aardappelen met ham en kaas",
+  "instructions": [
+   "Snijd de aardappelen in kleine blokjes en bak ze 10 tot 12 minuten in de olie op middelhoog vuur goudbruin en gaar",
+   "Voeg de ham in reepjes toe en bak 1 minuut mee",
+   "Giet de losgeklopte eieren, op smaak gebracht met zout en peper, erover en bak 3 minuten zachtjes tot ze bijna gestold zijn",
+   "Bestrooi met de geraspte kaas, dek 1 minuut af tot hij smelt en klap dubbel"
+  ]
+ },
+ "b-tofu-scramble-burrito": {
+  "name": "Burrito met roertofu",
+  "description": "Twee tortilla's gevuld met gekruide roertofu en kidneybonen",
+  "instructions": [
+   "Verkruimel de tofu boven de hete olie, voeg de kurkuma, de komijn, het paprikapoeder en zout toe en bak 5 minuten",
+   "Voeg de uitgelekte kidneybonen toe en verwarm 2 minuten mee",
+   "Verwarm de tortilla's in een droge pan",
+   "Verdeel de vulling erover, vouw de zijkanten naar binnen en rol op"
+  ]
+ },
+ "b-peanut-butter-overnight-oats": {
+  "name": "Overnight oats met pindakaas en banaan",
+  "description": "Zuivelvrije overnight oats met kokosmelk, pindakaas en banaan",
+  "instructions": [
+   "Roer de havermout, de kokosmelk, het water, het zout en de helft van de pindakaas door elkaar in een pot of kom",
+   "Dek af en zet een nacht in de koelkast, of minstens 4 uur",
+   "Roer goed door, maak zo nodig losser met een scheutje water en leg de plakjes banaan, de rest van de pindakaas en kaneel erop"
+  ]
+ },
+ "b-greek-yogurt-power-bowl": {
+  "name": "Powerbowl met Griekse yoghurt",
+  "description": "Grote kom Griekse yoghurt met banaan, blauwe bessen, pindakaas en honing",
+  "instructions": [
+   "Schep de yoghurt in een kom",
+   "Snijd de banaan in plakjes en leg ze er met de blauwe bessen op",
+   "Voeg de pindakaas in kleine lepeltjes toe, besprenkel met de honing en bestrooi met kaneel"
+  ]
+ },
+ "b-cheesy-egg-quesadilla": {
+  "name": "Quesadilla met ei, kaas en spinazie",
+  "description": "Knapperige tortilla's gevuld met roerei, spinazie en gesmolten kaas",
+  "instructions": [
+   "Smelt de boter in een pan, laat de spinazie 30 seconden slinken, giet dan de losgeklopte eieren erbij en roer tot ze net gestold zijn",
+   "Beleg één tortilla met de helft van de geraspte kaas, de eieren en de rest van de kaas en leg de tweede tortilla erop",
+   "Veeg de pan schoon en bak de quesadilla op middelhoog vuur 2 minuten per kant knapperig",
+   "Snijd in punten"
+  ]
+ },
+ "b-banana-pancake-stack": {
+  "name": "Stapel pannenkoeken met banaan",
+  "description": "Dikke pannenkoeken met banaan, boter en honing",
+  "instructions": [
+   "Klop de bloem, de eieren, de melk en het zout tot een glad, dik beslag en laat het 5 minuten rusten",
+   "Smelt een beetje van de boter in een koekenpan met antiaanbaklaag op middelhoog vuur",
+   "Bak kleine dikke pannenkoeken ongeveer 2 minuten per kant goudbruin en voeg zo nodig boter toe",
+   "Stapel ze met de plakjes banaan, besprenkel met de honing en bestrooi met kaneel"
+  ]
+ },
+ "b-tofu-bean-breakfast-plate": {
+  "name": "Ontbijtbord met tofu en bonen",
+  "description": "Roertofu met kidneybonen, tomaat en spinazie, en een sneetje toast",
+  "instructions": [
+   "Verhit de olie in een pan op middelhoog vuur, verkruimel de tofu erboven en bak hem 4 minuten met de kurkuma, zout en zwarte peper",
+   "Voeg de uitgelekte bonen en de tomatenblokjes toe en bak 3 minuten",
+   "Roer de spinazie erdoor tot hij geslonken is en rooster intussen het brood",
+   "Serveer de roertofu met de toast"
+  ]
+ },
+ "b-breakfast-egg-fried-rice": {
+  "name": "Gebakken rijst met ei als ontbijt",
+  "description": "Rijst gebakken met roerei, doperwten en sojasaus",
+  "instructions": [
+   "Kook de rijst 12 minuten met het deksel op de pan in {150} ml water met zout",
+   "Verhit de olie in een pan op middelhoog tot hoog vuur, breek de eieren erin en roer ze 1 minuut tot ze net gestold zijn",
+   "Voeg de rijst en de doperwten toe en bak 3 minuten; maak de rijst los",
+   "Roer de sojasaus en een beetje witte peper erdoor en serveer"
+  ]
+ },
+ "b-savoury-soy-oats-egg": {
+  "name": "Hartige havermout met ei en soja",
+  "description": "Havermout gekookt in water met champignons en spinazie, met een gebakken ei en sojasaus erop",
+  "instructions": [
+   "Snijd de champignons in plakjes en bak ze 3 minuten in de helft van de olie in een pannetje op middelhoog vuur",
+   "Voeg de havermout en {250} ml water toe en laat 4 minuten zachtjes koken, al roerend, tot het dik is; roer dan de spinazie erdoor tot hij geslonken is",
+   "Bak het ei in de rest van de olie in een kleine pan tot het eiwit gestold is",
+   "Schenk de havermout in een kom, leg het ei erop en besprenkel met de sojasaus"
+  ]
+ },
+ "b-rice-congee-egg": {
+  "name": "Rijstcongee met ei en champignons",
+  "description": "Rijst zacht en zijdeachtig gekookt, met champignons, een zacht ei en sojasaus",
+  "instructions": [
+   "Spoel de rijst, doe hem met {500} ml water en een snufje zout in een pan en breng aan de kook",
+   "Zet het vuur lager en laat 30 minuten zachtjes koken; roer af en toe, tot de rijst uiteengevallen is tot een dikke pap",
+   "Snijd de champignons in plakjes en voeg ze de laatste 5 minuten toe",
+   "Kook het ei 7 minuten in een aparte pan, pel het en halveer het",
+   "Serveer de congee met het ei erop, de sojasaus en een beetje geraspte gember"
+  ]
+ },
+ "b-soy-tofu-rice-bowl": {
+  "name": "Ontbijtrijstkom met sojatofu",
+  "description": "Warme rijst met goudbruine tofu, geslonken spinazie en sojasaus",
+  "instructions": [
+   "Kook de rijst 12 minuten met het deksel op de pan in {120} ml water met zout",
+   "Dep de tofu droog en snijd hem in blokjes; bak hem dan 6 minuten in de olie op middelhoog tot hoog vuur goudbruin",
+   "Voeg de spinazie en de sojasaus toe en schep 1 minuut om tot de spinazie geslonken is",
+   "Schep de tofu en de spinazie over de rijst"
+  ]
+ },
+ "b-caprese-toast": {
+  "name": "Toast caprese",
+  "description": "Toast met mozzarella, plakjes tomaat en olijfolie",
+  "instructions": [
+   "Rooster het brood",
+   "Snijd de mozzarella en de tomaat in plakjes en leg ze om en om op de toast",
+   "Besprenkel met de olijfolie en bestrooi met zout, zwarte peper en een snufje gedroogde oregano"
+  ]
+ },
+ "b-zucchini-parmesan-frittata": {
+  "name": "Frittata met courgette en Parmezaan",
+  "description": "Een dikke open omelet met courgette en Parmezaanse kaas, met een sneetje toast",
+  "instructions": [
+   "Snijd de courgette in dunne plakjes en bak ze 4 minuten in de olijfolie in een kleine pan op middelhoog vuur zacht",
+   "Klop de eieren los met de geraspte Parmezaanse kaas, zout en zwarte peper en giet ze over de courgette",
+   "Bak 4 minuten op laag vuur tot het ei bijna gestold is en dek de pan dan 2 minuten af zodat de bovenkant stolt",
+   "Laat op een bord glijden en serveer met het geroosterde brood"
+  ]
+ },
+ "b-pesto-eggs-toast": {
+  "name": "Pesto-eieren op toast",
+  "description": "Eieren gebakken in pesto, op toast met verse tomaat",
+  "instructions": [
+   "Verwarm de pesto in een pan op middelhoog vuur tot hij sist",
+   "Breek de eieren erin en bak ze 3 minuten tot het eiwit gestold is; schep de pesto erover",
+   "Rooster het brood, snijd de tomaat in plakjes en leg ze op de toast",
+   "Leg de eieren erop en bestrooi met zwarte peper"
+  ]
+ },
+ "b-tomato-chickpea-bruschetta": {
+  "name": "Bruschetta met tomaat en kikkererwten",
+  "description": "Toast ingewreven met knoflook, met tomaat en kikkererwten in olijfolie",
+  "instructions": [
+   "Snijd de tomaat in blokjes en meng hem met de uitgelekte kikkererwten, de olijfolie, een snufje zout en zwarte peper; plet een paar kikkererwten licht met een vork",
+   "Rooster het brood en wrijf het in met de snijkant van de gehalveerde knoflook",
+   "Schep de tomaat en de kikkererwten op de toast en maak af met een snufje gedroogde oregano"
+  ]
+ },
+ "b-soft-egg-bruschetta": {
+  "name": "Bruschetta met zachtgekookte eieren",
+  "description": "Tomatenbruschetta met zachtgekookte eieren erop",
+  "instructions": [
+   "Kook de eieren 6 minuten, laat ze schrikken onder koud water en pel ze",
+   "Snijd de tomaat in blokjes en meng hem met de olijfolie, zout en zwarte peper",
+   "Rooster het brood, wrijf het in met de snijkant van de gehalveerde knoflook en schep de tomaat erop",
+   "Halveer de eieren en leg ze op de bruschetta"
+  ]
+ }
+}

@@ -272,6 +272,7 @@ const nl: Translation = {
     likeFew: "Vind er een paar leuk om je volgende plan vorm te geven.",
     startOver: "Opnieuw beginnen",
     passOn: "{{name}} overslaan",
+    unlikeName: "{{name}} niet meer leuk vinden",
     likeName: "{{name}} leuk vinden",
     cardA11y: "{{name}}. {{description}}. {{min}} minuten, {{kcal}} kilocalorieën",
     cardHint: "Tik twee keer voor details. Veeg naar rechts voor leuk, naar links om over te slaan. Er zijn extra acties beschikbaar.",
@@ -436,6 +437,7 @@ const nl: Translation = {
     addToList: "Dit deel aan de boodschappenlijst toevoegen",
   },
   card: {
+    edited: ", aangepast",
     kicker: "{{day}}, {{type}}",
     eatingOut: "Uit eten",
     eatingOutName: "Uit eten",

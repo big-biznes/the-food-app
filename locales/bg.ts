@@ -272,6 +272,7 @@ const bg: Translation = {
     likeFew: "Харесайте няколко, за да оформите следващия си план.",
     startOver: "Отначало",
     passOn: "Пропусни {{name}}",
+    unlikeName: "Махни харесването на {{name}}",
     likeName: "Харесай {{name}}",
     cardA11y: "{{name}}. {{description}}. {{min}} минути, {{kcal}} килокалории",
     cardHint: "Докоснете два пъти за подробности. Плъзнете надясно, за да харесате, наляво — за да пропуснете. Има и допълнителни действия.",
@@ -436,6 +437,7 @@ const bg: Translation = {
     addToList: "Добави тази част в списъка за пазаруване",
   },
   card: {
+    edited: ", променено",
     kicker: "{{day}}, {{type}}",
     eatingOut: "Навън",
     eatingOutName: "Хранене навън",

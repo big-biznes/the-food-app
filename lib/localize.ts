@@ -4,7 +4,9 @@
 
 import ingredientDefs from '@/data/ingredients.json';
 import type { Ingredient } from '@/data/meals';
+import { renderText, type PersonalMeal } from '@/data/portions';
 import type { PrepLine } from '@/data/prep';
+import { recipeTextOf, type RecipeText } from '@/data/recipeText';
 import { parseItemText } from '@/lib/parseItem';
 import i18n from '@/lib/i18n';
 
@@ -107,4 +109,26 @@ export function prepLineText(line: PrepLine): string {
   }
   const key = PREP_JOB[verb];
   return key ? tr(`prepJob.${key}`, { what }) : line.label;
+}
+
+/**
+ * A meal's name, description, steps and seasonings in the app's language, with the
+ * numbers that follow the portion filled in. English, or a recipe without a translation,
+ * reads as the meal itself does. The steps keep their order and number, so code that
+ * reads the English steps (which ingredients a step uses) can go by position.
+ */
+export function mealText(meal: PersonalMeal): RecipeText {
+  const own = { name: meal.name, description: meal.description, instructions: meal.instructions, seasonings: meal.seasonings ?? [] };
+  const tr = recipeTextOf(meal.id, i18n.language);
+  if (!tr) return own;
+  // Counts in the text ("make {n:eggs} wells") come from the full recipe, left-out ingredients included.
+  const all = [...meal.ingredients, ...(meal.removed ?? [])];
+  const filled = (texts: string[], fallback: string[]) =>
+    texts.length === fallback.length ? texts.map(text => renderText(text, meal.scale ?? 1, all)) : fallback;
+  return {
+    name: tr.name,
+    description: tr.description,
+    instructions: filled(tr.instructions, own.instructions),
+    seasonings: filled(tr.seasonings, own.seasonings),
+  };
 }

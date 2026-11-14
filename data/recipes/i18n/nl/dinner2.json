@@ -1,0 +1,484 @@
+{
+ "d-ratatouille-baked-eggs": {
+  "name": "Ratatouille met eieren",
+  "description": "Stoof van courgette, paprika en tomaat met eieren en aardappelen",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout en giet af",
+   "Snijd de ui, de courgette en de paprika in blokjes en bak ze 8 minuten in de olijfolie; voeg dan de plakjes knoflook en de tijm toe",
+   "Voeg de tomatenblokjes toe en laat 12 minuten zachtjes koken tot de saus dik is; breng op smaak",
+   "Maak {n:eggs} kuiltjes, breek de eieren erin, dek af en laat 5 minuten garen tot ze gestold zijn; serveer met de aardappelen"
+  ]
+ },
+ "d-tofu-souvlaki-bowl": {
+  "name": "Souvlakibowl met tofu",
+  "description": "Tofu met citroen en oregano op couscous met komkommer, tomaat en paprika",
+  "instructions": [
+   "Giet het kokende water over de couscous met een snufje zout, dek 5 minuten af en maak los met een vork",
+   "Snijd de tofu in blokjes, meng ze met de oregano, zout, peper en de helft van het sap van de citroen en bak ze 6 minuten in de olijfolie goudbruin",
+   "Snijd de komkommer, de tomaat en de paprika in blokjes",
+   "Serveer de tofu op de couscous met de rauwe groenten en de rest van het citroensap"
+  ]
+ },
+ "d-beef-chickpea-tagine": {
+  "name": "Tajine met rundvlees en kikkererwten",
+  "description": "Langzaam gegaard gekruid rundvlees met kikkererwten en wortel, met couscous",
+  "instructions": [
+   "Snijd het rundvlees in stukken en bak het 4 minuten bruin in de olijfolie; bak dan de blokjes ui 3 minuten mee",
+   "Roer de komijn, het paprikapoeder, de kaneel en de chilivlokken erdoor en dan de tomatenblokjes, de plakjes wortel en het water",
+   "Dek af en laat 50 tot 60 minuten op laag vuur zachtjes koken tot het vlees mals is; voeg de laatste 10 minuten de uitgelekte kikkererwten toe",
+   "Giet {100} ml kokend water over de couscous met een snufje zout, dek 5 minuten af, maak los en serveer bij de tajine"
+  ]
+ },
+ "d-salmon-nicoise-salad": {
+  "name": "Salade niçoise met zalm",
+  "description": "Warme zalm met aardappelen, sperziebonen, ei, tomaat en sla",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten; kook het ei de laatste 8 minuten mee en de sperziebonen de laatste 5 en giet af",
+   "Bak de zalm 3 tot 4 minuten per kant in een beetje van de olijfolie",
+   "Klop de rest van de olijfolie met de mosterd, de azijn, zout en peper",
+   "Verdeel de sla, de aardappelen, de bonen, de tomatenpartjes en het ei in vieren over een bord, leg de zalm erop en giet de dressing erover"
+  ]
+ },
+ "d-lemon-garlic-chicken-potatoes": {
+  "name": "Kip met citroen en knoflook, aardappelen en sperziebonen",
+  "description": "In de pan gebakken kip met gekookte aardappelen en sperziebonen",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout, kook de sperziebonen de laatste 5 minuten mee en giet af",
+   "Kruid de kip met de tijm, zout en peper en bak hem in de olie op middelhoog vuur 6 minuten per kant",
+   "Voeg de laatste minuut de plakjes knoflook en het sap van de citroen toe aan de pan",
+   "Serveer de kip met de aardappelen en de bonen en schep het bakvocht erover"
+  ]
+ },
+ "d-cottage-pie": {
+  "name": "Cottage pie",
+  "description": "Rundergehakt met wortel en doperwten onder een laag aardappelpuree",
+  "instructions": [
+   "Verwarm de oven voor op 200°C en kook de aardappelen, in stukken gesneden, 15 minuten; giet af en stamp ze fijn met de boter en de melk",
+   "Bak het rundergehakt 8 minuten bruin met de blokjes ui en wortel in een droge pan",
+   "Roer de tomatenpuree, het water en het bouillonblokje erdoor, laat 10 minuten zachtjes koken en voeg dan de doperwten toe",
+   "Schep in een kleine ovenschaal, verdeel de puree erover en bak 20 minuten goudbruin"
+  ]
+ },
+ "d-salmon-mash-peas": {
+  "name": "Zalm met puree en doperwten",
+  "description": "Gebakken zalm met romige aardappelpuree en doperwten",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout, kook de doperwten de laatste 2 minuten mee en giet af",
+   "Schep de doperwten eruit en stamp de aardappelen fijn met de boter en de melk",
+   "Kruid de zalm en bak hem in een koekenpan met antiaanbaklaag op middelhoog vuur 3 tot 4 minuten per kant",
+   "Serveer met de puree, de doperwten en de citroen in partjes"
+  ]
+ },
+ "d-chicken-spinach-curry": {
+  "name": "Curry met kip en spinazie",
+  "description": "Kipcurry op basis van tomaat met spinazie en yoghurt, met rijst",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 5 minuten zacht in de olie; voeg dan de gehakte knoflook, de gember, het kerriepoeder en de chilivlokken 1 minuut toe",
+   "Voeg de kip in stukken toe en bak 3 minuten, dan de tomatenblokjes, en laat 15 minuten zachtjes koken",
+   "Kook intussen de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Roer de spinazie door de curry tot hij geslonken is, haal van het vuur, roer de yoghurt erdoor en serveer met de rijst"
+  ]
+ },
+ "d-pork-mustard-cream-mash": {
+  "name": "Varkensvlees in mosterdroomsaus met puree",
+  "description": "Varkensmedaillons in een romige mosterdsaus met puree en sperziebonen",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout, kook de sperziebonen de laatste 5 minuten mee en giet af",
+   "Schep de bonen eruit en stamp de aardappelen fijn met de boter",
+   "Snijd het varkensvlees in medaillons, kruid ze en bak ze in een koekenpan met antiaanbaklaag 3 minuten per kant",
+   "Roer de roomsaus en de mosterd door de pan, laat 2 minuten zachtjes koken en serveer over het vlees met de puree en de bonen"
+  ]
+ },
+ "d-slow-cooker-beef-stew": {
+  "name": "Runderstoof uit de slowcooker",
+  "description": "Mals rundvlees met aardappelen, wortel en doperwten in een volle jus",
+  "instructions": [
+   "Snijd het rundvlees in stukken, wentel ze door de bloem en bak ze 4 minuten bruin in de olie in een pan",
+   "Doe het in de slowcooker met de aardappelen en de wortels in stukken, de blokjes ui, de tomatenpuree, het water, het bouillonblokje en de tijm",
+   "Gaar 4 uur op de hoge stand of 7 tot 8 uur op de lage stand, tot het vlees uit elkaar valt",
+   "Roer de laatste 10 minuten de doperwten erdoor en breng op smaak"
+  ]
+ },
+ "d-oven-fish-and-chips": {
+  "name": "Fish and chips uit de oven",
+  "description": "Witvis met een krokant laagje, ovenfrieten en doperwten",
+  "instructions": [
+   "Verwarm de oven voor op 220°C, snijd de aardappelen in frieten, meng ze met twee derde van de olie en zout en rooster ze 30 minuten; keer één keer",
+   "Kruid de vis en wentel hem door de bloem gemengd met het paprikapoeder, dan door het losgeklopte ei en dan nog eens door de bloem",
+   "Bak hem in de rest van de olie op middelhoog tot hoog vuur 3 minuten per kant goudbruin",
+   "Kook de doperwten 2 minuten en serveer alles met de citroen in partjes"
+  ]
+ },
+ "d-turkey-sweet-potato-mash": {
+  "name": "Kalkoenschnitzels met zoete-aardappelpuree",
+  "description": "Gebakken kalkoen met puree van zoete aardappel en broccoli",
+  "instructions": [
+   "Schil de zoete aardappel, snijd hem in stukken en kook hem 12 minuten; kook de broccoliroosjes de laatste 4 minuten mee en giet af",
+   "Schep de broccoli eruit en stamp de zoete aardappel fijn met de boter en een snufje zout",
+   "Kruid de kalkoen met het paprikapoeder, zout en peper en bak hem in de olie op middelhoog vuur 4 tot 5 minuten per kant",
+   "Serveer de kalkoen met de puree en de broccoli"
+  ]
+ },
+ "d-chicken-meatballs-mushroom-sauce": {
+  "name": "Kipgehaktballetjes in champignonsaus",
+  "description": "Balletjes van kipgehakt in een romige champignonsaus met rijst",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Kruid het kipgehakt, rol er {8} kleine balletjes van en bak ze 6 minuten bruin in de olie",
+   "Voeg de blokjes ui en de plakjes champignon met de tijm toe en bak 5 minuten",
+   "Giet de roomsaus met een scheutje water erbij, laat 4 minuten zachtjes koken en serveer op de rijst"
+  ]
+ },
+ "d-meatballs-tomato-mash": {
+  "name": "Gehaktballetjes in tomatensaus met puree",
+  "description": "Balletjes van gemengd gehakt gestoofd in tomatensaus, met aardappelpuree",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout, giet af en stamp ze fijn met de boter en de melk",
+   "Meng het gemengde gehakt met de fijngesneden ui, het paprikapoeder, zout en peper en rol er {8} balletjes van",
+   "Bak ze 6 minuten rondom bruin in een droge koekenpan met antiaanbaklaag; keer regelmatig",
+   "Voeg de tomatensaus toe, dek af en laat 10 minuten zachtjes koken; serveer met de puree"
+  ]
+ },
+ "d-pork-mince-potato-skillet": {
+  "name": "Pannetje met varkensgehakt en aardappel",
+  "description": "Varkensgehakt gebakken met aardappelen, paprika en ui",
+  "instructions": [
+   "Snijd de aardappelen in blokjes van 1 cm en bak ze 12 minuten in de olie op middelhoog vuur goudbruin",
+   "Schuif ze opzij en bak het varkensgehakt 6 minuten bruin",
+   "Voeg de blokjes paprika en ui met het paprikapoeder toe en bak 5 minuten",
+   "Breng op smaak en bestrooi met peterselie"
+  ]
+ },
+ "d-lentil-shepherds-pie": {
+  "name": "Shepherd's pie met linzen",
+  "description": "Linzen, wortel en doperwten in jus onder puree met olijfolie",
+  "instructions": [
+   "Bak de blokjes ui en wortel 5 minuten zacht in een derde van de olijfolie en voeg dan de afgespoelde linzen, de tomatenpuree, de tijm, het water en het bouillonblokje toe",
+   "Laat 25 minuten zachtjes koken tot de linzen gaar zijn en de saus dik is en roer dan de doperwten erdoor",
+   "Kook intussen de aardappelen, in stukken gesneden, 15 minuten, giet af en stamp ze fijn met de rest van de olijfolie en zout",
+   "Verwarm de oven voor op 200°C, schep de linzen in een ovenschaal, bedek met de puree en bak 20 minuten"
+  ]
+ },
+ "d-chickpea-sweet-potato-curry": {
+  "name": "Curry met kikkererwten en zoete aardappel",
+  "description": "Milde kokoscurry met kikkererwten, zoete aardappel en spinazie, met rijst",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 4 minuten zacht in de olie; voeg dan de gehakte knoflook, het kerriepoeder en de chilivlokken toe",
+   "Voeg de zoete aardappel in blokjes van 2 cm, de kokosmelk en het water toe en laat 15 minuten zachtjes koken tot hij gaar is",
+   "Kook intussen de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Voeg de uitgelekte kikkererwten en de spinazie toe aan de curry, kook nog 3 minuten, breng op smaak en serveer met de rijst"
+  ]
+ },
+ "d-potato-pepper-egg-hash": {
+  "name": "Hash met aardappel, paprika en ei",
+  "description": "Knapperige aardappelen met paprika en ui, met drie gebakken eieren erop",
+  "instructions": [
+   "Snijd de aardappelen in blokjes van 1 cm en bak ze 12 minuten in twee derde van de olie op middelhoog vuur goudbruin",
+   "Voeg de blokjes paprika en ui met het paprikapoeder toe en bak 5 minuten",
+   "Bak de eieren 2 tot 3 minuten in de rest van de olie in een tweede pan",
+   "Breng de hash op smaak en serveer met de eieren erop"
+  ]
+ },
+ "d-garlic-butter-shrimp-rice": {
+  "name": "Garnalen in knoflookboter met rijst",
+  "description": "Garnalen in knoflookboter met rijst en doperwten",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout, kook de doperwten de laatste 2 minuten mee en giet af",
+   "Smelt de boter in een pan en bak de plakjes knoflook 1 minuut zachtjes",
+   "Voeg de garnalen toe en bak 2 tot 3 minuten tot ze roze zijn",
+   "Knijp het sap van de citroen erboven uit, breng op smaak en serveer op de rijst met doperwten, met peterselie"
+  ]
+ },
+ "d-tuna-fishcakes-salad": {
+  "name": "Tonijnkoekjes met salade",
+  "description": "Krokante koekjes van tonijn en aardappel met sla en tomaat",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten, giet goed af en stamp ze fijn",
+   "Meng de puree met de uitgelekte tonijn, het ei, de peterselie, zout en peper, vorm er {4} koekjes van en bestuif ze met de bloem",
+   "Bak in de olie op middelhoog vuur 4 minuten per kant krokant en goudbruin",
+   "Serveer met de sla, de plakjes tomaat en de citroen in partjes"
+  ]
+ },
+ "d-salmon-sweet-potato-traybake": {
+  "name": "Traybake met zalm, zoete aardappel en broccoli",
+  "description": "Zalm, zoete aardappel en broccoli van één bakplaat, met citroen",
+  "instructions": [
+   "Verwarm de oven voor op 210°C",
+   "Snijd de zoete aardappel in blokjes van 2 cm, meng ze op een bakplaat met de helft van de olijfolie, het paprikapoeder en zout en rooster ze 15 minuten",
+   "Voeg de broccoliroosjes, gemengd met de rest van de olijfolie, en de gekruide zalm toe en rooster nog 12 minuten",
+   "Knijp het sap van de citroen erover"
+  ]
+ },
+ "d-steak-garlic-potatoes": {
+  "name": "Biefstuk met knoflookaardappelen en sperziebonen",
+  "description": "Kort gebakken biefstuk met aardappelen in knoflookboter en sperziebonen",
+  "instructions": [
+   "Kook de aardappelen, in stukken gesneden, 15 minuten in water met zout, kook de sperziebonen de laatste 5 minuten mee en giet af",
+   "Schep de aardappelen 2 minuten om in de boter met de gehakte knoflook op laag vuur",
+   "Kruid het rundvlees royaal en schroei het in de olie op zeer hoog vuur 2 tot 3 minuten per kant dicht",
+   "Laat de biefstuk 3 minuten rusten en serveer met de aardappelen en de bonen"
+  ]
+ },
+ "d-creamy-chicken-broccoli-rice-bake": {
+  "name": "Romige rijstschotel met kip en broccoli",
+  "description": "Kip, broccoli en rijst gebakken in een roomsaus onder kaas",
+  "instructions": [
+   "Verwarm de oven voor op 200°C en kook de rijst 8 minuten in water met zout; kook de broccoliroosjes de laatste 2 minuten mee en giet af",
+   "Snijd de kip in kleine stukjes en bak ze 5 minuten met de blokjes ui in een koekenpan met antiaanbaklaag",
+   "Meng alles met de roomsaus, de nootmuskaat, zout en peper in een kleine ovenschaal",
+   "Bestrooi met de geraspte kaas en bak 15 minuten goudbruin"
+  ]
+ },
+ "d-crispy-tofu-sweet-potato": {
+  "name": "Krokante tofu met zoete aardappel en sperziebonen",
+  "description": "In de pan krokant gebakken tofu met geroosterde zoete aardappel en sperziebonen",
+  "instructions": [
+   "Verwarm de oven voor op 210°C, snijd de zoete aardappel in partjes, meng ze met de helft van de olie, het paprikapoeder en zout en rooster ze 25 minuten",
+   "Leg de sperziebonen de laatste 10 minuten op de bakplaat",
+   "Dep de tofu droog, snijd hem in plakken, kruid ze en bak ze in de rest van de olie 4 minuten per kant krokant",
+   "Serveer samen met een kneepje citroen"
+  ]
+ },
+ "d-smoky-bean-potato-stew": {
+  "name": "Rokerige stoof van bonen en aardappel",
+  "description": "Kidneybonen, aardappelen en wortel in een rokerige tomatenbouillon",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 4 minuten zacht in de olijfolie; roer dan het paprikapoeder erdoor",
+   "Voeg de aardappelen en de wortels in stukken, de tomatenblokjes, het water en het bouillonblokje toe en laat 20 minuten zachtjes koken tot alles gaar is",
+   "Roer de uitgelekte kidneybonen erdoor en kook nog 5 minuten",
+   "Breng op smaak met zout en peper"
+  ]
+ },
+ "d-turkey-burgers-sweet-potato-wedges": {
+  "name": "Kalkoenburgers met zoete-aardappelpartjes",
+  "description": "Magere kalkoenburger met sla en tomaat en geroosterde zoete aardappel",
+  "instructions": [
+   "Verwarm de oven voor op 220°C, snijd de zoete aardappel in partjes, meng ze met het grootste deel van de olie, het paprikapoeder en zout en rooster ze 25 minuten",
+   "Kruid het kalkoengehakt, vorm er een burger van en bak hem in de rest van de olie 5 minuten per kant gaar",
+   "Rooster het brood en besmeer het met mosterd",
+   "Beleg met de sla, de burger en de plakjes tomaat en serveer met de partjes"
+  ]
+ },
+ "d-fish-pie": {
+  "name": "Vispastei",
+  "description": "Witvis en doperwten in een roomsaus onder puree met kaas",
+  "instructions": [
+   "Verwarm de oven voor op 200°C en kook de aardappelen, in stukken gesneden, 15 minuten; giet af en stamp ze fijn met de boter",
+   "Snijd de vis in stukken en meng hem in een kleine ovenschaal met de doperwten, de roomsaus, de nootmuskaat, zout en peper",
+   "Verdeel de puree erover en bestrooi met de geraspte kaas",
+   "Bak 25 minuten tot de schotel goudbruin is en aan de randen bubbelt"
+  ]
+ },
+ "d-honey-mustard-pork-rice": {
+  "name": "Varkensvlees met honing en mosterd, rijst en broccoli",
+  "description": "Reepjes varkensvlees in een glazuur van honing en mosterd met rijst en broccoli",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout, kook de broccoliroosjes de laatste 3 minuten mee en giet af",
+   "Snijd het varkensvlees in reepjes, kruid ze en bak ze 5 minuten in de olie op hoog vuur bruin",
+   "Roer de honing en de mosterd met een scheutje water erdoor en laat 1 minuut bubbelen",
+   "Serveer het vlees met het glazuur op de rijst en de broccoli"
+  ]
+ },
+ "d-chicken-caesar-salad": {
+  "name": "Caesarsalade met kip",
+  "description": "Kip op knapperige sla met croutons, Parmezaanse kaas en een dressing van citroen en yoghurt",
+  "instructions": [
+   "Snijd het brood in blokjes en bak ze 3 minuten in de helft van de olijfolie knapperig; leg ze apart",
+   "Kruid de kip en bak hem in de rest van de olijfolie 5 tot 6 minuten per kant; snijd hem dan in plakken",
+   "Meng de yoghurt met de mosterd, het sap van de citroen, de helft van de geraspte Parmezaanse kaas, zout en peper",
+   "Schep de gescheurde sla door de dressing en leg de kip, de croutons en de rest van de Parmezaanse kaas erop"
+  ]
+ },
+ "d-thai-beef-noodle-salad": {
+  "name": "Thaise noedelsalade met rundvlees",
+  "description": "Kort gebakken rundvlees met koude noedels, komkommer, wortel en een dressing van chili en limoen",
+  "instructions": [
+   "Kook de noedels volgens de verpakking, giet af en spoel onder koud water",
+   "Schroei het rundvlees in de olie op zeer hoog vuur 2 minuten per kant dicht, laat 3 minuten rusten en snijd in dunne plakjes",
+   "Meng de sojasaus met het limoensap en de chilivlokken",
+   "Meng de noedels met de komkommer en de wortels in dunne reepjes, de gesneden sla en de dressing en leg het vlees en de kruiden erop"
+  ]
+ },
+ "d-chickpea-avocado-quinoa-salad": {
+  "name": "Salade met kikkererwten, avocado en quinoa",
+  "description": "Grote salade van quinoa, kikkererwten, avocado, tomaat en komkommer",
+  "instructions": [
+   "Spoel de quinoa af en laat hem 12 tot 15 minuten zachtjes koken in water met zout; giet af en laat iets afkoelen",
+   "Snijd de avocado, de tomaat en de komkommer in blokjes",
+   "Meng de quinoa met de uitgelekte kikkererwten, de groenten, de olijfolie, het sap van de citroen, zout, peper en peterselie"
+  ]
+ },
+ "d-chicken-alfredo": {
+  "name": "Pasta Alfredo met kip",
+  "description": "Pasta in een roomsaus met Parmezaanse kaas, kip en broccoli",
+  "instructions": [
+   "Kook de pasta in kokend water met zout volgens de verpakking, kook de broccoliroosjes de laatste 3 minuten mee, giet af en bewaar een beetje kookvocht",
+   "Snijd de kip in reepjes, kruid ze en bak ze 6 minuten in de boter op middelhoog tot hoog vuur",
+   "Voeg de roomsaus, de nootmuskaat en een scheutje kookvocht toe en laat 2 minuten zachtjes koken",
+   "Schep de pasta, de broccoli en de geraspte Parmezaanse kaas erdoor en breng op smaak met peper"
+  ]
+ },
+ "d-beef-stroganoff": {
+  "name": "Boeuf stroganoff",
+  "description": "Reepjes rundvlees en champignons in een romige saus op rijst",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Snijd het rundvlees in dunne reepjes, kruid ze, schroei ze 2 minuten in de helft van de boter op zeer hoog vuur en leg ze apart",
+   "Bak de reepjes ui en de plakjes champignon 6 minuten in de rest van de boter en roer dan het paprikapoeder en de mosterd erdoor",
+   "Voeg de roomsaus toe, laat 2 minuten zachtjes koken, doe het vlees terug om door te warmen en serveer op de rijst"
+  ]
+ },
+ "d-creamy-salmon-spinach-pasta": {
+  "name": "Romige pasta met zalm en spinazie",
+  "description": "Pasta met stukjes zalm en spinazie in een roomsaus met knoflook",
+  "instructions": [
+   "Kook de pasta in kokend water met zout volgens de verpakking en giet af; bewaar een beetje kookvocht",
+   "Bak de zalm 3 tot 4 minuten per kant in een koekenpan met antiaanbaklaag op middelhoog vuur en trek hem dan in stukjes",
+   "Voeg de plakjes knoflook 30 seconden toe en dan de roomsaus, de spinazie en een scheutje kookvocht",
+   "Schep de pasta erdoor en maak af met peper en citroensap"
+  ]
+ },
+ "d-peanut-tofu-stir-fry": {
+  "name": "Roerbak met tofu en pinda",
+  "description": "Krokante tofu met broccoli en paprika in een pinda-sojasaus op rijst",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Snijd de tofu in blokjes en bak ze 6 minuten in de olie op middelhoog tot hoog vuur goudbruin",
+   "Voeg de broccoliroosjes, de paprikareepjes en de gember met een scheutje water toe en roerbak 4 minuten",
+   "Klop de pindakaas met de sojasaus, het hete water en het limoensap, giet de saus erbij, schep 1 minuut om en serveer op de rijst"
+  ]
+ },
+ "d-lentil-chickpea-curry": {
+  "name": "Curry met linzen en kikkererwten",
+  "description": "Dikke kokoscurry van linzen, kikkererwten en spinazie met rijst",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 4 minuten zacht in de olie; roer dan het kerriepoeder en de chilivlokken erdoor",
+   "Voeg de afgespoelde linzen en het water toe en laat 20 minuten zachtjes koken tot de linzen zacht zijn",
+   "Kook intussen de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Roer de uitgelekte kikkererwten, de kokosmelk en de spinazie door de linzen, kook nog 5 minuten, breng op smaak met zout en serveer met de rijst"
+  ]
+ },
+ "d-loaded-bean-rice-burritos": {
+  "name": "Rijk gevulde burrito's met bonen en rijst",
+  "description": "Twee burrito's vol gekruide kidneybonen, rijst en mais",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Verwarm de uitgelekte kidneybonen 3 minuten in de olie met de komijn, het paprikapoeder en zout en plet ongeveer de helft",
+   "Roer de rijst, de mais en het limoensap erdoor",
+   "Verwarm de tortilla's, verdeel de vulling erover, vouw de zijkanten naar binnen en rol op"
+  ]
+ },
+ "d-spaghetti-carbonara": {
+  "name": "Spaghetti carbonara",
+  "description": "Spaghetti met knapperig spek in een zijdezachte saus van ei en Parmezaanse kaas",
+  "instructions": [
+   "Kook de pasta in kokend water met zout volgens de verpakking en giet af; bewaar een kopje kookvocht",
+   "Bak het gesneden spek 5 minuten in een droge pan knapperig en haal de pan dan van het vuur",
+   "Klop de eieren los met de geraspte Parmezaanse kaas en peper",
+   "Schep de hete pasta door het spek in de pan en roer dan van het vuur af het eimengsel en een scheutje kookvocht erdoor tot de saus romig is"
+  ]
+ },
+ "d-butter-chicken": {
+  "name": "Butter chicken met rijst",
+  "description": "Kip in een licht pittige, romige tomatensaus met rijst",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Bak de blokjes ui 4 minuten zacht in de boter; voeg dan de gehakte knoflook, de gember, het kerriepoeder en de chilivlokken 1 minuut toe",
+   "Voeg de kip in stukken toe en bak 4 minuten, dan de tomatensaus, en laat 12 minuten zachtjes koken",
+   "Roer de roomsaus erdoor, laat nog 2 minuten zachtjes koken, breng op smaak met zout en serveer met de rijst"
+  ]
+ },
+ "d-loaded-beef-burrito-bowl": {
+  "name": "Rijk gevulde burritobowl met rundergehakt",
+  "description": "Rijstkom met gekruid rundergehakt, bonen, mais en kaas",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout en giet af",
+   "Bak het rundergehakt 6 minuten bruin in een droge pan op hoog vuur en voeg dan de komijn, het paprikapoeder en zout toe",
+   "Roer de uitgelekte kidneybonen en de mais erdoor en warm goed door",
+   "Serveer op de rijst met de geraspte kaas, de tomatenblokjes en limoensap"
+  ]
+ },
+ "d-shrimp-egg-fried-rice": {
+  "name": "Gebakken rijst met garnalen en ei",
+  "description": "Grote kom gebakken rijst met garnalen, ei en doperwten",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout, giet af en laat hem droog stomen",
+   "Roerbak de garnalen 2 minuten in de olie op hoog vuur met de gember en voeg dan de doperwten toe",
+   "Schuif alles opzij, breek de eieren in de pan en roer ze tot ze net gestold zijn",
+   "Voeg de rijst en de sojasaus toe, roerbak 2 minuten en breng op smaak met peper"
+  ]
+ },
+ "d-chicken-shawarma-plate": {
+  "name": "Bord kipshoarma",
+  "description": "Gekruide kip met rijst, kikkererwten, knoflookyoghurt, komkommer en tomaat",
+  "instructions": [
+   "Kook de rijst 10 tot 12 minuten in water met zout, kook de uitgelekte kikkererwten de laatste minuut mee en giet af",
+   "Snijd de kip in dunne reepjes en wentel ze door de komijn, het paprikapoeder, de chilivlokken, de koriander en zout",
+   "Bak 6 tot 7 minuten in de olijfolie op hoog vuur tot de randjes bruin zijn",
+   "Serveer op de rijst met kikkererwten, met de blokjes komkommer en tomaat en de yoghurt"
+  ]
+ },
+ "d-tofu-lentil-bolognese": {
+  "name": "Bolognese van tofu en linzen",
+  "description": "Pasta met een volle tomatensaus van linzen en verkruimelde tofu",
+  "instructions": [
+   "Pers de knoflook. Snijd de ui in blokjes en bak hem met de knoflook 4 minuten zacht in de olijfolie in een diepe pan op middelhoog vuur",
+   "Verkruimel de tofu erboven en bak 5 minuten tot hij begint te kleuren",
+   "Voeg de afgespoelde linzen, de tomatenblokjes, de oregano en {350} ml water toe en laat 20 minuten zachtjes koken tot de linzen gaar zijn en de saus dik is",
+   "Kook intussen de pasta in kokend water met zout beetgaar en giet af",
+   "Breng de saus op smaak met zout en zwarte peper en serveer op de pasta"
+  ]
+ },
+ "d-chickpea-tofu-spinach-curry": {
+  "name": "Curry met kikkererwten, tofu en spinazie",
+  "description": "Kikkererwten en tofu gestoofd in een curry van tomaat en kokos met spinazie",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 4 minuten zacht in de olie in een diepe pan op middelhoog vuur; roer dan het kerriepoeder erdoor",
+   "Snijd de tofu in blokjes en voeg hem toe met de uitgelekte kikkererwten, de tomatenblokjes en de kokosmelk",
+   "Laat 12 minuten zachtjes koken tot de saus dikker is",
+   "Roer de spinazie erdoor tot hij geslonken is, breng op smaak met zout en serveer"
+  ]
+ },
+ "d-bean-tofu-chili": {
+  "name": "Chili met bonen en tofu",
+  "description": "Een dikke chili van kidneybonen en verkruimelde tofu met paprika en mais, op een beetje rijst",
+  "instructions": [
+   "Kook de rijst 12 minuten met het deksel op de pan in {60} ml water met zout",
+   "Snijd de ui en de paprika in blokjes en bak ze 4 minuten zacht in de olie in een pan op middelhoog vuur",
+   "Verkruimel de tofu erboven, voeg de komijn, het gerookte paprikapoeder en de chilivlokken toe en bak 4 minuten",
+   "Voeg de uitgelekte bonen, de mais en de tomatenblokjes toe en laat 15 minuten zachtjes koken tot de chili dik is",
+   "Breng op smaak met zout en serveer op de rijst"
+  ]
+ },
+ "d-crispy-tofu-quinoa-greens": {
+  "name": "Krokante tofu met quinoa en groene groenten",
+  "description": "Een grote kom met krokante tofu, quinoa, broccoli en doperwten met sojasaus",
+  "instructions": [
+   "Spoel de quinoa af en laat hem 12 minuten zachtjes koken in {130} ml water met het deksel op de pan; maak hem dan los met een vork",
+   "Dep de tofu goed droog en snijd hem in blokjes; snijd de broccoli in kleine roosjes",
+   "Verhit de olie in een brede pan op middelhoog tot hoog vuur en bak de tofu 8 minuten rondom krokant; keer regelmatig",
+   "Voeg de broccoli, de doperwten en een scheutje water toe, dek af en stoom 4 minuten",
+   "Giet de sojasaus erover, schep om en serveer op de quinoa"
+  ]
+ },
+ "d-lentil-tofu-dal": {
+  "name": "Dal met linzen en tofu",
+  "description": "Linzen zacht gekookt met tomaat, kokos en specerijen, met tofu en spinazie erdoor",
+  "instructions": [
+   "Snijd de ui in blokjes en bak hem 4 minuten zacht in de olie in een pan op middelhoog vuur; roer dan het kerriepoeder en de kurkuma erdoor",
+   "Voeg de afgespoelde linzen, de tomatenblokjes, de kokosmelk en {400} ml water toe en laat 20 minuten zachtjes koken; roer af en toe, tot de linzen uiteenvallen",
+   "Snijd de tofu in blokjes en voeg hem met de spinazie toe; kook nog 3 minuten",
+   "Breng op smaak met zout en serveer"
+  ]
+ },
+ "d-garlic-tofu-steaks-potatoes": {
+  "name": "Tofusteaks met knoflook, aardappelen en sperziebonen",
+  "description": "Dikke plakken tofu aangebakken met knoflook, met gekookte aardappelen en sperziebonen",
+  "instructions": [
+   "Snijd de aardappelen in stukken en kook ze 15 minuten in water met zout; kook de schoongemaakte sperziebonen de laatste 5 minuten mee en giet af",
+   "Dep de tofu droog en snijd hem in dikke plakken; kruid met zout, zwarte peper en het gerookte paprikapoeder",
+   "Verhit de olijfolie in een pan op middelhoog tot hoog vuur en bak de tofu 4 minuten per kant diep goudbruin",
+   "Voeg de laatste minuut de plakjes knoflook toe en serveer de tofu met de aardappelen en de sperziebonen, met de knoflookolie erover geschept"
+  ]
+ }
+}

@@ -2,6 +2,7 @@ import type { DietaryRestriction } from '@/contexts/AuthContext';
 import { CATEGORIES } from './meals';
 import { renderText } from './portions';
 import type { Ingredient, Meal, MealType } from './meals';
+import type { RecipeText } from './recipeText';
 
 /**
  * One row of the Supabase `recipes` table (supabase/recipes.sql).
@@ -30,6 +31,8 @@ export type RawRecipe = {
   appliances: string[];
   keywords: string[];
   dietary_tags: DietaryRestriction[];
+  /** The texts in other languages, by language code; absent until the table has the column. */
+  i18n?: Record<string, RecipeText> | null;
   sort: number;
 };
 

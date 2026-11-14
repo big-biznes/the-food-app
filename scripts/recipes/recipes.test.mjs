@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { buildAll, buildRecipe, indexIngredients, toSql } from './lib.mjs';
+import { addTranslations, buildAll, buildRecipe, indexIngredients, toSql } from './lib.mjs';
 
 const defs = indexIngredients([
   { key: 'eggs', per100g: { kcal: 143, protein: 12.6, carbs: 0.7, fat: 9.5, fiber: 0, sugar: 0.4, sodiumMg: 142 }, contains: ['egg'], piece: { g: 55, one: 'egg', many: 'eggs', shop: true } },
@@ -130,4 +130,27 @@ test('portion markers in steps and seasonings are checked', () => {
   assert.match(errors(recipe({ instructions: ['Toast the bread', 'Fry the {eggs}'] })), /must be \{number\}/);
   assert.match(errors(recipe({ ingredients: [{ item: 'eggs', pieces: 2 }, { item: 'oats', g: 50 }], instructions: ['Soak', 'Add {n:oats} oats'] })), /not counted in pieces/);
   assert.match(errors(recipe({ seasonings: ['{200 ml water'] })), /unbalanced braces/);
+});
+
+test('translations travel with the recipe and must line up with it', () => {
+  const build = () => buildAll([{ name: 't.json', recipes: [recipe({ seasonings: ['salt', '{200} ml water'], instructions: ['Toast the bread', 'Make {n:eggs} wells and fry the eggs'] })] }], defs).rows;
+  const seasonings = { salt: 'zout', '{200} ml water': '{200} ml water' };
+  const good = { name: 'Eieren op toast', description: 'Twee eieren op toast', instructions: ['Rooster het brood', 'Maak {n:eggs} kuiltjes en bak de eieren'] };
+
+  let rows = build();
+  let result = addTranslations(rows, { nl: { recipes: { 'b-eggs-on-toast': good }, seasonings } });
+  assert.deepEqual(result.problems, []);
+  assert.deepEqual(rows[0].i18n.nl, { ...good, seasonings: ['zout', '{200} ml water'] });
+
+  // No translation: the recipe stays English, with a warning.
+  rows = build();
+  result = addTranslations(rows, { nl: { recipes: {}, seasonings } });
+  assert.deepEqual(rows[0].i18n, {});
+  assert.match(result.warnings.join(), /1 recipes have no translation/);
+
+  // Another number of steps, a lost marker, or a seasoning without a translation is a problem.
+  const problems = (tr, s = seasonings) => addTranslations(build(), { nl: { recipes: { 'b-eggs-on-toast': tr }, seasonings: s } }).problems.join('; ');
+  assert.match(problems({ ...good, instructions: ['Rooster het brood'] }), /needs 2 steps/);
+  assert.match(problems({ ...good, instructions: ['Rooster het brood', 'Maak 2 kuiltjes'] }), /step 2 must keep \{n:eggs\}/);
+  assert.match(problems(good, { salt: 'zout' }), /no translation for the seasoning/);
 });

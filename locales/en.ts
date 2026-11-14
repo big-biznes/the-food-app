@@ -275,6 +275,7 @@ const en = {
     likeFew: "Like a few to shape your next plan.",
     startOver: "Start over",
     passOn: "Pass on {{name}}",
+    unlikeName: "Unlike {{name}}",
     likeName: "Like {{name}}",
     cardA11y: "{{name}}. {{description}}. {{min}} minutes, {{kcal}} kilocalories",
     cardHint: "Double tap for details. Swipe right to like, left to pass. Custom actions are available.",
@@ -439,6 +440,7 @@ const en = {
     addToList: "Add this part to the shopping list",
   },
   card: {
+    edited: ", edited",
     kicker: "{{day}}, {{type}}",
     eatingOut: "Eating out",
     eatingOutName: "Eating out",

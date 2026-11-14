@@ -1,4 +1,5 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
+import { useMealText } from '@/hooks/useMealText';
 import { useMealPrep } from '@/hooks/usePrep';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, View, Text, StyleSheet, Animated} from 'react-native';
@@ -68,6 +69,7 @@ export default function MealCard({
   const styles = useThemedStyles(makeStyles);
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal('isEatingOut' in meal ? undefined : meal);
+  const text = useMealText(personal);
   // Shorter when its chopping or its rice was done ahead (the prep list of its part).
   const prep = useMealPrep('isEatingOut' in meal ? undefined : meal);
   const reducedMotion = useReducedMotion();
@@ -189,7 +191,7 @@ export default function MealCard({
         accessibilityLabel={
           t(prep && prep.done.length > 0 ? 'card.a11yPrepped' : 'card.a11y', {
             kicker: kicker(dayLabel, typeLabel),
-            name: meal.name,
+            name: text?.name ?? meal.name,
             min: prep?.time ?? meal.prepTime,
             kcal: (personal ?? meal).calories,
           }) +
@@ -240,11 +242,11 @@ export default function MealCard({
 
         <Text style={[styles.emoji, hero && styles.emojiHero]}>{meal.emoji}</Text>
         <Text style={[styles.name, hero && styles.nameHero]} numberOfLines={hero ? 3 : 2}>
-          {meal.name}
+          {text?.name ?? meal.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
           {t(prep && prep.done.length > 0 ? 'card.statsPrepped' : 'card.stats', { min: prep?.time ?? meal.prepTime, kcal: (personal ?? meal).calories })}
-          {personal?.removed ? ', edited' : ''}
+          {personal?.removed ? t('card.edited') : ''}
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
       </PressableScale>

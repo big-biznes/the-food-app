@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Builds the recipes table from data/recipes/*.json. Calories and macros are
 // computed from data/ingredients.json; a recipe that uses an unknown
-// ingredient, or is malformed, stops the build.
+// ingredient, or is malformed, stops the build. Translations of the texts
+// (data/recipes/i18n) are checked against the recipes and travel with them.
 //
 //   node scripts/recipes/build.mjs            check, and write supabase/recipes_data.sql
 //   node scripts/recipes/build.mjs --check    check only
@@ -10,8 +11,8 @@
 //   node scripts/recipes/build.mjs --push     check, and write straight to Supabase
 //                                             (env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { AUTHORED_TAGS, COMPUTED_TAGS, MEAL_TYPES, buildAll, indexIngredients, toSql, toSqlParts } from './lib.mjs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { AUTHORED_TAGS, COMPUTED_TAGS, MEAL_TYPES, addTranslations, buildAll, indexIngredients, toSql, toSqlParts } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const root = new URL('../../', import.meta.url);
@@ -32,6 +33,25 @@ for (const name of readdirSync(dir).filter(f => f.endsWith('.json')).sort()) {
 const built = buildAll(files, defs);
 problems.push(...built.problems);
 const { rows, warnings } = built;
+
+// Translations: data/recipes/i18n/<language>/*.json hold { recipe id: { name, description, instructions } },
+// and seasonings.json there holds { English seasoning: translated }.
+const translations = {};
+const i18nDir = new URL('data/recipes/i18n/', root);
+for (const lang of existsSync(i18nDir) ? readdirSync(i18nDir).sort() : []) {
+  const entry = (translations[lang] = { recipes: {}, seasonings: {} });
+  for (const name of readdirSync(new URL(`${lang}/`, i18nDir)).filter(f => f.endsWith('.json')).sort()) {
+    try {
+      Object.assign(name === 'seasonings.json' ? entry.seasonings : entry.recipes, read(`data/recipes/i18n/${lang}/${name}`));
+    } catch (e) {
+      problems.push(`i18n/${lang}/${name}: not valid JSON (${e.message})`);
+    }
+  }
+}
+const translated = addTranslations(rows, translations);
+problems.push(...translated.problems);
+warnings.push(...translated.warnings);
+for (const lang of Object.keys(translations)) console.log(`${lang}: ${rows.filter(r => r.i18n[lang]).length} of ${rows.length} translated`);
 
 const count = type => rows.filter(r => r.meal_type === type).length;
 console.log(`${rows.length} recipes: ${MEAL_TYPES.map(type => `${count(type)} ${type}`).join(', ')}`);

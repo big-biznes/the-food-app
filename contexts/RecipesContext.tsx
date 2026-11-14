@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/lib/supabase';
 import { fetchAllRows } from '@/lib/fetchAll';
 import { rowsToMeals, RawRecipe } from '@/data/recipes';
+import { setRecipeTexts } from '@/data/recipeText';
 import { ALL_MEALS, Meal, setAllMeals } from '@/data/meals';
 import FullScreenLoading from '@/components/FullScreenLoading';
 import { Colors } from '@/constants/theme';
@@ -44,9 +45,15 @@ export function waitForRecipes(): Promise<void> {
 }
 
 async function fetchRecipes(): Promise<RawRecipe[]> {
-  return fetchAllRows<RawRecipe>((from, to) =>
-    supabase.from('recipes').select(RECIPE_COLUMNS).order('sort').order('id').range(from, to),
-  );
+  const fetchWith = (columns: string) =>
+    fetchAllRows<RawRecipe>((from, to) => supabase.from('recipes').select(columns).order('sort').order('id').range(from, to));
+  try {
+    return await fetchWith(`${RECIPE_COLUMNS},i18n`);
+  } catch (e) {
+    // A recipes table from before the translations (supabase/recipes.sql adds the column): English only.
+    if (!/i18n/.test((e as Error).message)) throw e;
+    return fetchWith(RECIPE_COLUMNS);
+  }
 }
 
 /**
@@ -65,6 +72,7 @@ export function RecipesProvider({ children }: { children: React.ReactNode }) {
 
   const apply = useCallback((rows: RawRecipe[]) => {
     const next = rowsToMeals(rows);
+    setRecipeTexts(rows);
     setAllMeals(next);
     setMeals(next);
     resolveReady();

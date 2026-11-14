@@ -1,0 +1,184 @@
+{
+ "s-peanut-butter-banana-toast": {
+  "name": "Toast met pindakaas en banaan",
+  "description": "Toast besmeerd met pindakaas, met plakjes banaan erop",
+  "instructions": [
+   "Rooster het brood goudbruin",
+   "Besmeer de toast met de pindakaas",
+   "Snijd de banaan in plakjes, leg ze erop en maak af met een beetje kaneel"
+  ]
+ },
+ "s-apple-peanut-butter": {
+  "name": "Appelpartjes met pindakaas",
+  "description": "Knapperige appelpartjes met pindakaas om in te dippen",
+  "instructions": [
+   "Verwijder het klokhuis van de appel en snijd hem in partjes",
+   "Doe de pindakaas in een kommetje en dip de partjes erin terwijl je eet"
+  ]
+ },
+ "s-hummus-carrot-sticks": {
+  "name": "Snelle hummus met wortelstengels",
+  "description": "Kikkererwten geprakt met olijfolie, knoflook en citroen, met wortelstengels om te dippen",
+  "instructions": [
+   "Laat de kikkererwten uitlekken en spoel ze af; prak ze dan met een vork of pureer ze met de olijfolie, de geperste knoflook, een kneepje citroensap, een snufje zout en een lepel water tot een gladde massa",
+   "Schil de wortels en snijd ze in stengels",
+   "Serveer de hummus met een snufje paprikapoeder erop en de wortelstengels ernaast"
+  ]
+ },
+ "s-greek-yogurt-berries-honey": {
+  "name": "Griekse yoghurt met blauwe bessen en honing",
+  "description": "Dikke yoghurt met blauwe bessen en een beetje honing",
+  "instructions": [
+   "Schep de yoghurt in een kom",
+   "Strooi de blauwe bessen erover en besprenkel met de honing"
+  ]
+ },
+ "s-cottage-cheese-tomato-toast": {
+  "name": "Toast met hüttenkäse en tomaat",
+  "description": "Toast met hüttenkäse, plakjes tomaat en een straaltje olijfolie",
+  "instructions": [
+   "Rooster het brood",
+   "Schep de hüttenkäse op de toast en leg de plakjes tomaat erop",
+   "Besprenkel met de olijfolie en bestrooi met zout en zwarte peper"
+  ]
+ },
+ "s-avocado-toast": {
+  "name": "Avocadotoast",
+  "description": "Twee sneetjes toast met geprakte avocado en tomaat",
+  "instructions": [
+   "Rooster het brood",
+   "Prak de avocado met een kneepje citroensap en een snufje zout en smeer hem op de toast",
+   "Leg de tomatenblokjes erop en bestrooi met een beetje zwarte peper"
+  ]
+ },
+ "s-boiled-eggs-cucumber-toast": {
+  "name": "Gekookte eieren met komkommer en toast",
+  "description": "Zachtgekookte eieren met plakjes komkommer en een sneetje toast",
+  "instructions": [
+   "Kook de eieren 7 minuten, laat ze schrikken onder koud water en pel ze",
+   "Rooster het brood en snijd de komkommer in plakjes",
+   "Halveer de eieren, bestrooi met zout en zwarte peper en serveer met de komkommer en de toast"
+  ]
+ },
+ "s-banana-oat-bites": {
+  "name": "Banaan-haverballetjes zonder oven",
+  "description": "Havermout, geprakte banaan en pindakaas, gerold tot kleine hapjes",
+  "instructions": [
+   "Prak de banaan met een vork in een kom",
+   "Roer de havermout, de pindakaas en een snufje kaneel erdoor tot het mengsel samenhangt",
+   "Rol er {6} kleine balletjes van; eet ze meteen op of zet ze 15 minuten in de koelkast om op te stijven"
+  ]
+ },
+ "s-roasted-chickpeas": {
+  "name": "Knapperig geroosterde kikkererwten",
+  "description": "Kikkererwten geroosterd met olijfolie en gerookt paprikapoeder tot ze knapperig zijn",
+  "instructions": [
+   "Verwarm de oven voor op 200°C. Laat de kikkererwten uitlekken, spoel ze af en dep ze helemaal droog",
+   "Meng ze met de olijfolie, het gerookte paprikapoeder en een snufje zout en verdeel ze over een bakplaat",
+   "Rooster 20 tot 25 minuten en schud de plaat één keer, tot ze knapperig zijn"
+  ]
+ },
+ "s-yogurt-banana-oats": {
+  "name": "Yoghurt met banaan en havermout",
+  "description": "Yoghurt met plakjes banaan en een handje havermout",
+  "instructions": [
+   "Schep de yoghurt in een kom",
+   "Snijd de banaan er in plakjes boven en bestrooi met de havermout"
+  ]
+ },
+ "s-tuna-cucumber-toast": {
+  "name": "Toast met tonijn en komkommer",
+  "description": "Tonijn gemengd met yoghurt op toast, met komkommer erop",
+  "instructions": [
+   "Laat de tonijn uitlekken en meng hem met de yoghurt, een kneepje citroensap, zout en zwarte peper",
+   "Rooster het brood en snijd de komkommer in plakjes",
+   "Smeer de tonijn op de toast en leg de komkommer erop"
+  ]
+ },
+ "s-cheese-tomato-toastie": {
+  "name": "Tosti met kaas en tomaat",
+  "description": "Een kleine in de pan gebakken tosti met gesmolten kaas en tomaat",
+  "instructions": [
+   "Leg de kaas en de plakjes tomaat tussen de twee sneetjes brood",
+   "Bak de tosti in een droge pan op middelhoog vuur 2 tot 3 minuten per kant en druk hem aan, tot hij goudbruin is en de kaas gesmolten is",
+   "Snijd doormidden en eet warm"
+  ]
+ },
+ "s-strawberry-banana-smoothie": {
+  "name": "Smoothie met aardbei en banaan",
+  "description": "Banaan en aardbeien gepureerd met melk",
+  "instructions": [
+   "Pel de banaan en verwijder de kroontjes van de aardbeien",
+   "Pureer ze met de melk tot een gladde smoothie en schenk in een glas"
+  ]
+ },
+ "s-coconut-blueberry-smoothie": {
+  "name": "Smoothie met kokos en blauwe bessen",
+  "description": "Banaan en blauwe bessen gepureerd met kokosmelk",
+  "instructions": [
+   "Pel de banaan en doe hem met de blauwe bessen en de kokosmelk in een blender",
+   "Voeg {100} ml koud water toe, pureer tot een gladde smoothie en schenk in een glas"
+  ]
+ },
+ "s-ham-cheese-roll-ups": {
+  "name": "Rolletjes van ham en kaas",
+  "description": "Plakjes ham opgerold om reepjes kaas en komkommer",
+  "instructions": [
+   "Snijd de kaas en de komkommer in reepjes",
+   "Leg van elk een reepje op een plakje ham, rol op en herhaal met de rest"
+  ]
+ },
+ "s-soy-glazed-tofu-bites": {
+  "name": "Tofublokjes met sojaglazuur",
+  "description": "Blokjes tofu, goudbruin gebakken en geglaceerd met sojasaus",
+  "instructions": [
+   "Dep de tofu droog en snijd hem in hapklare blokjes",
+   "Verhit de olie in een pan op middelhoog tot hoog vuur en bak de tofu 6 tot 8 minuten rondom goudbruin; keer regelmatig",
+   "Voeg de sojasaus toe, schep 30 seconden om tot de tofu ermee bedekt is en serveer"
+  ]
+ },
+ "s-yogurt-peanut-dip-apple": {
+  "name": "Yoghurtdip met pindakaas en appel",
+  "description": "Griekse yoghurt geroerd met pindakaas, met appelpartjes om te dippen",
+  "instructions": [
+   "Roer de pindakaas glad door de yoghurt",
+   "Verwijder het klokhuis van de appel, snijd hem in partjes en serveer ze met de dip"
+  ]
+ },
+ "s-egg-avocado-toast": {
+  "name": "Toast met ei en avocado",
+  "description": "Toast met geprakte avocado en plakjes gekookt ei",
+  "instructions": [
+   "Kook de eieren 8 minuten, laat ze schrikken onder koud water, pel ze en snijd ze in plakjes",
+   "Rooster het brood en besmeer het met de avocado, geprakt met een snufje zout",
+   "Leg de plakjes ei erop en bestrooi met zwarte peper"
+  ]
+ },
+ "s-bean-cheese-quesadilla": {
+  "name": "Quesadilla met bonen en kaas",
+  "description": "Een dubbelgevouwen tortilla gevuld met kidneybonen en gesmolten kaas",
+  "instructions": [
+   "Laat de bonen uitlekken, spoel ze af en prak ze grof met een vork, een snufje komijn en een snufje zout",
+   "Smeer de bonen over één helft van de tortilla, strooi de geraspte kaas erover en vouw de tortilla dicht",
+   "Bak in een droge pan op middelhoog vuur 2 minuten per kant, tot hij knapperig is en de kaas gesmolten is, en snijd dan in punten"
+  ]
+ },
+ "s-tofu-scramble-wrap": {
+  "name": "Wrap met roertofu",
+  "description": "Een tortilla gevuld met roertofu en paprika",
+  "instructions": [
+   "Snijd de paprika in blokjes en verkruimel de tofu met je vingers",
+   "Verhit de olie in een pan op middelhoog vuur, bak de paprika 2 minuten, voeg dan de tofu, de kurkuma, zout en zwarte peper toe en bak 4 minuten",
+   "Schep de roertofu op de tortilla, rol hem op en snijd hem doormidden"
+  ]
+ },
+ "s-chickpea-avocado-bowl": {
+  "name": "Kom met kikkererwten en avocado",
+  "description": "Kikkererwten gemengd met avocado en tomaat",
+  "instructions": [
+   "Laat de kikkererwten uitlekken, spoel ze af en doe ze in een kom",
+   "Snijd de avocado en de tomaat in blokjes en doe ze in de kom",
+   "Meng met een kneepje citroensap, een snufje zout en zwarte peper"
+  ]
+ }
+}

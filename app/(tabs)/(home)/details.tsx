@@ -14,6 +14,7 @@ import { ingredientAmount, ingredientName } from '@/lib/localize';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useMealText } from '@/hooks/useMealText';
 import { usePersonalMeal, useTargets } from '@/hooks/usePortions';
 
 import { font, type } from '@/constants/type';
@@ -37,6 +38,7 @@ export default function DetailsScreen() {
   // The recipe with amounts and nutrition sized for this user.
   const recipe = findMeal(id);
   const meal = usePersonalMeal(recipe);
+  const text = useMealText(meal);
   const targets = useTargets();
   // What was, or could be, prepared ahead for this meal (only for a meal of the week plan).
   const prep = useMealPrep(recipe);
@@ -103,9 +105,9 @@ export default function DetailsScreen() {
           </View>
           <Text style={styles.heroEmoji}>{meal.emoji}</Text>
           <Text style={styles.title} accessibilityRole="header">
-            {meal.name}
+            {text?.name}
           </Text>
-          <Text style={styles.description}>{meal.description}</Text>
+          <Text style={styles.description}>{text?.description}</Text>
         </View>
 
         {/* Stats */}
@@ -253,8 +255,8 @@ export default function DetailsScreen() {
               })}
             </Text>
           )}
-          {meal.seasonings && meal.seasonings.length > 0 && (
-            <Text style={styles.footnote}>{t('details.cupboard', { items: meal.seasonings.join(', ') })}</Text>
+          {text && text.seasonings.length > 0 && (
+            <Text style={styles.footnote}>{t('details.cupboard', { items: text.seasonings.join(', ') })}</Text>
           )}
           {targets && meal.portion != null && (
             <Text style={styles.footnote}>
