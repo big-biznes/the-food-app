@@ -48,7 +48,10 @@ export default function SetupPhase({
           <Text style={styles.headline} accessibilityRole="header">
             What are you craving this week?
           </Text>
-          <Text style={styles.sub}>Pick a few. The plan is built around them.</Text>
+          <Text style={styles.sub}>
+            Pick a few. The plan is built around them, in runs of three days that share ingredients: shop once, prep
+            once, cook quickly.
+          </Text>
         </View>
 
         <View style={styles.section}>

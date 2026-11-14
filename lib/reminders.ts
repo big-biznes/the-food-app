@@ -73,8 +73,8 @@ export async function syncReminders(eatingOutDay: string | null): Promise<void> 
     for (const part of ['A', 'B'] as const) {
       await n.scheduleNotificationAsync({
         content: {
-          title: 'Shopping day',
-          body: `Your meals for ${partLabel[part]} start tomorrow. The list is ready in the app.`,
+          title: 'Shop and prep day',
+          body: `Your meals for ${partLabel[part]} start tomorrow. Shop today, and prep ahead to cook faster.`,
         },
         trigger: {
           type: n.SchedulableTriggerInputTypes.WEEKLY,

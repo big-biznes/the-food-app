@@ -1,4 +1,5 @@
 import { usePersonalMeal } from '@/hooks/usePortions';
+import { useMealPrep } from '@/hooks/usePrep';
 import { useEffect, useRef } from 'react';
 import { AccessibilityInfo, View, Text, StyleSheet, Animated} from 'react-native';
 import PressableScale from '@/components/PressableScale';
@@ -70,6 +71,8 @@ export default function MealCard({
   const styles = useThemedStyles(makeStyles);
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal('isEatingOut' in meal ? undefined : meal);
+  // Shorter when its chopping or its rice was done ahead (the prep list of its part).
+  const prep = useMealPrep('isEatingOut' in meal ? undefined : meal);
   const reducedMotion = useReducedMotion();
   const spinAnim = useRef(new Animated.Value(0)).current;
   const router = useRouter();
@@ -186,7 +189,9 @@ export default function MealCard({
           router.push({ pathname: '/details', params: { id: meal.id } });
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${meal.prepTime} minutes, ${(personal ?? meal).calories} kilocalories${
+        accessibilityLabel={`${kicker(dayLabel, typeLabel)}: ${meal.name}, ${prep?.time ?? meal.prepTime} minutes${
+          prep && prep.done.length > 0 ? ' with your prep' : ''
+        }, ${(personal ?? meal).calories} kilocalories${
           personal?.removed ? `, without ${personal.removed.map(i => i.name).join(', ')}` : ''
         }`}
         accessibilityHint={swapBlockedReason ?? (onCardTap ? 'Swaps with the selected meal' : 'Opens the recipe')}
@@ -235,7 +240,8 @@ export default function MealCard({
           {meal.name}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          {meal.prepTime} min, {(personal ?? meal).calories} kcal{personal?.removed ? ', edited' : ''}
+          {prep?.time ?? meal.prepTime} min{prep && prep.done.length > 0 ? ' prepped' : ''}, {(personal ?? meal).calories} kcal
+          {personal?.removed ? ', edited' : ''}
         </Text>
         <Animated.View style={[styles.rejectFlash, { opacity: flashOpacity }]} pointerEvents="none" />
       </PressableScale>

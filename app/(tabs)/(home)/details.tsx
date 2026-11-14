@@ -9,7 +9,8 @@ import { canLeaveOut } from '@/data/portions';
 import { usePlan } from '@/contexts/PlanContext';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import { useShoppingListSync } from '@/hooks/useShoppingListSync';
-import { DietaryRestriction, useAuth } from '@/contexts/AuthContext';
+import { useMealPrep } from '@/hooks/usePrep';
+import { DietaryRestriction } from '@/contexts/AuthContext';
 import { formatQuantity } from '@/data/quantity';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -42,12 +43,12 @@ const RESTRICTION_LABEL: Record<DietaryRestriction, string> = {
   kosher: 'Kosher',
 };
 
-function formatAmount(ing: Ingredient, imperial: boolean): string {
+function formatAmount(ing: Ingredient): string {
   if (ing.label) return ing.label;
   if (!ing.unit) {
     return ing.amount > 1 ? `x${ing.amount}` : '';
   }
-  return formatQuantity(ing.amount, ing.unit, imperial);
+  return formatQuantity(ing.amount, ing.unit);
 }
 
 export default function DetailsScreen() {
@@ -60,8 +61,8 @@ export default function DetailsScreen() {
   const recipe = findMeal(id);
   const meal = usePersonalMeal(recipe);
   const targets = useTargets();
-  const { user } = useAuth();
-  const imperial = user?.units === 'imperial';
+  // What was, or could be, prepared ahead for this meal (only for a meal of the week plan).
+  const prep = useMealPrep(recipe);
   // A meal of the week plan can be edited: ingredients ticked off are left out of it.
   const { inPlan, toggleIngredient, without } = usePlan();
   // After an edit here that the shopping list does not have yet, offer to update the list.
@@ -134,8 +135,8 @@ export default function DetailsScreen() {
         <View style={styles.statsRow}>
           <View style={styles.statCard}>
             <Ionicons name="time-outline" size={20} color={c.text} />
-            <Text style={styles.statValue}>{meal.prepTime} min</Text>
-            <Text style={styles.statLabel}>Prep time</Text>
+            <Text style={styles.statValue}>{prep?.time ?? meal.prepTime} min</Text>
+            <Text style={styles.statLabel}>{prep && prep.done.length > 0 ? 'With your prep' : 'Time'}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statCard}>
@@ -211,7 +212,7 @@ export default function DetailsScreen() {
           )}
           <View style={styles.ingredientList}>
             {rows.map(({ ing, kept }, i) => {
-              const amount = formatAmount(ing, imperial);
+              const amount = formatAmount(ing);
               const rowStyle = [styles.ingredientRow, i > 0 && styles.ingredientRowBorder];
               const content = (
                 <>
@@ -255,6 +256,18 @@ export default function DetailsScreen() {
             <Text style={styles.footnote}>
               Left out: {meal.removed.map(i => i.name).join(', ')}. The nutrition and your shopping list follow; the
               steps are as written, so skip what mentions {meal.removed.length === 1 ? 'it' : 'them'}.
+            </Text>
+          )}
+          {prep && prep.done.length > 0 && (
+            <Text style={styles.footnote}>
+              Already prepped: {prep.done.map(t => t.ingredient).join(', ')}. That takes {meal.prepTime - prep.time} min
+              off the {meal.prepTime} min the recipe takes from scratch.
+            </Text>
+          )}
+          {prep && prep.done.length === 0 && prep.bestTime < meal.prepTime && (
+            <Text style={styles.footnote}>
+              Prep ahead ({prep.tasks.map(t => t.ingredient).join(', ')}) and this takes about {prep.bestTime} min
+              instead of {meal.prepTime}. The prep list is on the Week tab.
             </Text>
           )}
           {meal.seasonings && meal.seasonings.length > 0 && (

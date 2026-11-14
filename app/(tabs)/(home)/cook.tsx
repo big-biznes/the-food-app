@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { findMeal, formatIngredient } from '@/data/meals';
-import { useAuth } from '@/contexts/AuthContext';
 import { stepIngredients } from '@/data/portions';
 import { usePersonalMeal } from '@/hooks/usePortions';
+import { useMealPrep } from '@/hooks/usePrep';
+import { cooksAlone } from '@/data/prep';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
 import { font, type } from '@/constants/type';
-const { width: SCREEN_W } = Dimensions.get('window');
 
 export default function CookScreen() {
   const { colors: c } = useTheme();
@@ -22,8 +22,9 @@ export default function CookScreen() {
   // Steps and amounts for the portion this user cooks.
   const meal = usePersonalMeal(findMeal(id));
 
+  const recipe = findMeal(id);
+  const prep = useMealPrep(recipe);
   const [step, setStep] = useState(0);
-  const imperial = useAuth().user?.units === 'imperial';
 
   if (!meal || meal.instructions.length === 0) {
     return (
@@ -45,9 +46,15 @@ export default function CookScreen() {
   const progress = (step + 1) / total;
   const isLast = step === total - 1;
   // How much of each ingredient this step uses, in the user's portion.
-  const used = stepIngredients(steps[step], meal.ingredients).map(ing => formatIngredient(ing, imperial));
+  const used = stepIngredients(steps[step], meal.ingredients).map(formatIngredient);
   // Ingredients the user left out of this meal that the step still talks about.
   const skipped = stepIngredients(steps[step], meal.removed ?? []).map(ing => ing.name);
+  // Ingredients of this step that were cut or cooked ahead.
+  const ready = stepIngredients(steps[step], meal.ingredients)
+    .filter(ing => prep?.done.some(t => t.ingredient === ing.name))
+    .map(ing => ing.name);
+  // The whole step is cooking a staple that was cooked ahead: nothing to do but warm it up.
+  const cookedAhead = prep?.done.find(t => t.kind === 'cook' && cooksAlone(steps[step], t.ingredient, meal.ingredients));
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -78,6 +85,13 @@ export default function CookScreen() {
           <Text style={styles.stepAmounts} accessibilityLabel={`For this step: ${used.join(', ')}`}>
             {used.join('  ·  ')}
           </Text>
+        )}
+        {cookedAhead ? (
+          <Text style={styles.stepReady}>
+            You cooked the {cookedAhead.ingredient} ahead. Skip this step and reheat it until steaming hot before serving.
+          </Text>
+        ) : (
+          ready.length > 0 && <Text style={styles.stepReady}>Already prepped: {ready.join(', ')}.</Text>
         )}
         {skipped.length > 0 && (
           <Text style={styles.stepSkipped}>You left out the {skipped.join(' and the ')}: skip that part.</Text>
@@ -201,6 +215,12 @@ const makeStyles = (c: Colors) => StyleSheet.create({
     marginTop: 18,
   },
 
+  stepReady: {
+    fontFamily: font.semibold,
+    fontSize: 15,
+    lineHeight: 21,
+    color: c.textSecondary,
+  },
   stepSkipped: {
     fontFamily: font.semibold,
     fontSize: 15,
