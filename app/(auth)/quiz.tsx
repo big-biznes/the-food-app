@@ -13,6 +13,8 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, Goal, Gender, Activity, DietaryRestriction } from '@/contexts/AuthContext';
+import { BODY_LIMITS } from '@/data/portions';
+import { NO_EATING_OUT } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 
@@ -20,6 +22,9 @@ import { font, type } from '@/constants/type';
 const TOTAL_STEPS = 9;
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+/** The same limits Settings uses, so a profile made here always gets its portions sized. */
+const within = (n: number, { min, max }: { min: number; max: number }) => !isNaN(n) && n >= min && n <= max;
 
 const GOALS: { value: Goal; label: string; desc: string }[] = [
   { value: 'lose', label: 'Lose weight', desc: 'Reduce body fat' },
@@ -50,22 +55,36 @@ const RESTRICTIONS: { value: DietaryRestriction; label: string }[] = [
   { value: 'kosher', label: 'Kosher' },
 ];
 
+/** Answers the quiz starts with for a dev account, so testing only takes tapping Next. */
+const DEV_ANSWERS = {
+  name: 'Alex',
+  goal: 'maintain' as Goal,
+  gender: 'other' as Gender,
+  age: '28',
+  height: '175',
+  weight: '70',
+  activity: 'light' as Activity,
+  restrictions: [] as DietaryRestriction[],
+  eatingOutDay: 'Sun',
+};
+
 export default function QuizScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const router = useRouter();
-  const { completeProfile, logout } = useAuth();
+  const { completeProfile, logout, isDevAccount } = useAuth();
+  const prefill = __DEV__ && isDevAccount ? DEV_ANSWERS : null;
 
   const [step, setStep] = useState(1);
-  const [name, setName] = useState('');
-  const [goal, setGoal] = useState<Goal | null>(null);
-  const [gender, setGender] = useState<Gender | null>(null);
-  const [age, setAge] = useState('');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [activity, setActivity] = useState<Activity | null>(null);
-  const [restrictions, setRestrictions] = useState<DietaryRestriction[]>([]);
-  const [eatingOutDay, setEatingOutDay] = useState<string | null>(null);
+  const [name, setName] = useState(prefill?.name ?? '');
+  const [goal, setGoal] = useState<Goal | null>(prefill?.goal ?? null);
+  const [gender, setGender] = useState<Gender | null>(prefill?.gender ?? null);
+  const [age, setAge] = useState(prefill?.age ?? '');
+  const [height, setHeight] = useState(prefill?.height ?? '');
+  const [weight, setWeight] = useState(prefill?.weight ?? '');
+  const [activity, setActivity] = useState<Activity | null>(prefill?.activity ?? null);
+  const [restrictions, setRestrictions] = useState<DietaryRestriction[]>(prefill?.restrictions ?? []);
+  const [eatingOutDay, setEatingOutDay] = useState<string | null>(prefill?.eatingOutDay ?? null);
 
   function canContinue() {
     const n = (v: string) => parseInt(v, 10);
@@ -73,9 +92,9 @@ export default function QuizScreen() {
       case 1: return name.trim().length > 0;
       case 2: return goal !== null;
       case 3: return gender !== null;
-      case 4: return !isNaN(n(age)) && n(age) >= 1 && n(age) <= 120;
-      case 5: return !isNaN(n(height)) && n(height) >= 50 && n(height) <= 300;
-      case 6: return !isNaN(n(weight)) && n(weight) >= 20 && n(weight) <= 500;
+      case 4: return within(n(age), BODY_LIMITS.age);
+      case 5: return within(n(height), BODY_LIMITS.heightCm);
+      case 6: return within(n(weight), BODY_LIMITS.weightKg);
       case 7: return activity !== null;
       case 8: return true;
       case 9: return eatingOutDay !== null;
@@ -154,8 +173,8 @@ export default function QuizScreen() {
                 unit="years"
                 value={age}
                 setValue={setAge}
-                min={1}
-                max={120}
+                min={BODY_LIMITS.age.min}
+                max={BODY_LIMITS.age.max}
               />
             )}
             {step === 5 && (
@@ -164,8 +183,8 @@ export default function QuizScreen() {
                 unit="cm"
                 value={height}
                 setValue={setHeight}
-                min={50}
-                max={300}
+                min={BODY_LIMITS.heightCm.min}
+                max={BODY_LIMITS.heightCm.max}
               />
             )}
             {step === 6 && (
@@ -174,8 +193,8 @@ export default function QuizScreen() {
                 unit="kg"
                 value={weight}
                 setValue={setWeight}
-                min={20}
-                max={500}
+                min={BODY_LIMITS.weightKg.min}
+                max={BODY_LIMITS.weightKg.max}
               />
             )}
             {step === 7 && <StepActivity activity={activity} setActivity={setActivity} />}
@@ -430,7 +449,7 @@ function StepEatingOutDay({
   return (
     <View style={step.wrap}>
       <Text style={step.question}>Which day do you eat out?</Text>
-      <Text style={step.hint}>We’ll skip meal planning for that day</Text>
+      <Text style={step.hint}>Dinner is left open that day. If you don’t eat out, every day gets cooked.</Text>
       <View style={step.chipRow}>
         {DAYS_OF_WEEK.map(d => {
           const selected = day === d;
@@ -445,6 +464,15 @@ function StepEatingOutDay({
             </PressableScale>
           );
         })}
+        <PressableScale
+          style={[step.chip, day === NO_EATING_OUT && step.chipSelected]}
+          onPress={() => setDay(NO_EATING_OUT)}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityState={{ selected: day === NO_EATING_OUT }}
+        >
+          <Text style={[step.chipText, day === NO_EATING_OUT && step.chipTextSelected]}>I don’t eat out</Text>
+        </PressableScale>
       </View>
     </View>
   );

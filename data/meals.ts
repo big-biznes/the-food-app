@@ -161,13 +161,13 @@ function compatiblePool(restrictions: DietaryRestriction[]): Meal[] {
 }
 
 /** Format a single ingredient for display on the meal card */
-export function formatIngredient(ing: Ingredient, imperial = false): string {
+export function formatIngredient(ing: Ingredient): string {
   // "2 eggs" already names the ingredient; "2 cloves" needs it: "2 cloves garlic".
   if (ing.label) return ing.label.includes(ing.name.replace(/s$/, '')) ? ing.label : `${ing.label} ${ing.name}`;
   if (!ing.unit) {
     return ing.amount > 1 ? `${ing.amount} ${ing.name}` : ing.name;
   }
-  return `${formatQuantity(ing.amount, ing.unit, imperial)} ${ing.name}`;
+  return `${formatQuantity(ing.amount, ing.unit)} ${ing.name}`;
 }
 
 export type WeekPart = 'A' | 'B' | 'C';
@@ -210,11 +210,20 @@ export type DayPlan = {
   snack?: Meal;
 };
 
+/**
+ * The day on its own at the end of the week. For someone who eats out it is the
+ * eating-out day: a cooked lunch and dinner out. For someone who does not, it is
+ * a full day of cooking.
+ */
 export type PartCDayPlan = {
+  breakfast?: Meal;
   lunch: Meal;
-  dinner: EatingOutEntry;
+  dinner: Meal | EatingOutEntry;
   snack?: Meal;
 };
+
+/** The value of the profile's eating-out day for someone who does not eat out. */
+export const NO_EATING_OUT = 'none';
 
 /** One meal's place in a plan. */
 export type PlanSlot = { part: WeekPart; day: string; mealType: MealType };
@@ -241,8 +250,37 @@ export function mealAt(plan: StructuredWeekPlan, slot: PlanSlot): Meal | undefin
 
 /** The plan without the snack of one day. */
 export function withoutSnack(plan: StructuredWeekPlan, part: WeekPart, day: string): StructuredWeekPlan {
-  const { snack: _snack, ...rest } = plan[part][day];
+  const { snack: _snack, ...rest } = plan[part][day] as DayPlan;
   return { ...plan, [part]: { ...plan[part], [day]: rest } };
+}
+
+/** The plan without any snacks. */
+export function removeSnacks(plan: StructuredWeekPlan): StructuredWeekPlan {
+  let next = plan;
+  for (const slot of planSlots(plan)) if (slot.mealType === 'snack') next = withoutSnack(next, slot.part, slot.day);
+  return next;
+}
+
+/**
+ * The plan with a snack on every day that has none, from the snacks that fit the
+ * dietary restrictions; days stay without one when no snack fits.
+ */
+export function addSnacks(plan: StructuredWeekPlan, restrictions: DietaryRestriction[]): StructuredWeekPlan {
+  const fitting = ALL_MEALS.filter(m => m.mealType === 'snack' && fitsRestrictions(m, restrictions));
+  if (fitting.length === 0) return plan;
+  const used = extractUsedIds(plan);
+  let next = plan;
+  for (const part of ['A', 'B', 'C'] as const) {
+    for (const [day, dayPlan] of Object.entries(plan[part])) {
+      if (dayPlan.snack) continue;
+      const fresh = fitting.filter(m => !used.has(m.id));
+      const from = fresh.length > 0 ? fresh : fitting;
+      const snack = from[Math.floor(Math.random() * from.length)];
+      used.add(snack.id);
+      next = withMeal(next, { part, day, mealType: 'snack' }, snack);
+    }
+  }
+  return next;
 }
 
 /** The plan with one of its meals replaced. */
@@ -573,10 +611,13 @@ export function generateStructuredMealPlan(
   // Part C: eating-out day — one cooked lunch + eating-out dinner
   const cScored = scoredPool(pool, keywords, likedIds, focus, targets);
   const cLunch = pickMeal(cScored, 'lunch', usedIds);
+  // Without an eating-out day the week still ends on a day of its own (Sunday), cooked in full.
+  const cooksAll = eatingOutDay === NO_EATING_OUT;
   const partC: Record<string, PartCDayPlan> = {
     [partDays.C[0]]: {
+      ...(cooksAll ? { breakfast: pickMeal(cScored, 'breakfast', usedIds) } : {}),
       lunch: cLunch,
-      dinner: EATING_OUT,
+      dinner: cooksAll ? pickMeal(cScored, 'dinner', usedIds) : EATING_OUT,
       ...(wantsSnack(cScored, targets) ? { snack: pickMeal(cScored, 'snack', usedIds) } : {}),
     },
   };

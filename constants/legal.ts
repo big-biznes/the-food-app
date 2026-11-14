@@ -73,7 +73,7 @@ export const PRIVACY: LegalDoc = {
     {
       heading: 'Changes and contact',
       body: [
-        'If this policy changes in a way that matters, the app will tell you before the change applies.',
+        'When this policy changes, the new text is shown here with a new date. If a change affects how your health or diet data is used, we will ask for your consent again before it applies to you.',
         `Questions or requests about your data: ${contact}`,
       ],
     },
@@ -132,7 +132,7 @@ export const TERMS: LegalDoc = {
     {
       heading: 'Changes and contact',
       body: [
-        'If these terms change in a way that matters, the app will tell you before the change applies. Using the app after that means you accept the new terms.',
+        'When these terms change, the new text is shown here with a new date. Using the app after that date means you accept the new terms.',
         `Questions: ${contact}`,
       ],
     },

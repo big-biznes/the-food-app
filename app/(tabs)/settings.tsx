@@ -13,13 +13,15 @@ import { Href, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, Activity, DietaryRestriction, Goal, MacroBalance } from '@/contexts/AuthContext';
 import { BODY_LIMITS } from '@/data/portions';
-import { cmToFeet, feetToCm, kgToLb, lbToKg } from '@/data/quantity';
+import { NO_EATING_OUT } from '@/data/meals';
 import { allowReminders } from '@/lib/reminders';
 import { useTargets } from '@/hooks/usePortions';
 import { Colors } from '@/constants/theme';
 import StorePicker from '@/components/shopping/StorePicker';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import ConfirmSheet from '@/components/ConfirmSheet';
+import PlanIntroSheet from '@/components/home/PlanIntroSheet';
+import { usePlan } from '@/contexts/PlanContext';
 
 import { font, type } from '@/constants/type';
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -59,6 +61,8 @@ export default function SettingsScreen() {
   const { user, logout, updateProfile, deleteAccount } = useAuth();
   const router = useRouter();
   const [confirm, setConfirm] = useState<'logout' | 'delete' | null>(null);
+  const { savedPlan } = usePlan();
+  const [showIntro, setShowIntro] = useState(false);
 
   // Plan settings
   const [goal, setGoal] = useState<Goal>(user?.goal ?? 'maintain');
@@ -72,7 +76,6 @@ export default function SettingsScreen() {
   );
 
   // Application settings
-  const imperial = user?.units === 'imperial';
   // Set when the phone refused permission for notifications.
   const [remindersBlocked, setRemindersBlocked] = useState(false);
 
@@ -113,7 +116,6 @@ export default function SettingsScreen() {
     return null;
   }
 
-  const firstName = user?.name?.split(' ')[0] ?? '';
   const initials = user?.name
     ? user.name
         .split(' ')
@@ -157,35 +159,21 @@ export default function SettingsScreen() {
             onChange={age => updateProfile({ age })}
           />
           <Divider />
-          {imperial ? (
-            <HeightRowImperial heightCm={user?.heightCm} onChange={heightCm => updateProfile({ heightCm })} />
-          ) : (
-            <NumberRow
-              label="Height"
-              value={user?.heightCm}
-              unit="cm"
-              limits={BODY_LIMITS.heightCm}
-              onChange={heightCm => updateProfile({ heightCm })}
-            />
-          )}
+          <NumberRow
+            label="Height"
+            value={user?.heightCm}
+            unit="cm"
+            limits={BODY_LIMITS.heightCm}
+            onChange={heightCm => updateProfile({ heightCm })}
+          />
           <Divider />
-          {imperial ? (
-            <NumberRow
-              label="Weight"
-              value={user?.weightKg ? kgToLb(user.weightKg) : undefined}
-              unit="lb"
-              limits={{ min: kgToLb(BODY_LIMITS.weightKg.min), max: kgToLb(BODY_LIMITS.weightKg.max) }}
-              onChange={lb => updateProfile({ weightKg: lbToKg(lb) })}
-            />
-          ) : (
-            <NumberRow
-              label="Weight"
-              value={user?.weightKg}
-              unit="kg"
-              limits={BODY_LIMITS.weightKg}
-              onChange={weightKg => updateProfile({ weightKg })}
-            />
-          )}
+          <NumberRow
+            label="Weight"
+            value={user?.weightKg}
+            unit="kg"
+            limits={BODY_LIMITS.weightKg}
+            onChange={weightKg => updateProfile({ weightKg })}
+          />
           <Text style={styles.sectionNote}>
             Your portions are worked out from these. Update your weight when it changes.
           </Text>
@@ -241,6 +229,14 @@ export default function SettingsScreen() {
                 }}
               />
             ))}
+            <Chip
+              label="I don’t eat out"
+              selected={eatingOutDay === NO_EATING_OUT}
+              onPress={() => {
+                setEatingOutDay(NO_EATING_OUT);
+                updateProfile({ eatingOutDay: NO_EATING_OUT });
+              }}
+            />
           </View>
 
           <Divider />
@@ -304,17 +300,6 @@ export default function SettingsScreen() {
         {/* ── Application Settings ──────────────────────────────────── */}
         <SectionHeader label="Application" />
         <View style={styles.section}>
-          <RowLabel
-            label="Measurement system"
-            hint="For recipe amounts and your height and weight. Shopping lists stay in grams, as the shops sell them."
-          />
-          <View style={styles.chipRow}>
-            <Chip label="Metric" selected={!imperial} onPress={() => updateProfile({ units: 'metric' })} />
-            <Chip label="Imperial" selected={imperial} onPress={() => updateProfile({ units: 'imperial' })} />
-          </View>
-
-          <Divider />
-
           <View style={styles.switchRow}>
             <View style={styles.switchText}>
               <Text style={styles.rowLabel}>Shopping reminders</Text>
@@ -338,6 +323,13 @@ export default function SettingsScreen() {
         {/* ── App Information ───────────────────────────────────────── */}
         <SectionHeader label="App information" />
         <View style={styles.section}>
+          {/* Told with the person's own plan, so only once there is one. */}
+          {savedPlan?.plan && (
+            <>
+              <LinkRow label="How planning works" onPress={() => setShowIntro(true)} />
+              <Divider />
+            </>
+          )}
           <LinkRow
             label="Terms of Service"
             onPress={() => router.push('/legal/terms' as Href)}
@@ -367,6 +359,7 @@ export default function SettingsScreen() {
         </PressableScale>
       </ScrollView>
 
+      <PlanIntroSheet visible={showIntro} onClose={() => setShowIntro(false)} />
       <ConfirmSheet
         visible={confirm === 'logout'}
         title="Log out?"
@@ -425,7 +418,7 @@ function NumberInput({
   const fieldStyles = useThemedStyles(makeFieldStyles);
   const shown = value != null ? String(value) : '';
   const [text, setText] = useState(shown);
-  // Follow the profile when it changes elsewhere (another unit system, another device).
+  // Follow the profile when it changes elsewhere (another device).
   useEffect(() => setText(shown), [shown]);
 
   function commit() {
@@ -477,39 +470,6 @@ function NumberRow({
         <Text style={fieldStyles.label}>{label}</Text>
         <NumberInput value={value} limits={limits} label={`${label} in ${unit}`} onChange={onChange} onError={setError} />
         <Text style={fieldStyles.unit}>{unit}</Text>
-      </View>
-      {error && (
-        <Text style={fieldStyles.error} accessibilityRole="alert">
-          {error}
-        </Text>
-      )}
-    </View>
-  );
-}
-
-/** Height as feet and inches; saved in centimetres like everything else. */
-function HeightRowImperial({ heightCm, onChange }: { heightCm: number | undefined; onChange: (cm: number) => void }) {
-  const fieldStyles = useThemedStyles(makeFieldStyles);
-  const [error, setError] = useState<string | null>(null);
-  const { ft, inch } = heightCm ? cmToFeet(heightCm) : { ft: undefined, inch: undefined };
-
-  function save(nextFt: number, nextInch: number) {
-    const cm = feetToCm(nextFt, nextInch);
-    if (cm < BODY_LIMITS.heightCm.min || cm > BODY_LIMITS.heightCm.max) {
-      setError('That height is outside what the app can work with.');
-      return;
-    }
-    onChange(cm);
-  }
-
-  return (
-    <View>
-      <View style={fieldStyles.row}>
-        <Text style={fieldStyles.label}>Height</Text>
-        <NumberInput value={ft} limits={{ min: 3, max: 7 }} label="Height, feet" onChange={n => save(n, inch ?? 0)} onError={setError} />
-        <Text style={fieldStyles.unit}>ft</Text>
-        <NumberInput value={inch} limits={{ min: 0, max: 11 }} label="Height, inches" onChange={n => save(ft ?? 5, n)} onError={setError} />
-        <Text style={fieldStyles.unit}>in</Text>
       </View>
       {error && (
         <Text style={fieldStyles.error} accessibilityRole="alert">

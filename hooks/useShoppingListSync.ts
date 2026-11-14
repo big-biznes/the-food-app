@@ -5,9 +5,9 @@ import { extractPartIngredients } from '@/data/meals';
 import { useTargets } from '@/hooks/usePortions';
 
 /**
- * Whether the shopping list made from the plan no longer matches it because
- * ingredients were left out of (or put back into) its recipes since, and a way
- * to bring the list up to date.
+ * Whether the shopping list made from the plan no longer matches it, because a
+ * meal was replaced or swapped to other days, or ingredients were left out of
+ * (or put back into) a recipe since. `update` brings the list up to date.
  */
 export function useShoppingListSync(): { stale: boolean; update: () => void } {
   const { savedPlan, setSavedPlan, without } = usePlan();
@@ -18,17 +18,18 @@ export function useShoppingListSync(): { stale: boolean; update: () => void } {
   const hasList = shoppingItems.length > 0;
 
   const change = useMemo(() => {
-    if (!plan || !list || !hasList || list.without === without) return null;
-    const before = extractPartIngredients(plan, list.part, targets, list.without);
+    // `needs` is absent on a list made by an older version of the app.
+    if (!plan || !list?.needs || !hasList) return null;
     const after = extractPartIngredients(plan, list.part, targets, without);
-    const same = before.length === after.length && before.every((b, i) => b.name === after[i].name);
-    return same ? null : { before, after };
+    // The order follows the days, and meals trading days within the part changes nothing to buy.
+    const names = (items: { name: string }[]) => items.map(i => i.name).sort().join('\n');
+    return names(list.needs) === names(after) ? null : { before: list.needs, after };
   }, [plan, list, hasList, targets, without]);
 
   const update = useCallback(() => {
     if (!change) return;
     updatePlanIngredients(change.before, change.after);
-    setSavedPlan(prev => (prev?.list ? { ...prev, list: { ...prev.list, without: prev.without ?? {} } } : prev));
+    setSavedPlan(prev => (prev?.list ? { ...prev, list: { ...prev.list, needs: change.after } } : prev));
   }, [change, updatePlanIngredients, setSavedPlan]);
 
   return { stale: change != null, update };

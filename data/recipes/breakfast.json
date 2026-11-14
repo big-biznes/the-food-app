@@ -2344,5 +2344,426 @@
       "Stir in the spinach until wilted, and toast the bread meanwhile",
       "Serve the scramble with the toast"
     ]
+  },
+  {
+    "id": "b-breakfast-egg-fried-rice",
+    "name": "Breakfast Egg Fried Rice",
+    "description": "Rice fried with scrambled egg, peas and soy sauce",
+    "mealType": "breakfast",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍳",
+    "main": "eggs",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "rice",
+        "g": 60
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "peas",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "ml": 10
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "pinch of white pepper"
+    ],
+    "instructions": [
+      "Cook the rice in {150} ml of salted water, covered, for 12 minutes",
+      "Heat the oil in a pan over medium-high heat, crack in the eggs and scramble them for 1 minute until just set",
+      "Add the rice and the peas and fry for 3 minutes, breaking up the rice",
+      "Stir in the soy sauce and a little white pepper and serve"
+    ]
+  },
+  {
+    "id": "b-savoury-soy-oats-egg",
+    "name": "Savoury Oats with Egg and Soy",
+    "description": "Oats cooked in water with mushrooms and spinach, topped with a fried egg and soy sauce",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥣",
+    "main": "oats",
+    "tags": [
+      "asian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "oats",
+        "g": 50
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "mushrooms",
+        "g": 60
+      },
+      {
+        "item": "spinach",
+        "g": 50
+      },
+      {
+        "item": "soy sauce",
+        "ml": 10
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [],
+    "instructions": [
+      "Slice the mushrooms and fry them in half of the oil in a small pot over medium heat for 3 minutes",
+      "Add the oats and {250} ml of water and simmer for 4 minutes, stirring, until thick, then stir in the spinach until wilted",
+      "Fry the egg in the rest of the oil in a small pan until the white is set",
+      "Pour the oats into a bowl, lay the egg on top and drizzle with the soy sauce"
+    ]
+  },
+  {
+    "id": "b-rice-congee-egg",
+    "name": "Rice Congee with Egg and Mushrooms",
+    "description": "Rice simmered until soft and silky, with mushrooms, a soft egg and soy sauce",
+    "mealType": "breakfast",
+    "prepTime": 40,
+    "difficulty": "weekend",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍚",
+    "main": "rice",
+    "tags": [
+      "asian",
+      "comfort"
+    ],
+    "ingredients": [
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "eggs",
+        "pieces": 1
+      },
+      {
+        "item": "mushrooms",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "ml": 10
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "a little grated ginger"
+    ],
+    "instructions": [
+      "Rinse the rice, put it in a pot with {500} ml of water and a pinch of salt and bring to the boil",
+      "Turn the heat down and simmer for 30 minutes, stirring now and then, until the rice has broken down into a thick porridge",
+      "Slice the mushrooms and add them for the last 5 minutes",
+      "Boil the egg for 7 minutes in a separate pot, peel and halve it",
+      "Serve the congee with the egg on top, the soy sauce and a little grated ginger"
+    ]
+  },
+  {
+    "id": "b-soy-tofu-rice-bowl",
+    "name": "Soy Tofu Breakfast Rice Bowl",
+    "description": "Warm rice with golden tofu, wilted spinach and soy sauce",
+    "mealType": "breakfast",
+    "prepTime": 20,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🍙",
+    "main": "tofu",
+    "tags": [
+      "asian"
+    ],
+    "ingredients": [
+      {
+        "item": "tofu",
+        "g": 150
+      },
+      {
+        "item": "rice",
+        "g": 50
+      },
+      {
+        "item": "spinach",
+        "g": 60
+      },
+      {
+        "item": "soy sauce",
+        "ml": 15
+      },
+      {
+        "item": "oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of salt"
+    ],
+    "instructions": [
+      "Cook the rice in {120} ml of salted water, covered, for 12 minutes",
+      "Pat the tofu dry and cut it into cubes, then fry it in the oil over medium-high heat for 6 minutes until golden",
+      "Add the spinach and the soy sauce and toss for 1 minute until the spinach has wilted",
+      "Spoon the tofu and spinach over the rice"
+    ]
+  },
+  {
+    "id": "b-caprese-toast",
+    "name": "Caprese Toast",
+    "description": "Toast with mozzarella, sliced tomato and olive oil",
+    "mealType": "breakfast",
+    "prepTime": 5,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🍅",
+    "main": "mozzarella",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "mozzarella",
+        "g": 60
+      },
+      {
+        "item": "tomato",
+        "g": 100
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper",
+      "pinch of dried oregano"
+    ],
+    "instructions": [
+      "Toast the bread",
+      "Slice the mozzarella and the tomato and layer them on the toast",
+      "Drizzle with the olive oil and season with salt, black pepper and a pinch of dried oregano"
+    ]
+  },
+  {
+    "id": "b-zucchini-parmesan-frittata",
+    "name": "Zucchini and Parmesan Frittata",
+    "description": "A thick open omelette with zucchini and parmesan, with a slice of toast",
+    "mealType": "breakfast",
+    "prepTime": 15,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥒",
+    "main": "eggs",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 3
+      },
+      {
+        "item": "zucchini",
+        "g": 120
+      },
+      {
+        "item": "parmesan",
+        "g": 15
+      },
+      {
+        "item": "olive oil",
+        "g": 5
+      },
+      {
+        "item": "bread",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Slice the zucchini thinly and fry it in the olive oil in a small pan over medium heat for 4 minutes until soft",
+      "Beat the eggs with the grated parmesan, salt and black pepper and pour them over the zucchini",
+      "Cook on low heat for 4 minutes until nearly set, then cover the pan for 2 minutes to set the top",
+      "Slide onto a plate and serve with the toasted bread"
+    ]
+  },
+  {
+    "id": "b-pesto-eggs-toast",
+    "name": "Pesto Eggs on Toast",
+    "description": "Eggs fried in pesto, on toast with fresh tomato",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🌿",
+    "main": "eggs",
+    "tags": [
+      "italian"
+    ],
+    "ingredients": [
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "pesto",
+        "ml": 15
+      },
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "tomato",
+        "g": 80
+      }
+    ],
+    "seasonings": [
+      "black pepper"
+    ],
+    "instructions": [
+      "Warm the pesto in a pan over medium heat until it sizzles",
+      "Crack in the eggs and fry them for 3 minutes until the whites are set, spooning the pesto over them",
+      "Toast the bread, slice the tomato and lay it on the toast",
+      "Top with the eggs and season with black pepper"
+    ]
+  },
+  {
+    "id": "b-tomato-chickpea-bruschetta",
+    "name": "Tomato and Chickpea Bruschetta",
+    "description": "Garlic-rubbed toast piled with tomato and chickpeas in olive oil",
+    "mealType": "breakfast",
+    "prepTime": 8,
+    "difficulty": "quick",
+    "appliances": [],
+    "emoji": "🥖",
+    "main": "chickpeas",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "chickpeas",
+        "g": 100
+      },
+      {
+        "item": "tomato",
+        "g": 120
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper",
+      "pinch of dried oregano"
+    ],
+    "instructions": [
+      "Dice the tomato and mix it with the drained chickpeas, the olive oil, a pinch of salt and black pepper, lightly crushing some of the chickpeas with a fork",
+      "Toast the bread and rub it with the cut side of the halved garlic",
+      "Pile the tomato and chickpeas on the toast and finish with a pinch of dried oregano"
+    ]
+  },
+  {
+    "id": "b-soft-egg-bruschetta",
+    "name": "Bruschetta with Soft Eggs",
+    "description": "Tomato bruschetta topped with soft-boiled eggs",
+    "mealType": "breakfast",
+    "prepTime": 12,
+    "difficulty": "quick",
+    "appliances": [
+      "stovetop"
+    ],
+    "emoji": "🥚",
+    "main": "eggs",
+    "tags": [
+      "italian",
+      "fresh"
+    ],
+    "ingredients": [
+      {
+        "item": "bread",
+        "pieces": 2
+      },
+      {
+        "item": "eggs",
+        "pieces": 2
+      },
+      {
+        "item": "tomato",
+        "g": 150
+      },
+      {
+        "item": "olive oil",
+        "g": 8
+      },
+      {
+        "item": "garlic",
+        "pieces": 1
+      }
+    ],
+    "seasonings": [
+      "pinch of salt",
+      "black pepper"
+    ],
+    "instructions": [
+      "Boil the eggs for 6 minutes, cool them under cold water and peel them",
+      "Dice the tomato and toss it with the olive oil, salt and black pepper",
+      "Toast the bread, rub it with the cut side of the halved garlic and spoon the tomato on top",
+      "Halve the eggs and lay them on the bruschetta"
+    ]
   }
 ]

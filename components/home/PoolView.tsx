@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { WeekPart, Day, MealType, PlanSlot, StructuredWeekPlan, swapGroup } from '@/data/meals';
+import { WeekPart, Day, Meal, MealType, PlanSlot, StructuredWeekPlan, swapGroup } from '@/data/meals';
 import MealCard from '@/components/MealCard';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
@@ -42,21 +42,16 @@ export default function PoolView({
 
   if (selectedPart === 'C') {
     const day = days[0];
+    const { breakfast, lunch, dinner, snack } = plan.C[day];
+    const cooked = (meal: Meal, mealType: MealType) => (
+      <MealCard key={mealType} meal={meal} dayLabel="Day 1" onRefresh={() => onRefreshMeal('C', day, mealType)} />
+    );
     return (
       <View style={styles.container}>
-        <MealCard
-          meal={plan.C[day].lunch}
-          dayLabel="Day 1"
-          onRefresh={() => onRefreshMeal('C', day, 'lunch')}
-        />
-        <MealCard meal={plan.C[day].dinner} dayLabel="Day 1" />
-        {plan.C[day].snack && (
-          <MealCard
-            meal={plan.C[day].snack}
-            dayLabel="Day 1"
-            onRefresh={() => onRefreshMeal('C', day, 'snack')}
-          />
-        )}
+        {breakfast && cooked(breakfast, 'breakfast')}
+        {cooked(lunch, 'lunch')}
+        {'isEatingOut' in dinner ? <MealCard meal={dinner} dayLabel="Day 1" /> : cooked(dinner, 'dinner')}
+        {snack && cooked(snack, 'snack')}
       </View>
     );
   }

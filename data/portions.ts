@@ -225,7 +225,7 @@ function spellings(word: string): string[] {
 }
 
 /** What an ingredient can be called in a step: "beef mince" is also "the mince". */
-function namesIn(name: string, all: Ingredient[]): string[] {
+export function namesIn(name: string, all: Ingredient[]): string[] {
   const parts = name.split(' ');
   const last = parts[parts.length - 1];
   const head = parts.slice(0, -1).join(' ');
