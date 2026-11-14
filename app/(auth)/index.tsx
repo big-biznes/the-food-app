@@ -7,9 +7,11 @@ import LanguagePicker from '@/components/LanguagePicker';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 export default function WelcomeScreen() {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const { devLogin } = useAuth();
 
@@ -47,10 +49,10 @@ export default function WelcomeScreen() {
             </View>
           </View>
           <Text style={styles.headline} accessibilityRole="header">
-            Dinner,{'\n'}decided.
+            {t('auth.headline')}
           </Text>
           <Text style={styles.tagline}>
-            A week of cheap, quick meals and the shopping list to match. Planned in one tap.
+            {t('auth.tagline')}
           </Text>
         </View>
 
@@ -61,7 +63,7 @@ export default function WelcomeScreen() {
             activeOpacity={0.8}
             accessibilityRole="button"
           >
-            <Text style={styles.primaryButtonText}>Start planning</Text>
+            <Text style={styles.primaryButtonText}>{t('auth.start')}</Text>
           </PressableScale>
           <PressableScale
             style={styles.secondaryButton}
@@ -69,7 +71,7 @@ export default function WelcomeScreen() {
             activeOpacity={0.8}
             accessibilityRole="button"
           >
-            <Text style={styles.secondaryButtonText}>Sign in</Text>
+            <Text style={styles.secondaryButtonText}>{t('auth.signIn')}</Text>
           </PressableScale>
 
           {/* Before the quiz, so it is already in the right language. */}

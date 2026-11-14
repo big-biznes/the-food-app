@@ -12,6 +12,7 @@ import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { usePrepList } from '@/hooks/usePrep';
 import { useTranslation } from 'react-i18next';
+import { prepLineText } from '@/lib/localize';
 
 const SECTIONS: { kind: PrepLine['kind']; title: 'prep.cookAhead' | 'prep.cutStore'; note: 'prep.cookNote' | 'prep.cutNote' }[] = [
   {
@@ -95,14 +96,14 @@ export default function PrepScreen() {
                       activeOpacity={0.7}
                       scaleTo={1}
                       accessibilityRole="checkbox"
-                      accessibilityLabel={t('prep.for', { job: job.label, meals: job.meals.join(', ') })}
+                      accessibilityLabel={t('prep.for', { job: prepLineText(job), meals: job.meals.join(', ') })}
                       accessibilityState={{ checked }}
                     >
                       <View style={[styles.checkbox, checked && styles.checkboxOn]}>
                         {checked && <Ionicons name="checkmark" size={16} color={c.onPrimary} />}
                       </View>
                       <View style={styles.rowText}>
-                        <Text style={[styles.rowLabel, checked && styles.rowLabelDone]}>{job.label}</Text>
+                        <Text style={[styles.rowLabel, checked && styles.rowLabelDone]}>{prepLineText(job)}</Text>
                         <Text style={styles.rowMeals}>{job.meals.join(' · ')}</Text>
                       </View>
                     </PressableScale>

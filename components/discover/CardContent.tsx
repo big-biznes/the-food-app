@@ -4,18 +4,19 @@ import { Meal } from '@/data/meals';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 type Props = { meal: Meal };
 
-const TYPE_LABEL = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' } as const;
 
 export default function CardContent({ meal }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal(meal);
   return (
     <View style={styles.cardInner}>
-      <Text style={styles.kicker}>{TYPE_LABEL[meal.mealType]}</Text>
+      <Text style={styles.kicker}>{t(`meals.${meal.mealType}`)}</Text>
       <View style={styles.emojiWrap}>
         <Text style={styles.emoji}>{meal.emoji}</Text>
       </View>
@@ -27,7 +28,7 @@ export default function CardContent({ meal }: Props) {
           {meal.description}
         </Text>
         <Text style={styles.meta}>
-          {meal.prepTime} min, {personal.calories} kcal
+          {t('card.stats', { min: meal.prepTime, kcal: personal.calories })}
         </Text>
       </View>
     </View>

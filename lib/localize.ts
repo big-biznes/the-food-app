@@ -4,6 +4,7 @@
 
 import ingredientDefs from '@/data/ingredients.json';
 import type { Ingredient } from '@/data/meals';
+import type { PrepLine } from '@/data/prep';
 import { parseItemText } from '@/lib/parseItem';
 import i18n from '@/lib/i18n';
 
@@ -65,4 +66,45 @@ export function shoppingLine(text: string): string {
   if (!key || !has(`ingredient.${key}`)) return text;
   if (amount == null) return ingredientName(key);
   return ingredientLine({ name: key, amount, unit });
+}
+
+/** A sign-in or sign-up error from Supabase in the app's language; other messages are shown as they are. */
+export function authErrorText(message: string): string {
+  const rules: [RegExp, string][] = [
+    [/invalid login credentials/i, 'auth.invalidLogin'],
+    [/already (been )?registered|already exists/i, 'auth.alreadyRegistered'],
+    [/password should be at least|weak password/i, 'auth.weakPassword'],
+    [/invalid.*email|email.*invalid|unable to validate email/i, 'auth.invalidEmail'],
+    [/network request failed|failed to fetch|timed out/i, 'auth.network'],
+  ];
+  const hit = rules.find(([re]) => re.test(message));
+  return hit ? tr(hit[1]) : message;
+}
+
+/** The English names of prep jobs (data/prep.ts) and their translation keys. */
+const PREP_JOB: Record<string, string> = {
+  dice: 'dice',
+  chop: 'chop',
+  slice: 'slice',
+  grate: 'grate',
+  shred: 'shred',
+  trim: 'trim',
+  halve: 'halve',
+  'chop finely': 'chopFinely',
+  'cut up': 'cutUp',
+  cook: 'cook',
+};
+
+/** A prep-list job in the app's language: "Нарежете на кубчета 180 г лук". */
+export function prepLineText(line: PrepLine): string {
+  const what = line.amount != null && line.unit ? ingredientLine({ name: line.ingredient, amount: line.amount, unit: line.unit }) : ingredientName(line.ingredient);
+  const verb = line.verb.toLowerCase();
+  const into = verb.match(/^cut into (.+)$/);
+  if (into) {
+    const shape = into[1].trim();
+    if (!has(`prepShape.${shape}`)) return line.label;
+    return tr('prepJob.cutInto', { what, shape: tr(`prepShape.${shape}`) });
+  }
+  const key = PREP_JOB[verb];
+  return key ? tr(`prepJob.${key}`, { what }) : line.label;
 }

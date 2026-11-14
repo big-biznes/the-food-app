@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Meal } from '@/data/meals';
 import { Colors, tileColor } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import CardContent from './CardContent';
 
@@ -51,6 +52,7 @@ export default function SwipeCard({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   // Calories for the portion this user will cook.
   const personal = usePersonalMeal(meal);
   const { width: screenWidth } = useWindowDimensions();
@@ -203,12 +205,12 @@ export default function SwipeCard({
           },
         ]}
         accessible
-        accessibilityLabel={`${meal.name}. ${meal.description}. ${meal.prepTime} minutes, ${personal.calories} kilocalories`}
-        accessibilityHint="Double tap for details. Swipe right to like, left to pass. Custom actions are available."
+        accessibilityLabel={t('discover.cardA11y', { name: meal.name, description: meal.description, min: meal.prepTime, kcal: personal.calories })}
+        accessibilityHint={t('discover.cardHint')}
         accessibilityActions={[
-          { name: 'activate', label: 'Show details' },
-          { name: 'like', label: 'Like' },
-          { name: 'pass', label: 'Pass' },
+          { name: 'activate', label: t('discover.showDetails') },
+          { name: 'like', label: t('discover.like') },
+          { name: 'pass', label: t('discover.pass') },
         ]}
         onAccessibilityAction={e => {
           if (e.nativeEvent.actionName === 'activate') onTapRef.current?.();
@@ -217,10 +219,10 @@ export default function SwipeCard({
         }}
       >
         <Animated.View style={[styles.stamp, styles.stampLike, { opacity: likeOpacity }]}>
-          <Animated.Text style={styles.stampLikeText}>Like</Animated.Text>
+          <Animated.Text style={styles.stampLikeText}>{t('discover.like')}</Animated.Text>
         </Animated.View>
         <Animated.View style={[styles.stamp, styles.stampNope, { opacity: nopeOpacity }]}>
-          <Animated.Text style={styles.stampNopeText}>Pass</Animated.Text>
+          <Animated.Text style={styles.stampNopeText}>{t('discover.pass')}</Animated.Text>
         </Animated.View>
         {showTapHint && (
           <Animated.View
@@ -230,7 +232,7 @@ export default function SwipeCard({
             accessibilityElementsHidden
           >
             <Ionicons name="hand-left-outline" size={13} color={c.onTile} />
-            <Animated.Text style={styles.tapHintText}>Tap for details</Animated.Text>
+            <Animated.Text style={styles.tapHintText}>{t('discover.tapDetails')}</Animated.Text>
           </Animated.View>
         )}
         <CardContent meal={meal} />
@@ -254,6 +256,7 @@ type FlyingProps = {
 export function FlyingCard({ meal, expertMode, direction, release, onDone }: FlyingProps) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const { width: screenWidth } = useWindowDimensions();
   const position = useRef(new Animated.ValueXY({ x: release.x, y: release.y })).current;
 
@@ -295,7 +298,7 @@ export function FlyingCard({ meal, expertMode, direction, release, onDone }: Fly
     >
       <Animated.View style={[styles.stamp, direction === 'right' ? styles.stampLike : styles.stampNope]}>
         <Animated.Text style={direction === 'right' ? styles.stampLikeText : styles.stampNopeText}>
-          {direction === 'right' ? 'Like' : 'Pass'}
+          {direction === 'right' ? t('discover.like') : t('discover.pass')}
         </Animated.Text>
       </Animated.View>
       <CardContent meal={meal} />

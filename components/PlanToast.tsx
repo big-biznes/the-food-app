@@ -12,6 +12,7 @@ import PressableScale from '@/components/PressableScale';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 
 import { font } from '@/constants/type';
@@ -47,6 +48,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
 ) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const reducedMotion = useReducedMotionRef();
   const [visible, setVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(HIDDEN_Y)).current;
@@ -192,7 +194,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
     <Animated.View
       style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
       {...panResponder.panHandlers}
-      accessibilityActions={[{ name: 'dismiss', label: 'Dismiss' }]}
+      accessibilityActions={[{ name: 'dismiss', label: t('nav.dismiss') }]}
       onAccessibilityAction={e => {
         if (e.nativeEvent.actionName === 'dismiss') dismissInternal();
       }}

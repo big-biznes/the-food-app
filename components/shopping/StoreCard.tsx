@@ -83,6 +83,7 @@ export default function StoreCard({ store, labels, itemCount, badge, initiallyOp
 
 function ItemLine({ item, label }: { item: ItemChoice; label: string }) {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   return (
     <View style={styles.line}>
       <View style={styles.lineText}>
@@ -90,8 +91,12 @@ function ItemLine({ item, label }: { item: ItemChoice; label: string }) {
         {item.lines.map(l => (
           <Text key={l.productId} style={styles.lineProduct}>
             {item.byWeight
-              ? `${l.productName} · loose, ${formatMoney(l.priceCents)} per ${formatAmount(l.packAmount, l.packUnit)}`
-              : `${l.packs} × ${l.productName} · ${formatMoney(l.priceCents)} each`}
+              ? t('shopMore.loose', {
+                  product: l.productName,
+                  price: formatMoney(l.priceCents),
+                  amount: formatAmount(l.packAmount, l.packUnit),
+                })
+              : t('shopMore.packs', { packs: l.packs, product: l.productName, price: formatMoney(l.priceCents) })}
           </Text>
         ))}
         {item.leftover > 0 && (

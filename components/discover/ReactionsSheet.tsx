@@ -17,6 +17,7 @@ import { useLikes } from '@/contexts/LikesContext';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import ReactionRow from './ReactionRow';
 
 import { font, type } from '@/constants/type';
@@ -36,6 +37,7 @@ type Section = {
 export default function ReactionsSheet({ visible, onClose }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const { height: screenHeight } = useWindowDimensions();
   const { likedIds, dislikedIds, toggle } = useLikes();
   // From context (not ALL_MEALS directly) so the list fills in once recipes finish loading.
@@ -69,19 +71,19 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
     const passed = allMeals.filter(m => dislikedSet.has(m.id));
     const out: Section[] = [];
     if (liked.length > 0) {
-      out.push({ key: 'liked', title: `${liked.length} liked`, liked: true, first: true, data: liked });
+      out.push({ key: 'liked', title: t('discover.likedCount', { count: liked.length }), liked: true, first: true, data: liked });
     }
     if (passed.length > 0) {
       out.push({
         key: 'passed',
-        title: `${passed.length} passed`,
+        title: t('discover.passedCount', { count: passed.length }),
         liked: false,
         first: out.length === 0,
         data: passed,
       });
     }
     return out;
-  }, [likedIds, dislikedIds, allMeals]);
+  }, [likedIds, dislikedIds, allMeals, t]);
 
   const totalSeen = likedIds.length + dislikedIds.length;
 
@@ -100,7 +102,7 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
           activeOpacity={1}
           onPress={close}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('common.close')}
         />
       </Animated.View>
 
@@ -111,8 +113,8 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
             {...panResponder.panHandlers}
             hitSlop={{ top: 24 }}
             accessibilityRole="button"
-            accessibilityLabel="Close"
-            accessibilityHint="Drag down or double tap to close"
+            accessibilityLabel={t('common.close')}
+            accessibilityHint={t('common.closeHint')}
             onAccessibilityTap={close}
           >
             <View style={styles.handle} />
@@ -120,9 +122,9 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
 
           <View style={styles.titleRow}>
             <Text style={styles.title} accessibilityRole="header">
-              Your reactions
+              {t('discover.reactions')}
             </Text>
-            <Text style={styles.titleSub}>{totalSeen} seen</Text>
+            <Text style={styles.titleSub}>{t('shopMore.seen', { count: totalSeen })}</Text>
           </View>
 
           <SectionList
@@ -135,7 +137,7 @@ export default function ReactionsSheet({ visible, onClose }: Props) {
             ListEmptyComponent={
               <View style={styles.emptyState}>
                 <Text style={styles.emptyEmoji}>👆</Text>
-                <Text style={styles.emptyText}>Start swiping to see your reactions here</Text>
+                <Text style={styles.emptyText}>{t('discover.reactionsEmpty')}</Text>
               </View>
             }
             renderSectionHeader={({ section }) => (

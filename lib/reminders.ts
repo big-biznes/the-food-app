@@ -6,6 +6,7 @@
 
 import { Platform } from 'react-native';
 import { DAYS, getWeekStructure } from '@/data/meals';
+import i18n from '@/lib/i18n';
 
 type Api = typeof import('expo-notifications');
 
@@ -60,9 +61,9 @@ export async function allowReminders(): Promise<boolean> {
 /**
  * Make the scheduled reminders match the plan: one every week on each shopping
  * day of a plan built around `eatingOutDay`, or none when `eatingOutDay` is null
- * (reminders switched off, no plan, signed out).
+ * (reminders switched off, no plan, signed out). The text is in `language`.
  */
-export async function syncReminders(eatingOutDay: string | null): Promise<void> {
+export async function syncReminders(eatingOutDay: string | null, language?: string): Promise<void> {
   const n = load();
   if (!n || Platform.OS === 'web') return;
   try {
@@ -73,8 +74,8 @@ export async function syncReminders(eatingOutDay: string | null): Promise<void> 
     for (const part of ['A', 'B'] as const) {
       await n.scheduleNotificationAsync({
         content: {
-          title: 'Shop and prep day',
-          body: `Your meals for ${partLabel[part]} start tomorrow. Shop today, and prep ahead to cook faster.`,
+          title: i18n.t('reminder.title', { lng: language }),
+          body: i18n.t('reminder.body', { part: partLabel[part], lng: language }),
         },
         trigger: {
           type: n.SchedulableTriggerInputTypes.WEEKLY,

@@ -153,8 +153,14 @@ export type PrepLine = {
   /** Every task this line covers; ticking the line ticks them all. */
   keys: string[];
   kind: 'cut' | 'cook';
-  /** "Dice 180g onion" */
+  /** "Dice 180g onion", in English; lib/localize.ts writes it in the app's language from the parts below. */
   label: string;
+  /** How the job was named in English: "Dice", "Cut into florets", "Cook". */
+  verb: string;
+  ingredient: string;
+  /** The amount to prepare, when it is a weight or volume. */
+  amount?: number;
+  unit?: string;
   /** Names of the meals it is for. */
   meals: string[];
   /** Minutes of work now. */
@@ -218,6 +224,9 @@ export function prepList(
       keys,
       kind: task.kind,
       label: capital(label),
+      verb: task.verb,
+      ingredient: task.ingredient,
+      ...(quantity ? { amount, unit } : {}),
       meals,
       // Doing the same job for several meals in one go goes faster than doing it meal by meal.
       minutes: task.kind === 'cook' ? 5 : Math.max(task.minutes, Math.round(task.minutes * (1 + 0.6 * (meals.length - 1)))),

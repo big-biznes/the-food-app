@@ -18,11 +18,14 @@ import SigningInOverlay from '@/components/auth/SigningInOverlay';
 import { useSignInTransition } from '@/hooks/useSignInTransition';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { Trans, useTranslation } from 'react-i18next';
+import { authErrorText } from '@/lib/localize';
 
 import { font, type } from '@/constants/type';
 export default function LoginScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
@@ -40,7 +43,7 @@ export default function LoginScreen() {
     const message = await login(email, password);
     if (message) {
       cancel();
-      setError(message);
+      setError(authErrorText(message));
     }
     // On success useSignInTransition goes to home (or the quiz) once the profile has loaded.
   }
@@ -56,15 +59,15 @@ export default function LoginScreen() {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Welcome back</Text>
-          <Text style={styles.subtitle}>Sign in to your account</Text>
+          <Text style={styles.title}>{t('auth.welcomeBack')}</Text>
+          <Text style={styles.subtitle}>{t('auth.signInSub')}</Text>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>{t('auth.email')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="you@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 placeholderTextColor={c.textFaint}
                 value={email}
                 onChangeText={setEmail}
@@ -74,7 +77,7 @@ export default function LoginScreen() {
               />
             </View>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={styles.label}>{t('auth.password')}</Text>
               <TextInput
                 style={styles.input}
                 placeholder="••••••••"
@@ -105,7 +108,7 @@ export default function LoginScreen() {
                 activeOpacity={0.8}
                 disabled={!canSubmit}
               >
-                <Text style={styles.primaryButtonText}>{submitting ? 'Signing in…' : 'Sign in'}</Text>
+                <Text style={styles.primaryButtonText}>{submitting ? t('auth.signingIn') : t('auth.signIn')}</Text>
               </PressableScale>
             </View>
             <GoogleButton />
@@ -114,8 +117,7 @@ export default function LoginScreen() {
               activeOpacity={0.7}
             >
               <Text style={styles.switchText}>
-                No account?{' '}
-                <Text style={styles.switchLink}>Register</Text>
+                <Trans i18nKey="auth.noAccount" components={{ link: <Text style={styles.switchLink} /> }} />
               </Text>
             </PressableScale>
           </View>

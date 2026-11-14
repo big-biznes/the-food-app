@@ -7,12 +7,15 @@ import { useSignInTransition } from '@/hooks/useSignInTransition';
 import SigningInOverlay from './SigningInOverlay';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
+import { authErrorText } from '@/lib/localize';
 import { font } from '@/constants/type';
 
 /** "or" divider + "Continue with Google" pill, used on the sign-in and sign-up screens. */
 export default function GoogleButton() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const { signInWithGoogle } = useAuth();
   const { signingIn, begin, cancel } = useSignInTransition();
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +56,7 @@ export default function GoogleButton() {
         activeOpacity={0.8}
         disabled={busy}
         accessibilityRole="button"
-        accessibilityLabel="Continue with Google"
+        accessibilityLabel={t('auth.google')}
         accessibilityState={{ busy, disabled: busy }}
       >
         {busy ? (
@@ -61,14 +64,14 @@ export default function GoogleButton() {
         ) : (
           <>
             <Ionicons name="logo-google" size={18} color={c.text} />
-            <Text style={styles.buttonText}>Continue with Google</Text>
+            <Text style={styles.buttonText}>{t('auth.google')}</Text>
           </>
         )}
       </PressableScale>
 
       {error && (
         <Text style={styles.errorText} accessibilityRole="alert">
-          {error}
+          {authErrorText(error)}
         </Text>
       )}
     </View>

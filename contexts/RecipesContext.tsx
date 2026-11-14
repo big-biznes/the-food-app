@@ -8,6 +8,7 @@ import { ALL_MEALS, Meal, setAllMeals } from '@/data/meals';
 import FullScreenLoading from '@/components/FullScreenLoading';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { font } from '@/constants/type';
 
 // v2: rows follow supabase/recipes.sql (ingredient lists, computed nutrition).
@@ -123,14 +124,16 @@ export function useRecipes() {
 }
 
 function RecipesLoading() {
-  return <FullScreenLoading title="Loading recipes" subtitle="Fetching the cookbook…" />;
+  const { t } = useTranslation();
+  return <FullScreenLoading title={t('recipes.loading')} subtitle={t('recipes.fetching')} />;
 }
 
 function RecipesError({ message, onRetry }: { message: string; onRetry: () => void }) {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   return (
     <View style={styles.container} accessibilityLiveRegion="polite">
-      <Text style={styles.title}>Couldn’t load recipes</Text>
+      <Text style={styles.title}>{t('recipes.error')}</Text>
       <Text style={styles.subText}>{message}</Text>
       <TouchableOpacity
         style={styles.button}
@@ -138,7 +141,7 @@ function RecipesError({ message, onRetry }: { message: string; onRetry: () => vo
         activeOpacity={0.8}
         accessibilityRole="button"
       >
-        <Text style={styles.buttonText}>Try again</Text>
+        <Text style={styles.buttonText}>{t('recipes.retry')}</Text>
       </TouchableOpacity>
     </View>
   );

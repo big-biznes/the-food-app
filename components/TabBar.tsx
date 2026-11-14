@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -19,16 +20,17 @@ type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 const FEEDBACK: 'tile' | 'fill' | 'label' = 'tile';
 const HAPTICS = true;
 
-const TABS: Record<string, { label: string; icon: IoniconName; active: IoniconName }> = {
-  '(home)': { label: 'Week', icon: 'home-outline', active: 'home' },
-  '(discover)': { label: 'Discover', icon: 'sparkles-outline', active: 'sparkles' },
-  '(shopping)': { label: 'Shopping', icon: 'cart-outline', active: 'cart' },
-  settings: { label: 'Settings', icon: 'settings-outline', active: 'settings' },
+const TABS: Record<string, { label: 'nav.week' | 'nav.discover' | 'nav.shopping' | 'nav.settings'; icon: IoniconName; active: IoniconName }> = {
+  '(home)': { label: 'nav.week', icon: 'home-outline', active: 'home' },
+  '(discover)': { label: 'nav.discover', icon: 'sparkles-outline', active: 'sparkles' },
+  '(shopping)': { label: 'nav.shopping', icon: 'cart-outline', active: 'cart' },
+  settings: { label: 'nav.settings', icon: 'settings-outline', active: 'settings' },
 };
 
 export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   // Tab the finger just touched: highlighted immediately, before the screen switch renders.
   const [pendingKey, setPendingKey] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarPr
             onPress={onPressIn}
             style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}
             accessibilityRole="tab"
-            accessibilityLabel={tab.label}
+            accessibilityLabel={t(tab.label)}
             accessibilityState={{ selected: focused }}
             hitSlop={{ top: 10, bottom: 10 }}
           >
@@ -78,7 +80,7 @@ export default function TabBar({ state, emitter, navigateToTab }: BottomTabBarPr
                 color={showTile ? c.onTile : focused ? c.text : c.textMuted}
               />
             </View>
-            {showLabel && <Text style={styles.label}>{tab.label}</Text>}
+            {showLabel && <Text style={styles.label}>{t(tab.label)}</Text>}
           </Pressable>
         );
       })}

@@ -7,11 +7,13 @@ import { PRIVACY, TERMS } from '@/constants/legal';
 import { Colors } from '@/constants/theme';
 import { type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 /** The Privacy Policy (/legal/privacy) or the Terms of Service (/legal/terms), opened from Settings. */
 export default function LegalScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const { doc } = useLocalSearchParams<{ doc: string }>();
   const text = doc === 'terms' ? TERMS : PRIVACY;
@@ -23,7 +25,7 @@ export default function LegalScreen() {
         onPress={() => router.back()}
         activeOpacity={0.7}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('common.back')}
       >
         <Ionicons name="chevron-back" size={22} color={c.text} />
       </PressableScale>

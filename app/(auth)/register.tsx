@@ -16,11 +16,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import GoogleButton from '@/components/auth/GoogleButton';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { Trans, useTranslation } from 'react-i18next';
+import { authErrorText } from '@/lib/localize';
 
 import { font, type } from '@/constants/type';
 export default function RegisterScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const { register } = useAuth();
   const [email, setEmail] = useState('');
@@ -41,7 +44,7 @@ export default function RegisterScreen() {
     const message = await register(email, password);
     setSubmitting(false);
     if (message) {
-      setError(message);
+      setError(authErrorText(message));
       return;
     }
     router.push('/(auth)/quiz');
@@ -57,15 +60,15 @@ export default function RegisterScreen() {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Create account</Text>
-          <Text style={styles.subtitle}>A quick profile setup follows</Text>
+          <Text style={styles.title}>{t('auth.createAccount')}</Text>
+          <Text style={styles.subtitle}>{t('auth.createSub')}</Text>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>{t('auth.email')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="you@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 placeholderTextColor={c.textFaint}
                 value={email}
                 onChangeText={setEmail}
@@ -75,10 +78,10 @@ export default function RegisterScreen() {
               />
             </View>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={styles.label}>{t('auth.password')}</Text>
               <TextInput
                 style={styles.input}
-                placeholder="min. 6 characters"
+                placeholder={t('auth.passwordPlaceholder')}
                 placeholderTextColor={c.textFaint}
                 value={password}
                 onChangeText={setPassword}
@@ -87,20 +90,20 @@ export default function RegisterScreen() {
               />
             </View>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Confirm password</Text>
+              <Text style={styles.label}>{t('auth.confirmPassword')}</Text>
               <TextInput
                 style={[
                   styles.input,
                   confirm.length > 0 && !passwordsMatch && styles.inputError,
                 ]}
-                placeholder="repeat password"
+                placeholder={t('auth.repeatPassword')}
                 placeholderTextColor={c.textFaint}
                 value={confirm}
                 onChangeText={setConfirm}
                 secureTextEntry
               />
               {confirm.length > 0 && !passwordsMatch && (
-                <Text style={styles.errorText}>Passwords don’t match</Text>
+                <Text style={styles.errorText}>{t('auth.mismatch')}</Text>
               )}
             </View>
             {error && (
@@ -123,28 +126,37 @@ export default function RegisterScreen() {
                 activeOpacity={0.8}
                 disabled={!canSubmit}
               >
-                <Text style={styles.primaryButtonText}>Continue</Text>
+                <Text style={styles.primaryButtonText}>{t('common.continue')}</Text>
               </PressableScale>
             </View>
             <GoogleButton />
             <Text style={styles.legalText}>
-              By creating an account you agree to the{' '}
-              <Text style={styles.switchLink} accessibilityRole="link" onPress={() => router.push('/legal/terms' as Href)}>
-                Terms of Service
-              </Text>{' '}
-              and the{' '}
-              <Text style={styles.switchLink} accessibilityRole="link" onPress={() => router.push('/legal/privacy' as Href)}>
-                Privacy Policy
-              </Text>
-              .
+              <Trans
+                i18nKey="auth.agree"
+                components={{
+                  terms: (
+                    <Text
+                      style={styles.switchLink}
+                      accessibilityRole="link"
+                      onPress={() => router.push('/legal/terms' as Href)}
+                    />
+                  ),
+                  privacy: (
+                    <Text
+                      style={styles.switchLink}
+                      accessibilityRole="link"
+                      onPress={() => router.push('/legal/privacy' as Href)}
+                    />
+                  ),
+                }}
+              />
             </Text>
             <PressableScale
               onPress={() => router.replace('/(auth)/login')}
               activeOpacity={0.7}
             >
               <Text style={styles.switchText}>
-                Have an account?{' '}
-                <Text style={styles.switchLink}>Sign in</Text>
+                <Trans i18nKey="auth.haveAccount" components={{ link: <Text style={styles.switchLink} /> }} />
               </Text>
             </PressableScale>
           </View>

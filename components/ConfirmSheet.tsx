@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet, SheetMotion } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { font, type } from '@/constants/type';
 
 type Props = {
@@ -33,13 +34,14 @@ export default function ConfirmSheet({
   confirmLabel,
   destructive = false,
   hideCancel = false,
-  cancelLabel = 'Cancel',
+  cancelLabel,
   onConfirm,
   onClose,
   motion = 'ios',
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -74,7 +76,7 @@ export default function ConfirmSheet({
         setBusy(false);
       }
     } catch (e) {
-      setError((e as Error)?.message ?? 'Something went wrong.');
+      setError((e as Error)?.message ?? t('common.somethingWrong'));
       setBusy(false);
     }
   }
@@ -96,7 +98,7 @@ export default function ConfirmSheet({
           activeOpacity={1}
           onPress={dismiss}
           accessibilityRole="button"
-          accessibilityLabel="Cancel"
+          accessibilityLabel={t('common.cancel')}
         />
       </Animated.View>
 
@@ -108,8 +110,8 @@ export default function ConfirmSheet({
               {...(busy ? {} : panResponder.panHandlers)}
               hitSlop={{ top: 24 }}
               accessibilityRole="button"
-              accessibilityLabel="Cancel"
-              accessibilityHint="Drag down or double tap to close"
+              accessibilityLabel={t('common.cancel')}
+              accessibilityHint={t('common.closeHint')}
               onAccessibilityTap={dismiss}
             >
               <View style={styles.handle} />
@@ -151,7 +153,7 @@ export default function ConfirmSheet({
                 disabled={busy}
                 accessibilityRole="button"
               >
-                <Text style={styles.cancelText}>{cancelLabel}</Text>
+                <Text style={styles.cancelText}>{cancelLabel ?? t('common.cancel')}</Text>
               </PressableScale>
             )}
 

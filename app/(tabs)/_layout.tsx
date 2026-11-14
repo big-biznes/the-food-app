@@ -1,9 +1,11 @@
 import { Redirect, Tabs } from 'expo-router';
 import TabBar from '@/components/TabBar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
   const { isLoading, isLoggedIn } = useAuth();
+  const { t } = useTranslation();
   // Signed out (logout / account deleted) → back to the welcome screen.
   if (!isLoading && !isLoggedIn) return <Redirect href="/(auth)" />;
 
@@ -19,10 +21,10 @@ export default function TabLayout() {
         freezeOnBlur: true,
       }}
     >
-      <Tabs.Screen name="(home)" options={{ title: 'Week' }} />
-      <Tabs.Screen name="(discover)" options={{ title: 'Discover' }} />
-      <Tabs.Screen name="(shopping)" options={{ title: 'Shopping' }} />
-      <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
+      <Tabs.Screen name="(home)" options={{ title: t('nav.week') }} />
+      <Tabs.Screen name="(discover)" options={{ title: t('nav.discover') }} />
+      <Tabs.Screen name="(shopping)" options={{ title: t('nav.shopping') }} />
+      <Tabs.Screen name="settings" options={{ title: t('nav.settings') }} />
       {/* Hide auto-discovered group from the tab bar */}
     </Tabs>
   );

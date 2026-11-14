@@ -19,6 +19,7 @@ import SwipeCard, { Direction, FlyingCard, SwipeRelease } from '@/components/dis
 import ReactionsSheet from '@/components/discover/ReactionsSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { useReducedMotion, useScreenReader } from '@/hooks/useReducedMotion';
 
 import { font, type } from '@/constants/type';
@@ -28,6 +29,7 @@ const ACTIONS_BAR_HEIGHT = 100;
 export default function DiscoverScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
   const { user, updateProfile } = useAuth();
   const { like, dislike, likedIds, dislikedIds } = useLikes();
@@ -188,16 +190,16 @@ export default function DiscoverScreen() {
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text style={styles.title} accessibilityRole="header">
-            Discover
+            {t('discover.title')}
           </Text>
-          <Text style={styles.subText}>Swipe right to save, left to skip</Text>
+          <Text style={styles.subText}>{t('discover.sub')}</Text>
         </View>
         <PressableScale
           style={styles.headerBtn}
           onPress={() => setSheetVisible(true)}
           activeOpacity={0.75}
           accessibilityRole="button"
-          accessibilityLabel={`Your reactions, ${likedIds.length} liked`}
+          accessibilityLabel={t('discover.reactionsA11y', { count: likedIds.length })}
         >
           <Ionicons name="heart-outline" size={19} color={c.text} />
           {totalSeen > 0 && (
@@ -209,16 +211,16 @@ export default function DiscoverScreen() {
       </View>
 
       <View style={styles.deckArea}>
-        {waitingForDeck && <FullScreenLoading title="Loading meals" subtitle="Shuffling the deck…" />}
+        {waitingForDeck && <FullScreenLoading title={t('discover.loading')} subtitle={t('discover.shuffling')} />}
 
         {!current && !waitingForDeck && (
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>🍽️</Text>
-            <Text style={styles.emptyTitle}>You’ve seen them all</Text>
+            <Text style={styles.emptyTitle}>{t('discover.seenAll')}</Text>
             <Text style={styles.emptyHint}>
               {likedIds.length > 0
-                ? 'We’ll work your favourites into your next plan.'
-                : 'Like a few to shape your next plan.'}
+                ? t('discover.favourites')
+                : t('discover.likeFew')}
             </Text>
             <PressableScale
               style={styles.resetBtn}
@@ -229,7 +231,7 @@ export default function DiscoverScreen() {
               activeOpacity={0.8}
               accessibilityRole="button"
             >
-              <Text style={styles.resetBtnText}>Start over</Text>
+              <Text style={styles.resetBtnText}>{t('discover.startOver')}</Text>
             </PressableScale>
           </View>
         )}
@@ -275,7 +277,7 @@ export default function DiscoverScreen() {
               onPress={() => handleButtonSwipe('left', current)}
               activeOpacity={0.8}
               accessibilityRole="button"
-              accessibilityLabel={`Pass on ${current.name}`}
+              accessibilityLabel={t('discover.passOn', { name: current.name })}
             >
               <Ionicons name="close" size={28} color={c.text} />
             </PressableScale>
@@ -284,7 +286,7 @@ export default function DiscoverScreen() {
               onPress={() => handleButtonSwipe('right', current)}
               activeOpacity={0.85}
               accessibilityRole="button"
-              accessibilityLabel={`Like ${current.name}`}
+              accessibilityLabel={t('discover.likeName', { name: current.name })}
             >
               <Ionicons name="heart" size={26} color={c.onPrimary} />
             </PressableScale>

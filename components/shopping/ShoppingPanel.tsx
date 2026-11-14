@@ -109,7 +109,7 @@ export default function ShoppingPanel({
 
       <View style={styles.flex}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionLabel}>{checkedCount} checked</Text>
+          <Text style={styles.sectionLabel}>{t('shopMore.checked', { count: checkedCount })}</Text>
           <View style={styles.sectionActions}>
             {items.length > 0 && (
               <PressableScale

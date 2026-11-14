@@ -43,9 +43,10 @@ const makeStyles = (c: Colors) =>
   StyleSheet.create({
     row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
     rowCompact: { justifyContent: 'center' },
-    chip: { backgroundColor: c.surface, borderRadius: 100, paddingHorizontal: 16, paddingVertical: 10 },
+    // Like the other chips in Settings, so it shows on a section card as well as on the page.
+    chip: { backgroundColor: c.surfaceAlt, borderRadius: 100, paddingHorizontal: 16, paddingVertical: 8 },
     chipCompact: { paddingHorizontal: 12, paddingVertical: 6 },
     chipOn: { backgroundColor: c.primary },
-    label: { fontFamily: font.semibold, fontSize: 14, color: c.text },
+    label: { fontFamily: font.medium, fontWeight: '500', fontSize: 13, color: c.text },
     labelOn: { color: c.onPrimary },
   });
