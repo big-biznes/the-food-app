@@ -7,27 +7,15 @@ import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
 
-const DEV_PROFILE = {
-  name: 'Alex',
-  email: 'dev@test.com',
-  goal: 'maintain' as const,
-  gender: 'other' as const,
-  age: 28,
-  heightCm: 175,
-  weightKg: 70,
-  restrictions: [] as [],
-  eatingOutDay: 'Fri',
-  discoverExpertMode: false,
-};
-
 export default function WelcomeScreen() {
   const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { devLogin } = useAuth();
 
+  // Starts a brand-new local account every time: the quiz, then an empty plan.
   function handleDevSkip() {
-    devLogin(DEV_PROFILE);
-    router.replace('/(tabs)/(home)');
+    devLogin();
+    router.replace('/(auth)/quiz');
   }
 
   return (

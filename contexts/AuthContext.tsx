@@ -29,7 +29,6 @@ export type Goal = 'lose' | 'gain' | 'maintain';
 export type Activity = 'low' | 'light' | 'active' | 'very';
 export type Gender = 'male' | 'female' | 'other';
 export type { MacroBalance };
-export type UnitSystem = 'metric' | 'imperial';
 
 export type UserProfile = {
   name: string;
@@ -56,10 +55,10 @@ export type UserProfile = {
   snacks?: boolean;
   /** Which meals plans lean towards (data/portions.ts); 'balanced' when absent. */
   macroBalance?: MacroBalance;
-  /** How recipe amounts and body measurements are shown; metric when absent. */
-  units?: UnitSystem;
   /** Whether the user asked for a reminder on shopping days (lib/reminders.ts). */
   notifications?: boolean;
+  /** One-time tips the user closed or no longer needs (hooks/useTips.ts). */
+  tipsSeen?: string[];
 };
 
 type StoredProfile = Omit<UserProfile, 'email'>;
@@ -86,7 +85,15 @@ type AuthContextType = {
   signInWithGoogle: (onAccountChosen?: () => void) => Promise<GoogleSignInResult>;
   completeProfile: (profile: StoredProfile) => void;
   updateProfile: (updates: Partial<StoredProfile>) => void;
-  devLogin: (profile: UserProfile) => void;
+  /** Dev builds only: start as a brand-new local account (empty data, then the quiz). Nothing is synced. */
+  devLogin: () => void;
+  /**
+   * Changes whenever a new dev account starts, so local state (plan, likes, shopping) starts
+   * over as well; with a real account the user id does this.
+   */
+  localEpoch: number;
+  /** A dev account is signed in (dev builds only); the quiz comes prefilled for it. */
+  isDevAccount: boolean;
   logout: () => Promise<void>;
   deleteAccount: () => AuthResult;
 };
@@ -249,6 +256,9 @@ async function loadUserData(userId: string): Promise<StoredProfile | null> {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
+  // A dev account (no session) is signed in; see devLogin.
+  const [devActive, setDevActive] = useState(false);
+  const [localEpoch, setLocalEpoch] = useState(0);
   const [sessionRestored, setSessionRestored] = useState(false);
   // Which user id the current `user` profile was loaded for.
   const [profileLoadedFor, setProfileLoadedFor] = useState<string | null>(null);
@@ -363,10 +373,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, userId],
   );
 
-  const devLogin = useCallback((profile: UserProfile) => {
+  const devLogin = useCallback(() => {
     if (!__DEV__) return;
-    // Local-only user: nothing is synced because there is no session.
-    setUser({ ...profile, email: '' });
+    // A local-only account that starts like a new sign-up: no profile yet (so the quiz comes
+    // first) and, through localEpoch, an empty plan, likes and shopping list.
+    setUser(null);
+    setDevActive(true);
+    setLocalEpoch(epoch => epoch + 1);
   }, []);
 
   const logout = useCallback(async () => {
@@ -378,6 +391,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearPrimed();
     setSession(null);
     setUser(null);
+    setDevActive(false);
     console.log('[auth] logout: done');
   }, []);
 
@@ -396,7 +410,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextType = {
     isLoading,
     isLoggedIn: !!user,
-    needsProfile: !!session && !user && !isLoading,
+    needsProfile: (!!session || devActive) && !user && !isLoading,
     userId,
     user,
     register,
@@ -405,6 +419,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     completeProfile,
     updateProfile,
     devLogin,
+    localEpoch,
+    isDevAccount: devActive,
     logout,
     deleteAccount,
   };

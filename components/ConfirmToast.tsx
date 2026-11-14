@@ -247,7 +247,10 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
               importantForAccessibility={isCurrent ? 'auto' : 'no-hide-descendants'}
               accessibilityElementsHidden={!isCurrent}
             >
-              <View style={[styles.content, { maxWidth }]} onLayout={isCurrent ? onLineLayout : undefined}>
+              <View
+                style={[styles.content, options.actionLabel && options.onAction ? styles.contentWithAction : null, { maxWidth }]}
+                onLayout={isCurrent ? onLineLayout : undefined}
+              >
                 <Ionicons name={options.icon ?? icon} size={18} color={c.onPrimary} />
                 <Text style={styles.text} numberOfLines={1}>
                   {textOf(options)}
@@ -258,10 +261,13 @@ const ConfirmToast = forwardRef<ConfirmToastHandle, Props>(function ConfirmToast
                     disabled={!isCurrent}
                     accessibilityRole="button"
                     accessibilityLabel={options.actionLabel}
-                    hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}
-                    activeOpacity={0.7}
+                    hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+                    activeOpacity={0.75}
+                    style={styles.actionBtn}
                   >
-                    <Text style={styles.action}>{options.actionLabel}</Text>
+                    <Text style={styles.actionText} numberOfLines={1}>
+                      {options.actionLabel}
+                    </Text>
                   </PressableScale>
                 )}
               </View>
@@ -311,11 +317,23 @@ const makeStyles = (c: Colors) =>
       fontFamily: font.semibold, fontWeight: '600',
       flexShrink: 1,
     },
-    action: {
-      color: c.onPrimary,
-      fontSize: 14,
-      fontFamily: font.bold, fontWeight: '700',
-      textDecorationLine: 'underline',
+    // With a button the pill keeps its height: the button takes the vertical padding's place,
+    // and sits as close to the right edge as the top and bottom.
+    contentWithAction: {
+      paddingVertical: 7,
+      paddingRight: 7,
+    },
+    // Same pill as the plan toast's "Make shopping list" button.
+    actionBtn: {
+      backgroundColor: c.bg,
+      borderRadius: 100,
+      paddingHorizontal: 14,
+      paddingVertical: 6,
       marginLeft: 4,
+    },
+    actionText: {
+      color: c.text,
+      fontSize: 13,
+      fontFamily: font.semibold, fontWeight: '600',
     },
   });

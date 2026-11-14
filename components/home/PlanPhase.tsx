@@ -4,18 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import {
   WeekPart,
   Day,
+  EatingOutEntry,
+  Meal,
   MealType,
   PlanSlot,
   StructuredWeekPlan,
 } from '@/data/meals';
 import MealCard from '@/components/MealCard';
 import PoolView from '@/components/home/PoolView';
+import PrepCard from '@/components/home/PrepCard';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
 import { useSwipeTabs } from '@/hooks/useSwipeTabs';
 import { useWiggle } from '@/hooks/useWiggle';
 import PressableScale from '@/components/PressableScale';
+import Tip from '@/components/Tip';
+import { usePlan } from '@/contexts/PlanContext';
+import { TipId, useTips } from '@/hooks/useTips';
 
 const DAY_NAME: Record<Day, string> = {
   Mon: 'Monday',
@@ -44,6 +50,7 @@ function nextMealType(isToday: boolean, available: MealType[]): MealType {
 }
 
 type SwapSource = PlanSlot | null;
+export type PlanNotice = { key: string; text: string; action: string; onPress: () => void };
 type ViewMode = 'day' | 'pool';
 
 type Props = {
@@ -56,19 +63,23 @@ type Props = {
   partDays: Record<WeekPart, Day[]>;
   shoppingBanner: string | null;
   swapSource: SwapSource;
-  /** How many meals no longer fit the eating preferences set in Settings. */
-  misfitCount: number;
-  onReplaceMisfits: () => void;
+  /** Things about the plan that no longer match the user's settings, each with a way to fix it. */
+  notices: PlanNotice[];
   onPartChange: (part: WeekPart) => void;
   onDayChange: (day: string) => void;
   onAddToShoppingList: () => void;
   onRefreshMeal: (part: WeekPart, day: string, mealType: MealType) => void;
   onSwapSelect: (part: WeekPart, day: string, mealType: MealType) => void;
+  /** Keep tips out of the way, e.g. while the plan was just made and other things are on screen. */
+  tipsPaused?: boolean;
 };
 
 const ICON_HIT_SLOP = { top: 4, bottom: 4, left: 4, right: 4 };
 const PARTS: readonly WeekPart[] = ['A', 'B', 'C'];
 const H_PAD = 20;
+/** Centres of the two buttons at the end of the day row, from its right edge (40 wide, 8 apart). */
+const CART_FROM_RIGHT = 20;
+const GRID_FROM_RIGHT = 68;
 
 export default function PlanPhase({
   firstName,
@@ -80,13 +91,13 @@ export default function PlanPhase({
   partDays,
   shoppingBanner,
   swapSource,
-  misfitCount,
-  onReplaceMisfits,
+  notices,
   onPartChange,
   onDayChange,
   onAddToShoppingList,
   onRefreshMeal,
   onSwapSelect,
+  tipsPaused = false,
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -101,7 +112,83 @@ export default function PlanPhase({
   });
   const viewMode: ViewMode = viewState.part === selectedPart ? viewState.mode : 'day';
 
+  // One-time tips. At most one general tip per visit, so they never line up into a tour;
+  // the swap tip belongs to the grid view and shows there regardless.
+  const { isSeen, markSeen } = useTips();
+  const { savedPlan } = usePlan();
+  const [tipsQuiet, setTipsQuiet] = useState(false);
+  // A tip that is done but still folding away; it stays on screen until its animation ends.
+  const [leavingTip, setLeavingTip] = useState<TipId | null>(null);
+
+  function doneWithTip(id: TipId) {
+    // Using a feature retires its tip either way, but only a tip that was on screen counts as
+    // this visit's one tip; otherwise the next one would never get its turn.
+    const showing = tipFor(viewMode) === id;
+    if (showing) setLeavingTip(id);
+    markSeen(id);
+    if (showing && id !== 'swap') setTipsQuiet(true);
+  }
+
+  function tipFor(mode: ViewMode): TipId | null {
+    if (tipsPaused) return null;
+    if (mode === 'pool') return !swapSource && !isSeen('swap') ? 'swap' : null;
+    if (tipsQuiet) return null;
+    if (!savedPlan?.list && !isSeen('cart')) return 'cart';
+    if (!isSeen('refresh')) return 'refresh';
+    if (!isSeen('grid')) return 'grid';
+    return null;
+  }
+
+  function renderTip(id: TipId) {
+    const leaving = id === leavingTip;
+    const common = {
+      onDismiss: () => doneWithTip(id),
+      leaving,
+      onGone: () => setLeavingTip(current => (current === id ? null : current)),
+    };
+    const icon = (name: React.ComponentProps<typeof Ionicons>['name']) => (
+      <Ionicons name={name} size={14} color={c.butter} />
+    );
+    switch (id) {
+      case 'cart':
+        return (
+          <Tip key={id} {...common} pointRight={CART_FROM_RIGHT}>
+            Tap the cart to turn these days into one shopping list.
+          </Tip>
+        );
+      case 'grid':
+        return (
+          <Tip key={id} {...common} pointRight={GRID_FROM_RIGHT}>
+            See all the meals of these days at once. That is also where you swap meals between days.
+          </Tip>
+        );
+      case 'refresh':
+        return (
+          <Tip key={id} {...common}>
+            Not in the mood for a meal? Tap {icon('refresh')} on it for a different one.
+          </Tip>
+        );
+      case 'swap':
+        return (
+          <Tip key={id} {...common}>
+            Tap {icon('swap-horizontal')} on a meal, then on another one, and they trade places.
+          </Tip>
+        );
+    }
+  }
+
+  function refreshMeal(part: WeekPart, day: string, mealType: MealType) {
+    doneWithTip('refresh');
+    onRefreshMeal(part, day, mealType);
+  }
+
+  function swapSelect(part: WeekPart, day: string, mealType: MealType) {
+    doneWithTip('swap');
+    onSwapSelect(part, day, mealType);
+  }
+
   function toggleViewMode() {
+    if (viewMode === 'day') doneWithTip('grid');
     setViewState({ part: selectedPart, mode: viewMode === 'day' ? 'pool' : 'day' });
   }
 
@@ -122,35 +209,25 @@ export default function PlanPhase({
 
   function renderMeals(part: WeekPart, day: Day) {
     // Meals for the day, in eating order.
-    const dayMeals: { mealType: MealType; node: React.ReactNode }[] =
-      part === 'C'
-        ? [
-            {
-              mealType: 'lunch',
-              node: (
-                <MealCard
-                  key="lunch"
-                  size="hero"
-                  meal={plan.C[day].lunch}
-                  onRefresh={() => onRefreshMeal('C', day, 'lunch')}
-                />
-              ),
-            },
-            {
-              mealType: 'dinner',
-              node: <MealCard key="dinner" meal={plan.C[day].dinner} />,
-            },
-          ]
-        : (['breakfast', 'lunch', 'dinner'] as const).map(mealType => ({
-            mealType,
-            node: (
-              <MealCard
-                key={mealType}
-                meal={plan[part][day][mealType]}
-                onRefresh={() => onRefreshMeal(part, day, mealType)}
-              />
-            ),
-          }));
+    const dayPlan: Partial<Record<MealType, Meal | EatingOutEntry>> = plan[part][day];
+    // On an eating-out day the cooked lunch is the day's one meal, so it is shown large.
+    const eatsOut = dayPlan.dinner != null && 'isEatingOut' in dayPlan.dinner;
+    const dayMeals = (['breakfast', 'lunch', 'dinner'] as const).flatMap(mealType => {
+      const meal = dayPlan[mealType];
+      if (!meal) return [];
+      const node =
+        'isEatingOut' in meal ? (
+          <MealCard key={mealType} meal={meal} />
+        ) : (
+          <MealCard
+            key={mealType}
+            size={eatsOut ? 'hero' : 'tile'}
+            meal={meal}
+            onRefresh={() => refreshMeal(part, day, mealType)}
+          />
+        );
+      return [{ mealType: mealType as MealType, node }];
+    });
     // Only in the plans of people whose day is too big for three meals.
     const snack = plan[part][day].snack;
 
@@ -170,7 +247,7 @@ export default function PlanPhase({
             ))}
           </View>
         )}
-        {snack && <MealCard meal={snack} onRefresh={() => onRefreshMeal(part, day, 'snack')} />}
+        {snack && <MealCard meal={snack} onRefresh={() => refreshMeal(part, day, 'snack')} />}
       </View>
     );
   }
@@ -178,6 +255,7 @@ export default function PlanPhase({
   function renderPanel(part: WeekPart) {
     const open = part === selectedPart;
     const mode: ViewMode = open ? viewMode : 'day';
+    const tip = open ? (leavingTip ?? tipFor(mode)) : null;
     const day = dayFor(part);
 
     return (
@@ -226,6 +304,7 @@ export default function PlanPhase({
             style={styles.iconBtn}
             onPress={() => {
               cart.wiggle();
+              doneWithTip('cart');
               onAddToShoppingList();
             }}
             scaleTo={0.9}
@@ -240,6 +319,8 @@ export default function PlanPhase({
           </PressableScale>
         </View>
 
+        {open && tip && renderTip(tip)}
+
         {/* Shop-today note */}
         {shoppingBanner && (
           <View
@@ -251,6 +332,8 @@ export default function PlanPhase({
           </View>
         )}
 
+        <PrepCard part={part} />
+
         {mode === 'day' ? (
           renderMeals(part, day)
         ) : (
@@ -259,8 +342,8 @@ export default function PlanPhase({
             selectedPart={part}
             partDays={partDays}
             swapSource={swapSource}
-            onRefreshMeal={onRefreshMeal}
-            onSwapSelect={onSwapSelect}
+            onRefreshMeal={refreshMeal}
+            onSwapSelect={swapSelect}
           />
         )}
       </>
@@ -285,23 +368,21 @@ export default function PlanPhase({
         </Text>
       </View>
 
-      {/* Meals that stopped fitting after the eating preferences changed */}
-      {misfitCount > 0 && (
-        <View style={styles.misfit} accessibilityLiveRegion="polite">
-          <Text style={styles.misfitText}>
-            {misfitCount === 1 ? '1 meal no longer fits' : `${misfitCount} meals no longer fit`} your eating preferences
-          </Text>
+      {/* The plan no longer matches a setting that was changed: say so, and offer the fix */}
+      {notices.map(notice => (
+        <View key={notice.key} style={styles.misfit} accessibilityLiveRegion="polite">
+          <Text style={styles.misfitText}>{notice.text}</Text>
           <PressableScale
             style={styles.misfitBtn}
-            onPress={onReplaceMisfits}
+            onPress={notice.onPress}
             activeOpacity={0.8}
             accessibilityRole="button"
-            accessibilityLabel={misfitCount === 1 ? 'Replace that meal' : 'Replace those meals'}
+            accessibilityLabel={`${notice.action}. ${notice.text}`}
           >
-            <Text style={styles.misfitBtnText}>Replace</Text>
+            <Text style={styles.misfitBtnText}>{notice.action}</Text>
           </PressableScale>
         </View>
-      )}
+      ))}
 
       {/* Part tabs */}
       <View style={styles.tabRow} accessibilityRole="tablist">

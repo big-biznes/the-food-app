@@ -52,7 +52,14 @@ export function useBottomSheet(onClosed?: () => void, motion: SheetMotion = 'ios
   const onClosedRef = useRef(onClosed);
   onClosedRef.current = onClosed;
 
+  // Whether the sheet is open. Sheets call close() whenever `visible` is false, which includes
+  // their first render; without this, a sheet that was never opened would report being closed
+  // and its onClose would run (the snack question then answered itself and built a plan).
+  const isOpen = useRef(false);
+
   const closeRef = useRef(() => {
+    if (!isOpen.current) return;
+    isOpen.current = false;
     if (reducedMotion.current) {
       backdropAnim.setValue(0);
       slideAnim.setValue(heightRef.current);
@@ -99,6 +106,7 @@ export function useBottomSheet(onClosed?: () => void, motion: SheetMotion = 'ios
   ).current;
 
   function open() {
+    isOpen.current = true;
     if (reducedMotion.current) {
       slideAnim.setValue(0);
       backdropAnim.setValue(1);

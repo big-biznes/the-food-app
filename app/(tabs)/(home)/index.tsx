@@ -22,19 +22,23 @@ import {
   swapGroup,
   withMeal,
   withoutSnack,
+  addSnacks,
+  removeSnacks,
   CATEGORIES,
 } from '@/data/meals';
 import { usePlan } from '@/contexts/PlanContext';
-import { waitForRecipes } from '@/contexts/RecipesContext';
+import { useRecipes, waitForRecipes } from '@/contexts/RecipesContext';
 import { useTargets } from '@/hooks/usePortions';
+import { useShoppingListSync } from '@/hooks/useShoppingListSync';
 import { SNACK_FROM_KCAL, dailyTargets } from '@/data/portions';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import ConfirmSheet from '@/components/ConfirmSheet';
 import PlanToast, { PlanToastHandle } from '@/components/PlanToast';
 import LoadingScreen from '@/components/home/LoadingScreen';
 import SetupPhase from '@/components/home/SetupPhase';
-import PlanPhase from '@/components/home/PlanPhase';
+import PlanPhase, { PlanNotice } from '@/components/home/PlanPhase';
 import CravingSheet from '@/components/home/CravingSheet';
+import PlanIntroSheet from '@/components/home/PlanIntroSheet';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
@@ -90,8 +94,8 @@ export default function HomeScreen() {
   }
 
   const shoppingBannerMap: Partial<Record<string, string>> = {
-    [partShoppingDay.A]: `Shop today — ${partLabel.A} starts tomorrow`,
-    [partShoppingDay.B]: `Shop today — ${partLabel.B} starts tomorrow`,
+    [partShoppingDay.A]: `Shop and prep today — ${partLabel.A} starts tomorrow`,
+    [partShoppingDay.B]: `Shop and prep today — ${partLabel.B} starts tomorrow`,
   };
 
   const [swapSource, setSwapSource] = useState<PlanSlot | null>(null);
@@ -154,6 +158,7 @@ export default function HomeScreen() {
   // The Replan button steps out of the way while the "week is planned" toast is up,
   // so the two never stack.
   const [toastUp, setToastUp] = useState(false);
+
   const fabAnim = useRef(new Animated.Value(1)).current; // 1 = shown, 0 = hidden below
   useEffect(() => {
     const toValue = toastUp ? 0 : 1;
@@ -174,6 +179,25 @@ export default function HomeScreen() {
   const planToastRef = useRef<PlanToastHandle>(null);
   const confirmToastRef = useRef<ConfirmToastHandle>(null);
 
+  // A meal was replaced, moved to another part or dropped after the shopping list was
+  // made: offer to update the list. (Recipe edits get the same offer on the recipe page.)
+  const { stale: listStale, update: updateList } = useShoppingListSync();
+  const updateListRef = useRef(updateList);
+  updateListRef.current = updateList;
+  const offeredFor = useRef(plan);
+  useEffect(() => {
+    if (offeredFor.current === plan) return;
+    offeredFor.current = plan;
+    if (!listStale) return;
+    confirmToastRef.current?.show({
+      message: 'Shopping list is out of date',
+      actionLabel: 'Update',
+      icon: 'cart',
+      doneMessage: 'Shopping list updated',
+      onAction: () => updateListRef.current(),
+    });
+  }, [plan, listStale]);
+
   const today = getTodayKey();
   const shoppingBanner = shoppingBannerMap[today] ?? null;
   const firstName = user?.name?.split(' ')[0] || 'there';
@@ -181,11 +205,11 @@ export default function HomeScreen() {
   function handleAddToShoppingList() {
     planToastRef.current?.dismiss();
     setTimeout(() => confirmToastRef.current?.show(), 50);
-    requestAnimationFrame(() => {
-      if (plan) replacePlanIngredients(extractPartIngredients(plan, selectedPart, targets, without));
-    });
-    // Remembered so the list can be brought up to date when a recipe is edited later.
-    setSavedPlan(prev => (prev ? { ...prev, list: { part: selectedPart, without: prev.without ?? {} } } : prev));
+    if (!plan) return;
+    const needs = extractPartIngredients(plan, selectedPart, targets, without);
+    requestAnimationFrame(() => replacePlanIngredients(needs));
+    // Remembered so the list can be brought up to date when the plan changes later.
+    setSavedPlan(prev => (prev ? { ...prev, list: { part: selectedPart, needs } } : prev));
   }
 
   function toggleCraving(chip: string) {
@@ -220,7 +244,29 @@ export default function HomeScreen() {
     const plansBefore = user?.plansCreated ?? 0;
     const extraMs = plansBefore === 0 ? FIRST_PLAN_TOAST_EXTRA_MS : plansBefore === 1 ? FIRST_PLAN_TOAST_EXTRA_MS / 2 : 0;
     if (plansBefore < 2) updateProfile({ plansCreated: plansBefore + 1 });
+    if (plansBefore === 0) {
+      // First plan: how it works comes first, the "Make shopping list" toast once that is closed.
+      toastAfterIntro.current = extraMs;
+      // Tips wait for the explainer: it is about the whole plan, they are about single buttons.
+      setIntroPending(true);
+      setTimeout(() => {
+        setIntroPending(false);
+        setShowIntro(true);
+      }, 600);
+      return;
+    }
     setTimeout(() => planToastRef.current?.show({ extraMs }), 500);
+  }
+
+  const [showIntro, setShowIntro] = useState(false);
+  const [introPending, setIntroPending] = useState(false);
+  const toastAfterIntro = useRef<number | null>(null);
+
+  function closeIntro() {
+    setShowIntro(false);
+    const extraMs = toastAfterIntro.current;
+    toastAfterIntro.current = null;
+    if (extraMs != null) setTimeout(() => planToastRef.current?.show({ extraMs }), 200);
   }
 
   /** Generate a plan for the current craving and show it. */
@@ -365,6 +411,42 @@ export default function HomeScreen() {
     setSwapSource(null);
   }
 
+  // The daily snack was switched on or off in Settings after this plan was made.
+  const { meals: cookbook } = useRecipes();
+  const planHasSnacks = useMemo(() => (plan ? planSlots(plan).some(slot => slot.mealType === 'snack') : false), [plan]);
+  const snacksToAdd = useMemo(
+    () =>
+      Boolean(plan && targets?.snack && !planHasSnacks) &&
+      cookbook.some(m => m.mealType === 'snack' && fitsRestrictions(m, restrictions)),
+    [plan, targets, planHasSnacks, cookbook, restrictions],
+  );
+
+  const notices: PlanNotice[] = [];
+  if (misfitCount > 0) {
+    notices.push({
+      key: 'misfits',
+      text: `${misfitCount === 1 ? '1 meal no longer fits' : `${misfitCount} meals no longer fit`} your eating preferences`,
+      action: 'Replace',
+      onPress: handleReplaceMisfits,
+    });
+  }
+  if (snacksToAdd) {
+    notices.push({
+      key: 'snacks-add',
+      text: 'You switched on a daily snack. This plan has none yet.',
+      action: 'Add',
+      onPress: () => setPlan(prev => (prev ? addSnacks(prev, restrictions) : prev)),
+    });
+  }
+  if (plan && planHasSnacks && targets && !targets.snack) {
+    notices.push({
+      key: 'snacks-remove',
+      text: 'You switched off the daily snack. This plan still has them.',
+      action: 'Remove',
+      onPress: () => setPlan(prev => (prev ? removeSnacks(prev) : prev)),
+    });
+  }
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       {loading && <LoadingScreen fadeAnim={fadeAnim} spinAnim={spinAnim} />}
@@ -391,13 +473,13 @@ export default function HomeScreen() {
           partDays={partDays}
           shoppingBanner={shoppingBanner}
           swapSource={swapSource}
-          misfitCount={misfitCount}
-          onReplaceMisfits={handleReplaceMisfits}
+          notices={notices}
           onPartChange={handlePartChange}
           onDayChange={setSelectedDay}
           onAddToShoppingList={handleAddToShoppingList}
           onRefreshMeal={handleRefreshMeal}
           onSwapSelect={handleSwapSelect}
+          tipsPaused={introPending || showIntro}
         />
       )}
 
@@ -490,6 +572,8 @@ export default function HomeScreen() {
         // Also runs after "Yes"; answerSnack ignores the second call.
         onClose={() => answerSnack(false)}
       />
+
+      <PlanIntroSheet visible={showIntro} onClose={closeIntro} />
 
       <CravingSheet
         visible={showSheet}

@@ -17,7 +17,7 @@ export function useCloudState<T>(
   column: UserDataColumn,
   initial: T,
 ): [T, Dispatch<SetStateAction<T>>, boolean] {
-  const { userId } = useAuth();
+  const { userId, localEpoch } = useAuth();
   const [value, setValueRaw] = useState<T>(() =>
     userId ? (getPrimed<T>(userId, column) ?? initial) : initial,
   );
@@ -47,7 +47,7 @@ export function useCloudState<T>(
     }
   }, [userId, column]);
 
-  // Load whenever the signed-in user changes.
+  // Load whenever the signed-in user changes, or a new local (dev) account starts.
   useEffect(() => {
     let cancelled = false;
     dirty.current = false;
@@ -93,7 +93,7 @@ export function useCloudState<T>(
     return () => {
       cancelled = true;
     };
-  }, [userId, column]);
+  }, [userId, column, localEpoch]);
 
   // Register for logout flushes and save anything pending on unmount / user change.
   useEffect(() => {
