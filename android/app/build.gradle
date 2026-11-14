@@ -104,15 +104,26 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // The upload key for Google Play, for release builds made on this machine. It is never
+        // in the repository: put these four properties in ~/.gradle/gradle.properties.
+        // EAS builds do not use this; EAS signs with the key it keeps for the project.
+        if (project.hasProperty('FUDAPP_UPLOAD_STORE_FILE')) {
+            release {
+                storeFile file(FUDAPP_UPLOAD_STORE_FILE)
+                storePassword FUDAPP_UPLOAD_STORE_PASSWORD
+                keyAlias FUDAPP_UPLOAD_KEY_ALIAS
+                keyPassword FUDAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Without an upload key on this machine the release build is signed with the debug
+            // key: fine for trying it on a phone, not accepted by Google Play.
+            signingConfig signingConfigs.findByName('release') ?: signingConfigs.debug
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds

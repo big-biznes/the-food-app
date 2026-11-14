@@ -20,7 +20,12 @@
         "foregroundImage": "./assets/images/icon-adaptive-foreground.png",
         "backgroundColor": "#181817"
       },
-      "package": "com.kebabzter.thefoodapp"
+      "package": "com.kebabzter.thefoodapp",
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ]
     },
     "web": {
       "bundler": "metro",
