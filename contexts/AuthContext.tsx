@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, startTransition } from 'react';
 import { Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
@@ -424,8 +424,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   }, [userId]);
 
-  // The profile's choice wins; then a choice made on this device; then the phone's language.
-  const language = pickLanguage(user?.language ?? deviceChoice);
+  // A language just picked in this session, and the account it was picked for. It shows at
+  // once; the profile, which is saved a little later (setLanguage), would otherwise still
+  // hold the old language and keep the app in it until that save.
+  const [justPicked, setJustPicked] = useState<{ language: Language; userId: string | null } | null>(null);
+  // A pick from this session wins; then the profile's choice; then a choice made on this
+  // device; then the phone's language.
+  const language = pickLanguage(
+    (justPicked && justPicked.userId === userId ? justPicked.language : null) ?? user?.language ?? deviceChoice,
+  );
   useEffect(() => {
     if (i18n.language !== language) i18n.changeLanguage(language);
   }, [language]);
@@ -436,16 +443,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const setLanguage = useCallback(
     (next: Language) => {
-      // The language and the profile change in the same tick, so the app re-renders once
+      // i18next and the context change in the same tick, so the app re-renders once
       // (the effect above then has nothing left to do).
       i18n.changeLanguage(next);
+      setJustPicked({ language: next, userId });
       setDeviceChoice(next);
       AsyncStorage.setItem(LANGUAGE_KEY, next).catch(() => {});
-      // Saved a little later: a profile change re-renders every screen that reads the
-      // profile, and that should not land in the same frame as the switch.
-      if (user) setTimeout(() => updateProfileRef.current({ language: next }), 1500);
+      // Saved a little later, as a transition: a profile change re-renders every screen
+      // that reads the profile, and that should not land in the same frame as the switch.
+      if (user) setTimeout(() => startTransition(() => updateProfileRef.current({ language: next })), 1500);
     },
-    [user],
+    [user, userId],
   );
 
   // Memoised: a new object would re-render every screen that reads the profile, even
