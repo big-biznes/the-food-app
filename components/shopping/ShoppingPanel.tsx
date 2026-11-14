@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShoppingItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import ShoppingRow from './ShoppingRow';
 
 import { font } from '@/constants/type';
@@ -51,6 +52,7 @@ export default function ShoppingPanel({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const hasChecked = checkedCount > 0;
   const allChecked = items.length > 0 && checkedCount === items.length;
 
@@ -66,20 +68,20 @@ export default function ShoppingPanel({
       <View style={styles.addRow}>
         <TextInput
           style={styles.addInput}
-          placeholder="Add an item…"
+          placeholder={t('shop.addItem')}
           placeholderTextColor={c.textFaint}
           value={input}
           onChangeText={onInputChange}
           onSubmitEditing={onAdd}
           returnKeyType="done"
-          accessibilityLabel="Add an item to the shopping list"
+          accessibilityLabel={t('shop.addItemA11y')}
         />
         <PressableScale
           style={styles.addBtn}
           onPress={onAdd}
           activeOpacity={0.8}
           accessibilityRole="button"
-          accessibilityLabel="Add item"
+          accessibilityLabel={t('shop.addItemButton')}
         >
           <Ionicons name="add" size={22} color={c.onPrimary} />
         </PressableScale>
@@ -91,15 +93,15 @@ export default function ShoppingPanel({
           onPress={onComparePrices}
           activeOpacity={0.85}
           accessibilityRole="button"
-          accessibilityLabel="Compare store prices"
-          accessibilityHint="Shows what your list costs at each store"
+          accessibilityLabel={t('shop.compare')}
+          accessibilityHint={t('shop.compareHint')}
         >
           <View style={styles.compareIcon}>
             <Ionicons name="pricetag" size={16} color={c.onTile} />
           </View>
           <View style={styles.compareText}>
-            <Text style={styles.compareTitle}>Compare store prices</Text>
-            <Text style={styles.compareSub}>See where your list is cheapest</Text>
+            <Text style={styles.compareTitle}>{t('shop.compare')}</Text>
+            <Text style={styles.compareSub}>{t('shop.compareSub')}</Text>
           </View>
           <Ionicons name="chevron-forward" size={18} color={c.onPrimaryMuted} />
         </PressableScale>
@@ -115,9 +117,9 @@ export default function ShoppingPanel({
                 activeOpacity={0.7}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 accessibilityRole="button"
-                accessibilityLabel={allChecked ? 'Deselect all items' : 'Select all items'}
+                accessibilityLabel={allChecked ? t('shop.deselectAllA11y') : t('shop.selectAllA11y')}
               >
-                <Text style={styles.clearText}>{allChecked ? 'Deselect all' : 'Select all'}</Text>
+                <Text style={styles.clearText}>{allChecked ? t('shop.deselectAll') : t('shop.selectAll')}</Text>
               </PressableScale>
             )}
             <PressableScale
@@ -126,11 +128,11 @@ export default function ShoppingPanel({
               disabled={!hasChecked}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               accessibilityRole="button"
-              accessibilityLabel="Clear checked items"
+              accessibilityLabel={t('shop.clearA11y')}
               accessibilityState={{ disabled: !hasChecked }}
             >
               <Text style={[styles.clearText, !hasChecked && styles.clearTextDim]}>
-                Clear
+                {t('shop.clear')}
               </Text>
             </PressableScale>
           </View>
@@ -148,8 +150,8 @@ export default function ShoppingPanel({
           ListEmptyComponent={
             <View style={styles.emptyState}>
               <Text style={styles.emptyIcon}>🛒</Text>
-              <Text style={styles.emptyText}>Your list is empty</Text>
-              <Text style={styles.emptyHint}>Add items above to get started</Text>
+              <Text style={styles.emptyText}>{t('shop.empty')}</Text>
+              <Text style={styles.emptyHint}>{t('shop.emptyHint')}</Text>
             </View>
           }
         />
@@ -165,10 +167,10 @@ export default function ShoppingPanel({
             onPress={onFinishShopping}
             activeOpacity={0.85}
             accessibilityRole="button"
-            accessibilityLabel="Finish shopping"
-            accessibilityHint="Moves checked items to your pantry"
+            accessibilityLabel={t('shop.finish')}
+            accessibilityHint={t('shop.finishHint')}
           >
-            <Text style={styles.fabText}>Finish shopping</Text>
+            <Text style={styles.fabText}>{t('shop.finish')}</Text>
             <Ionicons name="checkmark-circle" size={20} color={c.onPrimary} />
           </PressableScale>
         </Animated.View>

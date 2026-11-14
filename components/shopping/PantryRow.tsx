@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { PantryItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
+import { shoppingLine } from '@/lib/localize';
 
 import { font } from '@/constants/type';
 type Props = {
@@ -16,19 +18,21 @@ const DELETE_HIT_SLOP = { top: 14, bottom: 14, left: 14, right: 14 };
 const PantryRow = memo(function PantryRow({ item, onDelete }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
+  const label = shoppingLine(item.name);
 
   return (
     <View style={styles.row}>
       <View style={styles.dot} />
       <Text style={styles.name} numberOfLines={2}>
-        {item.name}
+        {label}
       </Text>
       <TouchableOpacity
         onPress={() => onDelete(item.id)}
         activeOpacity={0.7}
         hitSlop={DELETE_HIT_SLOP}
         accessibilityRole="button"
-        accessibilityLabel={`Remove ${item.name} from pantry`}
+        accessibilityLabel={t('shop.removeFromPantry', { item: label })}
       >
         <Ionicons name="close" size={18} color={c.textFaint} />
       </TouchableOpacity>

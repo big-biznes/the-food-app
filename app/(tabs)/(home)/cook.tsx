@@ -4,19 +4,22 @@ import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { findMeal, formatIngredient } from '@/data/meals';
+import { findMeal } from '@/data/meals';
+import { ingredientLine, ingredientName } from '@/lib/localize';
 import { stepIngredients } from '@/data/portions';
 import { usePersonalMeal } from '@/hooks/usePortions';
 import { useMealPrep } from '@/hooks/usePrep';
 import { cooksAlone, stepAfterPrep } from '@/data/prep';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 import { font, type } from '@/constants/type';
 
 export default function CookScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   // Steps and amounts for the portion this user cooks.
@@ -34,8 +37,8 @@ export default function CookScreen() {
         </PressableScale>
         <View style={styles.emptyState}>
           <Text style={styles.emptyEmoji}>🍳</Text>
-          <Text style={styles.emptyTitle}>No instructions</Text>
-          <Text style={styles.emptyHint}>This recipe doesn’t have cooking steps yet.</Text>
+          <Text style={styles.emptyTitle}>{t('cook.noSteps')}</Text>
+          <Text style={styles.emptyHint}>{t('cook.noStepsHint')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -46,7 +49,7 @@ export default function CookScreen() {
   const progress = (step + 1) / total;
   const isLast = step === total - 1;
   // How much of each ingredient this step uses, in the user's portion.
-  const used = stepIngredients(steps[step], meal.ingredients).map(formatIngredient);
+  const used = stepIngredients(steps[step], meal.ingredients).map(ingredientLine);
   // Ingredients the user left out of this meal that the step still talks about.
   const skipped = stepIngredients(steps[step], meal.removed ?? []).map(ing => ing.name);
   // Ingredients of this step that were cut or cooked ahead.
@@ -68,7 +71,7 @@ export default function CookScreen() {
         </PressableScale>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle} numberOfLines={1}>{meal.name}</Text>
-          <Text style={styles.headerSub}>Step {step + 1} of {total}</Text>
+          <Text style={styles.headerSub}>{t('cook.step', { n: step + 1, total })}</Text>
         </View>
         <View style={styles.closeBtnPlaceholder} />
       </View>
@@ -84,24 +87,24 @@ export default function CookScreen() {
           <Text style={styles.stepNumber}>{step + 1}</Text>
         </View>
         <Text style={styles.stepText}>
-          {afterPrep.text || `Nothing to do here: you prepped the ${ready.join(' and the ')} ahead.`}
+          {afterPrep.text || t('cook.nothingHere', { items: ready.map(ingredientName).join(', ') })}
         </Text>
         {used.length > 0 && (
-          <Text style={styles.stepAmounts} accessibilityLabel={`For this step: ${used.join(', ')}`}>
+          <Text style={styles.stepAmounts} accessibilityLabel={t('cook.forStep', { items: used.join(', ') })}>
             {used.join('  ·  ')}
           </Text>
         )}
         {cookedAhead ? (
           <Text style={styles.stepReady}>
-            You cooked the {cookedAhead.ingredient} ahead. Skip this step and reheat it until steaming hot before serving.
+            {t('cook.cookedAhead', { item: ingredientName(cookedAhead.ingredient) })}
           </Text>
         ) : (
           // Only when the step could not be rewritten around the prep.
           !afterPrep.complete &&
-          ready.length > 0 && <Text style={styles.stepReady}>Already prepped: {ready.join(', ')}.</Text>
+          ready.length > 0 && <Text style={styles.stepReady}>{t('cook.alreadyPrepped', { items: ready.map(ingredientName).join(', ') })}</Text>
         )}
         {skipped.length > 0 && (
-          <Text style={styles.stepSkipped}>You left out the {skipped.join(' and the ')}: skip that part.</Text>
+          <Text style={styles.stepSkipped}>{t('cook.leftOut', { items: skipped.map(ingredientName).join(', ') })}</Text>
         )}
       </View>
 
@@ -114,7 +117,7 @@ export default function CookScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="chevron-back" size={20} color={c.text} />
-            <Text style={styles.backStepText}>Back</Text>
+            <Text style={styles.backStepText}>{t('common.back')}</Text>
           </PressableScale>
         ) : (
           <View style={styles.backStepPlaceholder} />
@@ -128,7 +131,7 @@ export default function CookScreen() {
           }}
           activeOpacity={0.85}
         >
-          <Text style={styles.nextBtnText}>{isLast ? 'Done' : 'Next step'}</Text>
+          <Text style={styles.nextBtnText}>{isLast ? t('common.done') : t('cook.nextStep')}</Text>
           {!isLast && <Ionicons name="chevron-forward" size={18} color={c.onPrimary} />}
           {isLast && <Ionicons name="checkmark" size={18} color={c.onPrimary} />}
         </PressableScale>

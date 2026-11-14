@@ -20,19 +20,22 @@ import ingredientDefs from '@/data/ingredients.json';
 import { compare, IngredientDef, StoreTotal } from '@/lib/pricing';
 import { toNeed } from '@/lib/parseItem';
 import { formatMoney } from '@/lib/format';
+import { useTranslation } from 'react-i18next';
+import { shoppingLine } from '@/lib/localize';
 
 const DEFS = ingredientDefs as IngredientDef[];
 
 const MODE_KEYS = ['single', 'split'] as const;
 
-const MODES = [
-  { key: 'single', label: 'One store' },
-  { key: 'split', label: 'Best prices' },
-] as const;
 
 export default function CompareScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t, i18n } = useTranslation();
+  const MODES = [
+    { key: 'single', label: t('compare.oneStore') },
+    { key: 'split', label: t('compare.bestPrices') },
+  ] as const;
   const router = useRouter();
   const { user } = useAuth();
   const { shoppingItems, assignStores } = useShoppingContext();
@@ -50,7 +53,9 @@ export default function CompareScreen() {
   const offers = prices.status === 'ready' ? prices.offers : null;
 
   const toBuy = useMemo(() => shoppingItems.filter(i => !i.checked), [shoppingItems]);
-  const labels = useMemo(() => new Map(toBuy.map(i => [i.id, i.name])), [toBuy]);
+  // Shown in the app's language; the list itself stays in English for the price matching.
+  // Not memoised: it must follow a change of language, and it is cheap.
+  const labels = new Map(toBuy.map(i => [i.id, shoppingLine(i.name)]));
   const result = useMemo(
     () => (offers ? compare(toBuy.map(i => toNeed(i.id, i.name, DEFS)), offers, chainIds, DEFS) : null),
     [offers, toBuy, chainIds],
@@ -69,7 +74,7 @@ export default function CompareScreen() {
   const picker = (chainIds.length === 0 || editingStores) && (
     <View style={styles.card}>
       {chainIds.length === 0 && (
-        <Text style={styles.intro}>Choose where you shop to see what your list costs at each store.</Text>
+        <Text style={styles.intro}>{t('compare.intro')}</Text>
       )}
       <StorePicker />
     </View>
@@ -80,23 +85,23 @@ export default function CompareScreen() {
     <>
       {result.unpriced.length > 0 && (
         <View style={styles.unpriced}>
-          <Text style={styles.unpricedTitle}>No price found at your stores</Text>
+          <Text style={styles.unpricedTitle}>{t('compare.unpricedTitle')}</Text>
           <Text style={styles.unpricedText}>{result.unpriced.map(id => labels.get(id)).join(', ')}</Text>
-          <Text style={styles.unpricedHint}>The stores may still sell these; we just have no prices for them.</Text>
+          <Text style={styles.unpricedHint}>{t('compare.unpricedHint')}</Text>
         </View>
       )}
       <Text style={styles.footnote}>
         {prices.status === 'ready' && prices.updatedAt
-          ? `Prices from ${new Date(prices.updatedAt).toLocaleDateString()}. `
+          ? t('compare.pricesFrom', { date: new Date(prices.updatedAt).toLocaleDateString(i18n.language) })
           : ''}
-        Shelf prices can differ between branches.
+        {t('compare.shelfNote')}
       </Text>
     </>
   );
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ConfirmToast ref={toastRef} message="Stores added to your list" icon="pricetag-outline" />
+      <ConfirmToast ref={toastRef} message={t('compare.storesAdded')} icon="pricetag-outline" />
 
       <View style={styles.header}>
         <PressableScale
@@ -104,21 +109,21 @@ export default function CompareScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
           accessibilityRole="button"
-          accessibilityLabel="Close price comparison"
+          accessibilityLabel={t('compare.close')}
         >
           <Ionicons name="close" size={22} color={c.text} />
         </PressableScale>
         <Text style={styles.title} accessibilityRole="header">
-          Compare prices
+          {t('compare.title')}
         </Text>
         {chainIds.length > 0 && (
           <PressableScale
             onPress={() => setEditingStores(v => !v)}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
-            accessibilityLabel={editingStores ? 'Done choosing stores' : 'Choose stores'}
+            accessibilityLabel={editingStores ? t('compare.doneChoosing') : t('compare.chooseStores')}
           >
-            <Text style={styles.headerAction}>{editingStores ? 'Done' : 'Stores'}</Text>
+            <Text style={styles.headerAction}>{editingStores ? t('common.done') : t('compare.stores')}</Text>
           </PressableScale>
         )}
       </View>
@@ -149,9 +154,9 @@ export default function CompareScreen() {
                     store={s}
                     itemCount={result.itemCount}
                     labels={labels}
-                    badge={i === 0 && result.single.length > 1 ? 'Cheapest' : undefined}
+                    badge={i === 0 && result.single.length > 1 ? t('compare.cheapest') : undefined}
                     initiallyOpen={i === 0}
-                    actionLabel="Shop here"
+                    actionLabel={t('compare.shopHere')}
                     onAction={() => shopAt([s])}
                   />
                 ))}
@@ -171,8 +176,11 @@ export default function CompareScreen() {
                       <Text style={styles.splitTotal}>{formatMoney(result.split.totalCents)}</Text>
                       <Text style={styles.splitNote}>
                         {result.split.savingCents > 0
-                          ? `${formatMoney(result.split.savingCents)} less than ${chainName(best.chainId)} alone`
-                          : `Covers ${best.missing.length - result.split.missing.length} more items than ${chainName(best.chainId)} alone`}
+                          ? t('compare.saving', { amount: formatMoney(result.split.savingCents), store: chainName(best.chainId) })
+                          : t('compare.covers', {
+                              count: best.missing.length - result.split.missing.length,
+                              store: chainName(best.chainId),
+                            })}
                       </Text>
                     </View>
                     {result.split.stores.map(s => (
@@ -183,16 +191,16 @@ export default function CompareScreen() {
                       onPress={() => shopAt(result.split!.stores)}
                       activeOpacity={0.85}
                       accessibilityRole="button"
-                      accessibilityHint="Marks each item on your list with the store to buy it at"
+                      accessibilityHint={t('compare.shopThisWayHint')}
                     >
-                      <Text style={styles.buttonText}>Shop this way</Text>
+                      <Text style={styles.buttonText}>{t('compare.shopThisWay')}</Text>
                     </PressableScale>
                   </>
                 ) : (
                   <Text style={styles.message}>
                     {chainIds.length < 2
-                      ? 'Choose at least two stores to split your list between them.'
-                      : `Splitting your list would not save at least €1. ${chainName(best.chainId)} alone is the best deal at ${formatMoney(best.totalCents)}.`}
+                      ? t('compare.twoStores')
+                      : t('compare.noSaving', { store: chainName(best.chainId), amount: formatMoney(best.totalCents) })}
                   </Text>
                 )}
                 {footer}
@@ -205,25 +213,25 @@ export default function CompareScreen() {
           {picker}
 
           {chainIds.length > 0 && prices.status === 'loading' && (
-            <ActivityIndicator style={styles.center} color={c.text} accessibilityLabel="Loading prices" />
+            <ActivityIndicator style={styles.center} color={c.text} accessibilityLabel={t('compare.loading')} />
           )}
 
           {chainIds.length > 0 && prices.status === 'error' && (
             <View style={styles.center}>
-              <Text style={styles.message}>Could not load prices. Check your connection.</Text>
+              <Text style={styles.message}>{t('compare.error')}</Text>
               <PressableScale style={styles.button} onPress={prices.retry} activeOpacity={0.85} accessibilityRole="button">
-                <Text style={styles.buttonText}>Try again</Text>
+                <Text style={styles.buttonText}>{t('compare.retry')}</Text>
               </PressableScale>
             </View>
           )}
 
           {result && toBuy.length === 0 && (
-            <Text style={[styles.message, styles.center]}>Nothing left to buy on your list.</Text>
+            <Text style={[styles.message, styles.center]}>{t('compare.nothingLeft')}</Text>
           )}
 
           {result && toBuy.length > 0 && result.pricedCount === 0 && (
             <Text style={[styles.message, styles.center]}>
-              None of the items on your list have a store price yet.
+              {t('compare.noPrices')}
             </Text>
           )}
         </ScrollView>

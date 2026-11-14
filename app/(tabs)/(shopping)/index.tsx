@@ -17,15 +17,13 @@ import PantryPanel from '@/components/shopping/PantryPanel';
 import SegmentTabs from '@/components/SegmentTabs';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
+import { shoppingLine } from '@/lib/localize';
 import { useReducedMotionRef } from '@/hooks/useReducedMotion';
 import { useSwipeTabs } from '@/hooks/useSwipeTabs';
 
 import { type } from '@/constants/type';
 
-const TABS = [
-  { key: 'list', label: 'List' },
-  { key: 'pantry', label: 'Pantry' },
-] as const;
 
 const TAB_KEYS = ['list', 'pantry'] as const;
 
@@ -33,6 +31,7 @@ const FAB_HIDDEN_Y = 130;
 
 export default function ShoppingScreen() {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const {
     active: activeTab,
     switchTab,
@@ -95,38 +94,38 @@ export default function ShoppingScreen() {
     (message: string) => {
       undoToastRef.current?.show({
         message,
-        actionLabel: 'Undo',
+        actionLabel: t('common.undo'),
         onAction: () => {
           undoLastRemoval();
         },
       });
     },
-    [undoLastRemoval],
+    [undoLastRemoval, t],
   );
 
   const handleDeleteShoppingItem = useCallback(
     (id: string) => {
       const item = shoppingItemsRef.current.find(i => i.id === id);
       deleteShoppingItem(id);
-      showUndo(item ? `Removed ${item.name}` : 'Item removed');
+      showUndo(item ? t('shop.removed', { item: shoppingLine(item.name) }) : t('shop.itemRemoved'));
     },
-    [deleteShoppingItem, showUndo],
+    [deleteShoppingItem, showUndo, t],
   );
 
   const handleClearChecked = useCallback(() => {
     const n = checkedCountRef.current;
     if (n === 0) return;
     clearChecked();
-    showUndo(n === 1 ? 'Cleared 1 item' : `Cleared ${n} items`);
-  }, [clearChecked, showUndo]);
+    showUndo(t('shop.cleared', { count: n }));
+  }, [clearChecked, showUndo, t]);
 
   const handleDeletePantryItem = useCallback(
     (id: string) => {
       const item = pantryItemsRef.current.find(i => i.id === id);
       deletePantryItem(id);
-      showUndo(item ? `Removed ${item.name}` : 'Item removed');
+      showUndo(item ? t('shop.removed', { item: shoppingLine(item.name) }) : t('shop.itemRemoved'));
     },
-    [deletePantryItem, showUndo],
+    [deletePantryItem, showUndo, t],
   );
 
   // FAB slides in when there are checked items.
@@ -149,8 +148,8 @@ export default function ShoppingScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ConfirmToast ref={pantryToastRef} message="Ingredients added to pantry" />
-      <ConfirmToast ref={undoToastRef} message="Item removed" icon="trash-outline" />
+      <ConfirmToast ref={pantryToastRef} message={t('shop.toPantry')} />
+      <ConfirmToast ref={undoToastRef} message={t('shop.itemRemoved')} icon="trash-outline" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -158,11 +157,16 @@ export default function ShoppingScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.title} accessibilityRole="header">
-            Shopping
+            {t('shop.title')}
           </Text>
         </View>
 
-        <SegmentTabs tabs={TABS} active={activeTab} onChange={switchTab} progress={tabProgress} />
+        <SegmentTabs
+          tabs={[
+            { key: 'list', label: t('shop.list') },
+            { key: 'pantry', label: t('shop.pantry') },
+          ]}
+          active={activeTab} onChange={switchTab} progress={tabProgress} />
 
         {/* Horizontally sliding panels */}
         <View style={styles.tabContainer} {...panHandlers}>

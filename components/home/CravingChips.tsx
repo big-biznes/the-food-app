@@ -3,6 +3,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 export const CRAVING_CHIPS = [
   'Spicy', 'Light', 'Hearty', 'Fresh',
@@ -17,6 +18,7 @@ type Props = {
 
 export default function CravingChips({ selected, onToggle }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
 
   return (
     <View style={styles.grid}>
@@ -30,10 +32,10 @@ export default function CravingChips({ selected, onToggle }: Props) {
             activeOpacity={0.7}
             hitSlop={{ top: 5, bottom: 5 }}
             accessibilityRole="button"
-            accessibilityLabel={chip}
+            accessibilityLabel={t(`craving.${chip}`)}
             accessibilityState={{ selected: on }}
           >
-            <Text style={[styles.chipText, on && styles.chipTextOn]}>{chip}</Text>
+            <Text style={[styles.chipText, on && styles.chipTextOn]}>{t(`craving.${chip}`)}</Text>
           </PressableScale>
         );
       })}

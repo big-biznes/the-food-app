@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { chainName } from '@/data/stores';
 import type { ItemChoice, StoreTotal } from '@/lib/pricing';
 import { formatAmount, formatMoney } from '@/lib/format';
@@ -25,8 +26,12 @@ export default function StoreCard({ store, labels, itemCount, badge, initiallyOp
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
   const [open, setOpen] = useState(initiallyOpen);
+  const { t } = useTranslation();
   const name = chainName(store.chainId);
-  const count = itemCount != null ? `${store.found.length} of ${itemCount} items` : `${store.found.length} items`;
+  const count =
+    itemCount != null
+      ? t('shop.itemsOf', { found: store.found.length, total: itemCount })
+      : t('shop.items', { count: store.found.length });
 
   return (
     <View style={styles.card}>

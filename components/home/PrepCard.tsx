@@ -6,6 +6,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { usePrepList } from '@/hooks/usePrep';
 
 /** Rounded to 5 so an estimate does not read as a measurement. */
@@ -18,17 +19,18 @@ export const roughMinutes = (minutes: number) => Math.max(5, Math.round(minutes 
 export default function PrepCard({ part }: { part: WeekPart }) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const router = useRouter();
   const { lines, minutes, saves, done } = usePrepList(part);
   if (lines.length === 0) return null;
 
   const finished = done.length === lines.length;
-  const title = finished ? 'Prepped' : 'Prep ahead';
+  const title = finished ? t('prep.done') : t('prep.title');
   const detail = finished
-    ? `Your meals are about ${roughMinutes(saves)} min quicker`
+    ? t('prep.quicker', { min: roughMinutes(saves) })
     : done.length > 0
-      ? `${done.length} of ${lines.length} done`
-      : `${roughMinutes(minutes)} min now, about ${roughMinutes(saves)} min less cooking later`;
+      ? t('prep.progress', { done: done.length, total: lines.length })
+      : t('prep.offer', { now: roughMinutes(minutes), later: roughMinutes(saves) });
 
   return (
     <PressableScale
@@ -37,7 +39,7 @@ export default function PrepCard({ part }: { part: WeekPart }) {
       onPress={() => router.push({ pathname: '/prep', params: { part } } as unknown as Href)}
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${detail}`}
-      accessibilityHint="Opens the prep list for these days"
+      accessibilityHint={t('prep.opensList')}
     >
       <View style={[styles.icon, finished && styles.iconDone]}>
         <Ionicons name={finished ? 'checkmark' : 'cut'} size={18} color={finished ? c.onPrimary : c.text} />

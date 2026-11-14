@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { ShoppingItem } from '@/contexts/ShoppingContext';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
+import { shoppingLine } from '@/lib/localize';
 
 import { font } from '@/constants/type';
 import { chainName } from '@/data/stores';
@@ -19,6 +21,9 @@ const DELETE_HIT_SLOP = { top: 14, bottom: 14, left: 14, right: 14 };
 const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
+  // Stored in English for the price matching; shown in the app's language.
+  const label = shoppingLine(item.name);
 
   return (
     <View style={styles.row}>
@@ -28,7 +33,7 @@ const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Prop
         activeOpacity={0.7}
         hitSlop={CHECKBOX_HIT_SLOP}
         accessibilityRole="checkbox"
-        accessibilityLabel={item.name}
+        accessibilityLabel={label}
         accessibilityState={{ checked: item.checked }}
       >
         {item.checked && <Ionicons name="checkmark" size={14} color={c.onPrimary} />}
@@ -38,7 +43,7 @@ const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Prop
           style={[styles.name, item.checked && styles.nameChecked]}
           numberOfLines={2}
         >
-          {item.name}
+          {label}
         </Text>
         {item.store && !item.checked && <Text style={styles.store}>{chainName(item.store)}</Text>}
       </View>
@@ -46,7 +51,7 @@ const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Prop
         <View
           style={styles.lowStockBadge}
           accessible
-          accessibilityLabel="Low stock at home"
+          accessibilityLabel={t('shop.lowStock')}
         >
           <Ionicons name="home-outline" size={12} color={c.warning} />
         </View>
@@ -56,7 +61,7 @@ const ShoppingRow = memo(function ShoppingRow({ item, onToggle, onDelete }: Prop
         activeOpacity={0.7}
         hitSlop={DELETE_HIT_SLOP}
         accessibilityRole="button"
-        accessibilityLabel={`Remove ${item.name}`}
+        accessibilityLabel={t('shop.remove', { item: label })}
       >
         <Ionicons name="close" size={18} color={c.textFaint} />
       </TouchableOpacity>

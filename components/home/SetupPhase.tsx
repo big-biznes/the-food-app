@@ -11,6 +11,7 @@ import PressableScale from '@/components/PressableScale';
 import { Colors } from '@/constants/theme';
 import { font, type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import CravingChips from './CravingChips';
 
 type Props = {
@@ -32,6 +33,7 @@ export default function SetupPhase({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
 
   return (
     <KeyboardAvoidingView
@@ -44,13 +46,12 @@ export default function SetupPhase({
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={styles.greeting}>Hey {firstName}</Text>
+          <Text style={styles.greeting}>{t('setup.hey', { name: firstName })}</Text>
           <Text style={styles.headline} accessibilityRole="header">
-            What are you craving this week?
+            {t('setup.question')}
           </Text>
           <Text style={styles.sub}>
-            Pick a few. The plan is built around them, in runs of three days that share ingredients: shop once, prep
-            once, cook quickly.
+            {t('setup.sub')}
           </Text>
         </View>
 
@@ -60,18 +61,18 @@ export default function SetupPhase({
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle} accessibilityRole="header">
-            Anything else?
+            {t('setupMore.anythingElseTitle')}
           </Text>
           <TextInput
             style={styles.input}
-            placeholder="e.g. something with pasta, no mushrooms…"
+            placeholder={t('setup.placeholder')}
             placeholderTextColor={c.textFaint}
             value={cravingText}
             onChangeText={onCravingTextChange}
             multiline
             numberOfLines={3}
             textAlignVertical="top"
-            accessibilityLabel="Anything else you are craving"
+            accessibilityLabel={t('setup.anythingElse')}
           />
         </View>
 
@@ -81,7 +82,7 @@ export default function SetupPhase({
           activeOpacity={0.8}
           accessibilityRole="button"
         >
-          <Text style={styles.btnText}>Plan my week</Text>
+          <Text style={styles.btnText}>{t('setup.planWeek')}</Text>
         </PressableScale>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -4,11 +4,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Colors } from '@/constants/theme';
 import { font } from '@/constants/type';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import { COUNTRIES, Country, chainsIn } from '@/data/stores';
 
 /** Country and store-chain choice, saved on the profile. Used in Settings and on the compare screen. */
 export default function StorePicker() {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const country = user?.country;
   const stores = user?.stores ?? [];
@@ -26,16 +28,16 @@ export default function StorePicker() {
 
   return (
     <View>
-      <Text style={styles.label}>Country</Text>
+      <Text style={styles.label}>{t('shop.country')}</Text>
       <View style={styles.chipRow}>
         {COUNTRIES.map(opt => (
-          <Chip key={opt.value} label={opt.label} selected={country === opt.value} onPress={() => pickCountry(opt.value)} />
+          <Chip key={opt.value} label={t(`country.${opt.value}`)} selected={country === opt.value} onPress={() => pickCountry(opt.value)} />
         ))}
       </View>
 
       {country && (
         <>
-          <Text style={[styles.label, styles.labelGap]}>Stores you shop at</Text>
+          <Text style={[styles.label, styles.labelGap]}>{t('shop.storesYouUse')}</Text>
           {chains.length > 0 ? (
             <View style={styles.chipRow}>
               {chains.map(ch => (
@@ -43,7 +45,7 @@ export default function StorePicker() {
               ))}
             </View>
           ) : (
-            <Text style={styles.hint}>No store prices are available for this country yet.</Text>
+            <Text style={styles.hint}>{t('shop.noStores')}</Text>
           )}
         </>
       )}

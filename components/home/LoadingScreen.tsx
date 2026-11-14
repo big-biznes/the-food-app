@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AccessibilityInfo, Animated, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/theme';
 import { useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 
 import { font } from '@/constants/type';
 type Props = {
@@ -14,10 +15,13 @@ type Props = {
 export default function LoadingScreen({
   fadeAnim,
   spinAnim,
-  title: TITLE = 'Building your plan',
-  subtitle: SUBTITLE = 'Picking meals just for you…',
+  title,
+  subtitle,
 }: Props) {
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
+  const TITLE = title ?? t('setup.building');
+  const SUBTITLE = subtitle ?? t('setup.picking');
 
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility(`${TITLE}. ${SUBTITLE}`);
@@ -36,7 +40,7 @@ export default function LoadingScreen({
       <Animated.View
         style={[styles.spinner, { transform: [{ rotate: spin }] }]}
         accessibilityRole="progressbar"
-        accessibilityLabel="Loading"
+        accessibilityLabel={t('setup.loading')}
       />
       <Text style={styles.title}>{TITLE}</Text>
       <Text style={styles.subText}>{SUBTITLE}</Text>

@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet } from '@/hooks/useBottomSheet';
 import { Colors } from '@/constants/theme';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
+import { useTranslation } from 'react-i18next';
 import CravingChips from './CravingChips';
 
 import { font, type } from '@/constants/type';
@@ -39,6 +40,7 @@ export default function CravingSheet({
 }: Props) {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -73,7 +75,7 @@ export default function CravingSheet({
           activeOpacity={1}
           onPress={close}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('common.close')}
         />
       </Animated.View>
 
@@ -88,8 +90,8 @@ export default function CravingSheet({
               {...panResponder.panHandlers}
               hitSlop={{ top: 24 }}
               accessibilityRole="button"
-              accessibilityLabel="Close"
-              accessibilityHint="Drag down or double tap to close"
+              accessibilityLabel={t('common.close')}
+              accessibilityHint={t('common.closeHint')}
               onAccessibilityTap={close}
             >
               <View style={styles.handle} />
@@ -100,9 +102,9 @@ export default function CravingSheet({
               keyboardShouldPersistTaps="handled"
             >
               <Text style={styles.title} accessibilityRole="header">
-                New plan
+                {t('setup.newPlan')}
               </Text>
-              <Text style={styles.hint}>What are you craving this week?</Text>
+              <Text style={styles.hint}>{t('setup.question')}</Text>
 
               <View style={styles.chipsWrapper}>
                 <CravingChips selected={selectedCravings} onToggle={onToggleCraving} />
@@ -110,14 +112,14 @@ export default function CravingSheet({
 
               <TextInput
                 style={styles.input}
-                placeholder="e.g. something with pasta, no mushrooms…"
+                placeholder={t('setup.placeholder')}
                 placeholderTextColor={c.textFaint}
                 value={cravingText}
                 onChangeText={onCravingTextChange}
                 multiline
                 numberOfLines={3}
                 textAlignVertical="top"
-                accessibilityLabel="Anything specific you are craving"
+                accessibilityLabel={t('setup.anythingSpecific')}
               />
 
               <PressableScale
@@ -126,7 +128,7 @@ export default function CravingSheet({
                 activeOpacity={0.8}
                 accessibilityRole="button"
               >
-                <Text style={styles.btnText}>Generate</Text>
+                <Text style={styles.btnText}>{t('setup.generate')}</Text>
               </PressableScale>
             </ScrollView>
 
