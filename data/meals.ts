@@ -662,6 +662,15 @@ export function extractUsedIds(plan: StructuredWeekPlan): Set<string> {
 /** One shopping-list line for a plan, and how many meals need that ingredient. */
 export type PlanIngredient = { name: string; uses: number };
 
+/**
+ * The parts one shopping trip covers. The day on its own at the end of the week has no
+ * shop of its own: its food is bought on the second shopping day, with the days before it.
+ */
+export function shopParts(part: WeekPart): WeekPart[] {
+  return part === 'A' ? ['A'] : ['B', 'C'];
+}
+
+/** The shopping list for the trip that covers `part` (see shopParts). */
 export function extractPartIngredients(
   plan: StructuredWeekPlan,
   part: WeekPart,
@@ -679,8 +688,9 @@ export function extractPartIngredients(
     groups.get(key)!.push(ing);
   }
 
+  const parts = shopParts(part);
   for (const slot of planSlots(plan)) {
-    if (slot.part !== part) continue;
+    if (!parts.includes(slot.part)) continue;
     for (const ing of ingredientsOf(slot.meal)) collect(ing);
   }
 

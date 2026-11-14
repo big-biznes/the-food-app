@@ -132,14 +132,15 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
   const { partDays, partShoppingDay, partLabel, basket, prep } = content;
   const eatsOut = eatingOutDay !== NO_EATING_OUT;
   const dayC = partDays.C[0];
-  // The week as it is lived: the shop for the first half comes the day before it.
+  // The week from its first day; the bags mark the two shopping days.
   const strip: { day: Day; part: WeekPart }[] = [
-    { day: dayC, part: 'C' },
     ...partDays.A.map(day => ({ day, part: 'A' as const })),
     ...partDays.B.map(day => ({ day, part: 'B' as const })),
+    { day: dayC, part: 'C' },
   ];
   const shopsFor: Partial<Record<Day, WeekPart>> = { [partShoppingDay.A]: 'A', [partShoppingDay.B]: 'B' };
-  const partTint: Record<WeekPart, string> = { A: c.pea, B: c.sky, C: eatsOut ? c.beet : c.surfaceAlt };
+  // A colour per shopping trip: the day on its own is bought for with the days before it.
+  const partTint: Record<WeekPart, string> = { A: c.pea, B: c.sky, C: c.sky };
   // The meals in one row: tiles shrink to fit rather than wrap, down to a size that still reads.
   const rowWidth = width - 48;
   const fit = (rowWidth - TILE_GAP * (basket.meals.length - 1)) / Math.max(1, basket.meals.length);
@@ -215,11 +216,7 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                         {shopsFor[day] && <Ionicons name="bag-handle" size={13} color={c.onTile} />}
                       </View>
                       <View style={[styles.dayTile, { backgroundColor: partTint[part] }]}>
-                        {part === 'C' && eatsOut ? (
-                          <Ionicons name="restaurant" size={14} color={c.onTile} />
-                        ) : (
-                          <Text style={styles.dayTileText}>{day[0]}</Text>
-                        )}
+                        {part === 'C' && eatsOut && <Ionicons name="restaurant" size={14} color={c.onTile} />}
                       </View>
                       <Text style={styles.dayLabel}>{day}</Text>
                     </View>
@@ -230,7 +227,6 @@ export default function PlanIntroSheet({ visible, onClose }: Props) {
                     shopA: dayName(partShoppingDay.A),
                     partA: partLabel.A,
                     shopB: dayName(partShoppingDay.B),
-                    partB: partLabel.B,
                     outDay: dayName(dayC),
                   })}
                 </Text>
@@ -388,7 +384,6 @@ const makeStyles = (c: Colors) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
-    dayTileText: { fontFamily: font.bold, fontSize: 15, color: c.onTile },
     dayLabel: { ...type.label, fontSize: 12, color: c.textMuted },
 
     chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },

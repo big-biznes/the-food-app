@@ -31,9 +31,10 @@ const en = {
     settingsRow: 'How planning works',
     kicker: 'How your plan works',
     weekTitle: 'Your week, in two shops',
-    weekBody: 'Shop on {{shopA}} for {{partA}}, and on {{shopB}} for {{partB}}. Fresh food never waits more than three days.',
+    weekBody:
+      'Shop on {{shopA}} for {{partA}}, and on {{shopB}} for the rest of the week. Each shop covers just a few days, so what you buy is eaten while it is fresh.',
     weekBodyEatOut:
-      'Shop on {{shopA}} for {{partA}}, and on {{shopB}} for {{partB}}. Fresh food never waits more than three days, and {{outDay}} you eat out.',
+      'Shop on {{shopA}} for {{partA}}, and on {{shopB}} for the rest of the week. Each shop covers just a few days, so what you buy is eaten while it is fresh. On {{outDay}} you eat out for dinner.',
     basketTitle: 'One basket, {{count}} meals',
     basketBody:
       '{{items}} come back across your lunches and dinners for these days. You buy one set of ingredients, use it up, and still eat something different every meal.',

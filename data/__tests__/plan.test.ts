@@ -264,7 +264,9 @@ describe('someone who does not eat out', () => {
     expect(home.C.Sun.breakfast).toBeDefined();
     // Seven days of three meals, all of them shopped for.
     expect(planSlots(home)).toHaveLength(21);
-    expect(extractPartIngredients(home, 'C')[0].name).toBe('450g chicken');
+    // The day on its own is bought for on the second shopping day, with the three days before it.
+    expect(extractPartIngredients(home, 'C')).toEqual(extractPartIngredients(home, 'B'));
+    expect(extractPartIngredients(home, 'B')[0].name).toBe('1800g chicken');
   });
 });
 
