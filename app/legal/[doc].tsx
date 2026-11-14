@@ -3,7 +3,7 @@ import PressableScale from '@/components/PressableScale';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { PRIVACY, TERMS } from '@/constants/legal';
+import { legalDoc } from '@/constants/legal';
 import { Colors } from '@/constants/theme';
 import { type } from '@/constants/type';
 import { useTheme, useThemedStyles } from '@/hooks/useTheme';
@@ -13,10 +13,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function LegalScreen() {
   const { colors: c } = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const { doc } = useLocalSearchParams<{ doc: string }>();
-  const text = doc === 'terms' ? TERMS : PRIVACY;
+  const text = legalDoc(doc === 'terms' ? 'terms' : 'privacy', i18n.language);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -34,7 +34,7 @@ export default function LegalScreen() {
         <Text style={styles.title} accessibilityRole="header">
           {text.title}
         </Text>
-        <Text style={styles.updated}>Last updated {text.updated}</Text>
+        <Text style={styles.updated}>{t('legal.updated', { date: text.updated })}</Text>
         <Text style={styles.intro}>{text.intro}</Text>
 
         {text.sections.map(section => (

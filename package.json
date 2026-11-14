@@ -12,6 +12,7 @@
     "ingest": "node scripts/ingest/index.mjs",
     "recipes": "node scripts/recipes/build.mjs",
     "recipes:prompts": "node scripts/recipes/prompts.mjs",
+    "legal": "node scripts/legal/build.mjs",
     "reset-project": "node ./scripts/reset-project.js"
   },
   "dependencies": {
@@ -73,6 +74,9 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/android/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    }
   }
 }
