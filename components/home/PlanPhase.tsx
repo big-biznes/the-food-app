@@ -210,8 +210,10 @@ export default function PlanPhase({
   function renderMeals(part: WeekPart, day: Day) {
     // Meals for the day, in eating order.
     const dayPlan: Partial<Record<MealType, Meal | EatingOutEntry>> = plan[part][day];
-    // On an eating-out day the cooked lunch is the day's one meal, so it is shown large.
+    // In plans from before the eating-out day had a breakfast, its lunch is the day's one
+    // cooked meal, so it is shown large.
     const eatsOut = dayPlan.dinner != null && 'isEatingOut' in dayPlan.dinner;
+    const loneLunch = eatsOut && !dayPlan.breakfast;
     const dayMeals = (['breakfast', 'lunch', 'dinner'] as const).flatMap(mealType => {
       const meal = dayPlan[mealType];
       if (!meal) return [];
@@ -221,7 +223,7 @@ export default function PlanPhase({
         ) : (
           <MealCard
             key={mealType}
-            size={eatsOut ? 'hero' : 'tile'}
+            size={loneLunch ? 'hero' : 'tile'}
             meal={meal}
             onRefresh={() => refreshMeal(part, day, mealType)}
           />

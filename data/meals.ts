@@ -212,8 +212,9 @@ export type DayPlan = {
 
 /**
  * The day on its own at the end of the week. For someone who eats out it is the
- * eating-out day: a cooked lunch and dinner out. For someone who does not, it is
- * a full day of cooking.
+ * eating-out day: breakfast and lunch at home, dinner out. For someone who does not,
+ * it is a full day of cooking. Plans made before the eating-out day had a breakfast
+ * have none.
  */
 export type PartCDayPlan = {
   breakfast?: Meal;
@@ -608,15 +609,14 @@ export function generateStructuredMealPlan(
   const resultA = generatePartPlan(partDays.A, pool, keywords, usedIds, likedIds, new Set(), focus, targets);
   const resultB = generatePartPlan(partDays.B, pool, keywords, usedIds, likedIds, resultA.proteins, focus, targets);
 
-  // Part C: eating-out day — one cooked lunch + eating-out dinner
+  // Part C: the eating-out day — breakfast and lunch at home, dinner out. Without an
+  // eating-out day the week still ends on a day of its own (Sunday), cooked in full.
   const cScored = scoredPool(pool, keywords, likedIds, focus, targets);
-  const cLunch = pickMeal(cScored, 'lunch', usedIds);
-  // Without an eating-out day the week still ends on a day of its own (Sunday), cooked in full.
   const cooksAll = eatingOutDay === NO_EATING_OUT;
   const partC: Record<string, PartCDayPlan> = {
     [partDays.C[0]]: {
-      ...(cooksAll ? { breakfast: pickMeal(cScored, 'breakfast', usedIds) } : {}),
-      lunch: cLunch,
+      breakfast: pickMeal(cScored, 'breakfast', usedIds),
+      lunch: pickMeal(cScored, 'lunch', usedIds),
       dinner: cooksAll ? pickMeal(cScored, 'dinner', usedIds) : EATING_OUT,
       ...(wantsSnack(cScored, targets) ? { snack: pickMeal(cScored, 'snack', usedIds) } : {}),
     },

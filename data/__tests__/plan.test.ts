@@ -130,8 +130,8 @@ describe('a plan and its places', () => {
     setAllMeals(cookbook(8));
     const plan = generateStructuredMealPlan([], [], 'Sun', [], [], dailyTargets(big));
     const slots = planSlots(plan);
-    // 6 days of four, and lunch and a snack on the eating-out day.
-    expect(slots).toHaveLength(26);
+    // 6 days of four, and breakfast, lunch and a snack on the eating-out day.
+    expect(slots).toHaveLength(27);
     const slot = slots[0];
     const other = meal('other', slot.mealType, { dietaryTags: ['vegan'] });
     const next = withMeal(plan, slot, other);
@@ -250,12 +250,13 @@ test('a meal that does not say how to cut joins the part’s line for that ingre
 });
 
 describe('someone who does not eat out', () => {
-  test('the day on its own is cooked in full; with an eating-out day its dinner is left open', () => {
+  test('the day on its own is cooked in full; with an eating-out day only its dinner is left open', () => {
     setAllMeals(cookbook(0));
     const out = generateStructuredMealPlan([], [], 'Fri');
     expect('isEatingOut' in out.C.Fri.dinner).toBe(true);
-    expect(out.C.Fri.breakfast).toBeUndefined();
-    expect(planSlots(out)).toHaveLength(19);
+    // Breakfast and lunch at home on the eating-out day too.
+    expect(out.C.Fri.breakfast).toBeDefined();
+    expect(planSlots(out)).toHaveLength(20);
 
     const home = generateStructuredMealPlan([], [], NO_EATING_OUT);
     expect(Object.keys(home.C)).toEqual(['Sun']);
