@@ -195,6 +195,13 @@ export default function HomeScreen() {
   // The Replan button steps out of the way while the "week is planned" toast is up,
   // so the two never stack.
   const [toastUp, setToastUp] = useState(false);
+  // After a new plan, tips wait for the "Make shopping list" toast: the cart tip says the same
+  // thing, so it only comes a few seconds after the toast (TIP_DELAY_MS in PlanPhase), and not
+  // at all once the toast's button has made the list.
+  const [tipsWaitForToast, setTipsWaitForToast] = useState(false);
+  useEffect(() => {
+    if (toastUp) setTipsWaitForToast(false);
+  }, [toastUp]);
 
   const fabAnim = useRef(new Animated.Value(1)).current; // 1 = shown, 0 = hidden below
   useEffect(() => {
@@ -271,6 +278,7 @@ export default function HomeScreen() {
   }
 
   function applyNewPlan(newPlan: StructuredWeekPlan, focus: string[]) {
+    setTipsWaitForToast(true);
     setSavedPlan({ plan: newPlan, eatingOutDay: user?.eatingOutDay ?? 'Sun', focus });
     setSwapSource(null);
     const todayPart = getTodayPart();
@@ -519,7 +527,7 @@ export default function HomeScreen() {
           onAddToShoppingList={handleAddToShoppingList}
           onRefreshMeal={handleRefreshMeal}
           onSwapSelect={handleSwapSelect}
-          tipsPaused={loading || introPending || showIntro}
+          tipsPaused={loading || introPending || showIntro || tipsWaitForToast}
         />
       )}
 
