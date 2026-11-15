@@ -73,7 +73,6 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   function startEnter() {
     if (!pendingEnter.current) return;
     pendingEnter.current = false;
-    onVisibleChangeRef.current?.(true);
     // Native driver: shown right after a plan is generated, while the JS thread is busy;
     // a JS-driven slide would skip frames and jump into place.
     Animated.timing(slideAnim, {
@@ -169,16 +168,18 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
       if (labelWidthRef.current != null) textWidth.setValue(labelWidthRef.current);
       textOpacity.setValue(1);
       setVisible(true);
+      // The Replan button steps aside right away, as it always has; only the toast's own slide
+      // waits for its layout.
+      onVisibleChangeRef.current?.(true);
       AccessibilityInfo.announceForAccessibility(`${message} ${actionLabel}`);
 
       if (reducedMotion.current) {
         slideAnim.setValue(0);
-        onVisibleChangeRef.current?.(true);
       } else {
         slideAnim.setValue(HIDDEN_Y);
-        // The slide (and the Replan button stepping aside) starts once the toast is laid out,
+        // The slide starts once the toast is laid out,
         // i.e. really on screen. Started here, it ran while the toast was still being mounted
-        // and was mostly over by the time it showed: the toast and button jumped.
+        // and was mostly over by the time it showed, so the toast jumped.
         pendingEnter.current = true;
         // Already on screen (shown again): no new layout is coming, so slide now.
         if (visibleRef.current) startEnter();
@@ -216,7 +217,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   return (
     <Animated.View
       style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
-      onLayout={() => requestAnimationFrame(startEnter)}
+      onLayout={startEnter}
       {...panResponder.panHandlers}
       accessibilityActions={[{ name: 'dismiss', label: t('nav.dismiss') }]}
       onAccessibilityAction={e => {
