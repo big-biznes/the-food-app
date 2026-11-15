@@ -122,16 +122,20 @@ export default function CompareScreen() {
         >
           <Ionicons name="close" size={22} color={c.text} />
         </PressableScale>
-        <Text style={styles.title} accessibilityRole="header">
+        {/* One line, shrunk to fit beside the buttons; on two lines it rose into the status bar. */}
+        <Text style={styles.title} accessibilityRole="header" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
           {t('compare.title')}
         </Text>
         {chainIds.length > 0 && (
           <PressableScale
+            style={[styles.storesBtn, editingStores && styles.storesBtnOn]}
             onPress={() => setEditingStores(v => !v)}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.7}
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             accessibilityRole="button"
             accessibilityLabel={editingStores ? t('compare.doneChoosing') : t('compare.chooseStores')}
           >
+            <Ionicons name={editingStores ? 'checkmark' : 'storefront-outline'} size={16} color={c.text} />
             <Text style={styles.headerAction}>{editingStores ? t('common.done') : t('compare.stores')}</Text>
           </PressableScale>
         )}
@@ -269,6 +273,17 @@ const makeStyles = (c: Colors) =>
       justifyContent: 'center',
     },
     title: { ...type.title, color: c.text, flex: 1 },
+    // A pill like the close button beside it, so it reads as a button and not a label.
+    storesBtn: {
+      height: 40,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 14,
+      borderRadius: 100,
+      backgroundColor: c.surface,
+    },
+    storesBtnOn: { backgroundColor: c.butter },
     headerAction: { fontSize: 14, fontFamily: font.semibold, fontWeight: '600', color: c.text },
     content: { paddingHorizontal: 20, paddingBottom: 120 },
 

@@ -96,14 +96,8 @@ export default function ShoppingPanel({
           accessibilityLabel={t('shop.compare')}
           accessibilityHint={t('shop.compareHint')}
         >
-          <View style={styles.compareIcon}>
-            <Ionicons name="pricetag" size={16} color={c.onTile} />
-          </View>
-          <View style={styles.compareText}>
-            <Text style={styles.compareTitle}>{t('shop.compare')}</Text>
-            <Text style={styles.compareSub}>{t('shop.compareSub')}</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={18} color={c.onPrimaryMuted} />
+          <Ionicons name="pricetags-outline" size={18} color={c.onTile} />
+          <Text style={styles.compareTitle}>{t('shop.compare')}</Text>
         </PressableScale>
       )}
 
@@ -208,28 +202,20 @@ const makeStyles = (c: Colors) =>
       justifyContent: 'center',
     },
 
+    // A plain pill like the app's other buttons, so it reads as one: filled, label centred.
     compare: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 12,
+      justifyContent: 'center',
+      gap: 8,
       marginHorizontal: 20,
       marginBottom: 16,
-      paddingVertical: 12,
-      paddingHorizontal: 14,
-      borderRadius: 18,
-      backgroundColor: c.primary,
-    },
-    compareIcon: {
-      width: 34,
-      height: 34,
-      borderRadius: 17,
+      minHeight: 48,
+      paddingHorizontal: 20,
+      borderRadius: 100,
       backgroundColor: c.butter,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
-    compareText: { flex: 1 },
-    compareTitle: { fontSize: 15, fontFamily: font.semibold, fontWeight: '600', color: c.onPrimary },
-    compareSub: { fontSize: 13, fontFamily: font.regular, color: c.onPrimaryMuted, marginTop: 1 },
+    compareTitle: { fontSize: 15, fontFamily: font.semibold, fontWeight: '600', color: c.onTile },
 
     sectionHeader: {
       flexDirection: 'row',
