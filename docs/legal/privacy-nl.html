@@ -7,7 +7,9 @@
 <style>
   body { margin: 0; background: #F7F8F3; color: #123B2F; font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   main { max-width: 680px; margin: 0 auto; padding: 32px 20px 72px; }
-  nav { font-size: 14px; color: #5F7A70; display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+  nav { font-size: 14px; color: #5F7A70; display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: space-between; align-items: center; }
+  .back { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 100px; background: #ECEEE6; font-weight: 600; text-decoration: none; }
+  .back:hover { background: #E1E5DA; }
   a { color: #123B2F; }
   h1 { font-size: 34px; line-height: 1.1; letter-spacing: -0.02em; margin: 28px 0 6px; }
   h2 { font-size: 20px; margin: 34px 0 8px; }
@@ -18,7 +20,7 @@
 </head>
 <body>
 <main>
-<nav><a href="index.html">fudapp</a><span><a href="privacy.html">English</a> · <a href="privacy-bg.html">Български</a> · <span>Nederlands</span></span></nav>
+<nav><a class="back" href="/" onclick="if (document.referrer.indexOf(location.origin + '/') === 0 && history.length > 1) { history.back(); return false; }">← Terug naar fudapp</a><span><a href="privacy.html">English</a> · <a href="privacy-bg.html">Български</a> · <span>Nederlands</span></span></nav>
 <h1>Privacybeleid</h1>
 <p class="updated">14 november 2026</p>
 <p class="intro">fudapp plant je maaltijden voor de week en maakt je boodschappenlijst. Op deze pagina staat wat de app over je bewaart, waarom, en hoe je het verwijdert. fudapp wordt uitgegeven door Gabriel Chitarliev, die verantwoordelijk is voor je gegevens.</p>
