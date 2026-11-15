@@ -228,6 +228,8 @@ const bg: Translation = {
     chooseStores: "Избери магазини",
     stores: "Магазини",
     cheapest: "Най-евтино",
+    bestPick: "Най-добър избор",
+    pricedSummary: "{{priced}} от {{total}} продукта с цена. Сумите са само за продуктите с цена.",
     shopHere: "Пазарувай тук",
     saving: "С {{amount}} по-малко, отколкото само в {{store}}",
     covers: "Покрива {{count}} продукта повече, отколкото само {{store}}",

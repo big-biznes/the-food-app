@@ -70,6 +70,15 @@ export default function CompareScreen() {
 
   const best = result?.single[0];
   const ready = result != null && best != null && result.pricedCount > 0;
+  // The top store has the most of the list, so it can cost more than one that has fewer items.
+  // "Cheapest" only when its total really is the lowest; otherwise "Best pick", and its card
+  // shows how many of the items it has.
+  const topBadge =
+    !best || result.single.length < 2
+      ? undefined
+      : result.single.every(s => s.totalCents >= best.totalCents)
+        ? t('compare.cheapest')
+        : t('compare.bestPick');
 
   const picker = (chainIds.length === 0 || editingStores) && (
     <View style={styles.card}>
@@ -133,7 +142,7 @@ export default function CompareScreen() {
           <View style={styles.fixed}>
             {picker}
             <Text style={styles.summary}>
-              {result.pricedCount} of {result.itemCount} items priced. Totals cover priced items only.
+              {t('compare.pricedSummary', { priced: result.pricedCount, total: result.itemCount })}
             </Text>
           </View>
           <SegmentTabs tabs={MODES} active={mode} onChange={switchMode} progress={progress} />
@@ -154,7 +163,7 @@ export default function CompareScreen() {
                     store={s}
                     itemCount={result.itemCount}
                     labels={labels}
-                    badge={i === 0 && result.single.length > 1 ? t('compare.cheapest') : undefined}
+                    badge={i === 0 ? topBadge : undefined}
                     initiallyOpen={i === 0}
                     actionLabel={t('compare.shopHere')}
                     onAction={() => shopAt([s])}

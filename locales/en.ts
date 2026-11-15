@@ -231,6 +231,8 @@ const en = {
     chooseStores: "Choose stores",
     stores: "Stores",
     cheapest: "Cheapest",
+    bestPick: "Best pick",
+    pricedSummary: "{{priced}} of {{total}} items priced. Totals cover priced items only.",
     shopHere: "Shop here",
     saving: "{{amount}} less than {{store}} alone",
     covers: "Covers {{count}} more items than {{store}} alone",

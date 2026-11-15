@@ -228,6 +228,8 @@ const nl: Translation = {
     chooseStores: "Winkels kiezen",
     stores: "Winkels",
     cheapest: "Goedkoopst",
+    bestPick: "Beste keuze",
+    pricedSummary: "{{priced}} van {{total}} producten met prijs. Totalen gelden alleen voor producten met prijs.",
     shopHere: "Hier kopen",
     saving: "{{amount}} minder dan alleen bij {{store}}",
     covers: "Dekt {{count}} items meer dan alleen {{store}}",
