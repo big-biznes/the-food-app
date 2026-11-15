@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -76,6 +76,9 @@ const H_PAD = 20;
 const CART_FROM_RIGHT = 20;
 const GRID_FROM_RIGHT = 68;
 
+/** How long the plan is on screen before a general tip shows. The swap tip answers an action, so it does not wait. */
+const TIP_DELAY_MS = 4000;
+
 export default function PlanPhase({
   firstName,
   plan,
@@ -125,10 +128,22 @@ export default function PlanPhase({
     if (showing && id !== 'swap') setTipsQuiet(true);
   }
 
+  // Tips wait a moment after the plan is on screen (or after whatever paused them), so the
+  // first look at a plan is the plan, not a bubble pointing at buttons.
+  const [tipsDue, setTipsDue] = useState(false);
+  useEffect(() => {
+    if (tipsPaused) {
+      setTipsDue(false);
+      return;
+    }
+    const timer = setTimeout(() => setTipsDue(true), TIP_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [tipsPaused]);
+
   function tipFor(mode: ViewMode): TipId | null {
     if (tipsPaused) return null;
     if (mode === 'pool') return !swapSource && !isSeen('swap') ? 'swap' : null;
-    if (tipsQuiet) return null;
+    if (tipsQuiet || !tipsDue) return null;
     if (!savedPlan?.list && !isSeen('cart')) return 'cart';
     if (!isSeen('refresh')) return 'refresh';
     if (!isSeen('grid')) return 'grid';

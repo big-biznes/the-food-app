@@ -10,6 +10,8 @@ type Props = {
   spinAnim: Animated.Value;
   title?: string;
   subtitle?: string;
+  /** Lie over the whole screen, so what is being prepared can render beneath it unseen. */
+  cover?: boolean;
 };
 
 export default function LoadingScreen({
@@ -17,6 +19,7 @@ export default function LoadingScreen({
   spinAnim,
   title,
   subtitle,
+  cover = false,
 }: Props) {
   const styles = useThemedStyles(makeStyles);
   const { t } = useTranslation();
@@ -34,7 +37,7 @@ export default function LoadingScreen({
 
   return (
     <Animated.View
-      style={[styles.container, { opacity: fadeAnim }]}
+      style={[styles.container, cover && styles.cover, { opacity: fadeAnim }]}
       accessibilityLiveRegion="polite"
     >
       <Animated.View
@@ -56,6 +59,12 @@ const makeStyles = (c: Colors) =>
       justifyContent: 'center',
       gap: 16,
       paddingBottom: 40,
+    },
+    cover: {
+      position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+      backgroundColor: c.bg,
+      zIndex: 50,
+      elevation: 50,
     },
     spinner: {
       width: 40,

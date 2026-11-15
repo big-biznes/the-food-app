@@ -124,31 +124,66 @@ export default function HomeScreen() {
     }).start();
   }, [swapSource, swapBannerAnim, reducedMotion]);
 
-  function runWithLoading(action: () => void) {
+  // Things to do once the loading screen has lifted (the plan toast, the first-plan intro).
+  const loadingRef = useRef(false);
+  const afterReveal = useRef<(() => void)[]>([]);
+  function whenRevealed(fn: () => void) {
+    if (loadingRef.current) afterReveal.current.push(fn);
+    else fn();
+  }
+
+  /**
+   * "Building your plan": the screen fades in over everything, the plan is made and drawn
+   * beneath it while it is up, and only then does it fade away, uncovering the finished plan.
+   * (It used to fade out first and draw the plan after, so the plan popped in with a stutter.)
+   */
+  async function runWithLoading(action: () => void | Promise<void>) {
+    const started = Date.now();
+    const reduced = reducedMotion.current;
+    loadingRef.current = true;
     setLoading(true);
-    if (reducedMotion.current) {
+    spinAnim.setValue(0);
+    if (reduced) {
       fadeAnim.setValue(1);
-      spinAnim.setValue(0);
-      setTimeout(() => {
-        setLoading(false);
-        action();
-      }, LOADING_MS);
+    } else {
+      fadeAnim.setValue(0);
+      spinLoopRef.current = Animated.loop(
+        Animated.timing(spinAnim, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true }),
+      );
+      spinLoopRef.current.start();
+      await new Promise<void>(resolve =>
+        Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start(() => resolve()),
+      );
+    }
+
+    try {
+      await action();
+    } catch (e) {
+      console.warn('Making the plan failed', e);
+    }
+    // Let the new plan render and paint under the cover before it lifts.
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    const left = LOADING_MS - (Date.now() - started);
+    if (left > 0) await new Promise(resolve => setTimeout(resolve, left));
+
+    const finish = () => {
+      spinLoopRef.current?.stop();
+      loadingRef.current = false;
+      setLoading(false);
+      const queued = afterReveal.current;
+      afterReveal.current = [];
+      queued.forEach(fn => fn());
+    };
+    if (reduced) {
+      finish();
       return;
     }
-    fadeAnim.setValue(0);
-    spinAnim.setValue(0);
-    Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
-    spinLoopRef.current = Animated.loop(
-      Animated.timing(spinAnim, { toValue: 1, duration: 900, easing: Easing.linear, useNativeDriver: true }),
-    );
-    spinLoopRef.current.start();
-    setTimeout(() => {
-      spinLoopRef.current?.stop();
-      Animated.timing(fadeAnim, { toValue: 0, duration: 300, useNativeDriver: true }).start(() => {
-        setLoading(false);
-        action();
-      });
-    }, LOADING_MS);
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 420,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: true,
+    }).start(finish);
   }
 
   const [selectedPart, setSelectedPart] = useState<WeekPart>(getTodayPart);
@@ -251,13 +286,16 @@ export default function HomeScreen() {
       toastAfterIntro.current = extraMs;
       // Tips wait for the explainer: it is about the whole plan, they are about single buttons.
       setIntroPending(true);
-      setTimeout(() => {
-        setIntroPending(false);
-        setShowIntro(true);
-      }, 600);
+      whenRevealed(() =>
+        setTimeout(() => {
+          setIntroPending(false);
+          setShowIntro(true);
+        }, 400),
+      );
       return;
     }
-    setTimeout(() => planToastRef.current?.show({ extraMs }), 500);
+    // Once the plan is uncovered, not while the loading screen is still on top of it.
+    whenRevealed(() => setTimeout(() => planToastRef.current?.show({ extraMs }), 300));
   }
 
   const [showIntro, setShowIntro] = useState(false);
@@ -451,9 +489,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      {loading && <LoadingScreen fadeAnim={fadeAnim} spinAnim={spinAnim} />}
-
-      {!loading && !plan && (
+      {!plan && (
         <SetupPhase
           firstName={firstName}
           selectedCravings={selectedCravings}
@@ -464,7 +500,7 @@ export default function HomeScreen() {
         />
       )}
 
-      {!loading && plan && (
+      {plan && (
         <PlanPhase
           firstName={firstName}
           plan={plan}
@@ -481,7 +517,7 @@ export default function HomeScreen() {
           onAddToShoppingList={handleAddToShoppingList}
           onRefreshMeal={handleRefreshMeal}
           onSwapSelect={handleSwapSelect}
-          tipsPaused={introPending || showIntro}
+          tipsPaused={loading || introPending || showIntro}
         />
       )}
 
@@ -512,7 +548,7 @@ export default function HomeScreen() {
       </Animated.View>
 
       {/* FAB — only in plan phase */}
-      {!loading && plan && (
+      {plan && (
         <Animated.View
           style={[
             styles.fabWrap,
@@ -536,6 +572,9 @@ export default function HomeScreen() {
           </PressableScale>
         </Animated.View>
       )}
+
+      {/* Over everything above, so the plan can be drawn beneath it. */}
+      {loading && <LoadingScreen fadeAnim={fadeAnim} spinAnim={spinAnim} cover />}
 
       {/* Toasts — always mounted so refs are valid when show() is called */}
       <PlanToast
