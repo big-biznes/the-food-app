@@ -306,7 +306,9 @@ export default function HomeScreen() {
     setShowIntro(false);
     const extraMs = toastAfterIntro.current;
     toastAfterIntro.current = null;
-    if (extraMs != null) setTimeout(() => planToastRef.current?.show({ extraMs }), 200);
+    // The explainer's window has only just been taken down, which keeps the device busy for a
+    // moment; a toast started right away would skip most of its slide.
+    if (extraMs != null) setTimeout(() => planToastRef.current?.show({ extraMs }), 500);
   }
 
   /** Generate a plan for the current craving and show it. */

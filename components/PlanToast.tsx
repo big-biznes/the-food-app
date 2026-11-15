@@ -52,6 +52,8 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   const { t } = useTranslation();
   const reducedMotion = useReducedMotionRef();
   const [visible, setVisible] = useState(false);
+  const visibleRef = useRef(false);
+  visibleRef.current = visible;
   const slideAnim = useRef(new Animated.Value(HIDDEN_Y)).current;
   // The label's natural width, measured by an unconstrained hidden copy (a one-line Text in the
   // row reports the row's free width on Android, which left the button half empty). Capped, so a
@@ -66,6 +68,21 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   const textWidth = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const pendingEnter = useRef(false);
+  function startEnter() {
+    if (!pendingEnter.current) return;
+    pendingEnter.current = false;
+    onVisibleChangeRef.current?.(true);
+    // Native driver: shown right after a plan is generated, while the JS thread is busy;
+    // a JS-driven slide would skip frames and jump into place.
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 420,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
+  }
 
   function clearTimers() {
     timers.current.forEach(clearTimeout);
@@ -110,6 +127,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
 
   function dismissInternal() {
     clearTimers();
+    pendingEnter.current = false;
     onVisibleChangeRef.current?.(false);
     if (reducedMotion.current) {
       setVisible(false);
@@ -151,21 +169,19 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
       if (labelWidthRef.current != null) textWidth.setValue(labelWidthRef.current);
       textOpacity.setValue(1);
       setVisible(true);
-      onVisibleChangeRef.current?.(true);
       AccessibilityInfo.announceForAccessibility(`${message} ${actionLabel}`);
 
       if (reducedMotion.current) {
         slideAnim.setValue(0);
+        onVisibleChangeRef.current?.(true);
       } else {
         slideAnim.setValue(HIDDEN_Y);
-        // Native driver: shown right after a plan is generated, while the JS thread is busy;
-        // a JS-driven slide would skip frames and jump into place.
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 380,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }).start();
+        // The slide (and the Replan button stepping aside) starts once the toast is laid out,
+        // i.e. really on screen. Started here, it ran while the toast was still being mounted
+        // and was mostly over by the time it showed: the toast and button jumped.
+        pendingEnter.current = true;
+        // Already on screen (shown again): no new layout is coming, so slide now.
+        if (visibleRef.current) startEnter();
 
         // Collapse button text to icon-only. Skipped under reduced motion so the label stays.
         const t1 = setTimeout(() => {
@@ -200,6 +216,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   return (
     <Animated.View
       style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
+      onLayout={() => requestAnimationFrame(startEnter)}
       {...panResponder.panHandlers}
       accessibilityActions={[{ name: 'dismiss', label: t('nav.dismiss') }]}
       onAccessibilityAction={e => {
