@@ -61,10 +61,7 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
   const maxLabelWidth = Math.round(useWindowDimensions().width * 0.4);
   const [labelWidth, setLabelWidth] = useState<number | null>(null);
   const labelWidthRef = useRef<number | null>(null);
-  useEffect(() => {
-    labelWidthRef.current = null;
-    setLabelWidth(null);
-  }, [actionLabel, maxLabelWidth]);
+  // A new label (another language) lays the hidden copy out again, and onLayout takes the new width.
   const textWidth = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -212,25 +209,11 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
     },
   }));
 
-  if (!visible) return null;
-
   return (
-    <Animated.View
-      style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
-      onLayout={startEnter}
-      {...panResponder.panHandlers}
-      accessibilityActions={[{ name: 'dismiss', label: t('nav.dismiss') }]}
-      onAccessibilityAction={e => {
-        if (e.nativeEvent.actionName === 'dismiss') dismissInternal();
-      }}
-      accessibilityRole="alert"
-      accessibilityLiveRegion="polite"
-    >
-      <View style={styles.left}>
-        <Ionicons name="checkmark-circle-outline" size={17} color={c.onPrimary} />
-        <Text style={styles.message} numberOfLines={2}>{message}</Text>
-      </View>
-      {/* Measures the label at its own width; never seen. */}
+    <>
+      {/* Measures the label at its own width; never seen. Rendered even while the toast is
+          hidden, so the width is known before the first slide (it used to arrive mid-slide:
+          the first toast came in icon-only, then jumped to full size). */}
       <Text
         style={[styles.actionBtnText, styles.measure]}
         aria-hidden
@@ -245,22 +228,40 @@ const PlanToast = forwardRef<PlanToastHandle, Props>(function PlanToast(
       >
         {' '}{actionLabel}
       </Text>
-      <PressableScale
-        style={styles.actionBtn}
-        onPress={onAction}
-        activeOpacity={0.75}
-        accessibilityRole="button"
-        accessibilityLabel={actionLabel}
-        hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
-      >
-        <Ionicons name={actionIcon} size={15} color={c.text} />
-        <Animated.View style={{ width: labelWidth == null ? 0 : textWidth, overflow: 'hidden' }}>
-          <Animated.Text style={[styles.actionBtnText, { opacity: textOpacity }]} numberOfLines={1}>
-            {' '}{actionLabel}
-          </Animated.Text>
+      {visible && (
+        <Animated.View
+          style={[styles.toast, { transform: [{ translateY: slideAnim }] }]}
+          onLayout={startEnter}
+          {...panResponder.panHandlers}
+          accessibilityActions={[{ name: 'dismiss', label: t('nav.dismiss') }]}
+          onAccessibilityAction={e => {
+            if (e.nativeEvent.actionName === 'dismiss') dismissInternal();
+          }}
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite"
+        >
+          <View style={styles.left}>
+            <Ionicons name="checkmark-circle-outline" size={17} color={c.onPrimary} />
+            <Text style={styles.message} numberOfLines={2}>{message}</Text>
+          </View>
+          <PressableScale
+            style={styles.actionBtn}
+            onPress={onAction}
+            activeOpacity={0.75}
+            accessibilityRole="button"
+            accessibilityLabel={actionLabel}
+            hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
+          >
+            <Ionicons name={actionIcon} size={15} color={c.text} />
+            <Animated.View style={{ width: labelWidth == null ? 0 : textWidth, overflow: 'hidden' }}>
+              <Animated.Text style={[styles.actionBtnText, { opacity: textOpacity }]} numberOfLines={1}>
+                {' '}{actionLabel}
+              </Animated.Text>
+            </Animated.View>
+          </PressableScale>
         </Animated.View>
-      </PressableScale>
-    </Animated.View>
+      )}
+    </>
   );
 });
 
@@ -308,7 +309,7 @@ const makeStyles = (c: Colors) =>
       paddingHorizontal: 12,
       paddingVertical: 8,
     },
-    measure: { position: 'absolute', opacity: 0, left: 0, top: 0 },
+    measure: { position: 'absolute', opacity: 0, left: 0, top: 0, pointerEvents: 'none' },
     actionBtnText: {
       fontSize: 13,
       fontFamily: font.semibold, fontWeight: '600',

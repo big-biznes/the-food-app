@@ -195,9 +195,10 @@ export default function HomeScreen() {
   // The Replan button steps out of the way while the "week is planned" toast is up,
   // so the two never stack.
   const [toastUp, setToastUp] = useState(false);
-  // After a new plan, tips wait for the "Make shopping list" toast: the cart tip says the same
-  // thing, so it only comes a few seconds after the toast (TIP_DELAY_MS in PlanPhase), and not
-  // at all once the toast's button has made the list.
+  // After a new plan, tips wait for the "Make shopping list" toast and then for it to leave
+  // (it stays longer for new accounts): the cart tip says the same thing, so it comes a few
+  // seconds after the toast is gone (TIP_DELAY_MS in PlanPhase), and not at all once the
+  // toast's button has made the list.
   const [tipsWaitForToast, setTipsWaitForToast] = useState(false);
   useEffect(() => {
     if (toastUp) setTipsWaitForToast(false);
@@ -527,7 +528,7 @@ export default function HomeScreen() {
           onAddToShoppingList={handleAddToShoppingList}
           onRefreshMeal={handleRefreshMeal}
           onSwapSelect={handleSwapSelect}
-          tipsPaused={loading || introPending || showIntro || tipsWaitForToast}
+          tipsPaused={loading || introPending || showIntro || tipsWaitForToast || toastUp}
         />
       )}
 
