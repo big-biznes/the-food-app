@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useShoppingContext } from '@/contexts/ShoppingContext';
+import Collapsible from '@/components/Collapsible';
 import ConfirmToast, { ConfirmToastHandle } from '@/components/ConfirmToast';
 import StorePicker from '@/components/shopping/StorePicker';
 import StoreCard from '@/components/shopping/StoreCard';
@@ -80,7 +81,7 @@ export default function CompareScreen() {
         ? t('compare.cheapest')
         : t('compare.bestPick');
 
-  const picker = (chainIds.length === 0 || editingStores) && (
+  const pickerCard = (
     <View style={styles.card}>
       {chainIds.length === 0 && (
         <Text style={styles.intro}>{t('compare.intro')}</Text>
@@ -88,6 +89,8 @@ export default function CompareScreen() {
       <StorePicker />
     </View>
   );
+  // Opens and closes smoothly instead of appearing all at once.
+  const picker = <Collapsible open={chainIds.length === 0 || editingStores}>{pickerCard}</Collapsible>;
 
   // Shown under both panels.
   const footer = result && (
@@ -122,10 +125,7 @@ export default function CompareScreen() {
         >
           <Ionicons name="close" size={22} color={c.text} />
         </PressableScale>
-        {/* One line, shrunk to fit beside the buttons; on two lines it rose into the status bar. */}
-        <Text style={styles.title} accessibilityRole="header" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
-          {t('compare.title')}
-        </Text>
+        <View style={styles.flex} />
         {chainIds.length > 0 && (
           <PressableScale
             style={[styles.storesBtn, editingStores && styles.storesBtnOn]}
@@ -140,6 +140,10 @@ export default function CompareScreen() {
           </PressableScale>
         )}
       </View>
+      {/* On its own line under the buttons, so it never shrinks or wraps beside them. */}
+      <Text style={styles.title} accessibilityRole="header" numberOfLines={2}>
+        {t('compare.title')}
+      </Text>
 
       {ready ? (
         <>
@@ -262,7 +266,7 @@ const makeStyles = (c: Colors) =>
       gap: 12,
       paddingHorizontal: 20,
       paddingTop: 12,
-      paddingBottom: 16,
+      paddingBottom: 12,
     },
     closeBtn: {
       width: 40,
@@ -272,7 +276,8 @@ const makeStyles = (c: Colors) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
-    title: { ...type.title, color: c.text, flex: 1 },
+    flex: { flex: 1 },
+    title: { ...type.title, color: c.text, paddingHorizontal: 20, paddingBottom: 16 },
     // A pill like the close button beside it, so it reads as a button and not a label.
     storesBtn: {
       height: 40,
